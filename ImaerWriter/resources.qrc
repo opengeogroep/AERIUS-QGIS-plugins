@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/plugins/ImaerWriter" >
+        <file>icon.png</file>
+        <file>OGG-logo2012_zondertekst_160x160_transp.png</file>
+    </qresource>
+</RCC>

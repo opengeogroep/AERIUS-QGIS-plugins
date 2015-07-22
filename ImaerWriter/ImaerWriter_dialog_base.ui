@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ImaerWriterDialogBase</class>
+ <widget class="QDialog" name="ImaerWriterDialogBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>904</width>
+    <height>539</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>ImaerWriter</string>
+  </property>
+  <widget class="QTabWidget" name="dataTabs">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>20</y>
+     <width>881</width>
+     <height>461</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="pointTab">
+    <attribute name="title">
+     <string>Point data</string>
+    </attribute>
+    <widget class="QWidget" name="formLayoutWidget_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>421</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="pointDataSourceLabel">
+        <property name="text">
+         <string>Point data source</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="pointDataCombo"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="emissionSourceTypeLabel">
+        <property name="text">
+         <string>Emission Source Type</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="pointSourceTypeCombo"/>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QGroupBox" name="pointGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>861</width>
+       <height>321</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Select columns from data source to create a mapping to Imaer properties</string>
+     </property>
+     <widget class="QWidget" name="pointEmissionSourceCharacteristicsWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>50</y>
+        <width>301</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <widget class="QWidget" name="formLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>0</y>
+         <width>283</width>
+         <height>251</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="pointEmissionSourceCharacteristicsLayout">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+        </property>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="pointEmissionWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>50</y>
+        <width>291</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <widget class="QWidget" name="formLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>0</y>
+         <width>271</width>
+         <height>251</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="pointEmissionLayout">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+        </property>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>-10</x>
+        <y>50</y>
+        <width>271</width>
+        <height>271</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="pointSourceContainerLayout"/>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>30</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Emission</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>211</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Emission Source Properties</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="pointEmissionSourceCharacteristicsCheckBox">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>30</y>
+        <width>281</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Emission Source Characteristics</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>800</x>
+       <y>0</y>
+       <width>71</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>OpenGeoGroep</string>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;http://www.opengeogroep.nl/&quot;&gt;&lt;img src=&quot;:/plugins/ImaerWriter/OGG-logo2012_zondertekst_160x160_transp.png&quot;/&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="openExternalLinks">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <zorder>pointGroupBox</zorder>
+    <zorder>formLayoutWidget_3</zorder>
+    <zorder>label_3</zorder>
+   </widget>
+   <widget class="QWidget" name="lineTab">
+    <attribute name="title">
+     <string>Line data</string>
+    </attribute>
+    <widget class="QWidget" name="formLayoutWidget_4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>421</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <layout class="QFormLayout" name="formLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="pointDataSourceLabel_2">
+        <property name="text">
+         <string>Line data source</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="lineDataCombo"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="emissionSourceTypeLabel_2">
+        <property name="text">
+         <string>Emission Source Type</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="lineSourceTypeCombo"/>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QGroupBox" name="lineGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>861</width>
+       <height>321</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Select columns from data source to create a mapping to Imaer properties</string>
+     </property>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>30</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Emission</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>211</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Emission Source Properties</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>-10</x>
+        <y>50</y>
+        <width>271</width>
+        <height>271</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="lineSourceContainerLayout"/>
+     </widget>
+     <widget class="QWidget" name="lineEmissionWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>50</y>
+        <width>291</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <widget class="QWidget" name="formLayoutWidget_5">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>0</y>
+         <width>271</width>
+         <height>251</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="lineEmissionLayout"/>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="lineEmissionSourceCharacteristicsWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>50</y>
+        <width>301</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <widget class="QWidget" name="formLayoutWidget_6">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>0</y>
+         <width>283</width>
+         <height>251</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="lineEmissionSourceCharacteristicsLayout">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+        </property>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QCheckBox" name="lineEmissionSourceCharacteristicsCheckBox">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>30</y>
+        <width>281</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Emission Source Characteristics</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </widget>
+    <zorder>lineGroupBox</zorder>
+    <zorder>formLayoutWidget_4</zorder>
+   </widget>
+   <widget class="QWidget" name="polygonTab">
+    <attribute name="title">
+     <string>Polygon data</string>
+    </attribute>
+    <widget class="QWidget" name="formLayoutWidget_7">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>421</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <layout class="QFormLayout" name="formLayout_3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="pointDataSourceLabel_3">
+        <property name="text">
+         <string>Polygon data source</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="polygonDataCombo"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="emissionSourceTypeLabel_3">
+        <property name="text">
+         <string>Emission Source Type</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="polygonSourceTypeCombo"/>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QGroupBox" name="polygonGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>861</width>
+       <height>321</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Select columns from data source to create a mapping to Imaer properties</string>
+     </property>
+     <widget class="QLabel" name="label_11">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>30</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Emission</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>30</y>
+        <width>211</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Emission Source Properties</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>-10</x>
+        <y>50</y>
+        <width>271</width>
+        <height>271</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="polygonSourceContainerLayout"/>
+     </widget>
+     <widget class="QWidget" name="polygonEmissionWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>50</y>
+        <width>291</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <widget class="QWidget" name="formLayoutWidget_8">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>0</y>
+         <width>271</width>
+         <height>251</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="polygonEmissionLayout"/>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="polygonEmissionSourceCharacteristicsWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>50</y>
+        <width>301</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <widget class="QWidget" name="formLayoutWidget_9">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>0</y>
+         <width>283</width>
+         <height>251</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="polygonEmissionSourceCharacteristicsLayout">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+        </property>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QCheckBox" name="polygonEmissionSourceCharacteristicsCheckBox">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>30</y>
+        <width>271</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Emission Source Characteristics</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>800</x>
+       <y>0</y>
+       <width>71</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;http://www.opengeogroep.nl/&quot;&gt;&lt;img src=&quot;:/plugins/ImaerWriter/OGG-logo2012_zondertekst_160x160_transp.png&quot;/&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <zorder>polygonGroupBox</zorder>
+    <zorder>formLayoutWidget_7</zorder>
+    <zorder>label_6</zorder>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>490</y>
+     <width>881</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Save as</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="gmlFileNameBox"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="fileBrowseButton">
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QDialogButtonBox" name="cancel_save_button_box">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="standardButtons">
+         <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QPushButton" name="helpButton">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>10</y>
+     <width>90</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Show help page</string>
+   </property>
+   <property name="text">
+    <string>Help</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>50</y>
+     <width>71</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>OpenGeoGroep</string>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;http://www.opengeogroep.nl/&quot;&gt;&lt;img src=&quot;:/plugins/ImaerWriter/OGG-logo2012_zondertekst_160x160_transp.png&quot;/&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="openExternalLinks">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>cancel_save_button_box</sender>
+   <signal>accepted()</signal>
+   <receiver>ImaerWriterDialogBase</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cancel_save_button_box</sender>
+   <signal>rejected()</signal>
+   <receiver>ImaerWriterDialogBase</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

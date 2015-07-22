@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Developers &mdash; ImaerWriter 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ImaerWriter 1.0 documentation" href="index.html" />
+    <link rel="prev" title="Usage" href="usage.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="usage.html" title="Usage"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">ImaerWriter 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="developers">
+<h1>Developers<a class="headerlink" href="#developers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="general-setup">
+<h2>General setup<a class="headerlink" href="#general-setup" title="Permalink to this headline">¶</a></h2>
+<p>This plug in for QGIS is meant to be a demonstrator. It is designed to be easily extensible and adaptable. Therefore the plug-in is split in two main parts:</p>
+<ul class="simple">
+<li>the <tt class="docutils literal"><span class="pre">imaerwrite</span></tt> module which handles the creation of valid IMAER gml</li>
+<li>the <tt class="docutils literal"><span class="pre">ImaerWriter</span></tt> module which provides the QGIS user interface and sends data to the imaerwrite module</li>
+</ul>
+</div>
+<div class="section" id="imaerwrite-module">
+<h2>imaerwrite module<a class="headerlink" href="#imaerwrite-module" title="Permalink to this headline">¶</a></h2>
+<p>The imaerwrite module writes valid IMAER gml on the basis of passed in data. The module can be imported and used stand alone. Therefore it provides a basis for extending GIS (or other) software with the capability to write valid IMAER gml.</p>
+<p>The module has no dependencies outside of the Python core libraries. Only generic Emission Sources are supported.</p>
+<div class="section" id="basic-usage">
+<h3>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h3>
+<p>Writing IMAER gml from python by using the imaerwrite module is simple:</p>
+<p>Start by importing the module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">imaerwrite</span> <span class="kn">as</span> <span class="nn">imaer</span>
+</pre></div>
+</div>
+<p>Create an Emission source by providing an id and a geometry:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">e</span> <span class="o">=</span> <span class="n">imaer</span><span class="o">.</span><span class="n">EmissionSource</span><span class="p">(</span><span class="n">wktGeometry</span> <span class="o">=</span> <span class="s">&#39;POINT(25000 300000)&#39;</span><span class="p">,</span> <span class="n">gmlId</span> <span class="o">=</span> <span class="s">&#39;ES.1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Geometry should be valid WKT-geometry in the EPSG:28992 coordinate system.</p>
+</div>
+<p>Add an emission to the emission source:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">e</span><span class="o">.</span><span class="n">addEmission</span><span class="p">(</span><span class="n">imaer</span><span class="o">.</span><span class="n">EmissionSource</span><span class="o">.</span><span class="n">Emission</span><span class="p">(</span><span class="s">&#39;NH3&#39;</span><span class="p">,</span><span class="mi">36152</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Create the writer object and pass in a list of Emission sources (a list of one in this case):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">i</span> <span class="o">=</span> <span class="n">imaer</span><span class="o">.</span><span class="n">ImaerWrite</span><span class="p">(</span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>And save:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">i</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&#39;test.gml&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Of course Emission Source Characteristics and a label can be added to an Emission Source:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sc</span> <span class="o">=</span> <span class="n">imaer</span><span class="o">.</span><span class="n">EmissionSource</span><span class="o">.</span><span class="n">EmissionSourceCharacteristics</span><span class="p">(</span><span class="n">heatContent</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">emissionHeight</span> <span class="o">=</span> <span class="mi">31</span><span class="p">)</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">imaer</span><span class="o">.</span><span class="n">EmissionSource</span><span class="p">(</span><span class="n">wktGeometry</span> <span class="o">=</span> <span class="s">&#39;POINT(25000 300000)&#39;</span><span class="p">,</span>
+                         <span class="n">emissionSourceCharacteristics</span> <span class="o">=</span> <span class="n">sc</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&#39;test source&#39;</span><span class="p">,</span> <span class="n">gmlId</span> <span class="o">=</span> <span class="s">&#39;ES.3&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And multiple Emissions can be added to an Emission source:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">e</span><span class="o">.</span><span class="n">addEmission</span><span class="p">(</span><span class="n">imaer</span><span class="o">.</span><span class="n">EmissionSource</span><span class="o">.</span><span class="n">Emission</span><span class="p">(</span><span class="s">&#39;NOX&#39;</span><span class="p">,</span><span class="mf">3.3</span><span class="p">))</span>
+<span class="n">e</span><span class="o">.</span><span class="n">addEmission</span><span class="p">(</span><span class="n">imaer</span><span class="o">.</span><span class="n">EmissionSource</span><span class="o">.</span><span class="n">Emission</span><span class="p">(</span><span class="s">&#39;NO2&#39;</span><span class="p">,</span><span class="mf">4.12</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>To demonstrate the use of the imaerwrite module a demo script <tt class="docutils literal"><span class="pre">basictest.py</span></tt> is included.</p>
+</div>
+<div class="section" id="extending-the-module-with-emissionsourcetypes">
+<h3>Extending the module with EmissionSourceTypes<a class="headerlink" href="#extending-the-module-with-emissionsourcetypes" title="Permalink to this headline">¶</a></h3>
+<p>Up till now the imaerwrite module supports generic Emission source types only. Adding an Emission source type for a specific sector (eg farmLodging) requires the following steps:</p>
+<ul class="simple">
+<li>create a class FarmLodgingEmissionSource using the EmissionSource class as an example<ul>
+<li>create an <tt class="docutils literal"><span class="pre">__init__</span></tt> method exposing the needed attributes</li>
+<li>add a <tt class="docutils literal"><span class="pre">dom</span></tt> property which constructs valid gml from the attributes</li>
+</ul>
+</li>
+<li>add the new class name to the EmissionSourceTypes property of the <tt class="docutils literal"><span class="pre">ImaerWrite</span></tt> class.</li>
+<li>expose the attributes via the <tt class="docutils literal"><span class="pre">getUiFields</span></tt> method of the <tt class="docutils literal"><span class="pre">ImaerWrite</span></tt> class in a list of two lists: first list mandatory attributes, second list optional attributes</li>
+<li>test by extending the <tt class="docutils literal"><span class="pre">basictest.py</span></tt> script.</li>
+<li>don&#8217;t forget to update this documentation!</li>
+</ul>
+<p>Be sure the gml your code generates is valid xml according to the IMAER datamodel. Refer to the schema which location is available in the module constant <tt class="docutils literal"><span class="pre">_imaerSchemaLocation</span></tt>. The UML is available at <a class="reference external" href="https://www.aerius.nl/nl/file/imaerumlv10pdf">https://www.aerius.nl/nl/file/imaerumlv10pdf</a> .</p>
+</div>
+</div>
+<div class="section" id="imaerwriter-module">
+<h2>ImaerWriter module<a class="headerlink" href="#imaerwriter-module" title="Permalink to this headline">¶</a></h2>
+<p>The ImaerWriter module has a standard QGIS plug-in setup. The basics were generated using the QGIS plugin builder plugin.</p>
+<ul class="simple">
+<li>It provides an user interface (GUI) for the imaerwrite module.</li>
+<li>It sends geometry and attributes from QGIS data sources to the imaerwrite module</li>
+</ul>
+<p>The GUI was created with Qt4 Designer.</p>
+<div class="section" id="id1">
+<h3>Extending the module with EmissionSourceTypes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Up till now the ImaerWriter module supports generic Emission source types only. Adding an Emission source type for a specific sector (eg farmLodging) requires the following steps:</p>
+<ul>
+<li><p class="first">Extend the <tt class="docutils literal"><span class="pre">imaerwrite</span></tt> module as described above</p>
+</li>
+<li><p class="first">Extend the GUI with the appropriate layout and/ or widgets</p>
+<blockquote>
+<div><ul class="simple">
+<li>Edit <tt class="docutils literal"><span class="pre">ImaerWriter_dialog_base_ui</span></tt> with Qt4 Designer</li>
+<li>don&#8217;t forget to run make if you add resources like images</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Generate widgets in the GUI in the <tt class="docutils literal"><span class="pre">__init__</span></tt> method based on the <tt class="docutils literal"><span class="pre">getUiFields</span></tt> method from the <tt class="docutils literal"><span class="pre">ImaerWrite</span></tt> class in the <tt class="docutils literal"><span class="pre">imaerwrite</span></tt> module</p>
+</li>
+<li><p class="first">Extend the signal-slot communication in the <tt class="docutils literal"><span class="pre">__init__</span></tt> method</p>
+</li>
+<li><p class="first">Extend the <tt class="docutils literal"><span class="pre">run</span></tt> method to send the attributes and geometry to the new EmissionSourceType <tt class="docutils literal"><span class="pre">__init__</span></tt> method rom the <tt class="docutils literal"><span class="pre">ImaerWrite</span></tt> class in the <tt class="docutils literal"><span class="pre">imaerwrite</span></tt> module</p>
+</li>
+<li><p class="first">don&#8217;t forget to update this documentation!</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Developers</a><ul>
+<li><a class="reference internal" href="#general-setup">General setup</a></li>
+<li><a class="reference internal" href="#imaerwrite-module">imaerwrite module</a><ul>
+<li><a class="reference internal" href="#basic-usage">Basic usage</a></li>
+<li><a class="reference internal" href="#extending-the-module-with-emissionsourcetypes">Extending the module with EmissionSourceTypes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#imaerwriter-module">ImaerWriter module</a><ul>
+<li><a class="reference internal" href="#id1">Extending the module with EmissionSourceTypes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="usage.html"
+                        title="previous chapter">Usage</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/developers.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="usage.html" title="Usage"
+             >previous</a> |</li>
+        <li><a href="index.html">ImaerWriter 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, OpenGeoGroep.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
