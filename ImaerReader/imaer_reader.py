@@ -224,7 +224,7 @@ class ImaerReader:
             ft = featureCollection.nextFeature()
             while ft:
                 self.featureCount += 1
-                self.log(ft['hexagon'])
+                #self.log(ft['hexagon'])
                 #self.updateFeatureCounter()
                 
                 feat = QgsFeature()
@@ -239,7 +239,7 @@ class ImaerReader:
                         featureAttributes.append(ft[attr])
                     except:
                         featureAttributes.append(None)
-                self.log(str(featureAttributes))
+                #self.log(str(featureAttributes))
                 feat.setAttributes(featureAttributes)
         
                 if self.doPoint:
@@ -286,7 +286,6 @@ class ImaerReader:
     def updateFeatureCounter(self):
         self.progress.feature_count_label.setText(str(self.featureCount))
         self.log(self.featureCount)
-        #self.logfile.write(str(self.featureCount)+'\n')
     
     def chooseFile(self):
         fileName = QFileDialog.getOpenFileName(caption = "Open gml File", directory = '', filter = '*.gml')
