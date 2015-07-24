@@ -221,7 +221,7 @@ class ImaerReader:
             if self.doPoint:
                 (self.pointLayer, self.pointProvider) = self.createLayer(dim=0, name="Depositie rekenpunt")
             if self.doHexagon:
-                (self.hexagonLayer, self.hexagonProvider) = self.createLayer(dim=2, name="Depositie rekenpunt")
+                (self.hexagonLayer, self.hexagonProvider) = self.createLayer(dim=2, name="Depositie hexagoon")
 
             # create features
             ft = featureCollection.nextFeature(doPoints=self.doPoint, doHexagons=self.doHexagon)
