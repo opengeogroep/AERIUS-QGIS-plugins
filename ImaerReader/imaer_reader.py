@@ -20,19 +20,20 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt4.QtCore import * #QSettings, QTranslator, qVersion, QCoreApplication
+from PyQt4.QtCore import *
 from PyQt4.QtGui import QAction, QIcon, QFileDialog, QDialogButtonBox
 from qgis.core import *
 from qgis.utils import *
 # Initialize Qt resources from file resources.py
 import resources_rc
-# Import the code for the dialog
+# Import the code for the dialogs
 from imaer_reader_dialog import ImaerReaderDialog
 from progress_dialog import ProgressDialog
-import os.path
-import time
 
 import imaerread as IR
+
+import os.path
+import time
 
 class ImaerReader:
     """QGIS Plugin Implementation."""
@@ -222,11 +223,10 @@ class ImaerReader:
             if self.doHexagon:
                 (self.hexagonLayer, self.hexagonProvider) = self.createLayer(dim=2, name="imaer hexagons")
 
-            
+            # create features
             ft = featureCollection.nextFeature(doPoints=self.doPoint, doHexagons=self.doHexagon)
             while ft:
                 self.featureCount += 1
-                #self.log(ft['hexagon'])
                 #self.updateFeatureCounter()
                 
                 if self.doPoint:
@@ -242,17 +242,18 @@ class ImaerReader:
             #self.progress.progressBar.value = 100
             #self.updateFeatureCounter()
             
+            # add layers to map
             canvas = iface.mapCanvas()
-            #hexagonQml = os.path.join(self.plugin_dir,'imaer_hexagon.qml')
             if self.doHexagon:
-                self.hexagonLayer.updateExtents()
+                #hexagonQml = os.path.join(self.plugin_dir,'imaer_hexagon.qml')
                 #self.hexagonLayer.loadNamedStyle(hexagonQml)
+                self.hexagonLayer.updateExtents()
                 QgsMapLayerRegistry.instance().addMapLayer(self.hexagonLayer)
                 canvas.setExtent(self.hexagonLayer.extent())
             if self.doPoint:
-                self.pointLayer.updateExtents()
                 # TODO: create some point style too
                 #self.pointLayer.loadNamedStyle()
+                self.pointLayer.updateExtents()
                 QgsMapLayerRegistry.instance().addMapLayer(self.pointLayer)
                 if not self.doHexagon:
                     canvas.setExtent(self.pointLayer.extent())
@@ -260,6 +261,7 @@ class ImaerReader:
             self.log('import time: ' + str(time.time() - t0) + ' sec')
                 
     def getFeature(self, ft, dim=2):
+        """Creates a QGIS feature from a feature returned by the imaerread parser"""
         feat = QgsFeature()
         if dim == 2:
             feat.setGeometry(QgsGeometry.fromWkt(ft['hexagon']))
@@ -277,6 +279,7 @@ class ImaerReader:
         
 
     def createLayer(self, dim=2, name="imaer layer"):
+        """Creates a map layer of polygon (2) or point (0) type, and returns both the layer and the provider as a tuple."""
         # create layer
         if dim == 2:
             vl = QgsVectorLayer("Polygon?crs=EPSG:28992", name, "memory")
@@ -292,14 +295,17 @@ class ImaerReader:
         return (vl,pr)
         
     def updateFeatureCounter(self):
+        """Updates the feature count in the progress dialog."""
         self.progress.feature_count_label.setText(str(self.featureCount))
         self.log(self.featureCount)
     
     def chooseFile(self):
+        """Opens the file dialog to pick a file to open"""
         fileName = QFileDialog.getOpenFileName(caption = "Open gml File", directory = '', filter = '*.gml')
         self.dlg.gmlFileNameBox.setText(fileName)
         
     def gmlFileNameBoxChanged(self, fileName):
+        """Enables the OK button after entering a file name"""
         if os.path.exists(os.path.dirname(fileName)):
             self.dlg.cancel_open_button_box.button(QDialogButtonBox.Open).setEnabled(True)
     

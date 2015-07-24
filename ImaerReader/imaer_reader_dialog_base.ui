@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>770</width>
-    <height>196</height>
+    <height>228</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>150</y>
+     <y>190</y>
      <width>751</width>
      <height>32</height>
     </rect>
@@ -108,6 +108,25 @@
    </property>
    <property name="text">
     <string>Help...</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>90</y>
+     <width>71</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>OpenGeoGroep</string>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;http://www.opengeogroep.nl/&quot;&gt;&lt;img src=&quot;:/plugins/ImaerWriter/OGG-logo2012_zondertekst_160x160_transp.png&quot;/&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="openExternalLinks">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>

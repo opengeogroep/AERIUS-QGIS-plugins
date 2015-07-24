@@ -15,7 +15,7 @@ class ImaerRead():
 
     @property
     def AttributeFields(self):
-        '''Returns the attributes which can be returned in the features'''
+        """Returns the attributes which can be returned in the features"""
         attributes = []
         for type in _resultTypes:
             for substance in _substances:
@@ -23,7 +23,7 @@ class ImaerRead():
         return attributes
 
     def nextFeature(self, doPoints=True, doHexagons=True):
-        '''Returns the next ReceptorPoint as a feature'''
+        """Returns the next ReceptorPoint as a feature"""
         event, node = self.events.next()
         _nextReceptorPoint = False
         while event:
