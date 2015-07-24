@@ -22,7 +22,7 @@ class ImaerRead():
                 attributes.append("%s_%s" %(type[0:3],substance))
         return attributes
 
-    def nextFeature(self):
+    def nextFeature(self, doPoints=True, doHexagons=True):
         '''Returns the next ReceptorPoint as a feature'''
         event, node = self.events.next()
         _nextReceptorPoint = False
@@ -33,25 +33,27 @@ class ImaerRead():
                 data['id'] = id
                 _nextReceptorPoint = True
             
-            if _nextReceptorPoint and event == pulldom.START_ELEMENT and node.tagName == 'gml:pos':
-                txt = ''
-                while not event == pulldom.END_ELEMENT:
-                    # we have to wait for the END event as the SAX-parser may split CHARACTER events
-                    # see http://bugs.python.org/issue10026 and http://www.mail-archive.com/xml-sig@python.org/msg00263.html
-                    event, node = self.events.next()
-                    if event == pulldom.CHARACTERS:
-                        txt = txt + node.wholeText
-                data['point'] = 'POINT(%s)' % txt
+            if doPoints:
+                if _nextReceptorPoint and event == pulldom.START_ELEMENT and node.tagName == 'gml:pos':
+                    txt = ''
+                    while not event == pulldom.END_ELEMENT:
+                        # we have to wait for the END event as the SAX-parser may split CHARACTER events
+                        # see http://bugs.python.org/issue10026 and http://www.mail-archive.com/xml-sig@python.org/msg00263.html
+                        event, node = self.events.next()
+                        if event == pulldom.CHARACTERS:
+                            txt = txt + node.wholeText
+                    data['point'] = 'POINT(%s)' % txt
 
-            if _nextReceptorPoint and event == pulldom.START_ELEMENT and node.tagName == 'gml:posList':
-                txt = ''
-                while not event == pulldom.END_ELEMENT:
-                    # we have to wait for the END event as the SAX-parser may split CHARACTER events
-                    event, node = self.events.next()
-                    if event == pulldom.CHARACTERS:
-                        txt = txt + node.wholeText
-                s = txt.strip().split()
-                data['hexagon'] = 'POLYGON((%s))' %  ','.join(map(' '.join, zip(s[::2], s[1::2])))
+            if doHexagons:
+                if _nextReceptorPoint and event == pulldom.START_ELEMENT and node.tagName == 'gml:posList':
+                    txt = ''
+                    while not event == pulldom.END_ELEMENT:
+                        # we have to wait for the END event as the SAX-parser may split CHARACTER events
+                        event, node = self.events.next()
+                        if event == pulldom.CHARACTERS:
+                            txt = txt + node.wholeText
+                    s = txt.strip().split()
+                    data['hexagon'] = 'POLYGON((%s))' %  ','.join(map(' '.join, zip(s[::2], s[1::2])))
                 
             if _nextReceptorPoint and event == pulldom.START_ELEMENT and node.tagName == 'imaer:Result':
                 type = node.getAttribute('resultType')

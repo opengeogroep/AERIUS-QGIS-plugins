@@ -30,6 +30,7 @@ import resources_rc
 from imaer_reader_dialog import ImaerReaderDialog
 from progress_dialog import ProgressDialog
 import os.path
+import time
 
 import imaerread as IR
 
@@ -201,6 +202,7 @@ class ImaerReader:
         result = self.dlg.exec_()
         if result:
            
+            t0 = time.time()
             #self.progress = ProgressDialog()
             #self.progress.show()
             #self.progress.progressBar.maximum = 0
@@ -221,32 +223,19 @@ class ImaerReader:
                 (self.hexagonLayer, self.hexagonProvider) = self.createLayer(dim=2, name="imaer hexagons")
 
             
-            ft = featureCollection.nextFeature()
+            ft = featureCollection.nextFeature(doPoints=self.doPoint, doHexagons=self.doHexagon)
             while ft:
                 self.featureCount += 1
                 #self.log(ft['hexagon'])
                 #self.updateFeatureCounter()
                 
-                feat = QgsFeature()
-                if self.doHexagon:
-                    feat.setGeometry(QgsGeometry.fromWkt(ft['hexagon']))
-                else:
-                    feat.setGeometry(QgsGeometry.fromWkt(ft['point']))
-                
-                featureAttributes = [ft['id']]
-                for attr in self.attributes:
-                    try:
-                        featureAttributes.append(ft[attr])
-                    except:
-                        featureAttributes.append(None)
-                #self.log(str(featureAttributes))
-                feat.setAttributes(featureAttributes)
-        
                 if self.doPoint:
+                    feat = self.getFeature(ft, dim=0)
                     self.pointProvider.addFeatures([feat])
                 if self.doHexagon:
+                    feat = self.getFeature(ft, dim=2)
                     self.hexagonProvider.addFeatures([feat])
-            
+        
                 ft = featureCollection.nextFeature()
             
             #self.progress.progressBar.maximum = 100
@@ -255,6 +244,11 @@ class ImaerReader:
             
             canvas = iface.mapCanvas()
             #hexagonQml = os.path.join(self.plugin_dir,'imaer_hexagon.qml')
+            if self.doHexagon:
+                self.hexagonLayer.updateExtents()
+                #self.hexagonLayer.loadNamedStyle(hexagonQml)
+                QgsMapLayerRegistry.instance().addMapLayer(self.hexagonLayer)
+                canvas.setExtent(self.hexagonLayer.extent())
             if self.doPoint:
                 self.pointLayer.updateExtents()
                 # TODO: create some point style too
@@ -262,12 +256,26 @@ class ImaerReader:
                 QgsMapLayerRegistry.instance().addMapLayer(self.pointLayer)
                 if not self.doHexagon:
                     canvas.setExtent(self.pointLayer.extent())
-            if self.doHexagon:
-                self.hexagonLayer.updateExtents()
-                #self.hexagonLayer.loadNamedStyle(hexagonQml)
-                QgsMapLayerRegistry.instance().addMapLayer(self.hexagonLayer)
-                canvas.setExtent(self.hexagonLayer.extent())
+
+            self.log('import time: ' + str(time.time() - t0) + ' sec')
                 
+    def getFeature(self, ft, dim=2):
+        feat = QgsFeature()
+        if dim == 2:
+            feat.setGeometry(QgsGeometry.fromWkt(ft['hexagon']))
+        else:
+            feat.setGeometry(QgsGeometry.fromWkt(ft['point']))
+        featureAttributes = [ft['id']]
+        for attr in self.attributes:
+            try:
+                featureAttributes.append(ft[attr])
+            except:
+                featureAttributes.append(None)
+        #self.log(str(featureAttributes))
+        feat.setAttributes(featureAttributes)
+        return feat
+        
+
     def createLayer(self, dim=2, name="imaer layer"):
         # create layer
         if dim == 2:
