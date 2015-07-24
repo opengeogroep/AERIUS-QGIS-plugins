@@ -52,13 +52,13 @@
 <p>This plug in for QGIS is meant to be a demonstrator. It is designed to be easily extensible and adaptable. Therefore the plug-in is split in two main parts:</p>
 <ul class="simple">
 <li>the <tt class="docutils literal"><span class="pre">imaerread</span></tt> module which handles the import of IMAER gml</li>
-<li>the <tt class="docutils literal"><span class="pre">ImaerReader</span></tt> module which provides the QGIS user interface and receives data to the imaerread module</li>
+<li>the <tt class="docutils literal"><span class="pre">imaer_reader</span></tt> module which provides the QGIS user interface and receives data from the imaerread module</li>
 </ul>
 </div>
 <div class="section" id="imaerread-module">
 <h2>imaerread module<a class="headerlink" href="#imaerread-module" title="Permalink to this headline">¶</a></h2>
-<p>The imaerread module reads IMAER gml on the basis of passed in data. The module can be imported and used stand alone. Therefore it provides a basis for extending GIS (or other) software with the capability to write valid IMAER gml.</p>
-<p>The module has no dependencies outside of the Python core libraries. Only generic Emission Sources are supported.</p>
+<p>The imaerread module reads IMAER gml and passes its features. The module can be imported and used stand alone. Therefore it provides a basis for extending GIS (or other) software with the capability to read AERIUS IMAER output.</p>
+<p>The module has no dependencies outside of the Python core libraries.</p>
 <div class="section" id="basic-usage">
 <h3>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h3>
 <p>Reading IMAER gml from python by using the imaerread module is simple:</p>
@@ -70,11 +70,42 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="n">ir</span> <span class="o">=</span> <span class="n">ImaerRead</span><span class="p">(</span><span class="n">gmlFile</span> <span class="o">=</span> <span class="s">&#39;filename.gml&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">...</p>
+<p>The gml file contains an unknown number of ReceptorPoint features. The nextFeature() function finds the next, parses it and returns a imaer feature object:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ft</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">nextFeature</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>It uses the pulldom parser from the standard xml library, because the gml files can be too large to fit in memory.</p>
+<p>The features that are returned are python dictionaries with this structure:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">u&#39;id&#39;</span><span class="p">:</span> <span class="s">u&#39;3204036&#39;</span><span class="p">,</span>
+  <span class="s">u&#39;DEP_NH3&#39;</span><span class="p">:</span> <span class="mf">0.0502</span><span class="p">,</span>
+  <span class="s">u&#39;DEP_NOX&#39;</span><span class="p">:</span> <span class="mf">0.0123</span><span class="p">,</span>
+  <span class="s">u&#39;DEP_NO2&#39;</span><span class="p">:</span> <span class="mf">0.0456</span><span class="p">,</span>
+  <span class="s">u&#39;DEP_PM10&#39;</span><span class="p">:</span> <span class="mf">0.6783</span><span class="p">,</span>
+  <span class="s">u&#39;DEP_PM25&#39;</span><span class="p">:</span> <span class="mf">0.354</span><span class="p">,</span>
+  <span class="s">u&#39;CON_NH3&#39;</span><span class="p">:</span> <span class="mf">0.0789</span><span class="p">,</span>
+  <span class="s">u&#39;CON_NOX&#39;</span><span class="p">:</span> <span class="mf">0.0234</span><span class="p">,</span>
+  <span class="s">u&#39;CON_NO2&#39;</span><span class="p">:</span> <span class="mf">0.0567</span><span class="p">,</span>
+  <span class="s">u&#39;CON_PM10&#39;</span><span class="p">:</span> <span class="mf">0.0678</span><span class="p">,</span>
+  <span class="s">u&#39;CON_PM25&#39;</span><span class="p">:</span> <span class="mf">0.0345</span><span class="p">,</span>
+  <span class="s">u&#39;point&#39;</span><span class="p">:</span> <span class="s">u&#39;POINT(148871.0 409361.0)&#39;</span><span class="p">,</span>
+  <span class="s">u&#39;hexagon&#39;</span><span class="p">:</span> <span class="s">u&#39;POLYGON((148902.0 409415.0,148933.0 409361.0,148902.0 409307.0,148840.0 409307.0,148809.0 409361.0,148840.0 409415.0,148902.0 409415.0))&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For efficiency, you can parse the parameters doPoints=False or doHexagons=False to prevent processing geometry you do not need. The returning object lacks the point or hexagon information.</p>
+<p>Both point and and hexagon are returned in well known text (WKT) format to be parsed in most GIS libraries.</p>
 </div>
 </div>
+<div class="section" id="imaer-reader-module">
+<h2>imaer_reader module<a class="headerlink" href="#imaer-reader-module" title="Permalink to this headline">¶</a></h2>
+<p>The ImaerWriter module has a standard QGIS plug-in setup. The basics were generated using the QGIS plugin builder plugin.</p>
+<ul class="simple">
+<li>It provides a user interface (GUI) for the imaerread module.</li>
+<li>It creates memory layers based on the imaer gml data.</li>
+</ul>
+<p>The GUI was created with Qt4 Designer.</p>
+<p>Source code van be found on <a class="reference external" href="https://github.com/opengeogroep/AERIUS-QGIS-plugins/">github</a>. Any issues can also be reported there.</p>
 </div>
 </div>
 
@@ -92,6 +123,7 @@
 <li><a class="reference internal" href="#basic-usage">Basic usage</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#imaer-reader-module">imaer_reader module</a></li>
 </ul>
 </li>
 </ul>

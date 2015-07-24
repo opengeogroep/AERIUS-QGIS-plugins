@@ -30,7 +30,7 @@ class ImaerRead():
             if event == pulldom.START_ELEMENT and node.tagName == 'imaer:ReceptorPoint':
                 id = node.getAttribute('receptorPointId')
                 data = {}
-                data['id'] = id
+                data[u'id'] = id
                 _nextReceptorPoint = True
             
             if doPoints:
@@ -42,7 +42,7 @@ class ImaerRead():
                         event, node = self.events.next()
                         if event == pulldom.CHARACTERS:
                             txt = txt + node.wholeText
-                    data['point'] = 'POINT(%s)' % txt
+                    data[u'point'] = 'POINT(%s)' % txt
 
             if doHexagons:
                 if _nextReceptorPoint and event == pulldom.START_ELEMENT and node.tagName == 'gml:posList':
@@ -53,7 +53,7 @@ class ImaerRead():
                         if event == pulldom.CHARACTERS:
                             txt = txt + node.wholeText
                     s = txt.strip().split()
-                    data['hexagon'] = 'POLYGON((%s))' %  ','.join(map(' '.join, zip(s[::2], s[1::2])))
+                    data[u'hexagon'] = 'POLYGON((%s))' %  ','.join(map(' '.join, zip(s[::2], s[1::2])))
                 
             if _nextReceptorPoint and event == pulldom.START_ELEMENT and node.tagName == 'imaer:Result':
                 type = node.getAttribute('resultType')
@@ -76,3 +76,10 @@ class ImaerRead():
             except:
                 event = False
         return False
+    
+    def __del__(self):
+        """Close gml file when cleaning up instance"""
+        try:
+            self.gmlFile.close()
+        except:
+            pass 

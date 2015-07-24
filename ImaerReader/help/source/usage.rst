@@ -13,13 +13,13 @@ Preparing your data
 
 When the AERIUS Calculator has finished it will send you an email with a link to a zip file. Download the the zip file and unzip it anywhere on your system. The unzipped file will have a name similar to this: AERIUS_Calculator_20150624160359_0_Situation1.gml.
 
-Depending on the input, the file will contain one or more calculated values of the following emissions on different locations:
+Depending on the input, the file will contain one or more calculated values of the following depositions on different locations:
 
-  - NH3
-  - NO2
-  - NOx
-  - PM10
-  - PM25
+- NH3
+- NO2
+- NOx
+- PM10
+- PM25
 
 Locations are both available as points (x,y) or hexagons (six sided polygons).
 

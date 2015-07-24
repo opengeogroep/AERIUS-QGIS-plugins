@@ -219,16 +219,16 @@ class ImaerReader:
             
             #create layers
             if self.doPoint:
-                (self.pointLayer, self.pointProvider) = self.createLayer(dim=0, name="imaer points")
+                (self.pointLayer, self.pointProvider) = self.createLayer(dim=0, name="Depositie rekenpunt")
             if self.doHexagon:
-                (self.hexagonLayer, self.hexagonProvider) = self.createLayer(dim=2, name="imaer hexagons")
+                (self.hexagonLayer, self.hexagonProvider) = self.createLayer(dim=2, name="Depositie rekenpunt")
 
             # create features
             ft = featureCollection.nextFeature(doPoints=self.doPoint, doHexagons=self.doHexagon)
             while ft:
                 self.featureCount += 1
                 #self.updateFeatureCounter()
-                
+                self.log(ft)
                 if self.doPoint:
                     feat = self.getFeature(ft, dim=0)
                     self.pointProvider.addFeatures([feat])
@@ -261,7 +261,14 @@ class ImaerReader:
             self.log('import time: ' + str(time.time() - t0) + ' sec')
                 
     def getFeature(self, ft, dim=2):
-        """Creates a QGIS feature from a feature returned by the imaerread parser"""
+        """Creates a QGIS feature from a feature returned by the imaerread parser
+
+        :param ft: feature returned by the imaerread parser
+        :type ft: dict
+
+        :param dim: dimension of the geometry
+        :type dim: int
+        """
         feat = QgsFeature()
         if dim == 2:
             feat.setGeometry(QgsGeometry.fromWkt(ft['hexagon']))
@@ -279,7 +286,14 @@ class ImaerReader:
         
 
     def createLayer(self, dim=2, name="imaer layer"):
-        """Creates a map layer of polygon (2) or point (0) type, and returns both the layer and the provider as a tuple."""
+        """Creates a map layer of polygon (2) or point (0) type, and returns both the layer and the provider as a tuple.
+
+        :param dim: dimension of the geometry
+        :type dim: int
+
+        :param name: layer name (defaults to 'imaer layer'
+        :type ft: str
+        """
         # create layer
         if dim == 2:
             vl = QgsVectorLayer("Polygon?crs=EPSG:28992", name, "memory")
