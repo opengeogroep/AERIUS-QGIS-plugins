@@ -228,7 +228,6 @@ class ImaerReader:
             while ft:
                 self.featureCount += 1
                 #self.updateFeatureCounter()
-                self.log(ft)
                 if self.doPoint:
                     feat = self.getFeature(ft, dim=0)
                     self.pointProvider.addFeatures([feat])
