@@ -8,12 +8,12 @@
 
 [general]
 name=ImaerReader
+email=info@opengeogroep.nl
+author=OpenGeoGroep
 qgisMinimumVersion=2.0
 description=Import gml conform to the imaer schema output by the AERIUS calculator
-version=0.1
-author=OpenGeoGroep
-email=info@opengeogroep.nl
-
+about=The plugin reads IMAER gml output from the AERIUS Calculator.
+version=version 0.1
 # End of mandatory metadata
 
 # Recommended items:
@@ -25,7 +25,7 @@ email=info@opengeogroep.nl
 tags=imaer,aerius
 
 homepage=
-tracker=
+tracker=https://github.com/opengeogroep/AERIUS-QGIS-plugins/issues
 repository=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 category=Plugins
 icon=icon.png

@@ -9,8 +9,9 @@
 [general]
 name=ImaerWriter
 qgisMinimumVersion=2.4
-description=Export gml conform to the imaer schema to use in AERIUS Calculator or AERIUS Connect
-version=1.0
+description=Export gml input for AERIUS Calculator or AERIUS Connect
+about=Export gml conform to the imaer schema to use in AERIUS Calculator or AERIUS Connect.
+version=version 1.0
 author=OpenGeoGroep
 email=info@opengeogroep.nl
 
@@ -25,8 +26,8 @@ email=info@opengeogroep.nl
 tags=
 
 homepage=
-tracker=
-repository=
+tracker=https://github.com/opengeogroep/AERIUS-QGIS-plugins/issues
+repository=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 category=Plugins
 icon=icon.png
 # experimental flag
