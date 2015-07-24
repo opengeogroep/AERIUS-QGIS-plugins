@@ -22,11 +22,11 @@ email=info@opengeogroep.nl
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=
+tags=imaer,aerius
 
 homepage=
 tracker=
-repository=
+repository=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 category=Plugins
 icon=icon.png
 # experimental flag
