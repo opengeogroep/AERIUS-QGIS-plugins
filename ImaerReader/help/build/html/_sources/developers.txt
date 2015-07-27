@@ -66,7 +66,8 @@ The ImaerWriter module has a standard QGIS plug-in setup. The basics were genera
 
 The GUI was created with Qt4 Designer.
 
-Source code van be found on `github <https://github.com/opengeogroep/AERIUS-QGIS-plugins/>`_. Any issues can also be reported there.
+Source code van be found on `github <https://github.com/opengeogroep/AERIUS-QGIS-plugins/>`_. Any issues can also be reported there. There are also some demo files available there.
+
 
 
 

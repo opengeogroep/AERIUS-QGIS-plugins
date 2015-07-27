@@ -26,9 +26,10 @@ from qgis.core import *
 from qgis.utils import *
 # Initialize Qt resources from file resources.py
 import resources_rc
+#import ogg_rc
 # Import the code for the dialogs
 from imaer_reader_dialog import ImaerReaderDialog
-from progress_dialog import ProgressDialog
+#from progress_dialog import ProgressDialog
 
 import imaerread as IR
 
@@ -324,5 +325,5 @@ class ImaerReader:
     
     def showHelp(self):
         """Reacts on help button"""
-        showPluginHelp(filename = 'help/build/html/index')    
+        showPluginHelp(filename = 'help/html/index')    
         

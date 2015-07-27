@@ -46,11 +46,12 @@ PLUGINNAME = ImaerReader
 PY_FILES = \
 	imaer_reader.py \
 	imaer_reader_dialog.py \
-	__init__.py
+	__init__.py \
+	imaerread.py
 
-UI_FILES = imaer_reader_dialog_base.ui, progress_dialog.ui
+UI_FILES = imaer_reader_dialog_base.ui#, progress_dialog.ui
 
-EXTRAS = icon.png metadata.txt
+EXTRAS = icon.png metadata.txt ogg-logo_64x64.png
 
 COMPILED_RESOURCE_FILES = resources_rc.py
 
