@@ -220,23 +220,50 @@ class ImaerReader:
             
             #create layers
             if self.doPoint:
-                (self.pointLayer, self.pointProvider) = self.createLayer(dim=0, name="Depositie rekenpunt")
+                (self.pointLayer, self.pointProvider) = self.createLayer(dim=0, name="Deposition calculation point")
+                pointFeatures = []
             if self.doHexagon:
-                (self.hexagonLayer, self.hexagonProvider) = self.createLayer(dim=2, name="Depositie hexagoon")
+                (self.hexagonLayer, self.hexagonProvider) = self.createLayer(dim=2, name="Deposition hexagon")
+                hexagonFeatures = []
+            t00 = time.time()
+            every = 1000
+
 
             # create features
             ft = featureCollection.nextFeature(doPoints=self.doPoint, doHexagons=self.doHexagon)
             while ft:
                 self.featureCount += 1
                 #self.updateFeatureCounter()
-                if self.doPoint:
-                    feat = self.getFeature(ft, dim=0)
-                    self.pointProvider.addFeatures([feat])
-                if self.doHexagon:
-                    feat = self.getFeature(ft, dim=2)
-                    self.hexagonProvider.addFeatures([feat])
-        
+                if ft is not None:
+                    if self.doPoint:
+                        feat = self.getFeature(ft, dim=0)
+                        pointFeatures.append(feat)
+                    if self.doHexagon:
+                        feat = self.getFeature(ft, dim=2)
+                        hexagonFeatures.append(feat)
+
+       
+                if self.featureCount % every == 0:
+                    if self.doPoint:
+                        self.pointProvider.addFeatures(pointFeatures)
+                        pointFeatures = []
+                    if self.doHexagon:
+                        self.hexagonProvider.addFeatures(hexagonFeatures)
+                        hexagonFeatures = []
+                
+                #    t = time.time() - t00
+                #    t00 = time.time()
+                #    fps = round(every / t, 1)
+                #    l = str(self.featureCount) + ': ' + str(fps) + ' fps'
+                #    self.log(l)
+                
                 ft = featureCollection.nextFeature()
+
+            if self.doPoint:
+                self.pointProvider.addFeatures(pointFeatures)
+            if self.doHexagon:
+                self.hexagonProvider.addFeatures(hexagonFeatures)
+
             
             #self.progress.progressBar.maximum = 100
             #self.progress.progressBar.value = 100
@@ -245,8 +272,8 @@ class ImaerReader:
             # add layers to map
             canvas = iface.mapCanvas()
             if self.doHexagon:
-                #hexagonQml = os.path.join(self.plugin_dir,'imaer_hexagon.qml')
-                #self.hexagonLayer.loadNamedStyle(hexagonQml)
+                hexagonQml = os.path.join(self.plugin_dir,'imaer_hexagon.qml')
+                self.hexagonLayer.loadNamedStyle(hexagonQml)
                 self.hexagonLayer.updateExtents()
                 QgsMapLayerRegistry.instance().addMapLayer(self.hexagonLayer)
                 canvas.setExtent(self.hexagonLayer.extent())
@@ -258,7 +285,10 @@ class ImaerReader:
                 if not self.doHexagon:
                     canvas.setExtent(self.pointLayer.extent())
 
-            self.log('import time: ' + str(time.time() - t0) + ' sec')
+            self.log('import time: ' + str(round(time.time() - t0, 2)) + ' sec (' + str(self.featureCount) + ' features)')
+            #fps = round(self.featureCount / (time.time() - t0), 1)
+            #l = str(self.featureCount) + ': ' + str(fps) + ' fps'
+            #self.log(l)
                 
     def getFeature(self, ft, dim=2):
         """Creates a QGIS feature from a feature returned by the imaerread parser
@@ -325,5 +355,5 @@ class ImaerReader:
     
     def showHelp(self):
         """Reacts on help button"""
-        showPluginHelp(filename = 'help/html/index')    
+        showPluginHelp(filename = 'help/index.html')
         

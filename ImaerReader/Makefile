@@ -49,9 +49,13 @@ PY_FILES = \
 	__init__.py \
 	imaerread.py
 
-UI_FILES = imaer_reader_dialog_base.ui#, progress_dialog.ui
+UI_FILES = imaer_reader_dialog_base.ui \
+    progress_dialog.ui
 
-EXTRAS = icon.png metadata.txt ogg-logo_64x64.png
+EXTRAS = icon.png metadata.txt \
+    ogg-logo_64x64.png \
+    imaer_hexagon.qml \
+    README.md
 
 COMPILED_RESOURCE_FILES = resources_rc.py
 

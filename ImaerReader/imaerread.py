@@ -32,7 +32,7 @@ class ImaerRead():
                 data = {}
                 data[u'id'] = id
                 _nextReceptorPoint = True
-            
+
             if doPoints:
                 if _nextReceptorPoint and event == pulldom.START_ELEMENT and node.tagName == 'gml:pos':
                     txt = ''
@@ -70,7 +70,6 @@ class ImaerRead():
                 # we have a complete feature
                 self.numFeatures = self.numFeatures + 1
                 return data
-                
             try:
                 event, node = self.events.next()
             except:
