@@ -41,7 +41,7 @@
        <x>10</x>
        <y>10</y>
        <width>421</width>
-       <height>61</height>
+       <height>62</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout">
@@ -183,11 +183,11 @@
       </property>
      </widget>
     </widget>
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="label_ogg">
      <property name="geometry">
       <rect>
-       <x>800</x>
-       <y>0</y>
+       <x>790</x>
+       <y>10</y>
        <width>71</width>
        <height>61</height>
       </rect>
@@ -196,7 +196,7 @@
       <string>OpenGeoGroep</string>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;http://www.opengeogroep.nl/&quot;&gt;&lt;img src=&quot;:/plugins/ImaerWriter/OGG-logo2012_zondertekst_160x160_transp.png&quot;/&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;http://www.opengeogroep.nl/&quot;&gt;&lt;img src=&quot;:/plugins/ImaerReader/ogg-logo_64x64.png&quot;/&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
@@ -204,7 +204,7 @@
     </widget>
     <zorder>pointGroupBox</zorder>
     <zorder>formLayoutWidget_3</zorder>
-    <zorder>label_3</zorder>
+    <zorder>label_ogg</zorder>
    </widget>
    <widget class="QWidget" name="lineTab">
     <attribute name="title">
@@ -216,7 +216,7 @@
        <x>10</x>
        <y>10</y>
        <width>421</width>
-       <height>61</height>
+       <height>62</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout_2">
@@ -367,7 +367,7 @@
        <x>10</x>
        <y>10</y>
        <width>421</width>
-       <height>61</height>
+       <height>62</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout_3">
@@ -548,7 +548,7 @@
       <item>
        <widget class="QPushButton" name="fileBrowseButton">
         <property name="text">
-         <string>Browse</string>
+         <string>Browse...</string>
         </property>
        </widget>
       </item>
@@ -592,30 +592,13 @@
     <string>Show help page</string>
    </property>
    <property name="text">
-    <string>Help</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>810</x>
-     <y>50</y>
-     <width>71</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>OpenGeoGroep</string>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;http://www.opengeogroep.nl/&quot;&gt;&lt;img src=&quot;:/plugins/ImaerWriter/OGG-logo2012_zondertekst_160x160_transp.png&quot;/&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="openExternalLinks">
-    <bool>true</bool>
+    <string>Help...</string>
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>cancel_save_button_box</sender>

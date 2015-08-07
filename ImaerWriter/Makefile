@@ -44,13 +44,16 @@ SOURCES = \
 PLUGINNAME = ImaerWriter
 
 PY_FILES = \
+	imaerwrite.py \
 	ImaerWriter.py \
 	ImaerWriter_dialog.py \
 	__init__.py
 
 UI_FILES = ImaerWriter_dialog_base.ui
 
-EXTRAS = icon.png metadata.txt
+EXTRAS = icon.png metadata.txt \
+    ogg-logo_64x64.png \
+    README.md
 
 COMPILED_RESOURCE_FILES = resources_rc.py
 

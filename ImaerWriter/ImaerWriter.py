@@ -501,7 +501,7 @@ class ImaerWriter:
             
     def showHelp(self):
         """Reacts on help button"""
-        qgis.utils.showPluginHelp(filename = 'help/build/html/index')
+        qgis.utils.showPluginHelp(filename = 'help/index')
         
     def showOGG(self):
         """Shows ogg website on clicking the logo"""

@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/plugins/ImaerWriter" >
         <file>icon.png</file>
-        <file>OGG-logo2012_zondertekst_160x160_transp.png</file>
+        <file>ogg-logo_64x64.png</file>
     </qresource>
 </RCC>
