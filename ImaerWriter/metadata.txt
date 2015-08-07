@@ -7,7 +7,7 @@
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=ImaerWriter
+name=IMAERwriter
 qgisMinimumVersion=2.4
 description=Export gml input for AERIUS Calculator or AERIUS Connect
 about=Export gml conform to the imaer schema to use in AERIUS Calculator or AERIUS Connect.

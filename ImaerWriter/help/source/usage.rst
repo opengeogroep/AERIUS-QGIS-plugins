@@ -40,7 +40,7 @@ The following properties are *optional*:
   - spread
   - diurnalVariation
 
-For a full understanding of the data required by AERIUS and modeled in IMAER gml please refer to the documentation at: https://www.aerius.nl/nl/factsheets/release/aerius-connect
+For a full understanding of the IMAER datamodel, check the IMAER factsheets at: https://www.aerius.nl
 
 Exporting your data
 -------------------
@@ -56,6 +56,4 @@ When you are done mapping the attributes you can select a file to save to and cl
 
 Using your gml
 --------------
-The IMAER gml you created can be imported by the IMAER Calculator (https://calculator.aerius.nl/calculator/) when containing less then 100 Emission Sources. 
-
-If your gml contains more than 100 Emission sources you'll have to use the IMAER Connect calculation service. This service is accessible via an API documented at https://www.aerius.nl/nl/factsheets/api-voor-aerius-calculator/ .
+The IMAER gml you created can be imported in AERIUS Calculator or AERIUS Connect (API). See https://www.aerius.nl for more details.
