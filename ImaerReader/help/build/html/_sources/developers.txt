@@ -27,7 +27,7 @@ Create a reader object by providing a filename::
 
     ir = ImaerRead(gmlFile = 'filename.gml')
 
-The gml file contains an unknown number of ReceptorPoint features. The nextFeature() function finds the next, parses it and returns a imaer feature object::
+The gml file contains an unknown number of ReceptorPoint features. The nextFeature() function finds the next, parses it and returns an imaer feature object::
 
     ft = ir.nextFeature()
     
