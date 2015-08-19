@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Developers &mdash; ImaerReader 0.1 documentation</title>
+    <title>Developers &mdash; IMAERreader 1.1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1',
+        VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="ImaerReader 0.1 documentation" href="index.html" />
+    <link rel="top" title="IMAERreader 1.1 documentation" href="index.html" />
     <link rel="prev" title="Usage" href="usage.html" /> 
   </head>
   <body>
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="usage.html" title="Usage"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ImaerReader 0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">IMAERreader 1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -49,10 +49,11 @@
 <h1>Developers<a class="headerlink" href="#developers" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="general-setup">
 <h2>General setup<a class="headerlink" href="#general-setup" title="Permalink to this headline">¶</a></h2>
-<p>This plug in for QGIS is meant to be a demonstrator. It is designed to be easily extensible and adaptable. Therefore the plug-in is split in two main parts:</p>
+<p>This plug in for QGIS is meant to be a demonstrator. It is designed to be easily extensible and adaptable. Therefore the plug-in is split in three main parts:</p>
 <ul class="simple">
 <li>the <tt class="docutils literal"><span class="pre">imaerread</span></tt> module which handles the import of IMAER gml</li>
 <li>the <tt class="docutils literal"><span class="pre">imaer_reader</span></tt> module which provides the QGIS user interface and receives data from the imaerread module</li>
+<li>the <tt class="docutils literal"><span class="pre">worker</span></tt> module which provides a worker to read and parse features in a different thread</li>
 </ul>
 </div>
 <div class="section" id="imaerread-module">
@@ -89,12 +90,14 @@
   <span class="s">u&#39;CON_PM10&#39;</span><span class="p">:</span> <span class="mf">0.0678</span><span class="p">,</span>
   <span class="s">u&#39;CON_PM25&#39;</span><span class="p">:</span> <span class="mf">0.0345</span><span class="p">,</span>
   <span class="s">u&#39;point&#39;</span><span class="p">:</span> <span class="s">u&#39;POINT(148871.0 409361.0)&#39;</span><span class="p">,</span>
-  <span class="s">u&#39;hexagon&#39;</span><span class="p">:</span> <span class="s">u&#39;POLYGON((148902.0 409415.0,148933.0 409361.0,148902.0 409307.0,148840.0 409307.0,148809.0 409361.0,148840.0 409415.0,148902.0 409415.0))&#39;</span>
+  <span class="s">u&#39;hexagon&#39;</span><span class="p">:</span> <span class="s">u&#39;POLYGON((148902.0 409415.0,148933.0 409361.0,148902.0 409307.0,148840.0 409307.0,148809.0 409361.0,148840.0 409415.0,148902.0 409415.0))&#39;</span><span class="p">,</span>
+  <span class="s">u&#39;progress&#39;</span><span class="p">:</span> <span class="mf">0.54321</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>For efficiency, you can parse the parameters doPoints=False or doHexagons=False to prevent processing geometry you do not need. The returning object lacks the point or hexagon information.</p>
 <p>Both point and and hexagon are returned in well known text (WKT) format to be parsed in most GIS libraries.</p>
+<p>The &#8216;progress&#8217; indicates is a float value between 0 and 1 and indicates how much of the file has been read. It could be used to show a progress bar or estimate the time left for importing all data.</p>
 </div>
 </div>
 <div class="section" id="imaer-reader-module">
@@ -105,7 +108,12 @@
 <li>It creates memory layers based on the imaer gml data.</li>
 </ul>
 <p>The GUI was created with Qt4 Designer.</p>
-<p>Source code van be found on <a class="reference external" href="https://github.com/opengeogroep/AERIUS-QGIS-plugins/">github</a>. Any issues can also be reported there. There are also some demo files available there.</p>
+<p>Source code can be found on <a class="reference external" href="https://github.com/opengeogroep/AERIUS-QGIS-plugins/">github</a>. Any issues can also be reported there. There are also some demo files available.</p>
+</div>
+<div class="section" id="worker-module">
+<h2>worker module<a class="headerlink" href="#worker-module" title="Permalink to this headline">¶</a></h2>
+<p>Iterates over the features in the featurecollection, creates QGIS features from them and adds those to the layer. This is done in a worker object that runs in a different thread to avoid freezing QGIS during reading. Note that reading large gml files can take up several minutes.</p>
+<p>The worker object is created and started from <tt class="docutils literal"><span class="pre">imaer_reader_dialog.py</span></tt>, that also draws the progress bar and other user interaction like info enad error messages.</p>
 </div>
 </div>
 
@@ -124,6 +132,7 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#imaer-reader-module">imaer_reader module</a></li>
+<li><a class="reference internal" href="#worker-module">worker module</a></li>
 </ul>
 </li>
 </ul>
@@ -162,7 +171,7 @@
         <li class="right" >
           <a href="usage.html" title="Usage"
              >previous</a> |</li>
-        <li><a href="index.html">ImaerReader 0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">IMAERreader 1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

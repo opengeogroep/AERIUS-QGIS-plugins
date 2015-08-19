@@ -31,7 +31,9 @@ The interface is very straight forward. Browse to the gml file you just saved on
 
 Press OK to start importing.
 
-In case of large files, QGIS might freeze for a while. Just be patient and wait for your layer to appear on the map. The plugin automatically zooms in to your data extent.
+A progress bar on the top of your screen shows you the file is being processed. It also provides a ``cancel`` button to quit the process while reading. When finished reading (or cancelled), the plugin automatically zooms in to your data extent.
+
+For hexagon layers, a legend will be automatically applied to your layer. It will use the first non NULL column in the attribute table to style your feature. You can change this in the Layer Style editor by picking another column.
 
 Saving your data 
 ----------------

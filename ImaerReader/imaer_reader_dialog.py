@@ -23,7 +23,13 @@
 
 import os
 
-from PyQt4 import QtGui, uic
+from worker import Worker
+from qgis.utils import iface
+from qgis.gui import QgsMessageBar
+from qgis.core import QgsMessageLog
+
+from PyQt4 import QtGui, QtCore, uic
+
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'imaer_reader_dialog_base.ui'))
@@ -38,4 +44,65 @@ class ImaerReaderDialog(QtGui.QDialog, FORM_CLASS):
         # self.<objectname>, and you can use autoconnect slots - see
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
-        self.setupUi(self)
+        self.setupUi(self)  
+        self.iface = iface
+
+    def startWorker(self, featureCollection, attributes, pointProvider=None, hexagonProvider=None):
+        # create a new worker instance
+        worker = Worker(featureCollection, attributes, pointProvider, hexagonProvider)
+        
+
+        # configure the QgsMessageBar
+        messageBar = self.iface.messageBar().createMessage('Reading IMAER data...', )
+        progressBar = QtGui.QProgressBar()
+        progressBar.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        progressBar.setMinimum(0)
+        progressBar.setMaximum(100)
+        progressBar.setTextVisible(True)
+        cancelButton = QtGui.QPushButton()
+        cancelButton.setText('Cancel')
+        cancelButton.clicked.connect(worker.kill)
+        messageBar.layout().addWidget(progressBar)
+        messageBar.layout().addWidget(cancelButton)
+        self.iface.messageBar().pushWidget(messageBar, self.iface.messageBar().INFO)
+        self.messageBar = messageBar
+        self.progressBar = progressBar
+
+        # start the worker in a new thread
+        thread = QtCore.QThread(self)
+        worker.moveToThread(thread)
+        worker.finished.connect(self.workerFinished)
+        worker.error.connect(self.workerError)
+        worker.progress.connect(self.updateProgress)
+        thread.started.connect(worker.run)
+        thread.start()
+        self.thread = thread
+        self.worker = worker
+
+    def workerFinished(self, ret):
+        # clean up the worker and thread
+        self.worker.deleteLater()
+        self.thread.quit()
+        self.thread.wait()
+        self.thread.deleteLater()
+        # remove widget from message bar
+        self.iface.messageBar().popWidget(self.messageBar)
+        if ret is not None:
+            self.iface.messageBar().pushMessage('{cnt} features imported'.format(cnt=ret), duration=5)
+        else:
+            # notify the user that something went wrong
+            self.iface.messageBar().pushMessage('Error! See the message log for more information.', level=QgsMessageBar.CRITICAL, duration=5)
+        self.workerEnd.emit()
+
+
+    def workerError(self, e, exception_string):
+        QgsMessageLog.logMessage('Worker thread raised an exception:\n'.format(exception_string), level=QgsMessageLog.CRITICAL)
+        
+    def updateProgress(self, p):
+        self.progressBar.setValue(p)
+    
+    # signal 
+    workerEnd = QtCore.pyqtSignal()
+    
+
+    

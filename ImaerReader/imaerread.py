@@ -1,4 +1,5 @@
 from xml.dom import pulldom
+import os
 
 # constants
 _resultTypes = ['CONCENTRATION','DEPOSITION']
@@ -9,7 +10,9 @@ class ImaerRead():
        from which features can be fetched with the nextFeature Method'''
     def __init__(self, gmlFile):
         self.gmlFile = gmlFile
-        _gml = open(gmlFile)
+        _gml = open(gmlFile,'rb')
+        self.gml = _gml
+        self._filesize = float(os.fstat(_gml.fileno()).st_size)
         self.events = pulldom.parse(_gml)
         self.numFeatures = 0
 
@@ -69,6 +72,10 @@ class ImaerRead():
             if event == pulldom.END_ELEMENT and node.tagName == 'imaer:ReceptorPoint':
                 # we have a complete feature
                 self.numFeatures = self.numFeatures + 1
+                # calculate parse progress by readposition and filesize
+                pos = self.gml.tell()
+                data[u'progress'] = pos / self._filesize
+
                 return data
             try:
                 event, node = self.events.next()

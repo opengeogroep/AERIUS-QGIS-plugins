@@ -20,21 +20,22 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt4.QtCore import *
 from PyQt4.QtGui import QAction, QIcon, QFileDialog, QDialogButtonBox
-from qgis.core import *
-from qgis.utils import *
+from PyQt4 import QtCore
+from PyQt4.QtCore import *
+
+from qgis.core import QgsVectorLayer, QgsField, QgsMapLayerRegistry, QgsMessageLog
+from qgis.utils import iface, showPluginHelp
 # Initialize Qt resources from file resources.py
 import resources_rc
-#import ogg_rc
 # Import the code for the dialogs
 from imaer_reader_dialog import ImaerReaderDialog
-#from progress_dialog import ProgressDialog
-
+# Import the generic imaerread module
 import imaerread as IR
 
 import os.path
 import time
+
 
 class ImaerReader:
     """QGIS Plugin Implementation."""
@@ -69,18 +70,21 @@ class ImaerReader:
         # Create the dialog (after translation) and keep reference
         self.dlg = ImaerReaderDialog()
 
+        
         # add some necessary signal and slot communication as well as disable the save button for now              
         self.dlg.cancel_open_button_box.button(QDialogButtonBox.Open).setEnabled(False)
         QObject.connect(self.dlg.fileBrowseButton, SIGNAL("clicked()"), self.chooseFile)
         QObject.connect(self.dlg.gmlFileNameBox, SIGNAL("textChanged(QString)"), self.gmlFileNameBoxChanged)
         QObject.connect(self.dlg.help_pushButton, SIGNAL("clicked()"), self.showHelp)
+        self.dlg.workerEnd.connect(self.zoomToLayers)
+        
 
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&ImaerReader')
-        self.toolbar = self.iface.addToolBar(u'ImaerReader')
-        self.toolbar.setObjectName(u'ImaerReader')
+        self.menu = self.tr(u'&IMAERreader')
+        self.toolbar = self.iface.addToolBar(u'IMAERreader')
+        self.toolbar.setObjectName(u'IMAERreader')
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -95,7 +99,7 @@ class ImaerReader:
         :rtype: QString
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
-        return QCoreApplication.translate('ImaerReader', message)
+        return QCoreApplication.translate('IMAERreader', message)
 
 
     def add_action(
@@ -177,7 +181,7 @@ class ImaerReader:
         icon_path = ':/plugins/ImaerReader/icon.png'
         self.add_action(
             icon_path,
-            text=self.tr(u'Import imaer gml'),
+            text=self.tr(u'Import IMAER gml'),
             callback=self.run,
             parent=self.iface.mainWindow())
 
@@ -193,7 +197,8 @@ class ImaerReader:
         del self.toolbar
 
     def log(self, msg):
-        QgsMessageLog.logMessage(str(msg), 'ImaerReader', QgsMessageLog.INFO)
+        QgsMessageLog.logMessage(str(msg), 'IMAERreader', QgsMessageLog.INFO)
+
 
 
     def run(self):
@@ -203,117 +208,49 @@ class ImaerReader:
         # Run the dialog event loop
         result = self.dlg.exec_()
         if result:
-           
-            t0 = time.time()
-            #self.progress = ProgressDialog()
-            #self.progress.show()
-            #self.progress.progressBar.maximum = 0
-            #self.progress.progressBar.value = 0
-            self.featureCount = 0
-            #self.updateFeatureCounter()
-            
-            featureCollection = IR.ImaerRead(gmlFile = self.dlg.gmlFileNameBox.text())
-            self.attributes = featureCollection.AttributeFields
-            
             self.doPoint = self.dlg.point_checkBox.checkState()
             self.doHexagon = self.dlg.hexagon_checkBox.checkState()
+            # create new IMAER feature collection object 
+            featureCollection = IR.ImaerRead(gmlFile = self.dlg.gmlFileNameBox.text())
             
+            self.attributes = featureCollection.AttributeFields
+
             #create layers
             if self.doPoint:
                 (self.pointLayer, self.pointProvider) = self.createLayer(dim=0, name="Deposition calculation point")
-                pointFeatures = []
+            else:
+                self.pointProvider = None
             if self.doHexagon:
                 (self.hexagonLayer, self.hexagonProvider) = self.createLayer(dim=2, name="Deposition hexagon")
-                hexagonFeatures = []
-            t00 = time.time()
-            every = 1000
+            else:
+                self.hexagonProvider = None
 
-
-            # create features
-            ft = featureCollection.nextFeature(doPoints=self.doPoint, doHexagons=self.doHexagon)
-            while ft:
-                self.featureCount += 1
-                #self.updateFeatureCounter()
-                if ft is not None:
-                    if self.doPoint:
-                        feat = self.getFeature(ft, dim=0)
-                        pointFeatures.append(feat)
-                    if self.doHexagon:
-                        feat = self.getFeature(ft, dim=2)
-                        hexagonFeatures.append(feat)
-
-       
-                if self.featureCount % every == 0:
-                    if self.doPoint:
-                        self.pointProvider.addFeatures(pointFeatures)
-                        pointFeatures = []
-                    if self.doHexagon:
-                        self.hexagonProvider.addFeatures(hexagonFeatures)
-                        hexagonFeatures = []
-                
-                #    t = time.time() - t00
-                #    t00 = time.time()
-                #    fps = round(every / t, 1)
-                #    l = str(self.featureCount) + ': ' + str(fps) + ' fps'
-                #    self.log(l)
-                
-                ft = featureCollection.nextFeature()
-
-            if self.doPoint:
-                self.pointProvider.addFeatures(pointFeatures)
-            if self.doHexagon:
-                self.hexagonProvider.addFeatures(hexagonFeatures)
-
-            
-            #self.progress.progressBar.maximum = 100
-            #self.progress.progressBar.value = 100
-            #self.updateFeatureCounter()
+            # start worker for reading features in different thread 
+            self.dlg.startWorker(featureCollection, self.attributes, self.pointProvider, self.hexagonProvider)
             
             # add layers to map
             canvas = iface.mapCanvas()
             if self.doHexagon:
                 hexagonQml = os.path.join(self.plugin_dir,'imaer_hexagon.qml')
                 self.hexagonLayer.loadNamedStyle(hexagonQml)
-                self.hexagonLayer.updateExtents()
                 QgsMapLayerRegistry.instance().addMapLayer(self.hexagonLayer)
-                canvas.setExtent(self.hexagonLayer.extent())
             if self.doPoint:
                 # TODO: create some point style too
                 #self.pointLayer.loadNamedStyle()
-                self.pointLayer.updateExtents()
                 QgsMapLayerRegistry.instance().addMapLayer(self.pointLayer)
-                if not self.doHexagon:
-                    canvas.setExtent(self.pointLayer.extent())
 
-            self.log('import time: ' + str(round(time.time() - t0, 2)) + ' sec (' + str(self.featureCount) + ' features)')
-            #fps = round(self.featureCount / (time.time() - t0), 1)
-            #l = str(self.featureCount) + ': ' + str(fps) + ' fps'
-            #self.log(l)
-                
-    def getFeature(self, ft, dim=2):
-        """Creates a QGIS feature from a feature returned by the imaerread parser
 
-        :param ft: feature returned by the imaerread parser
-        :type ft: dict
-
-        :param dim: dimension of the geometry
-        :type dim: int
-        """
-        feat = QgsFeature()
-        if dim == 2:
-            feat.setGeometry(QgsGeometry.fromWkt(ft['hexagon']))
-        else:
-            feat.setGeometry(QgsGeometry.fromWkt(ft['point']))
-        featureAttributes = [ft['id']]
-        for attr in self.attributes:
-            try:
-                featureAttributes.append(ft[attr])
-            except:
-                featureAttributes.append(None)
-        #self.log(str(featureAttributes))
-        feat.setAttributes(featureAttributes)
-        return feat
-        
+    def zoomToLayers(self):
+        canvas = iface.mapCanvas()
+        if self.doHexagon:
+            self.hexagonLayer.updateExtents()
+            canvas.setExtent(self.hexagonLayer.extent())
+        if self.doPoint:
+            self.pointLayer.updateExtents()
+            if not self.doHexagon:
+                canvas.setExtent(self.pointLayer.extent())
+        canvas.refresh()
+    
 
     def createLayer(self, dim=2, name="imaer layer"):
         """Creates a map layer of polygon (2) or point (0) type, and returns both the layer and the provider as a tuple.
@@ -341,11 +278,10 @@ class ImaerReader:
     def updateFeatureCounter(self):
         """Updates the feature count in the progress dialog."""
         self.progress.feature_count_label.setText(str(self.featureCount))
-        self.log(self.featureCount)
     
     def chooseFile(self):
         """Opens the file dialog to pick a file to open"""
-        fileName = QFileDialog.getOpenFileName(caption = "Open gml File", directory = '', filter = '*.gml')
+        fileName = QFileDialog.getOpenFileName(caption = "Open IMAER gml File", filter = '*.gml')
         self.dlg.gmlFileNameBox.setText(fileName)
         
     def gmlFileNameBoxChanged(self, fileName):
@@ -355,5 +291,5 @@ class ImaerReader:
     
     def showHelp(self):
         """Reacts on help button"""
-        showPluginHelp(filename = 'help/index.html')
+        showPluginHelp(filename = 'help/index')
         

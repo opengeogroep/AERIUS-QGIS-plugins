@@ -47,10 +47,10 @@ PY_FILES = \
 	imaer_reader.py \
 	imaer_reader_dialog.py \
 	__init__.py \
-	imaerread.py
+	imaerread.py \
+	worker.py
 
-UI_FILES = imaer_reader_dialog_base.ui \
-    progress_dialog.ui
+UI_FILES = imaer_reader_dialog_base.ui
 
 EXTRAS = icon.png metadata.txt \
     ogg-logo_64x64.png \

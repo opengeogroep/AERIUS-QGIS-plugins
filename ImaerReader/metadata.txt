@@ -4,7 +4,8 @@
 # embedding metadata in __init__.py will 
 # is no longer supported since version 2.0.
 
-# This file should be included when you package your plugin.# Mandatory items:
+# This file should be included when you package your plugin.
+# Mandatory items:
 
 [general]
 name=IMAERreader
@@ -13,7 +14,7 @@ author=OpenGeoGroep
 qgisMinimumVersion=2.0
 description=Import gml conform to the imaer schema output by the AERIUS calculator
 about=The plugin reads IMAER gml output from the AERIUS Calculator
-version=version 1.0.4
+version=version 1.1
 tracker=https://github.com/opengeogroep/AERIUS-QGIS-plugins/issues
 repository=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 homepage=https://github.com/opengeogroep/AERIUS-QGIS-plugins
