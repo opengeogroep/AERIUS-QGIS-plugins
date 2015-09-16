@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- ImaerWriter
+ IMAERwriter
                                  A QGIS plugin
  Export gml conform to the imaer schema to use in AERIUS calculator
                               -------------------
@@ -85,9 +85,9 @@ class ImaerWriter:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&ImaerWriter')
-        self.toolbar = self.iface.addToolBar(u'ImaerWriter')
-        self.toolbar.setObjectName(u'ImaerWriter')
+        self.menu = self.tr(u'&IMAERwriter')
+        self.toolbar = self.iface.addToolBar(u'IMAERwriter')
+        self.toolbar.setObjectName(u'IMAERwriter')
         
         self.imaerInstance = imaer.ImaerWrite()
         self.uiFeatureTypes = ['point','line','polygon']
@@ -228,7 +228,7 @@ class ImaerWriter:
         icon_path = ':/plugins/ImaerWriter/icon.png'
         self.add_action(
             icon_path,
-            text=self.tr(u'Export imaer gml'),
+            text=self.tr(u'Export IMAER gml'),
             callback=self.run,
             parent=self.iface.mainWindow())
 
@@ -237,13 +237,13 @@ class ImaerWriter:
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
             self.iface.removePluginMenu(
-                self.tr(u'&ImaerWriter'),
+                self.tr(u'&IMAERwriter'),
                 action)
             self.iface.removeToolBarIcon(action)
         del self.toolbar
         
     def log(self, msg):
-        QgsMessageLog.logMessage(str(msg), 'ImaerWriter', QgsMessageLog.INFO)
+        QgsMessageLog.logMessage(str(msg), 'IMAERwriter', QgsMessageLog.INFO)
 
     def transformGeometry(self, geom, coordTrans):
         """helper function to transform geometries"""

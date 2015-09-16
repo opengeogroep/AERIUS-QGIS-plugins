@@ -29,7 +29,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="pointTab">
     <attribute name="title">
@@ -505,22 +505,8 @@
       </property>
      </widget>
     </widget>
-    <widget class="QLabel" name="label_6">
-     <property name="geometry">
-      <rect>
-       <x>800</x>
-       <y>0</y>
-       <width>71</width>
-       <height>61</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;a href=&quot;http://www.opengeogroep.nl/&quot;&gt;&lt;img src=&quot;:/plugins/ImaerWriter/OGG-logo2012_zondertekst_160x160_transp.png&quot;/&gt;&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
     <zorder>polygonGroupBox</zorder>
     <zorder>formLayoutWidget_7</zorder>
-    <zorder>label_6</zorder>
    </widget>
   </widget>
   <widget class="QWidget" name="horizontalLayoutWidget">
