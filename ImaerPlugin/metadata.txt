@@ -23,7 +23,7 @@ homepage=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 tags=imaer,aerius,calculator,gml,stikstof
 
 category=Plugins
-icon=icon.png
+icon=icon_reader.png
 
 # experimental flag
 experimental=False
