@@ -44,13 +44,14 @@ class ImaerReaderDialog(QtGui.QDialog, FORM_CLASS):
         # self.<objectname>, and you can use autoconnect slots - see
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
-        self.setupUi(self)  
+        self.setupUi(self)
         self.iface = iface
+
 
     def startWorker(self, featureCollection, attributes, pointProvider=None, hexagonProvider=None):
         # create a new worker instance
         worker = Worker(featureCollection, attributes, pointProvider, hexagonProvider)
-        
+
 
         # configure the QgsMessageBar
         messageBar = self.iface.messageBar().createMessage('Reading IMAER data...', )
@@ -97,12 +98,9 @@ class ImaerReaderDialog(QtGui.QDialog, FORM_CLASS):
 
     def workerError(self, e, exception_string):
         QgsMessageLog.logMessage('Worker thread raised an exception:\n'.format(exception_string), level=QgsMessageLog.CRITICAL)
-        
+
     def updateProgress(self, p):
         self.progressBar.setValue(p)
-    
-    # signal 
-    workerEnd = QtCore.pyqtSignal()
-    
 
-    
+    # signal
+    workerEnd = QtCore.pyqtSignal()

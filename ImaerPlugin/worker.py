@@ -35,7 +35,6 @@ class Worker(QObject):
                 if self.killed is True:
                     break
 
-
                 if ft is not None:
                     if self.doPoint:
                         pass
@@ -71,8 +70,10 @@ class Worker(QObject):
 
             if self.killed is False:
                 self.progress.emit(100)
-        except Exception, e:
-            self.error.emit(e, traceback.format_exc())
+        except Exception:
+            pass
+            self.error.emit()
+            #self.error.emit(e, traceback.format_exc())
 
         self.finished.emit(self.featureCount)
 
@@ -104,6 +105,7 @@ class Worker(QObject):
 
     def kill(self):
         self.killed = True
+
 
     finished = pyqtSignal(object)
     error = pyqtSignal(Exception, basestring)

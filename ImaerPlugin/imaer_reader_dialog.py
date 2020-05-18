@@ -23,15 +23,18 @@
 
 import os
 
-#from worker import Worker
-from qgis.utils import iface
-#from qgis.gui import QgsMessageBar
+from qgis.core import Qgis, QgsMessageLog
 #from qgis.core import QgsMessageLog
 
 from PyQt5 import QtGui, uic
 from PyQt5.QtWidgets import QDialog, QProgressBar, QPushButton
 from PyQt5.QtCore import pyqtSignal
-#from PyQt5.QtCore import
+from PyQt5 import QtCore
+
+from qgis.utils import iface
+
+from .worker import Worker
+
 
 
 
@@ -40,6 +43,7 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 
 
 class ImaerReaderDialog(QDialog, FORM_CLASS):
+
     def __init__(self, parent=None):
         """Constructor."""
         super(ImaerReaderDialog, self).__init__(parent)
@@ -50,6 +54,13 @@ class ImaerReaderDialog(QDialog, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
         self.iface = iface
+        self.do_log = True
+        self.log('ImaerReaderDialog ready :)')
+
+
+    def log(self, message, tab='Imaer'):
+        if self.do_log:
+            QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
 
 
     def startWorker(self, featureCollection, attributes, pointProvider=None, hexagonProvider=None):
@@ -69,7 +80,7 @@ class ImaerReaderDialog(QDialog, FORM_CLASS):
         cancelButton.clicked.connect(worker.kill)
         messageBar.layout().addWidget(progressBar)
         messageBar.layout().addWidget(cancelButton)
-        self.iface.messageBar().pushWidget(messageBar, self.iface.messageBar().INFO)
+        self.iface.messageBar().pushWidget(messageBar, Qgis.Info)
         self.messageBar = messageBar
         self.progressBar = progressBar
 
@@ -96,15 +107,17 @@ class ImaerReaderDialog(QDialog, FORM_CLASS):
             self.iface.messageBar().pushMessage('{cnt} features imported'.format(cnt=ret), duration=5)
         else:
             # notify the user that something went wrong
-            self.iface.messageBar().pushMessage('Error! See the message log for more information.', level=QgsMessageBar.CRITICAL, duration=5)
+            self.iface.messageBar().pushMessage('Error! See the message log for more information.', level=Qgis.Critical, duration=5)
         self.workerEnd.emit()
 
 
     def workerError(self, e, exception_string):
-        QgsMessageLog.logMessage('Worker thread raised an exception:\n'.format(exception_string), level=QgsMessageLog.CRITICAL)
+        QgsMessageLog.logMessage('Worker thread raised an exception:\n'.format(exception_string), level=Qgis.Critical)
+
 
     def updateProgress(self, p):
         self.progressBar.setValue(p)
+
 
     # signal
     workerEnd = pyqtSignal()
