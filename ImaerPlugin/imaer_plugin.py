@@ -17,6 +17,7 @@ from PyQt5.QtWidgets import QAction
 from PyQt5.QtGui import QIcon
 
 from qgis.core import QgsMessageLog, Qgis
+from .imaer_reader_dialog import ImaerReaderDialog
 
 
 
@@ -31,6 +32,8 @@ class ImaerPlugin:
 
     def initGui(self):
         self.toolbar = self.iface.addToolBar("Imaer Toolbar")
+
+        self.reader_dlg = ImaerReaderDialog()
 
         reader_icon = QIcon(os.path.join(self.plugin_dir, 'icon_reader.png'))
         self.reader_action = QAction(reader_icon, 'Import IMAER result', self.iface.mainWindow())
@@ -50,7 +53,9 @@ class ImaerPlugin:
 
 
     def run(self):
-        self.log('Print this in the Imaer tab')
+        self.reader_dlg.show()
+        result = self.reader_dlg.exec_()
+        self.log(result)
 
 
     def log(self, message, tab='Imaer'):
