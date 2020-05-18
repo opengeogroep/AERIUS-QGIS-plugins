@@ -13,10 +13,11 @@
 
 import os
 
-from PyQt5.QtWidgets import QAction
+from PyQt5.QtWidgets import QAction, QFileDialog, QDialogButtonBox
 from PyQt5.QtGui import QIcon
 
 from qgis.core import QgsMessageLog, Qgis
+
 from .imaer_reader_dialog import ImaerReaderDialog
 
 
@@ -40,6 +41,9 @@ class ImaerPlugin:
         self.reader_action.triggered.connect(self.run)
         self.toolbar.addAction(self.reader_action)
 
+        self.reader_dlg.fileBrowseButton.clicked.connect(self.chooseFile)
+        self.reader_dlg.gmlFileNameBox.textChanged.connect(self.gmlFileNameBoxChanged)
+
         #self.log('initGui')
 
 
@@ -48,6 +52,9 @@ class ImaerPlugin:
         self.toolbar.removeAction(self.reader_action)
         del self.reader_action
         del self.toolbar
+
+        self.reader_dlg.fileBrowseButton.clicked.disconnect(self.chooseFile)
+        self.reader_dlg.gmlFileNameBox.textChanged.disconnect(self.gmlFileNameBoxChanged)
 
         #self.log('unload')
 
@@ -61,3 +68,16 @@ class ImaerPlugin:
     def log(self, message, tab='Imaer'):
         if self.do_log:
             QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
+
+
+    def chooseFile(self):
+        """Opens the file dialog to pick a file to open"""
+        filename, filter = QFileDialog.getOpenFileName(caption = "Open IMAER gml File", filter = '*.gml')
+        self.reader_dlg.gmlFileNameBox.setText(filename)
+
+
+    def gmlFileNameBoxChanged(self):
+        """Enables the OK button after entering a file name"""
+        filename = self.reader_dlg.gmlFileNameBox.text()
+        enable_open = os.path.exists(os.path.dirname(filename))
+        self.reader_dlg.cancel_open_button_box.button(QDialogButtonBox.Open).setEnabled(enable_open)

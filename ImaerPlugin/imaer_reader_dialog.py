@@ -28,10 +28,10 @@ from qgis.utils import iface
 #from qgis.gui import QgsMessageBar
 #from qgis.core import QgsMessageLog
 
-#from PyQt4 import QtGui, QtCore, uic
 from PyQt5 import QtGui, uic
-from PyQt5.QtWidgets import QDialog
-
+from PyQt5.QtWidgets import QDialog, QProgressBar, QPushButton
+from PyQt5.QtCore import pyqtSignal
+#from PyQt5.QtCore import
 
 
 
@@ -51,7 +51,7 @@ class ImaerReaderDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.iface = iface
 
-'''
+
     def startWorker(self, featureCollection, attributes, pointProvider=None, hexagonProvider=None):
         # create a new worker instance
         worker = Worker(featureCollection, attributes, pointProvider, hexagonProvider)
@@ -59,12 +59,12 @@ class ImaerReaderDialog(QDialog, FORM_CLASS):
 
         # configure the QgsMessageBar
         messageBar = self.iface.messageBar().createMessage('Reading IMAER data...', )
-        progressBar = QtGui.QProgressBar()
+        progressBar = QProgressBar()
         progressBar.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         progressBar.setMinimum(0)
         progressBar.setMaximum(100)
         progressBar.setTextVisible(True)
-        cancelButton = QtGui.QPushButton()
+        cancelButton = QPushButton()
         cancelButton.setText('Cancel')
         cancelButton.clicked.connect(worker.kill)
         messageBar.layout().addWidget(progressBar)
@@ -107,5 +107,4 @@ class ImaerReaderDialog(QDialog, FORM_CLASS):
         self.progressBar.setValue(p)
 
     # signal
-    workerEnd = QtCore.pyqtSignal()
-'''
+    workerEnd = pyqtSignal()
