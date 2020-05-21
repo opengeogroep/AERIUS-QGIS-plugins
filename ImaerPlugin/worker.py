@@ -1,4 +1,4 @@
-import traceback
+#import traceback
 import time
 
 from PyQt5.QtCore import QObject, pyqtSignal
@@ -70,9 +70,9 @@ class Worker(QObject):
 
             if self.killed is False:
                 self.progress.emit(100)
-        except Exception:
-            pass
-            self.error.emit()
+        except: #Exception, e:
+            print('iets ging heel fout')
+            #self.error.emit(e, 'iets ging fout')
             #self.error.emit(e, traceback.format_exc())
 
         self.finished.emit(self.featureCount)
@@ -90,10 +90,10 @@ class Worker(QObject):
         """
         feat = QgsFeature()
         if dim == 2:
-            feat.setGeometry(QgsGeometry.fromWkt(ft[u'hexagon']))
+            feat.setGeometry(QgsGeometry.fromWkt(ft['hexagon']))
         else:
-            feat.setGeometry(QgsGeometry.fromWkt(ft[u'point']))
-        featureAttributes = [ft[u'id']]
+            feat.setGeometry(QgsGeometry.fromWkt(ft['point']))
+        featureAttributes = [ft['id']]
         for attr in self.attributes:
             try:
                 featureAttributes.append(ft[attr])

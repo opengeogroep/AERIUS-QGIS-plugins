@@ -95,6 +95,7 @@ class ImaerReaderDialog(QDialog, FORM_CLASS):
         self.thread = thread
         self.worker = worker
 
+
     def workerFinished(self, ret):
         # clean up the worker and thread
         self.worker.deleteLater()

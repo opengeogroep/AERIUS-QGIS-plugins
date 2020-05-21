@@ -14,10 +14,10 @@ class ImaerRead():
 
     def __init__(self, gmlFile):
         self.gmlFile = gmlFile
-        _gml = open(gmlFile,'rb')
+        _gml = open(gmlFile, 'rb')
         self.gml = _gml
         self._filesize = float(os.fstat(_gml.fileno()).st_size)
-        self.events = pulldom.parse(_gml)
+        self._doc = pulldom.parse(_gml)
         self.numFeatures = 0
 
 
@@ -25,74 +25,74 @@ class ImaerRead():
     def attributeFields(self):
         """Returns the attributes which can be returned in the features"""
         attributes = []
-        for type in _resultTypes:
+        for result_type in _resultTypes:
             for substance in _substances:
-                attributes.append("%s_%s" %(type[0:3],substance))
+                attributes.append("{}_{}".format(result_type[0:3], substance))
         return attributes
+
+
+    def _getFullNodeValue(self, node):
+        '''Get full text value and handles the case where the parser splits the text
+        in parts by the read buffer:
+        https://bugs.python.org/issue38011
+        '''
+        return ''.join(t.nodeValue for t in node.childNodes if t.nodeType == t.TEXT_NODE)
 
 
     def nextFeature(self, doPoints=True, doHexagons=True):
         """Returns the next ReceptorPoint as a feature"""
-        event, node = self.events.next()
         _nextReceptorPoint = False
-        while event:
+        for event, node in self._doc:
             if event == pulldom.START_ELEMENT and node.tagName == 'imaer:ReceptorPoint':
-                id = node.getAttribute('receptorPointId')
+                self._doc.expandNode(node)
+                #print(node.toxml())
+
                 data = {}
-                data[u'id'] = id
-                _nextReceptorPoint = True
 
-            if doPoints:
-                if _nextReceptorPoint and event == pulldom.START_ELEMENT and node.tagName == 'gml:pos':
-                    txt = ''
-                    while not event == pulldom.END_ELEMENT:
-                        # we have to wait for the END event as the SAX-parser may split CHARACTER events
-                        # see http://bugs.python.org/issue10026 and http://www.mail-archive.com/xml-sig@python.org/msg00263.html
-                        event, node = self.events.next()
-                        if event == pulldom.CHARACTERS:
-                            txt = txt + node.wholeText
-                    data[u'point'] = 'POINT(%s)' % txt
+                id = node.getAttribute('receptorPointId')
+                data['id'] = id
 
-            if doHexagons:
-                if _nextReceptorPoint and event == pulldom.START_ELEMENT and node.tagName == 'gml:posList':
-                    txt = ''
-                    while not event == pulldom.END_ELEMENT:
-                        # we have to wait for the END event as the SAX-parser may split CHARACTER events
-                        event, node = self.events.next()
-                        if event == pulldom.CHARACTERS:
-                            txt = txt + node.wholeText
-                    s = txt.strip().split()
-                    data[u'hexagon'] = 'POLYGON((%s))' %  ','.join(map(' '.join, zip(s[::2], s[1::2])))
+                if doPoints:
+                    ele = node.getElementsByTagName('gml:pos')[0]
+                    data['point'] = 'POINT({})'.format(self._getFullNodeValue(ele))
 
-            if _nextReceptorPoint and event == pulldom.START_ELEMENT and node.tagName == 'imaer:Result':
-                type = node.getAttribute('resultType')
-                substance = node.getAttribute('substance')
-                txt = ''
-                while not event == pulldom.END_ELEMENT:
-                    # we have to wait for the END event as the SAX-parser may split CHARACTER events
-                    event, node = self.events.next()
-                    if event == pulldom.CHARACTERS:
-                        txt = txt + node.wholeText
-                data["%s_%s" %(type[0:3],substance)] = float(txt)
+                if doHexagons:
+                    ele = node.getElementsByTagName('gml:posList')[0]
+                    #pretty costly way to replace every second space by a comma...
+                    gml_coords = self._getFullNodeValue(ele)
+                    gml_numbers = gml_coords.split()
+                    if not len(gml_numbers) == 14:
+                        print(gml_numbers)
+                    wkt_coord_list = []
+                    i = 0
+                    while i < len(gml_numbers):
+                        wkt_coord_list.append('{} {}'.format(gml_numbers[i], gml_numbers[i+1]))
+                        i += 2
+                    wkt_coords = ', '.join(wkt_coord_list)
+                    data['hexagon'] = 'POLYGON(({}))'.format(wkt_coords)
 
-            if event == pulldom.END_ELEMENT and node.tagName == 'imaer:ReceptorPoint':
-                # we have a complete feature
-                self.numFeatures = self.numFeatures + 1
+                results = node.getElementsByTagName('imaer:Result')
+                for result_node in results:
+                    result_type = result_node.getAttribute('resultType')
+                    result_substance = result_node.getAttribute('substance')
+                    key = '{}_{}'.format(result_type[:3], result_substance)
+                    value_node = result_node.getElementsByTagName('imaer:value')[0]
+                    data[key] = float(self._getFullNodeValue(value_node))
+
                 # calculate parse progress by readposition and filesize
                 pos = self.gml.tell()
-                data[u'progress'] = pos / self._filesize
+                data['progress'] = pos / self._filesize
 
+                self.numFeatures += 1
                 return data
-            try:
-                event, node = self.events.next()
-            except:
-                event = False
+
         return False
 
 
     def __del__(self):
         """Close gml file when cleaning up instance"""
+        print('deleting ImaerRead object')
         try:
-            self.gmlFile.close()
+            self._gml.close()
         except:
             pass
