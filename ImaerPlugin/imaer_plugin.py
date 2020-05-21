@@ -96,8 +96,8 @@ class ImaerPlugin:
             # add layers to map
             canvas = self.iface.mapCanvas()
             if self.doHexagon:
-                hexagonQml = os.path.join(self.plugin_dir,'imaer_hexagon.qml')
-                #self.hexagonLayer.loadNamedStyle(hexagonQml)
+                hexagonQml = os.path.join(self.plugin_dir, 'styles', 'imaer_hexagon.qml')
+                self.hexagonLayer.loadNamedStyle(hexagonQml)
                 QgsProject.instance().addMapLayer(self.hexagonLayer)
             if self.doPoint:
                 # TODO: create some point style too
