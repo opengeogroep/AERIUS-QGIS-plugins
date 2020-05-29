@@ -104,9 +104,10 @@ class ImaerPlugin:
                 #self.pointLayer.loadNamedStyle()
                 QgsProject.instance().addMapLayer(self.pointLayer)
 
+
     def chooseFile(self):
         """Opens the file dialog to pick a file to open"""
-        filename, filter = QFileDialog.getOpenFileName(caption = "Open IMAER gml File", filter = '*.gml')
+        filename, filter = QFileDialog.getOpenFileName(caption = "Open IMAER gml File", filter = '*.gml', parent=self.reader_dlg)
         self.reader_dlg.gmlFileNameBox.setText(filename)
 
 
