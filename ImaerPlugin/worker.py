@@ -9,6 +9,10 @@ from qgis.core import QgsFeature, QgsGeometry
 
 class Worker(QObject):
 
+    finished = pyqtSignal(object)
+    error = pyqtSignal(Exception, basestring)
+    progress = pyqtSignal(float)
+
     def __init__(self, featureCollection, attributes, pointProvider=None, hexagonProvider=None):
         QObject.__init__(self)
         self.killed = False
@@ -70,13 +74,12 @@ class Worker(QObject):
 
             if self.killed is False:
                 self.progress.emit(100)
-        except: #Exception, e:
+        except Exception as e:
             print('iets ging heel fout')
-            #self.error.emit(e, 'iets ging fout')
+            self.error.emit(e, 'iets ging fout')
             #self.error.emit(e, traceback.format_exc())
 
         self.finished.emit(self.featureCount)
-
 
 
     def getFeature(self, ft, dim=2):
@@ -105,8 +108,3 @@ class Worker(QObject):
 
     def kill(self):
         self.killed = True
-
-
-    finished = pyqtSignal(object)
-    error = pyqtSignal(Exception, basestring)
-    progress = pyqtSignal(float)
