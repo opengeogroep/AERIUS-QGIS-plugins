@@ -27,16 +27,17 @@ class ImaerGpkg(object):
 
 
     def run_query_text(self, sql_text, values=None, commit=True, multi=False):
-        print(sql_text)
+        #print(sql_text, values)
         cursor = self.connection.cursor()
 
         if multi:
             cursor.executescript(sql_text)
         else:
             if values is None:
-                cursor.execute(sql_text)
+                check = cursor.execute(sql_text)
             else:
-                cursor.execute(sql_text, values)
+                check = cursor.execute(sql_text, values)
+            print(check)
 
         if commit:
             self.connection.commit()
@@ -50,4 +51,4 @@ class ImaerGpkg(object):
 
     def init_db(self):
         self.run_query_file('create_tables_gpkg.sql', multi=True)
-        self.run_query_file('create_tables_imaer.sql', multi=True)
+        #self.run_query_file('create_tables_imaer.sql', multi=True)
