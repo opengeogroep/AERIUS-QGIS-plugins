@@ -46,8 +46,7 @@ class ImaerPlugin:
 
         self.reader_dlg.fileBrowseButton.clicked.connect(self.chooseFile)
         self.reader_dlg.gmlFileNameBox.textChanged.connect(self.gmlFileNameBoxChanged)
-
-        #self.log('initGui')
+        self.reader_dlg.workerEnd.connect(self.zoomToLayers)
 
 
     def unload(self):
@@ -58,8 +57,7 @@ class ImaerPlugin:
 
         self.reader_dlg.fileBrowseButton.clicked.disconnect(self.chooseFile)
         self.reader_dlg.gmlFileNameBox.textChanged.disconnect(self.gmlFileNameBoxChanged)
-
-        #self.log('unload')
+        self.reader_dlg.workerEnd.disconnect(self.zoomToLayers)
 
 
     def log(self, message, tab='Imaer'):
@@ -141,3 +139,15 @@ class ImaerPlugin:
             pr.addAttributes([QgsField(subst, QVariant.Double)])
         vl.updateFields()
         return (vl, pr)
+
+
+    def zoomToLayers(self):
+        canvas = self.iface.mapCanvas()
+        if self.doHexagon:
+            self.hexagonLayer.updateExtents()
+            canvas.setExtent(self.hexagonLayer.extent())
+        if self.doPoint:
+            self.pointLayer.updateExtents()
+            if not self.doHexagon:
+                canvas.setExtent(self.pointLayer.extent())
+        canvas.refresh()
