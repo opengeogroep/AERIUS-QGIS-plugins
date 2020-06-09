@@ -75,9 +75,7 @@ class Worker(QObject):
             if self.killed is False:
                 self.progress.emit(100)
         except Exception as e:
-            print('iets ging heel fout')
-            self.error.emit(e, 'iets ging fout')
-            #self.error.emit(e, traceback.format_exc())
+            self.error.emit(e, 'Error while reading xml file')
 
         self.finished.emit(self.featureCount)
 
