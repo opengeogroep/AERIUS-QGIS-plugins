@@ -23,7 +23,7 @@
 
 import os
 
-from qgis.core import Qgis, QgsMessageLog
+from qgis.core import Qgis, QgsMessageLog, QgsApplication
 #from qgis.core import QgsMessageLog
 
 from PyQt5 import QtGui, uic
@@ -33,7 +33,8 @@ from PyQt5 import QtCore
 
 from qgis.utils import iface
 
-from .worker import Worker
+#from .worker import Worker
+from .imaer_tasks import ImaerResultToGpkgTask
 
 
 
@@ -63,39 +64,19 @@ class ImaerReaderDialog(QDialog, FORM_CLASS):
             QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
 
 
-    def startWorker(self, featureCollection, attributes, pointProvider=None, hexagonProvider=None):
-        # create a new worker instance
-        worker = Worker(featureCollection, attributes, pointProvider, hexagonProvider)
+    def import_result_gml(self, gml_fn):
+        task = ImaerResultToGpkgTask(gml_fn,'')
+        self.log('import_result_task')
+        self.log(task)
+        QgsApplication.taskManager().addTask(task)
+        self.log('added to task manager')
+        
+        #return task
 
 
-        # configure the QgsMessageBar
-        messageBar = self.iface.messageBar().createMessage('Reading IMAER data...', )
-        progressBar = QProgressBar()
-        progressBar.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
-        progressBar.setMinimum(0)
-        progressBar.setMaximum(100)
-        progressBar.setTextVisible(True)
-        cancelButton = QPushButton()
-        cancelButton.setText('Cancel')
-        cancelButton.clicked.connect(worker.kill)
-        messageBar.layout().addWidget(progressBar)
-        messageBar.layout().addWidget(cancelButton)
-        self.iface.messageBar().pushWidget(messageBar, Qgis.Info)
-        self.messageBar = messageBar
-        self.progressBar = progressBar
-
-        # start the worker in a new thread
-        thread = QtCore.QThread(self)
-        worker.moveToThread(thread)
-        worker.finished.connect(self.workerFinished)
-        worker.error.connect(self.workerError)
-        worker.progress.connect(self.updateProgress)
-        thread.started.connect(worker.run)
-        thread.start()
-        self.thread = thread
-        self.worker = worker
 
 
+    '''
     def workerFinished(self, ret):
         # clean up the worker and thread
         self.worker.deleteLater()
@@ -118,7 +99,7 @@ class ImaerReaderDialog(QDialog, FORM_CLASS):
 
     def updateProgress(self, p):
         self.progressBar.setValue(p)
-
+    '''
 
     # signal
     workerEnd = pyqtSignal()
