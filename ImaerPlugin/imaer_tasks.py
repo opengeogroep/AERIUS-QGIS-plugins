@@ -1,5 +1,6 @@
 import random
 from time import sleep
+import os
 
 import xml.etree.ElementTree as ET
 
@@ -45,25 +46,26 @@ class ImaerResultToGpkgTask(QgsTask):
 
         #for i in range(100):
         #    self.
-
-        for event, elem in ET.iterparse(self.gml_fn):
-            self.log('{}, {}'.format(event, elem.tag))
-            if elem.tag == '{http://imaer.aerius.nl/2.2}featureMember':
-                child = list(elem)[0]
-                self.log('  {}'.format(child.tag))
-                if child.tag == '{http://imaer.aerius.nl/2.2}ReceptorPoint':
-                    self.process_rp(child)
-                    rp_cnt += 1
-                elif child.tag == '{http://imaer.aerius.nl/2.2}EmissionSource':
-                    self.process_es(child)
-                    es_cnt += 1
-                    sleep(0.3)
-                elem.clear()
-            if (es_cnt + rp_cnt) % 10 == 0:
-                self.log('{}, {}'.format(es_cnt, rp_cnt))
-                self.setProgress(0.5)
-            #if self.isCanceled():
-            #    return False
+        with open(self.gml_fn, 'rb') as gml_file:
+            gml_file_size = float(os.fstat(gml_file.fileno()).st_size)
+            for event, elem in ET.iterparse(gml_file):
+                self.log('{}, {}'.format(event, elem.tag))
+                if elem.tag == '{http://imaer.aerius.nl/2.2}featureMember':
+                    child = list(elem)[0]
+                    self.log('  {}'.format(child.tag))
+                    if child.tag == '{http://imaer.aerius.nl/2.2}ReceptorPoint':
+                        self.process_rp(child)
+                        rp_cnt += 1
+                        self.log(gml_file.tell())
+                    elif child.tag == '{http://imaer.aerius.nl/2.2}EmissionSource':
+                        self.process_es(child)
+                        es_cnt += 1
+                    elem.clear()
+                if (es_cnt + rp_cnt) % 1 == 0:
+                    self.log('{}, {}'.format(es_cnt, rp_cnt))
+                    self.setProgress( (gml_file.tell() / gml_file_size) * 100)
+                if self.isCanceled():
+                    return False
 
 
 
@@ -146,3 +148,4 @@ class ImaerResultToGpkgTask(QgsTask):
     def process_rp(self, elem):
         pass
         self.log('ReceptorPoint')
+        sleep(0.01)
