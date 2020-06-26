@@ -65,12 +65,13 @@ class ImaerReaderDialog(QDialog, FORM_CLASS):
 
 
     def import_result_gml(self, gml_fn):
-        task = ImaerResultToGpkgTask(gml_fn,'')
+        gpkg_fn = gml_fn.replace('.gml', '.gpkg')
+        task = ImaerResultToGpkgTask(gml_fn, gpkg_fn)
         self.log('import_result_task')
         self.log(task)
         QgsApplication.taskManager().addTask(task)
         self.log('added to task manager')
-        
+
         #return task
 
 
