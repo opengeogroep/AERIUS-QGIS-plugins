@@ -34,7 +34,7 @@ class ImaerResultToGpkgTask(QgsTask):
         self.gml_fn = gml_fn
         self.gpkg_fn = gpkg_fn
         self.exception = None
-        self.do_log = False
+        self.do_log = True
         self.log('doet de log het?')
         self.log(self.gml_fn)
         self.namespaces = {}
@@ -63,12 +63,18 @@ class ImaerResultToGpkgTask(QgsTask):
             gml_file_size = float(os.fstat(gml_file.fileno()).st_size)
 
             context = ET.iterparse(gml_file, events=('start', 'end', 'start-ns'))
-            context = iter(context)
-            root = context.__next__()
+            #context = iter(context)
+            #while not eventevent, root = context.__next__()
+            #self.log(ET.dump(root))
 
-
+            root = None
             for event, elem in context:
-                #self.log('{}, {}'.format(event, elem.tag))
+                #self.log('{}, {}'.format(event, elem))
+
+                # set the first elemant as root
+                if root is None and event == 'start':
+                    root = elem
+
                 if event == 'start-ns':
                     self.namespaces[elem[0]] = elem[1]
                     self.log(self.namespaces)
@@ -80,17 +86,27 @@ class ImaerResultToGpkgTask(QgsTask):
                         feat = self.process_rp(child)
                         receptors_provider.addFeatures([feat])
                         rp_cnt += 1
+                        elem.clear()
                     elif child.tag == '{http://imaer.aerius.nl/2.2}EmissionSource':
                         self.process_es(child)
                         es_cnt += 1
-                    elem.clear()
 
                 if (es_cnt + rp_cnt) % 100 == 0:
-                    self.log('{}, {}'.format(es_cnt, rp_cnt))
+                    #self.log('{}, {}'.format(es_cnt, rp_cnt))
                     self.setProgress( (gml_file.tell() / gml_file_size) * 100)
 
                 if self.isCanceled():
                     return False
+
+        for key in self.namespaces:
+            self.log(key)
+            ET.register_namespace(key, self.namespaces[key])
+        xml_string = ET.tostring(root).decode('utf-8')
+        self.log(len(xml_string))
+        xml_string = xml_string.replace('<imaer:featureMember />', '')
+        self.log(len(xml_string))
+        #self.log(xml_string)
+        self.save_metadata('xml', xml_string)
 
         return True
 
@@ -149,8 +165,8 @@ class ImaerResultToGpkgTask(QgsTask):
         self.conn = md.createConnection(self.gpkg_fn, {})
 
         fields = QgsFields()
-        fields.append(QgsField('xml_part', QVariant.String))
-        fields.append(QgsField('text', QVariant.String))
+        fields.append(QgsField('key', QVariant.String))
+        fields.append(QgsField('value', QVariant.String))
         self.conn.createVectorTable('', 'metadata', fields, QgsWkbTypes.NoGeometry, QgsCoordinateReferenceSystem(), True, {})
 
         fields = QgsFields()
@@ -159,6 +175,15 @@ class ImaerResultToGpkgTask(QgsTask):
         fields.append(QgsField('result_NH3', QVariant.Double))
         fields.append(QgsField('result_NOX', QVariant.Double))
         self.conn.createVectorTable('', 'receptors', fields, QgsWkbTypes.Polygon, QgsCoordinateReferenceSystem(28992), True, {})
+
+
+    def save_metadata(self, key, value):
+        layer = QgsVectorLayer('{}|layername={}'.format(self.gpkg_fn, 'metadata'), 'metadata', 'ogr')
+        provider = layer.dataProvider()
+
+        feat = QgsFeature()
+        feat.setAttributes([None, key, value])
+        provider.addFeatures([feat])
 
 
     def process_es(self, elem):
@@ -205,8 +230,6 @@ class ImaerResultToGpkgTask(QgsTask):
             if full:
                 result['result_fields'].append(field_name)
             result[field_name] = float(val)
-
-        print(result)
 
         if as_dict:
             return result
