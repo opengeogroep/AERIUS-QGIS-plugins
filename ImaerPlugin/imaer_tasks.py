@@ -61,6 +61,9 @@ class ImaerResultToGpkgTask(QgsTask):
 
         with open(self.gml_fn, 'rb') as gml_file:
             gml_file_size = float(os.fstat(gml_file.fileno()).st_size)
+            step = max(int(gml_file_size / 160000), 1)
+            self.log('step: {}'.format(step))
+            self.setProgress(0)
 
             context = ET.iterparse(gml_file, events=('start', 'end', 'start-ns'))
             #context = iter(context)
@@ -81,17 +84,17 @@ class ImaerResultToGpkgTask(QgsTask):
 
                 if event == 'end' and elem.tag == '{http://imaer.aerius.nl/2.2}featureMember':
                     child = list(elem)[0]
-                    self.log('  {}'.format(child.tag))
+                    #self.log('  {}'.format(child.tag))
                     if child.tag == '{http://imaer.aerius.nl/2.2}ReceptorPoint':
                         feat = self.process_rp(child)
                         receptors_provider.addFeatures([feat])
                         rp_cnt += 1
                         elem.clear()
-                    elif child.tag == '{http://imaer.aerius.nl/2.2}EmissionSource':
-                        self.process_es(child)
-                        es_cnt += 1
+                    #elif child.tag == '{http://imaer.aerius.nl/2.2}EmissionSource':
+                    #    self.process_es(child)
+                    #    es_cnt += 1
 
-                if (es_cnt + rp_cnt) % 100 == 0:
+                if (rp_cnt) % step == 0:
                     #self.log('{}, {}'.format(es_cnt, rp_cnt))
                     self.setProgress( (gml_file.tell() / gml_file_size) * 100)
 
