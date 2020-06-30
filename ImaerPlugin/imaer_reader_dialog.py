@@ -33,9 +33,6 @@ from PyQt5 import QtCore
 
 from qgis.utils import iface
 
-#from .worker import Worker
-from .imaer_tasks import ImaerResultToGpkgTask
-
 
 
 
@@ -56,51 +53,12 @@ class ImaerReaderDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.iface = iface
         self.do_log = True
-        self.log('ImaerReaderDialog ready :)')
+        #self.log('ImaerReaderDialog ready :)')
 
 
     def log(self, message, tab='Imaer'):
         if self.do_log:
             QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
 
-
-    def import_result_gml(self, gml_fn):
-        gpkg_fn = gml_fn.replace('.gml', '.gpkg')
-        task = ImaerResultToGpkgTask(gml_fn, gpkg_fn)
-        self.log('import_result_task')
-        self.log(task)
-        QgsApplication.taskManager().addTask(task)
-        self.log('added to task manager')
-
-        #return task
-
-
-
-
-    '''
-    def workerFinished(self, ret):
-        # clean up the worker and thread
-        self.worker.deleteLater()
-        self.thread.quit()
-        self.thread.wait()
-        self.thread.deleteLater()
-        # remove widget from message bar
-        self.iface.messageBar().popWidget(self.messageBar)
-        if ret is not None:
-            self.iface.messageBar().pushMessage('{cnt} features imported'.format(cnt=ret), duration=5)
-        else:
-            # notify the user that something went wrong
-            self.iface.messageBar().pushMessage('Error! See the message log for more information.', level=Qgis.Critical, duration=5)
-        self.workerEnd.emit()
-
-
-    def workerError(self, e, exception_string):
-        QgsMessageLog.logMessage('Worker thread raised an exception:\n'.format(exception_string), level=Qgis.Critical)
-
-
-    def updateProgress(self, p):
-        self.progressBar.setValue(p)
-    '''
-
-    # signal
-    workerEnd = pyqtSignal()
+    def load_layer(self, gpkg_filename):
+        self.log('load_layer()')

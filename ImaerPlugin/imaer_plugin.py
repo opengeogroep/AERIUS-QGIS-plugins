@@ -17,10 +17,15 @@ from PyQt5.QtWidgets import QAction, QFileDialog, QDialogButtonBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QVariant
 
-from qgis.core import QgsMessageLog, Qgis, QgsVectorLayer, QgsField, QgsProject
+from qgis.core import (
+    QgsMessageLog,
+    Qgis,
+    QgsVectorLayer,
+    QgsField,
+    QgsProject,
+    QgsApplication)
 
-from .imaer_reader_dialog import ImaerReaderDialog
-
+from .imaer_tasks import ImaerResultToGpkgTask
 
 
 
@@ -30,34 +35,25 @@ class ImaerPlugin:
     def __init__(self, iface):
         self.iface = iface
         self.plugin_dir = os.path.dirname(__file__)
+        self.task_manager = QgsApplication.taskManager()
         self.do_log = True
-        #self.log('init')
 
 
     def initGui(self):
         self.toolbar = self.iface.addToolBar("Imaer Toolbar")
-
-        self.reader_dlg = ImaerReaderDialog()
+        self.calc_file_dialog = QFileDialog()
 
         reader_icon = QIcon(os.path.join(self.plugin_dir, 'icon_reader.png'))
-        self.reader_action = QAction(reader_icon, 'Import IMAER result gml', self.iface.mainWindow())
-        self.reader_action.triggered.connect(self.reader_run)
+        self.reader_action = QAction(reader_icon, 'Import IMAER Calculator result gml', self.iface.mainWindow())
+        self.reader_action.triggered.connect(self.calc_reader_run)
         self.toolbar.addAction(self.reader_action)
-
-        self.reader_dlg.fileBrowseButton.clicked.connect(self.chooseFile)
-        self.reader_dlg.gmlFileNameBox.textChanged.connect(self.gmlFileNameBoxChanged)
-        self.reader_dlg.workerEnd.connect(self.zoomToLayers)
 
 
     def unload(self):
-        self.reader_action.triggered.disconnect(self.reader_run)
+        self.reader_action.triggered.disconnect(self.calc_reader_run)
         self.toolbar.removeAction(self.reader_action)
         del self.reader_action
         del self.toolbar
-
-        self.reader_dlg.fileBrowseButton.clicked.disconnect(self.chooseFile)
-        self.reader_dlg.gmlFileNameBox.textChanged.disconnect(self.gmlFileNameBoxChanged)
-        self.reader_dlg.workerEnd.disconnect(self.zoomToLayers)
 
 
     def log(self, message, tab='Imaer'):
@@ -65,38 +61,33 @@ class ImaerPlugin:
             QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
 
 
-    def reader_run(self):
-        self.log('hiero')
-        self.reader_dlg.gmlFileNameBox.setText('/home/raymond/git/AERIUS-QGIS-plugins/demodata/AERIUS_20200623162435_0_Situatie1.gml')
-        self.reader_dlg.gmlFileNameBox.setText('/home/raymond/git/AERIUS-QGIS-plugins/demodata/AERIUS_20200623162435_0_Situatie1_4.gml')
-        self.reader_dlg.show()
-        result = self.reader_dlg.exec_()
-        self.log(result)
-        if result:
-            self.reader_dlg.import_result_gml(self.reader_dlg.gmlFileNameBox.text())
+    def calc_reader_run(self):
+        self.calc_file_dialog.setDirectory('/home/raymond/git/AERIUS-QGIS-plugins/demodata/')
+        gml_fn, filter = self.calc_file_dialog.getOpenFileName(caption = "Open Calculator result gml file", filter='*.gml', parent=self.iface.mainWindow())
+        self.log(gml_fn)
+        #print(gml_fn)
+
+        if os.path.exists(os.path.dirname(gml_fn)):
+            gpkg_fn = gml_fn.replace('.gml', '.gpkg')
+            task = ImaerResultToGpkgTask(gml_fn, gpkg_fn, self.load_calc_layer)
+            self.task_manager.addTask(task)
+            self.log('added to task manager')
 
 
-    def chooseFile(self):
-        """Opens the file dialog to pick a file to open"""
-        filename, filter = QFileDialog.getOpenFileName(caption = "Open IMAER gml File", filter = '*.gml', parent=self.reader_dlg)
-        self.reader_dlg.gmlFileNameBox.setText(filename)
+    def load_calc_layer(self, gpkg_fn, zoom=True):
+        '''Callback function from the task after finishing the gpkg'''
+        base = os.path.basename(gpkg_fn)
+        stem, ext = os.path.splitext(base)
+        layer_name = '{} receptors'.format(stem)
+        self.log(layer_name)
+        receptors_layer = QgsVectorLayer(gpkg_fn, layer_name, 'ogr')
 
+        hexagon_qml = os.path.join(self.plugin_dir, 'styles', 'imaer_hexagon.qml')
+        receptors_layer.loadNamedStyle(hexagon_qml)
+        QgsProject.instance().addMapLayer(receptors_layer)
 
-    def gmlFileNameBoxChanged(self):
-        """Enables the OK button after entering a file name"""
-        filename = self.reader_dlg.gmlFileNameBox.text()
-        enable_open = os.path.exists(os.path.dirname(filename))
-        enable_open = True # !!!!!!!!!!!!!!!!!!!!!!!!
-        self.reader_dlg.cancel_open_button_box.button(QDialogButtonBox.Open).setEnabled(enable_open)
-
-
-    def zoomToLayers(self):
-        canvas = self.iface.mapCanvas()
-        if self.doHexagon:
-            self.hexagonLayer.updateExtents()
-            canvas.setExtent(self.hexagonLayer.extent())
-        if self.doPoint:
-            self.pointLayer.updateExtents()
-            if not self.doHexagon:
-                canvas.setExtent(self.pointLayer.extent())
-        canvas.refresh()
+        if zoom:
+            canvas = self.iface.mapCanvas()
+            extent = receptors_layer.extent()
+            extent.grow(100)
+            canvas.setExtent(extent)

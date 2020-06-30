@@ -1,11 +1,9 @@
 import random
 from time import sleep
 import os
-
 import xml.etree.ElementTree as ET
 
 from qgis.PyQt.QtCore import QVariant
-
 from qgis.core import (
     Qgis,
     QgsApplication,
@@ -18,38 +16,30 @@ from qgis.core import (
     QgsWkbTypes,
     QgsFeature,
     QgsGeometry,
-    QgsVectorLayer
+    QgsVectorLayer,
+    QgsExpressionContextUtils
     )
 
-IMAER_RESULT_ATTRIBUTES = ['DEP_NH3','DEP_NH3']
+_IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX', 'NO2']
 
 
 
 
 class ImaerResultToGpkgTask(QgsTask):
-    """This shows how to subclass QgsTask"""
 
-    def __init__(self, gml_fn, gpkg_fn):
+    def __init__(self, gml_fn, gpkg_fn, load_layer_callback):
         super().__init__('Imaer Result To Gpkg Task', QgsTask.CanCancel)
         self.gml_fn = gml_fn
         self.gpkg_fn = gpkg_fn
+        self.load_layer_callback = load_layer_callback
         self.exception = None
         self.do_log = True
-        self.log('doet de log het?')
-        self.log(self.gml_fn)
+        #self.log(self.gml_fn)
         self.namespaces = {}
 
 
     def run(self):
-        """Here you implement your heavy lifting.
-        Should periodically test for isCanceled() to gracefully
-        abort.
-        This method MUST return True or False.
-        Raising exceptions will crash QGIS, so we handle them
-        internally and raise them in self.finished
-        """
-        self.log('Started task "{}"'.format(
-                                     self.description()))
+        self.log('Started task "{}"'.format(self.description()))
 
         self.create_gpkg()
 
@@ -57,30 +47,24 @@ class ImaerResultToGpkgTask(QgsTask):
         receptors_provider = receptors_layer.dataProvider()
 
         rp_cnt = 0
-        es_cnt = 0
 
         with open(self.gml_fn, 'rb') as gml_file:
             gml_file_size = float(os.fstat(gml_file.fileno()).st_size)
             step = max(int(gml_file_size / 160000), 1)
-            self.log('step: {}'.format(step))
             self.setProgress(0)
 
             context = ET.iterparse(gml_file, events=('start', 'end', 'start-ns'))
-            #context = iter(context)
-            #while not eventevent, root = context.__next__()
-            #self.log(ET.dump(root))
 
             root = None
             for event, elem in context:
                 #self.log('{}, {}'.format(event, elem))
 
-                # set the first elemant as root
+                # set the first element as root
                 if root is None and event == 'start':
                     root = elem
 
                 if event == 'start-ns':
                     self.namespaces[elem[0]] = elem[1]
-                    self.log(self.namespaces)
 
                 if event == 'end' and elem.tag == '{http://imaer.aerius.nl/2.2}featureMember':
                     child = list(elem)[0]
@@ -90,26 +74,22 @@ class ImaerResultToGpkgTask(QgsTask):
                         receptors_provider.addFeatures([feat])
                         rp_cnt += 1
                         elem.clear()
-                    #elif child.tag == '{http://imaer.aerius.nl/2.2}EmissionSource':
-                    #    self.process_es(child)
-                    #    es_cnt += 1
 
                 if (rp_cnt) % step == 0:
-                    #self.log('{}, {}'.format(es_cnt, rp_cnt))
                     self.setProgress( (gml_file.tell() / gml_file_size) * 100)
 
                 if self.isCanceled():
                     return False
 
         for key in self.namespaces:
-            self.log(key)
             ET.register_namespace(key, self.namespaces[key])
         xml_string = ET.tostring(root).decode('utf-8')
-        self.log(len(xml_string))
         xml_string = xml_string.replace('<imaer:featureMember />', '')
-        self.log(len(xml_string))
         #self.log(xml_string)
         self.save_metadata('xml', xml_string)
+        self.save_metadata('gml_fn', self.gml_fn)
+        self.save_metadata('user', QgsExpressionContextUtils().globalScope().variable('user_full_name'))
+
 
         return True
 
@@ -125,14 +105,12 @@ class ImaerResultToGpkgTask(QgsTask):
         result is the return value from self.run.
         """
         self.log('finished task')
+        #self.conn.close()
         if result:
             self.log(
-                'RandomTask "{name}" completed\n' \
-                'RandomTotal: {total} (with {iterations} '\
-              'iterations)'.format(
-                  name=self.description(),
-                  total=self.total,
-                  iterations=self.iterations))
+                'ImaerResultToGpkgTask "{name}" completed'.format(
+                  name=self.description()))
+            self.load_layer_callback(self.gpkg_fn)
         else:
             if self.exception is None:
                 self.log(
@@ -153,9 +131,8 @@ class ImaerResultToGpkgTask(QgsTask):
         self.log(
             'RandomTask "{name}" was canceled'.format(
                 name=self.description()))
+                # TODO delete gpkg file
         super().cancel()
-
-
 
 
     def log(self, message, tab='Imaer'):
@@ -175,8 +152,9 @@ class ImaerResultToGpkgTask(QgsTask):
         fields = QgsFields()
         fields.append(QgsField('point_x', QVariant.Double))
         fields.append(QgsField('point_y', QVariant.Double))
-        fields.append(QgsField('result_NH3', QVariant.Double))
-        fields.append(QgsField('result_NOX', QVariant.Double))
+        for substance in _IMAER_DEPOSITION_SUBSTANCES:
+            field_name = 'DEP_{}'.format(substance)
+            fields.append(QgsField(field_name, QVariant.Double))
         self.conn.createVectorTable('', 'receptors', fields, QgsWkbTypes.Polygon, QgsCoordinateReferenceSystem(28992), True, {})
 
 
@@ -187,11 +165,6 @@ class ImaerResultToGpkgTask(QgsTask):
         feat = QgsFeature()
         feat.setAttributes([None, key, value])
         provider.addFeatures([feat])
-
-
-    def process_es(self, elem):
-        pass
-        #print('EmissionSource')
 
 
     def process_rp(self, elem, as_dict=False, full=False):
@@ -213,7 +186,7 @@ class ImaerResultToGpkgTask(QgsTask):
         coords = elem.findall('imaer:representation/gml:Polygon/gml:exterior/gml:LinearRing/gml:posList', self.namespaces)[0].text
         gml_numbers = coords.split()
         if not len(gml_numbers) == 14:
-            print(gml_numbers)
+            pass
         wkt_coord_list = []
         i = 0
         while i < len(gml_numbers):
@@ -222,14 +195,13 @@ class ImaerResultToGpkgTask(QgsTask):
         wkt_coords = ', '.join(wkt_coord_list)
         result['polygon_wkt'] = 'POLYGON(({}))'.format(wkt_coords)
 
-
         if full:
             result['result_fields'] = []
 
         for res in elem.findall('imaer:result/imaer:Result', self.namespaces):
             substance = res.attrib['substance']
             val = res.findall('imaer:value', self.namespaces)[0].text
-            field_name = 'result_{}'.format(substance)
+            field_name = 'DEP_{}'.format(substance)
             if full:
                 result['result_fields'].append(field_name)
             result[field_name] = float(val)
@@ -245,8 +217,8 @@ class ImaerResultToGpkgTask(QgsTask):
         attributes.append(int(result['receptorPointId']))
         attributes.append(float(result['point_x']))
         attributes.append(float(result['point_y']))
-        for substance in ['NH3', 'NOX']:
-            field_name = 'result_{}'.format(substance)
+        for substance in _IMAER_DEPOSITION_SUBSTANCES:
+            field_name = 'DEP_{}'.format(substance)
             if field_name in result:
                 attributes.append(float(result[field_name]))
             else:
