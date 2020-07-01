@@ -43,16 +43,26 @@ class ImaerPlugin:
         self.toolbar = self.iface.addToolBar("Imaer Toolbar")
         self.calc_file_dialog = QFileDialog()
 
-        reader_icon = QIcon(os.path.join(self.plugin_dir, 'icon_reader.png'))
-        self.reader_action = QAction(reader_icon, 'Import IMAER Calculator result gml', self.iface.mainWindow())
-        self.reader_action.triggered.connect(self.calc_reader_run)
-        self.toolbar.addAction(self.reader_action)
+        import_calc_icon = QIcon(os.path.join(self.plugin_dir, 'icon_calc_import.png'))
+        self.import_calc_action = QAction(import_calc_icon, 'Import IMAER Calculator result gml', self.iface.mainWindow())
+        self.import_calc_action.triggered.connect(self.run_import_calc)
+        self.toolbar.addAction(self.import_calc_action)
+
+        export_calc_icon = QIcon(os.path.join(self.plugin_dir, 'icon_calc_export.png'))
+        self.export_calc_action = QAction(export_calc_icon, 'Export to IMAER Calculator result gml', self.iface.mainWindow())
+        self.export_calc_action.triggered.connect(self.run_export_calc)
+        self.toolbar.addAction(self.export_calc_action)
 
 
     def unload(self):
-        self.reader_action.triggered.disconnect(self.calc_reader_run)
-        self.toolbar.removeAction(self.reader_action)
-        del self.reader_action
+        self.import_calc_action.triggered.disconnect(self.run_import_calc)
+        self.toolbar.removeAction(self.import_calc_action)
+        del self.import_calc_action
+
+        self.export_calc_action.triggered.disconnect(self.run_export_calc)
+        self.toolbar.removeAction(self.export_calc_action)
+        del self.export_calc_action
+
         del self.toolbar
 
 
@@ -61,7 +71,7 @@ class ImaerPlugin:
             QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
 
 
-    def calc_reader_run(self):
+    def run_import_calc(self):
         self.calc_file_dialog.setDirectory('/home/raymond/git/AERIUS-QGIS-plugins/demodata/')
         gml_fn, filter = self.calc_file_dialog.getOpenFileName(caption = "Open Calculator result gml file", filter='*.gml', parent=self.iface.mainWindow())
         self.log(gml_fn)
@@ -91,3 +101,8 @@ class ImaerPlugin:
             extent = receptors_layer.extent()
             extent.grow(100)
             canvas.setExtent(extent)
+
+
+    def run_export_calc(self):
+        self.log('run_export_calc()')
+        pass
