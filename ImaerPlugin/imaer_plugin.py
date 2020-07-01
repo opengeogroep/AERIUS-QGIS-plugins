@@ -25,7 +25,7 @@ from qgis.core import (
     QgsProject,
     QgsApplication)
 
-from .imaer_tasks import ImaerResultToGpkgTask
+from .tasks import ImportImaerCalculatorResultTask
 
 
 
@@ -69,7 +69,7 @@ class ImaerPlugin:
 
         if os.path.exists(os.path.dirname(gml_fn)):
             gpkg_fn = gml_fn.replace('.gml', '.gpkg')
-            task = ImaerResultToGpkgTask(gml_fn, gpkg_fn, self.load_calc_layer)
+            task = ImportImaerCalculatorResultTask(gml_fn, gpkg_fn, self.load_calc_layer)
             self.task_manager.addTask(task)
             self.log('added to task manager')
 

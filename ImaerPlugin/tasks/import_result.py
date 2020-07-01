@@ -25,10 +25,10 @@ _IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX', 'NO2']
 
 
 
-class ImaerResultToGpkgTask(QgsTask):
+class ImportImaerCalculatorResultTask(QgsTask):
 
     def __init__(self, gml_fn, gpkg_fn, load_layer_callback):
-        super().__init__('Imaer Result To Gpkg Task', QgsTask.CanCancel)
+        super().__init__('Import IMAER Calculator Result', QgsTask.CanCancel)
         self.gml_fn = gml_fn
         self.gpkg_fn = gpkg_fn
         self.load_layer_callback = load_layer_callback
@@ -89,7 +89,6 @@ class ImaerResultToGpkgTask(QgsTask):
         self.save_metadata('xml', xml_string)
         self.save_metadata('gml_fn', self.gml_fn)
         self.save_metadata('user', QgsExpressionContextUtils().globalScope().variable('user_full_name'))
-
 
         return True
 
@@ -168,9 +167,7 @@ class ImaerResultToGpkgTask(QgsTask):
 
 
     def process_rp(self, elem, as_dict=False, full=False):
-
         result = {}
-
         result['receptorPointId'] = elem.attrib['receptorPointId']
 
         if full:
