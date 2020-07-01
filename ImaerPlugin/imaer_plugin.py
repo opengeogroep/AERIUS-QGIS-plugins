@@ -25,7 +25,9 @@ from qgis.core import (
     QgsProject,
     QgsApplication)
 
-from .tasks import ImportImaerCalculatorResultTask
+from .tasks import (
+    ImportImaerCalculatorResultTask,
+    ExportImaerCalculatorResultTask)
 
 
 
@@ -105,4 +107,15 @@ class ImaerPlugin:
 
     def run_export_calc(self):
         self.log('run_export_calc()')
-        pass
+
+        receptor_layer = self.iface.activeLayer()
+
+        gml_fn = ''
+
+        if self.is_imaer_layer(receptor_layer):
+            task = ExportImaerCalculatorResultTask(receptor_layer, gml_fn)
+            self.task_manager.addTask(task)
+
+
+    def is_imaer_layer(self, receptor_layer):
+        return True

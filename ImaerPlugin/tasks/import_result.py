@@ -1,3 +1,4 @@
+import os
 import xml.etree.ElementTree as ET
 
 from qgis.PyQt.QtCore import QVariant
