@@ -1,12 +1,8 @@
-import random
-from time import sleep
-import os
 import xml.etree.ElementTree as ET
 
 from qgis.PyQt.QtCore import QVariant
 from qgis.core import (
     Qgis,
-    QgsApplication,
     QgsTask,
     QgsMessageLog,
     QgsProviderRegistry,
@@ -94,15 +90,6 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
 
     def finished(self, result):
-        """
-        This function is automatically called when the task has
-        completed (successfully or not).
-        You implement finished() to do whatever follow-up stuff
-        should happen after the task is complete.
-        finished is always called from the main thread, so it's safe
-        to do GUI operations and raise Python exceptions here.
-        result is the return value from self.run.
-        """
         self.log('finished task')
         #self.conn.close()
         if result:
@@ -113,13 +100,13 @@ class ImportImaerCalculatorResultTask(QgsTask):
         else:
             if self.exception is None:
                 self.log(
-                    'RandomTask "{name}" not successful but without '\
+                    'Task "{name}" not successful but without '\
                     'exception (probably the task was manually '\
                     'canceled by the user)'.format(
                         name=self.description()))
             else:
                 self.log(
-                    'RandomTask "{name}" Exception: {exception}'.format(
+                    'Task "{name}" Exception: {exception}'.format(
                         name=self.description(),
                         exception=self.exception))
                 raise self.exception
@@ -128,7 +115,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
     def cancel(self):
         self.log(
-            'RandomTask "{name}" was canceled'.format(
+            'Task "{name}" was canceled'.format(
                 name=self.description()))
                 # TODO delete gpkg file
         super().cancel()
