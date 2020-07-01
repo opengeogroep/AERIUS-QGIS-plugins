@@ -5,7 +5,6 @@ import time
 class TaskTimer():
     def __init__(self):
         self.reset()
-        self.add_feat_times = []
 
 
     def show(self):
@@ -37,8 +36,6 @@ class TaskTimer():
                 self.tasks[self.prev_name] += time_delta
             else:
                 self.tasks[self.prev_name] = time_delta
-            if self.prev_name == 'add feature':
-                self.add_feat_times.append(time_delta)
         else:
             self.start_time = self.prev_time = time.time()
         self.prev_time = time.time()

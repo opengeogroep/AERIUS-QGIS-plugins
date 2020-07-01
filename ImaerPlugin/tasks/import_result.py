@@ -17,8 +17,6 @@ from qgis.core import (
     QgsExpressionContextUtils
     )
 
-from .. task_timer import TaskTimer
-
 _IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX', 'NO2']
 
 
@@ -35,35 +33,27 @@ class ImportImaerCalculatorResultTask(QgsTask):
         self.do_log = True
         #self.log(self.gml_fn)
         self.namespaces = {}
-        self.task_timer = TaskTimer()
-        self.feat_timer = TaskTimer()
 
 
     def run(self):
         self.log('Started task "{}"'.format(self.description()))
 
-        self.task_timer.log('gpkg')
         self.create_gpkg()
 
-        self.task_timer.log('layer')
         receptors_layer = QgsVectorLayer(self.gpkg_fn, 'receptors', 'ogr')
         receptors_layer.startEditing()
-        #receptors_provider = receptors_layer.dataProvider()
 
         rp_cnt = 0
 
-        self.task_timer.log('get_file_size')
         with open(self.gml_fn, 'rb') as gml_file:
             gml_file_size = float(os.fstat(gml_file.fileno()).st_size)
             step = max(int(gml_file_size / 160000), 1)
             self.setProgress(0)
-            self.task_timer.log('parsing')
 
             context = ET.iterparse(gml_file, events=('start', 'end', 'start-ns'))
 
             root = None
             for event, elem in context:
-                self.task_timer.log('parsing')
 
                 #self.log('{}, {}'.format(event, elem))
 
@@ -79,13 +69,10 @@ class ImportImaerCalculatorResultTask(QgsTask):
                     #self.log('  {}'.format(child.tag))
                     if child.tag == '{http://imaer.aerius.nl/2.2}ReceptorPoint':
                         feat = self.process_rp(child)
-                        self.task_timer.log('add feature')
                         receptors_layer.addFeature(feat)
                         rp_cnt += 1
-                        self.task_timer.log('clear elem')
                         elem.clear()
 
-                self.task_timer.log('set progress')
                 if (rp_cnt) % step == 0:
                     self.setProgress( (gml_file.tell() / gml_file_size) * 100)
 
@@ -112,9 +99,6 @@ class ImportImaerCalculatorResultTask(QgsTask):
             self.log(
                 'ImaerResultToGpkgTask "{name}" completed'.format(
                   name=self.description()))
-            self.log(self.task_timer.show())
-            self.log(self.feat_timer.show())
-            self.log(self.task_timer.add_feat_times)
             self.load_layer_callback(self.gpkg_fn)
         else:
             if self.exception is None:
@@ -173,23 +157,19 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
 
     def process_rp(self, elem, as_dict=False, full=False):
-        self.task_timer.log('rp')
         result = {}
         result['receptorPointId'] = elem.attrib['receptorPointId']
 
         if full:
-            self.task_timer.log('full')
             pnt = elem.findall('imaer:GM_Point/gml:Point', self.namespaces)[0]
             srs = pnt.attrib['srsName']
             srs = srs.split('::')[1]
             result['epsg'] = srs
 
-        self.task_timer.log('point')
         pos = elem.findall('imaer:GM_Point/gml:Point/gml:pos', self.namespaces)[0].text.split()
         result['point_x'] = pos[0]
         result['point_y'] = pos[1]
 
-        self.task_timer.log('polygon')
         coords = elem.findall('imaer:representation/gml:Polygon/gml:exterior/gml:LinearRing/gml:posList', self.namespaces)[0].text
         gml_numbers = coords.split()
         if not len(gml_numbers) == 14:
@@ -203,10 +183,8 @@ class ImportImaerCalculatorResultTask(QgsTask):
         result['polygon_wkt'] = 'POLYGON(({}))'.format(wkt_coords)
 
         if full:
-            self.task_timer.log('full')
             result['result_fields'] = []
 
-        self.task_timer.log('result')
         for res in elem.findall('imaer:result/imaer:Result', self.namespaces):
             substance = res.attrib['substance']
             val = res.findall('imaer:value', self.namespaces)[0].text
@@ -218,20 +196,14 @@ class ImportImaerCalculatorResultTask(QgsTask):
         if as_dict:
             return result
 
-        self.task_timer.log('feat')
-        self.feat_timer.log('  init')
         feat = QgsFeature()
-        self.feat_timer.log('  wkt')
         geom = QgsGeometry.fromWkt(result['polygon_wkt'])
-        self.feat_timer.log('  set geom')
         feat.setGeometry(geom)
 
-        self.feat_timer.log('  attr simple')
         attributes = []
         attributes.append(int(result['receptorPointId']))
         attributes.append(float(result['point_x']))
         attributes.append(float(result['point_y']))
-        self.feat_timer.log('  attr dep')
 
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
             field_name = 'DEP_{}'.format(substance)
@@ -239,9 +211,6 @@ class ImportImaerCalculatorResultTask(QgsTask):
                 attributes.append(float(result[field_name]))
             else:
                 attributes.append(None)
-        self.feat_timer.log('  set attr')
         feat.setAttributes(attributes)
-        self.task_timer.log('void')
-        self.feat_timer.log('  void')
 
         return feat
