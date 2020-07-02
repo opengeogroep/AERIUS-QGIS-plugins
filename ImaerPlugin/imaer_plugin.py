@@ -117,7 +117,6 @@ class ImaerPlugin:
         self.log('run_export_calc()')
 
         receptor_layer = self.iface.activeLayer()
-
         gml_fn = ''
 
         if self.is_imaer_calc_layer(receptor_layer):
@@ -126,18 +125,18 @@ class ImaerPlugin:
 
 
     def get_imaer_calc_metadata(self, layer):
+        if layer is None:
+            print('layer is None')
+            return
+
         layer_id = layer.id()
-        print(layer_id)
 
         if layer_id in self.imaer_calc_layers:
+            print('  in cache')
             return self.imaer_calc_layers[layer_id]
 
         self.imaer_calc_layers[layer_id] = {}
         self.imaer_calc_layers[layer_id]['is_imaer_calc_layer'] = False
-
-        if layer is None:
-            return self.imaer_calc_layers[layer_id]
-        print('is_imaer_calc_layer {}'.format(layer.name()))
 
         if not isinstance(layer, QgsVectorLayer):
             print('  not vector')
@@ -174,5 +173,8 @@ class ImaerPlugin:
 
 
     def update_export_calc_widgets(self):
-        metadata = self.get_imaer_calc_metadata(self.iface.activeLayer())
-        self.export_calc_action.setEnabled(metadata['is_imaer_calc_layer'])
+        if self.iface.activeLayer() is not None:
+            metadata = self.get_imaer_calc_metadata(self.iface.activeLayer())
+            self.export_calc_action.setEnabled(metadata['is_imaer_calc_layer'])
+        else:
+            print('active layer is None')
