@@ -42,6 +42,9 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
         receptors_layer = QgsVectorLayer(self.gpkg_fn, 'receptors', 'ogr')
         receptors_layer.startEditing()
+        #receptors_provider = receptors_layer.dataProvider()
+        #receptors_provider.layerMetadata().setAbstract('imaer_calc_result')
+        #receptors_provider.layerMetadata().saveToLayer()
 
         rp_cnt = 0
 
@@ -136,7 +139,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         fields = QgsFields()
         fields.append(QgsField('key', QVariant.String))
         fields.append(QgsField('value', QVariant.String))
-        self.conn.createVectorTable('', 'metadata', fields, QgsWkbTypes.NoGeometry, QgsCoordinateReferenceSystem(), True, {})
+        self.conn.createVectorTable('', 'imaer_metadata', fields, QgsWkbTypes.NoGeometry, QgsCoordinateReferenceSystem(), True, {})
 
         fields = QgsFields()
         fields.append(QgsField('point_x', QVariant.Double))
@@ -148,7 +151,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
 
     def save_metadata(self, key, value):
-        layer = QgsVectorLayer('{}|layername={}'.format(self.gpkg_fn, 'metadata'), 'metadata', 'ogr')
+        layer = QgsVectorLayer('{}|layername={}'.format(self.gpkg_fn, 'imaer_metadata'), 'metadata', 'ogr')
         provider = layer.dataProvider()
 
         feat = QgsFeature()

@@ -38,6 +38,7 @@ class ImaerPlugin:
         self.iface = iface
         self.plugin_dir = os.path.dirname(__file__)
         self.task_manager = QgsApplication.taskManager()
+        self.imaer_calc_layers = {}
         self.do_log = True
 
 
@@ -55,8 +56,14 @@ class ImaerPlugin:
         self.export_calc_action.triggered.connect(self.run_export_calc)
         self.toolbar.addAction(self.export_calc_action)
 
+        self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
+
+        self.update_export_calc_widgets()
+
 
     def unload(self):
+        self.iface.mapCanvas().currentLayerChanged.disconnect(self.update_export_calc_widgets)
+
         self.import_calc_action.triggered.disconnect(self.run_import_calc)
         self.toolbar.removeAction(self.import_calc_action)
         del self.import_calc_action
@@ -92,7 +99,8 @@ class ImaerPlugin:
         stem, ext = os.path.splitext(base)
         layer_name = '{} receptors'.format(stem)
         self.log(layer_name)
-        receptors_layer = QgsVectorLayer(gpkg_fn, layer_name, 'ogr')
+        layer_data_source = '{}|layername={}'.format(gpkg_fn, 'receptors')
+        receptors_layer = QgsVectorLayer(layer_data_source, layer_name, 'ogr')
 
         hexagon_qml = os.path.join(self.plugin_dir, 'styles', 'imaer_hexagon.qml')
         receptors_layer.loadNamedStyle(hexagon_qml)
@@ -112,10 +120,59 @@ class ImaerPlugin:
 
         gml_fn = ''
 
-        if self.is_imaer_layer(receptor_layer):
+        if self.is_imaer_calc_layer(receptor_layer):
             task = ExportImaerCalculatorResultTask(receptor_layer, gml_fn)
             self.task_manager.addTask(task)
 
 
-    def is_imaer_layer(self, receptor_layer):
-        return True
+    def get_imaer_calc_metadata(self, layer):
+        layer_id = layer.id()
+        print(layer_id)
+
+        if layer_id in self.imaer_calc_layers:
+            return self.imaer_calc_layers[layer_id]
+
+        self.imaer_calc_layers[layer_id] = {}
+        self.imaer_calc_layers[layer_id]['is_imaer_calc_layer'] = False
+
+        if layer is None:
+            return self.imaer_calc_layers[layer_id]
+        print('is_imaer_calc_layer {}'.format(layer.name()))
+
+        if not isinstance(layer, QgsVectorLayer):
+            print('  not vector')
+            return self.imaer_calc_layers[layer_id]
+
+        provider = layer.dataProvider()
+        if not provider.wkbType() == 3:
+            print('  not polygon')
+            return self.imaer_calc_layers[layer_id]
+
+        ds = provider.dataSourceUri()
+        print(' ', ds)
+        if '|layername=' in ds:
+            gpkg_fn, gpkg_layer = ds.split('|layername=')
+            print(' ', gpkg_fn, gpkg_layer)
+        else:
+            return self.imaer_calc_layers[layer_id]
+        if not gpkg_layer == 'receptors':
+            print('  not receptors')
+            return self.imaer_calc_layers[layer_id]
+
+        metadata_ds = '{}|layername=imaer_metadata'.format(gpkg_fn)
+        print(metadata_ds)
+        try:
+            md_layer = QgsVectorLayer(metadata_ds, 'metadata', 'ogr')
+        except:
+            print('  no metadata')
+            return self.imaer_calc_layers[layer_id]
+        for md_feat in md_layer.getFeatures():
+           self.imaer_calc_layers[layer_id][md_feat[1]] = md_feat[2]
+        self.imaer_calc_layers[layer_id]['is_imaer_calc_layer'] = True
+
+        return self.imaer_calc_layers[layer_id]
+
+
+    def update_export_calc_widgets(self):
+        metadata = self.get_imaer_calc_metadata(self.iface.activeLayer())
+        self.export_calc_action.setEnabled(metadata['is_imaer_calc_layer'])
