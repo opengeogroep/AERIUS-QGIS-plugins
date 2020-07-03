@@ -117,11 +117,23 @@ class ImaerPlugin:
         self.log('run_export_calc()')
 
         receptor_layer = self.iface.activeLayer()
-        gml_fn = ''
+        metadata = self.get_imaer_calc_metadata(receptor_layer)
 
-        if self.is_imaer_calc_layer(receptor_layer):
-            task = ExportImaerCalculatorResultTask(receptor_layer, gml_fn)
-            self.task_manager.addTask(task)
+        if not metadata['is_imaer_calc_layer']:
+            self.log('active layer is not an Imaer layer') #todo messagedlg error
+
+        gpkg_fn = metadata['gpkg_fn']
+        gml_fn = gpkg_fn.replace('.gpkg', '_modified.gml')
+        print(gml_fn)
+
+        xml_lines = []
+        for line in metadata['xml'].split('\n'):
+            if not line.strip() == '':
+                print(line)
+                xml_lines.append(line)
+
+        task = ExportImaerCalculatorResultTask(receptor_layer, gml_fn, xml_lines)
+        self.task_manager.addTask(task)
 
 
     def get_imaer_calc_metadata(self, layer):
@@ -168,6 +180,8 @@ class ImaerPlugin:
         for md_feat in md_layer.getFeatures():
            self.imaer_calc_layers[layer_id][md_feat[1]] = md_feat[2]
         self.imaer_calc_layers[layer_id]['is_imaer_calc_layer'] = True
+        self.imaer_calc_layers[layer_id]['gpkg_fn'] = gpkg_fn
+
 
         return self.imaer_calc_layers[layer_id]
 
