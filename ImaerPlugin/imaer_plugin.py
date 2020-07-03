@@ -39,7 +39,7 @@ class ImaerPlugin:
         self.plugin_dir = os.path.dirname(__file__)
         self.task_manager = QgsApplication.taskManager()
         self.imaer_calc_layers = {}
-        self.do_log = True
+        self.do_log = False
 
 
     def initGui(self):
@@ -81,7 +81,8 @@ class ImaerPlugin:
 
 
     def run_import_calc(self):
-        self.calc_file_dialog.setDirectory('/home/raymond/git/AERIUS-QGIS-plugins/demodata/')
+        if self.do_log:
+            self.calc_file_dialog.setDirectory('/home/raymond/git/AERIUS-QGIS-plugins/demodata/')
         gml_fn, filter = self.calc_file_dialog.getOpenFileName(caption = "Open Calculator result gml file", filter='*.gml', parent=self.iface.mainWindow())
         self.log(gml_fn)
         #print(gml_fn)
@@ -91,7 +92,6 @@ class ImaerPlugin:
             task = ImportImaerCalculatorResultTask(gml_fn, gpkg_fn, self.load_calc_layer)
             self.task_manager.addTask(task)
             self.log('added to task manager')
-
 
 
     def load_calc_layer(self, gpkg_fn, zoom=True):
@@ -139,44 +139,44 @@ class ImaerPlugin:
 
     def get_imaer_calc_metadata(self, layer):
         if layer is None:
-            print('layer is None')
+            #print('layer is None')
             return
 
         layer_id = layer.id()
 
         if layer_id in self.imaer_calc_layers:
-            print('  in cache')
+            #print('  in cache')
             return self.imaer_calc_layers[layer_id]
 
         self.imaer_calc_layers[layer_id] = {}
         self.imaer_calc_layers[layer_id]['is_imaer_calc_layer'] = False
 
         if not isinstance(layer, QgsVectorLayer):
-            print('  not vector')
+            #print('  not vector')
             return self.imaer_calc_layers[layer_id]
 
         provider = layer.dataProvider()
         if not provider.wkbType() == 3:
-            print('  not polygon')
+            #print('  not polygon')
             return self.imaer_calc_layers[layer_id]
 
         ds = provider.dataSourceUri()
-        print(' ', ds)
+        #print(' ', ds)
         if '|layername=' in ds:
             gpkg_fn, gpkg_layer = ds.split('|layername=')
-            print(' ', gpkg_fn, gpkg_layer)
+            #print(' ', gpkg_fn, gpkg_layer)
         else:
             return self.imaer_calc_layers[layer_id]
         if not gpkg_layer == 'receptors':
-            print('  not receptors')
+            #print('  not receptors')
             return self.imaer_calc_layers[layer_id]
 
         metadata_ds = '{}|layername=imaer_metadata'.format(gpkg_fn)
-        print(metadata_ds)
+        #print(metadata_ds)
         try:
             md_layer = QgsVectorLayer(metadata_ds, 'metadata', 'ogr')
         except:
-            print('  no metadata')
+            #print('  no metadata')
             return self.imaer_calc_layers[layer_id]
         for md_feat in md_layer.getFeatures():
            self.imaer_calc_layers[layer_id][md_feat[1]] = md_feat[2]
