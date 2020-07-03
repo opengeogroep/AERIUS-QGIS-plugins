@@ -1,11 +1,13 @@
 import xml.etree.ElementTree as ET
-from time import sleep
 
 from qgis.core import (
     Qgis,
     QgsTask,
     QgsMessageLog
     )
+
+from .. task_timer import TaskTimer
+
 
 _IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX', 'NO2']
 
@@ -23,6 +25,8 @@ class ExportImaerCalculatorResultTask(QgsTask):
         self.do_log = True
         #self.log(self.gml_fn)
 
+        self.tt = TaskTimer()
+
 
     def log(self, message, tab='Imaer'):
         if self.do_log:
@@ -30,6 +34,7 @@ class ExportImaerCalculatorResultTask(QgsTask):
 
 
     def run(self):
+        self.tt.log('start')
         self.log('Started task "{}"'.format(self.description()))
 
         feat_i = 0
@@ -37,22 +42,25 @@ class ExportImaerCalculatorResultTask(QgsTask):
 
 
         with open(self.gml_fn, 'w') as gml_file:
+            self.tt.log('header')
+
             for line in self.xml_lines[:-1]:
                 gml_file.write(line + '\n')
 
+            self.tt.log('features')
             for feat in self.receptor_layer.getFeatures():
                 feat_i += 1
                 self.log(feat)
                 self.setProgress((feat_i / feat_cnt) * 100)
-                sleep(0.005)
 
                 receptor_xml = self.create_receptor_xml(feat)
+                self.tt.log('write')
                 gml_file.write(receptor_xml)
 
                 if self.isCanceled():
                     return False
 
-            gml_file.write('    <!-- qgis generated imaer gml-->\n')
+            #gml_file.write('    <!-- qgis generated imaer gml-->\n')
 
             gml_file.write(self.xml_lines[-1].strip())
 
@@ -61,6 +69,7 @@ class ExportImaerCalculatorResultTask(QgsTask):
 
     def finished(self, result):
         self.log('finished task')
+        #self.tt.show()
         #self.conn.close()
         if result:
             self.log(
@@ -89,55 +98,54 @@ class ExportImaerCalculatorResultTask(QgsTask):
         super().cancel()
 
 
-    def create_gml(self):
-        pass
-
-
     def create_receptor_xml(self, feat):
-        id = feat.attribute('fid')
-        x = feat[1]
-        y = feat[2]
-        dep_nh3 = feat[3]
-        dep_nox = feat[4]
+        self.tt.log('attrs')
+        id = feat['fid']
+        x = feat['point_x']
+        y = feat['point_y']
+        self.tt.log('poslist')
+        poslist = self.poslist_from_polygon(feat)
+        self.tt.log('format')
         result = f'''
     <imaer:featureMember>
-        <imaer:ReceptorPoint receptorPointId="{id}" gml:id="CP.{id}">
+        <imaer:ReceptorPoint receptorPointId="{ id }" gml:id="CP.{ id }">
             <imaer:identifier>
                 <imaer:NEN3610ID>
                     <imaer:namespace>NL.IMAER</imaer:namespace>
-                    <imaer:localId>CP.{id}</imaer:localId>
-                </imaer:NEN3610ID>
+                    <imaer:localId>CP.{ id }</imaer:localId>
+                    self.tt = TaskTimer()    </imaer:NEN3610ID>
             </imaer:identifier>
             <imaer:GM_Point>
-                <gml:Point srsName="urn:ogc:def:crs:EPSG::28992" gml:id="CP.{id}.POINT">
-                    <gml:pos>{x} {y}</gml:pos>
+                <gml:Point srsName="urn:ogc:def:crs:EPSG::28992" gml:id="CP.{ id }.POINT">
+                    <gml:pos>{ x } { y }</gml:pos>
                 </gml:Point>
             </imaer:GM_Point>
             <imaer:representation>
-                <gml:Polygon srsName="urn:ogc:def:crs:EPSG::28992" gml:id="NL.IMAER.REPR.{id}">
+                <gml:Polygon srsName="urn:ogc:def:crs:EPSG::28992" gml:id="NL.IMAER.REPR.{ id }">
                     <gml:exterior>
                         <gml:LinearRing>
-                            <gml:posList>136432.0 408878.0 136463.0 408824.0 136432.0 408770.0 136370.0 408770.0 136339.0 408824.0 136370.0 408878.0 136432.0 408878.0</gml:posList>
+                            <gml:posList>{ poslist }</gml:posList>
                         </gml:LinearRing>
                     </gml:exterior>
                 </gml:Polygon>
             </imaer:representation>\n'''
 
+        self.tt.log('substances')
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
             field_name = 'DEP_{}'.format(substance)
             value = feat.attribute(field_name)
-            print(value, type(value))
-            if isinstance(value, float):
+            if isinstance(value, float): #empty records are returned as <class 'PyQt5.QtCore.QVariant'> NULL values
                 result += self.create_result_value_xml(substance, value)
 
         result += '''</imaer:ReceptorPoint>
     </imaer:featureMember>
 '''
+        self.tt.log('void')
         return result
 
 
     def create_result_value_xml(self, substance, value):
-        print(f'{substance}: {value}')
+        #print(f'{ substance }: { value }')
         result = f'''
             <imaer:result>
                 <imaer:Result resultType="DEPOSITION" substance="{ substance }">
@@ -145,4 +153,18 @@ class ExportImaerCalculatorResultTask(QgsTask):
                 </imaer:Result>
             </imaer:result>
 '''
+        return result
+
+
+    def poslist_from_polygon(self, feat):
+        geom = feat.geometry()
+        polygon = geom.asPolygon()
+        outer = polygon[0]
+        poslist = []
+        for point in outer:
+            x = round(point.x(), 1)
+            poslist.append(str(x))
+            y = round(point.y(), 1)
+            poslist.append(str(y))
+        result = ' '.join(poslist)
         return result

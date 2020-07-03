@@ -93,6 +93,7 @@ class ImaerPlugin:
             self.log('added to task manager')
 
 
+
     def load_calc_layer(self, gpkg_fn, zoom=True):
         '''Callback function from the task after finishing the gpkg'''
         base = os.path.basename(gpkg_fn)
@@ -129,7 +130,7 @@ class ImaerPlugin:
         xml_lines = []
         for line in metadata['xml'].split('\n'):
             if not line.strip() == '':
-                print(line)
+                #print(line)
                 xml_lines.append(line)
 
         task = ExportImaerCalculatorResultTask(receptor_layer, gml_fn, xml_lines)
