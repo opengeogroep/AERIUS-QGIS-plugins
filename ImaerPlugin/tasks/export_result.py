@@ -11,6 +11,8 @@ from .. task_timer import TaskTimer
 
 _IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX', 'NO2']
 
+tab = 'Imaer'
+
 
 
 
@@ -42,12 +44,14 @@ class ExportImaerCalculatorResultTask(QgsTask):
 
 
         with open(self.gml_fn, 'w') as gml_file:
-            self.tt.log('header')
+            self.tt.log('writing header')
 
+            gml_file.write('''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n''')
             for line in self.xml_lines[:-1]:
                 gml_file.write(line + '\n')
 
-            self.tt.log('features')
+            self.tt.log('writing features')
+
             for feat in self.receptor_layer.getFeatures():
                 feat_i += 1
                 self.log(feat)
@@ -62,6 +66,8 @@ class ExportImaerCalculatorResultTask(QgsTask):
 
             #gml_file.write('    <!-- qgis generated imaer gml-->\n')
 
+            self.tt.log('writing footer')
+            gml_file.write('\n')
             gml_file.write(self.xml_lines[-1].strip())
 
         return True
@@ -99,13 +105,13 @@ class ExportImaerCalculatorResultTask(QgsTask):
 
 
     def create_receptor_xml(self, feat):
-        self.tt.log('attrs')
+        #self.tt.log('attrs')
         id = feat['fid']
         x = feat['point_x']
         y = feat['point_y']
-        self.tt.log('poslist')
+        #self.tt.log('poslist')
         poslist = self.poslist_from_polygon(feat)
-        self.tt.log('format')
+        #self.tt.log('format')
         result = f'''
     <imaer:featureMember>
         <imaer:ReceptorPoint receptorPointId="{ id }" gml:id="CP.{ id }">
@@ -113,7 +119,7 @@ class ExportImaerCalculatorResultTask(QgsTask):
                 <imaer:NEN3610ID>
                     <imaer:namespace>NL.IMAER</imaer:namespace>
                     <imaer:localId>CP.{ id }</imaer:localId>
-                    self.tt = TaskTimer()    </imaer:NEN3610ID>
+                </imaer:NEN3610ID>
             </imaer:identifier>
             <imaer:GM_Point>
                 <gml:Point srsName="urn:ogc:def:crs:EPSG::28992" gml:id="CP.{ id }.POINT">
@@ -128,18 +134,18 @@ class ExportImaerCalculatorResultTask(QgsTask):
                         </gml:LinearRing>
                     </gml:exterior>
                 </gml:Polygon>
-            </imaer:representation>\n'''
+            </imaer:representation>'''
 
-        self.tt.log('substances')
+        #self.tt.log('substances')
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
-            field_name = 'DEP_{}'.format(substance)
+            field_name = 'dep_{}'.format(substance)
             value = feat.attribute(field_name)
             if isinstance(value, float): #empty records are returned as <class 'PyQt5.QtCore.QVariant'> NULL values
                 result += self.create_result_value_xml(substance, value)
 
-        result += '''</imaer:ReceptorPoint>
-    </imaer:featureMember>
-'''
+        result += '''
+        </imaer:ReceptorPoint>
+    </imaer:featureMember>'''
         self.tt.log('void')
         return result
 
@@ -151,8 +157,7 @@ class ExportImaerCalculatorResultTask(QgsTask):
                 <imaer:Result resultType="DEPOSITION" substance="{ substance }">
                     <imaer:value>{ value }</imaer:value>
                 </imaer:Result>
-            </imaer:result>
-'''
+            </imaer:result>'''
         return result
 
 

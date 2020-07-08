@@ -17,7 +17,7 @@ from qgis.core import (
     QgsExpressionContextUtils
     )
 
-_IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX', 'NO2']
+_IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NO2', 'NOX']
 
 
 
@@ -145,7 +145,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         fields.append(QgsField('point_x', QVariant.Double))
         fields.append(QgsField('point_y', QVariant.Double))
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
-            field_name = 'DEP_{}'.format(substance)
+            field_name = 'dep_{}'.format(substance)
             fields.append(QgsField(field_name, QVariant.Double))
         self.conn.createVectorTable('', 'receptors', fields, QgsWkbTypes.Polygon, QgsCoordinateReferenceSystem(28992), True, {})
 
@@ -209,7 +209,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         attributes.append(float(result['point_y']))
 
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
-            field_name = 'DEP_{}'.format(substance)
+            field_name = 'dep_{}'.format(substance)
             if field_name in result:
                 attributes.append(float(result[field_name]))
             else:
