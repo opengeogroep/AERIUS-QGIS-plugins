@@ -6,9 +6,17 @@ from qgis.utils import iface
 from PyQt5.QtWidgets import QDialog
 from PyQt5 import uic
 
+from qgis.gui import QgsMapLayerComboBox
+
+'''pluginType = MODULE
+def moduleInformation():
+     return "qgis.gui", ("QgsMapLayerCombobox", "QgsMapLayerProxyModel" )
+'''
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'generate_calc_input_dlg.ui'))
+
+
 
 
 class GenerateCalcInputDialog(QDialog, FORM_CLASS):

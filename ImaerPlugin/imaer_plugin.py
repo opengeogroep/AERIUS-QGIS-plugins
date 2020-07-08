@@ -24,14 +24,16 @@ from qgis.core import (
     QgsField,
     QgsProject,
     QgsApplication)
+from qgis.gui import QgsMapLayerComboBox
 
 from .tasks import (
     ImportImaerCalculatorResultTask,
     ExportImaerCalculatorResultTask)
-
 from .generate_calc_input import GenerateCalcInputDialog
 
-
+'''def moduleInformation():
+     return "qgis.gui", ("QgsMapLayerCombobox", "QgsMapLayerProxyModel" )
+'''
 
 
 class ImaerPlugin:
