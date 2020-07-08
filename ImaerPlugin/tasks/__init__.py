@@ -1,2 +1,2 @@
-from .import_result import ImportImaerCalculatorResultTask
-from .export_result import ExportImaerCalculatorResultTask
+from .import_calc_result import ImportImaerCalculatorResultTask
+from .export_calc_result import ExportImaerCalculatorResultTask

@@ -29,6 +29,8 @@ from .tasks import (
     ImportImaerCalculatorResultTask,
     ExportImaerCalculatorResultTask)
 
+from .generate_calc_input import GenerateCalcInputDialog
+
 
 
 
@@ -46,15 +48,22 @@ class ImaerPlugin:
         self.toolbar = self.iface.addToolBar("Imaer Toolbar")
         self.calc_file_dialog = QFileDialog()
 
-        import_calc_icon = QIcon(os.path.join(self.plugin_dir, 'icon_calc_import.png'))
-        self.import_calc_action = QAction(import_calc_icon, 'Import IMAER Calculator result gml', self.iface.mainWindow())
-        self.import_calc_action.triggered.connect(self.run_import_calc)
-        self.toolbar.addAction(self.import_calc_action)
+        icon_import_calc = QIcon(os.path.join(self.plugin_dir, 'icon_import_calc_result.png'))
+        self.import_calc_result_action = QAction(icon_import_calc, 'Import IMAER Calculator result gml', self.iface.mainWindow())
+        self.import_calc_result_action.triggered.connect(self.run_import_calc_result)
+        self.toolbar.addAction(self.import_calc_result_action)
 
-        export_calc_icon = QIcon(os.path.join(self.plugin_dir, 'icon_calc_export.png'))
-        self.export_calc_action = QAction(export_calc_icon, 'Export to IMAER Calculator result gml', self.iface.mainWindow())
-        self.export_calc_action.triggered.connect(self.run_export_calc)
-        self.toolbar.addAction(self.export_calc_action)
+        icon_export_calc = QIcon(os.path.join(self.plugin_dir, 'icon_export_calc_result.png'))
+        self.export_calc_result_action = QAction(icon_export_calc, 'Export to IMAER Calculator result gml', self.iface.mainWindow())
+        self.export_calc_result_action.triggered.connect(self.run_export_calc_result)
+        self.toolbar.addAction(self.export_calc_result_action)
+
+        icon_generate_calc_input = QIcon(os.path.join(self.plugin_dir, 'icon_generate_calc_input.png'))
+        self.generate_calc_input_action = QAction(icon_generate_calc_input, 'Generate IMAER Calculator input gml', self.iface.mainWindow())
+        self.generate_calc_input_action.triggered.connect(self.run_generate_calc_input)
+        self.toolbar.addAction(self.generate_calc_input_action)
+
+        self.generate_calc_input_dlg = GenerateCalcInputDialog()
 
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
 
@@ -64,13 +73,17 @@ class ImaerPlugin:
     def unload(self):
         self.iface.mapCanvas().currentLayerChanged.disconnect(self.update_export_calc_widgets)
 
-        self.import_calc_action.triggered.disconnect(self.run_import_calc)
-        self.toolbar.removeAction(self.import_calc_action)
-        del self.import_calc_action
+        self.import_calc_result_action.triggered.disconnect(self.run_import_calc_result)
+        self.toolbar.removeAction(self.import_calc_result_action)
+        del self.import_calc_result_action
 
-        self.export_calc_action.triggered.disconnect(self.run_export_calc)
-        self.toolbar.removeAction(self.export_calc_action)
-        del self.export_calc_action
+        self.export_calc_result_action.triggered.disconnect(self.run_export_calc_result)
+        self.toolbar.removeAction(self.export_calc_result_action)
+        del self.export_calc_result_action
+
+        self.generate_calc_input_action.triggered.disconnect(self.run_generate_calc_input)
+        self.toolbar.removeAction(self.generate_calc_input_action)
+        del self.generate_calc_input_action
 
         del self.toolbar
 
@@ -80,7 +93,7 @@ class ImaerPlugin:
             QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
 
 
-    def run_import_calc(self):
+    def run_import_calc_result(self):
         if self.do_log:
             self.calc_file_dialog.setDirectory('/home/raymond/git/AERIUS-QGIS-plugins/demodata/')
         gml_fn, filter = self.calc_file_dialog.getOpenFileName(caption = "Open Calculator result gml file", filter='*.gml', parent=self.iface.mainWindow())
@@ -114,8 +127,8 @@ class ImaerPlugin:
             canvas.setExtent(extent)
 
 
-    def run_export_calc(self):
-        self.log('run_export_calc()')
+    def run_export_calc_result(self):
+        self.log('run_export_calc_result()')
 
         receptor_layer = self.iface.activeLayer()
         metadata = self.get_imaer_calc_metadata(receptor_layer)
@@ -183,13 +196,15 @@ class ImaerPlugin:
         self.imaer_calc_layers[layer_id]['is_imaer_calc_layer'] = True
         self.imaer_calc_layers[layer_id]['gpkg_fn'] = gpkg_fn
 
-
         return self.imaer_calc_layers[layer_id]
+
+
+    def run_generate_calc_input(self):
+        self.log('run_generate_calc_input()')
+        self.generate_calc_input_dlg.show()
 
 
     def update_export_calc_widgets(self):
         if self.iface.activeLayer() is not None:
             metadata = self.get_imaer_calc_metadata(self.iface.activeLayer())
-            self.export_calc_action.setEnabled(metadata['is_imaer_calc_layer'])
-        else:
-            print('active layer is None')
+            self.export_calc_result_action.setEnabled(metadata['is_imaer_calc_layer'])

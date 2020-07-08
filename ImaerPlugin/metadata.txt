@@ -24,7 +24,7 @@ changelog=
 tags=imaer,aerius,calculator,gml,stikstof
 
 category=Plugins
-icon=icon_calc_import.png
+icon=icon_import_calc_result.png
 
 # experimental flag
 experimental=True
