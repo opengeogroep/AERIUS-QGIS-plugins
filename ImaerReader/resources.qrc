@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/plugins/ImaerReader" >
-        <file>icon.png</file>
-        <file>ogg-logo_64x64.png</file>
-    </qresource>
-</RCC>
