@@ -70,14 +70,14 @@ class ImaerReader:
         # Create the dialog (after translation) and keep reference
         self.dlg = ImaerReaderDialog()
 
-        
-        # add some necessary signal and slot communication as well as disable the save button for now              
+
+        # add some necessary signal and slot communication as well as disable the save button for now
         self.dlg.cancel_open_button_box.button(QDialogButtonBox.Open).setEnabled(False)
         QObject.connect(self.dlg.fileBrowseButton, SIGNAL("clicked()"), self.chooseFile)
         QObject.connect(self.dlg.gmlFileNameBox, SIGNAL("textChanged(QString)"), self.gmlFileNameBoxChanged)
         QObject.connect(self.dlg.help_pushButton, SIGNAL("clicked()"), self.showHelp)
         self.dlg.workerEnd.connect(self.zoomToLayers)
-        
+
 
 
         # Declare instance attributes
@@ -210,9 +210,9 @@ class ImaerReader:
         if result:
             self.doPoint = self.dlg.point_checkBox.checkState()
             self.doHexagon = self.dlg.hexagon_checkBox.checkState()
-            # create new IMAER feature collection object 
+            # create new IMAER feature collection object
             featureCollection = IR.ImaerRead(gmlFile = self.dlg.gmlFileNameBox.text())
-            
+
             self.attributes = featureCollection.AttributeFields
 
             #create layers
@@ -225,9 +225,9 @@ class ImaerReader:
             else:
                 self.hexagonProvider = None
 
-            # start worker for reading features in different thread 
+            # start worker for reading features in different thread
             self.dlg.startWorker(featureCollection, self.attributes, self.pointProvider, self.hexagonProvider)
-            
+
             # add layers to map
             canvas = iface.mapCanvas()
             if self.doHexagon:
@@ -250,7 +250,7 @@ class ImaerReader:
             if not self.doHexagon:
                 canvas.setExtent(self.pointLayer.extent())
         canvas.refresh()
-    
+
 
     def createLayer(self, dim=2, name="imaer layer"):
         """Creates a map layer of polygon (2) or point (0) type, and returns both the layer and the provider as a tuple.
@@ -267,29 +267,28 @@ class ImaerReader:
         else:
             vl = QgsVectorLayer("Point?crs=EPSG:28992", name, "memory")
         pr = vl.dataProvider()
-        
+
         # add fields
         pr.addAttributes([QgsField("id", QVariant.String)])
         for subst in self.attributes:
             pr.addAttributes([QgsField(subst, QVariant.Double)])
         vl.updateFields()
         return (vl,pr)
-        
+
     def updateFeatureCounter(self):
         """Updates the feature count in the progress dialog."""
         self.progress.feature_count_label.setText(str(self.featureCount))
-    
+
     def chooseFile(self):
         """Opens the file dialog to pick a file to open"""
         fileName = QFileDialog.getOpenFileName(caption = "Open IMAER gml File", filter = '*.gml')
         self.dlg.gmlFileNameBox.setText(fileName)
-        
+
     def gmlFileNameBoxChanged(self, fileName):
         """Enables the OK button after entering a file name"""
         if os.path.exists(os.path.dirname(fileName)):
             self.dlg.cancel_open_button_box.button(QDialogButtonBox.Open).setEnabled(True)
-    
+
     def showHelp(self):
         """Reacts on help button"""
         showPluginHelp(filename = 'help/index')
-        

@@ -17,10 +17,17 @@ from PyQt5.QtWidgets import QAction, QFileDialog, QDialogButtonBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QVariant
 
-from qgis.core import QgsMessageLog, Qgis, QgsVectorLayer, QgsField, QgsProject
+from qgis.core import (
+    QgsMessageLog,
+    Qgis,
+    QgsVectorLayer,
+    QgsField,
+    QgsProject,
+    QgsApplication)
 
-from .imaer_reader_dialog import ImaerReaderDialog
-from .imaerread import ImaerRead
+from .tasks import (
+    ImportImaerCalculatorResultTask,
+    ExportImaerCalculatorResultTask)
 
 
 
@@ -30,34 +37,42 @@ class ImaerPlugin:
     def __init__(self, iface):
         self.iface = iface
         self.plugin_dir = os.path.dirname(__file__)
-        self.do_log = True
-        #self.log('init')
+        self.task_manager = QgsApplication.taskManager()
+        self.imaer_calc_layers = {}
+        self.do_log = False
 
 
     def initGui(self):
         self.toolbar = self.iface.addToolBar("Imaer Toolbar")
+        self.calc_file_dialog = QFileDialog()
 
-        self.reader_dlg = ImaerReaderDialog()
+        import_calc_icon = QIcon(os.path.join(self.plugin_dir, 'icon_calc_import.png'))
+        self.import_calc_action = QAction(import_calc_icon, 'Import IMAER Calculator result gml', self.iface.mainWindow())
+        self.import_calc_action.triggered.connect(self.run_import_calc)
+        self.toolbar.addAction(self.import_calc_action)
 
-        reader_icon = QIcon(os.path.join(self.plugin_dir, 'icon_reader.png'))
-        self.reader_action = QAction(reader_icon, 'Import IMAER result', self.iface.mainWindow())
-        self.reader_action.triggered.connect(self.reader_run)
-        self.toolbar.addAction(self.reader_action)
+        export_calc_icon = QIcon(os.path.join(self.plugin_dir, 'icon_calc_export.png'))
+        self.export_calc_action = QAction(export_calc_icon, 'Export to IMAER Calculator result gml', self.iface.mainWindow())
+        self.export_calc_action.triggered.connect(self.run_export_calc)
+        self.toolbar.addAction(self.export_calc_action)
 
-        self.reader_dlg.fileBrowseButton.clicked.connect(self.chooseFile)
-        self.reader_dlg.gmlFileNameBox.textChanged.connect(self.gmlFileNameBoxChanged)
-        self.reader_dlg.workerEnd.connect(self.zoomToLayers)
+        self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
+
+        self.update_export_calc_widgets()
 
 
     def unload(self):
-        self.reader_action.triggered.disconnect(self.reader_run)
-        self.toolbar.removeAction(self.reader_action)
-        del self.reader_action
-        del self.toolbar
+        self.iface.mapCanvas().currentLayerChanged.disconnect(self.update_export_calc_widgets)
 
-        self.reader_dlg.fileBrowseButton.clicked.disconnect(self.chooseFile)
-        self.reader_dlg.gmlFileNameBox.textChanged.disconnect(self.gmlFileNameBoxChanged)
-        self.reader_dlg.workerEnd.disconnect(self.zoomToLayers)
+        self.import_calc_action.triggered.disconnect(self.run_import_calc)
+        self.toolbar.removeAction(self.import_calc_action)
+        del self.import_calc_action
+
+        self.export_calc_action.triggered.disconnect(self.run_export_calc)
+        self.toolbar.removeAction(self.export_calc_action)
+        del self.export_calc_action
+
+        del self.toolbar
 
 
     def log(self, message, tab='Imaer'):
@@ -65,89 +80,116 @@ class ImaerPlugin:
             QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
 
 
-    def reader_run(self):
-        self.reader_dlg.show()
-        result = self.reader_dlg.exec_()
-        self.log(result)
-        if result:
-            self.doPoint = self.reader_dlg.point_checkBox.checkState()
-            self.doHexagon = self.reader_dlg.hexagon_checkBox.checkState()
+    def run_import_calc(self):
+        if self.do_log:
+            self.calc_file_dialog.setDirectory('/home/raymond/git/AERIUS-QGIS-plugins/demodata/')
+        gml_fn, filter = self.calc_file_dialog.getOpenFileName(caption = "Open Calculator result gml file", filter='*.gml', parent=self.iface.mainWindow())
+        self.log(gml_fn)
+        #print(gml_fn)
 
-            # create new IMAER feature collection object
-            featureCollection = ImaerRead(gmlFile = self.reader_dlg.gmlFileNameBox.text())
+        if os.path.exists(os.path.dirname(gml_fn)):
+            gpkg_fn = gml_fn.replace('.gml', '.gpkg')
+            task = ImportImaerCalculatorResultTask(gml_fn, gpkg_fn, self.load_calc_layer)
+            self.task_manager.addTask(task)
+            self.log('added to task manager')
 
-            self.attributes = featureCollection.attributeFields
 
-            #create layers
-            if self.doPoint:
-                (self.pointLayer, self.pointProvider) = self.createLayer(dim=0, name="Deposition Points")
-            else:
-                self.pointProvider = None
-            if self.doHexagon:
-                (self.hexagonLayer, self.hexagonProvider) = self.createLayer(dim=2, name="Deposition Hexagons")
-            else:
-                self.hexagonProvider = None
+    def load_calc_layer(self, gpkg_fn, zoom=True):
+        '''Callback function from the task after finishing the gpkg'''
+        base = os.path.basename(gpkg_fn)
+        stem, ext = os.path.splitext(base)
+        layer_name = '{} receptors'.format(stem)
+        self.log(layer_name)
+        layer_data_source = '{}|layername={}'.format(gpkg_fn, 'receptors')
+        receptors_layer = QgsVectorLayer(layer_data_source, layer_name, 'ogr')
 
-            # start worker for reading features in different thread
-            self.reader_dlg.startWorker(featureCollection, self.attributes, self.pointProvider, self.hexagonProvider)
+        hexagon_qml = os.path.join(self.plugin_dir, 'styles', 'imaer_hexagon.qml')
+        receptors_layer.loadNamedStyle(hexagon_qml)
+        QgsProject.instance().addMapLayer(receptors_layer)
 
-            # add layers to map
+        if zoom:
             canvas = self.iface.mapCanvas()
-            if self.doHexagon:
-                hexagonQml = os.path.join(self.plugin_dir, 'styles', 'imaer_hexagon.qml')
-                self.hexagonLayer.loadNamedStyle(hexagonQml)
-                QgsProject.instance().addMapLayer(self.hexagonLayer)
-            if self.doPoint:
-                # TODO: create some point style too
-                #self.pointLayer.loadNamedStyle()
-                QgsProject.instance().addMapLayer(self.pointLayer)
+            extent = receptors_layer.extent()
+            extent.grow(100)
+            canvas.setExtent(extent)
 
 
-    def chooseFile(self):
-        """Opens the file dialog to pick a file to open"""
-        filename, filter = QFileDialog.getOpenFileName(caption = "Open IMAER gml File", filter = '*.gml', parent=self.reader_dlg)
-        self.reader_dlg.gmlFileNameBox.setText(filename)
+    def run_export_calc(self):
+        self.log('run_export_calc()')
+
+        receptor_layer = self.iface.activeLayer()
+        metadata = self.get_imaer_calc_metadata(receptor_layer)
+
+        if not metadata['is_imaer_calc_layer']:
+            self.log('active layer is not an Imaer layer') #todo messagedlg error
+
+        gpkg_fn = metadata['gpkg_fn']
+        gml_fn = gpkg_fn.replace('.gpkg', '_modified.gml')
+        print(gml_fn)
+
+        xml_lines = []
+        for line in metadata['xml'].split('\n'):
+            if not line.strip() == '':
+                #print(line)
+                xml_lines.append(line)
+
+        task = ExportImaerCalculatorResultTask(receptor_layer, gml_fn, xml_lines)
+        self.task_manager.addTask(task)
 
 
-    def gmlFileNameBoxChanged(self):
-        """Enables the OK button after entering a file name"""
-        filename = self.reader_dlg.gmlFileNameBox.text()
-        enable_open = os.path.exists(os.path.dirname(filename))
-        self.reader_dlg.cancel_open_button_box.button(QDialogButtonBox.Open).setEnabled(enable_open)
+    def get_imaer_calc_metadata(self, layer):
+        if layer is None:
+            #print('layer is None')
+            return
 
+        layer_id = layer.id()
 
-    def createLayer(self, dim=2, name="imaer layer"):
-        """Creates a map layer of polygon (2) or point (0) type, and returns both the layer and the provider as a tuple.
+        if layer_id in self.imaer_calc_layers:
+            #print('  in cache')
+            return self.imaer_calc_layers[layer_id]
 
-        :param dim: dimension of the geometry
-        :type dim: int
+        self.imaer_calc_layers[layer_id] = {}
+        self.imaer_calc_layers[layer_id]['is_imaer_calc_layer'] = False
 
-        :param name: layer name (defaults to 'imaer layer'
-        :type ft: str
-        """
-        # create layer
-        self.log('creating layer')
-        if dim == 2:
-            vl = QgsVectorLayer("Polygon?crs=EPSG:28992", name, "memory")
+        if not isinstance(layer, QgsVectorLayer):
+            #print('  not vector')
+            return self.imaer_calc_layers[layer_id]
+
+        provider = layer.dataProvider()
+        if not provider.wkbType() == 3:
+            #print('  not polygon')
+            return self.imaer_calc_layers[layer_id]
+
+        ds = provider.dataSourceUri()
+        #print(' ', ds)
+        if '|layername=' in ds:
+            gpkg_fn, gpkg_layer = ds.split('|layername=')
+            #print(' ', gpkg_fn, gpkg_layer)
         else:
-            vl = QgsVectorLayer("Point?crs=EPSG:28992", name, "memory")
-        pr = vl.dataProvider()
+            return self.imaer_calc_layers[layer_id]
+        if not gpkg_layer == 'receptors':
+            #print('  not receptors')
+            return self.imaer_calc_layers[layer_id]
 
-        # add fields
-        pr.addAttributes([QgsField("id", QVariant.String)])
-        for subst in self.attributes:
-            pr.addAttributes([QgsField(subst, QVariant.Double)])
-        vl.updateFields()
-        return (vl, pr)
+        metadata_ds = '{}|layername=imaer_metadata'.format(gpkg_fn)
+        #print(metadata_ds)
+        try:
+            md_layer = QgsVectorLayer(metadata_ds, 'metadata', 'ogr')
+        except:
+            #print('  no metadata')
+            return self.imaer_calc_layers[layer_id]
+        for md_feat in md_layer.getFeatures():
+           self.imaer_calc_layers[layer_id][md_feat[1]] = md_feat[2]
+        self.imaer_calc_layers[layer_id]['is_imaer_calc_layer'] = True
+        self.imaer_calc_layers[layer_id]['gpkg_fn'] = gpkg_fn
 
 
-    def zoomToLayers(self):
-        canvas = self.iface.mapCanvas()
-        if self.doHexagon:
-            self.hexagonLayer.updateExtents()
-            canvas.setExtent(self.hexagonLayer.extent())
-        if self.doPoint:
-            self.pointLayer.updateExtents()
-            if not self.doHexagon:
-                canvas.setExtent(self.pointLayer.extent())
-        canvas.refresh()
+        return self.imaer_calc_layers[layer_id]
+
+
+    def update_export_calc_widgets(self):
+        if self.iface.activeLayer() is not None:
+            metadata = self.get_imaer_calc_metadata(self.iface.activeLayer())
+            self.export_calc_action.setEnabled(metadata['is_imaer_calc_layer'])
+        else:
+            print('active layer is None')

@@ -4,11 +4,11 @@
 name=IMAER Plugin
 email=info@opengeogroep.nl
 author=OpenGeoGroep
-qgisMinimumVersion=3.0
+qgisMinimumVersion=3.10
 qgisMaximumVersion=3.99
-description=!!EXPERIMENTAL PLUGIN FOR TESTING ONLY!! Plugin for generating AERIUS Calculator input IMAER files and importing AERIUS Calculator output IMAER files.
+description=!!EXPERIMENTAL PLUGIN FOR TESTING ONLY!! Plugin for generating AERIUS Calculator input IMAER files, and importing and exporting AERIUS Calculator result IMAER files.
 about=Plugin for handling AERIUS Calculator IMAER files
-version=version 3.0.0
+version=version 3.0.1
 tracker=https://github.com/opengeogroep/AERIUS-QGIS-plugins/issues
 repository=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 homepage=https://github.com/opengeogroep/AERIUS-QGIS-plugins
@@ -16,14 +16,15 @@ homepage=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 
 # Recommended items:
 
-# Uncomment the following line and add your changelog:
-# changelog=
+changelog=
+    3.0.1   (03-07-2020) New importer and exporter for Calculator Result
+    3.0.0   (29-05-2020) IMAER Calculator Result GML import
 
-# Tags are comma separated with spaces allowed
+# Tags are comma separated without spaces. (Spaces are allowed within the tag.)
 tags=imaer,aerius,calculator,gml,stikstof
 
 category=Plugins
-icon=icon_reader.png
+icon=icon_calc_import.png
 
 # experimental flag
 experimental=True
