@@ -31,9 +31,7 @@ from .tasks import (
     ExportImaerCalculatorResultTask)
 from .generate_calc_input import GenerateCalcInputDialog
 
-'''def moduleInformation():
-     return "qgis.gui", ("QgsMapLayerCombobox", "QgsMapLayerProxyModel" )
-'''
+
 
 
 class ImaerPlugin:
@@ -43,7 +41,7 @@ class ImaerPlugin:
         self.plugin_dir = os.path.dirname(__file__)
         self.task_manager = QgsApplication.taskManager()
         self.imaer_calc_layers = {}
-        self.do_log = False
+        self.do_log = True
 
 
     def initGui(self):
