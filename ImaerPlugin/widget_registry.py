@@ -18,22 +18,23 @@ class WidgetRegistry(dict):
         return result
 
 
-    def add_widgets(self, name, widgets=[]):
+    def add_widgets(self, name, widgets={}):
         if not name in self:
-            self[name] = []
-        for widget in widgets:
-            if widget in self[name]:
+            self[name] = {}
+        for widget_key, widget in widgets.items():
+            if widget_key in self[name]:
                 print('widget already registered (error)')
             else:
-                self[name].append(widget)
+                self[name][widget_key] = widget
 
 
     def remove_group(self, name):
         if not name in self:
             print('name not in widget_registry')
             return
-        for widget in self[name]:
-            self[name].remove(widget)
+        widget_keys = list(self[name].keys())
+        for widget_key in widget_keys:
+            self[name].pop(widget_key)
         self.pop(name)
 
 
@@ -47,5 +48,5 @@ class WidgetRegistry(dict):
         print(self)
         for name in self:
             print('  {}'.format(name))
-            for widget in self[name]:
-                print('    {}'.format(widget))
+            for widget_key, widget in self[name].items():
+                print('    {} {}'.format(widget_key, widget))

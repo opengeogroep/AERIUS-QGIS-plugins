@@ -82,31 +82,38 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
 
     def set_elements(self):
+        print(self.widget_registry)
         self.widget_registry.remove_all_groups()
-        self.clear_layout(self.layout_elements)
+        print(self.widget_registry)
 
-        self.layout_elements.update()
+        self.clear_layout(self.grid_elements)
+        #self.grid_elements.update()
+
+        row = self.grid_elements.rowCount()
         for key, element in emission_elements.items():
             print(key, element)
+            widgets = self.create_widgets(element)
+            print(widgets)
 
-            layout = self.create_widgets(key, element)
-            print(layout)
-            self.layout_elements.addLayout(layout)
+            if 'label' in widgets:
+                self.grid_elements.addWidget(widgets['label'], row, 0)
+            if 'fixed' in widgets:
+                self.grid_elements.addWidget(widgets['fixed'], row, 1)
+            if 'field' in widgets:
+                self.grid_elements.addWidget(widgets['field'], row, 2)
 
-            #self.combo_subsector.addItem(key)
-        print(self.widget_registry)
+            self.widget_registry.add_widgets(key, widgets)
+            row += 1
+
         self.widget_registry.show()
 
 
-    def create_widgets(self, key, element):
-        layout = QHBoxLayout()
+    def create_widgets(self, element):
+        #layout = QHBoxLayout(
 
         label_widget = QLabel(element['name'], self)
-        layout.addWidget(label_widget)
+        fixed_widget = QLineEdit('', self)
+        field_widget = QgsFieldComboBox(self)
 
-        edit_widget = QLineEdit('', self)
-        layout.addWidget(edit_widget)
-
-        self.widget_registry.add_widgets(key, [label_widget, edit_widget])
-
-        return layout
+        result = {'label': label_widget, 'fixed': fixed_widget, 'field': field_widget}
+        return result
