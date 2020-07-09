@@ -20,6 +20,8 @@ from .config import (
     emission_elements
 )
 
+from .widget_registry import WidgetRegistry
+
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'generate_calc_input_dlg.ui'))
@@ -34,6 +36,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         self.setupUi(self)
         self.iface = iface
+        self.widget_registry = WidgetRegistry(self)
+
         self.init_gui()
 
 
@@ -78,22 +82,23 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
 
     def set_elements(self):
+        self.widget_registry.remove_all_groups()
         self.clear_layout(self.layout_elements)
 
         self.layout_elements.update()
-        for key in emission_elements:
-            print(key)
-            element = emission_elements[key]
-            print(element)
+        for key, element in emission_elements.items():
+            print(key, element)
 
-            layout = self.create_widgets(element)
+            layout = self.create_widgets(key, element)
             print(layout)
             self.layout_elements.addLayout(layout)
 
             #self.combo_subsector.addItem(key)
+        print(self.widget_registry)
+        self.widget_registry.show()
 
 
-    def create_widgets(self, element):
+    def create_widgets(self, key, element):
         layout = QHBoxLayout()
 
         label_widget = QLabel(element['name'], self)
@@ -101,5 +106,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         edit_widget = QLineEdit('', self)
         layout.addWidget(edit_widget)
+
+        self.widget_registry.add_widgets(key, [label_widget, edit_widget])
 
         return layout
