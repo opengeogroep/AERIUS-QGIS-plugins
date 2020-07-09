@@ -1,6 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-demodata/*.gpkg
+demodata/AERIUS*.gpkg
 demodata/*.gpkg-shm
 demodata/*.gpkg-wal

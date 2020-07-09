@@ -63,7 +63,7 @@ class ImaerPlugin:
         self.generate_calc_input_action.triggered.connect(self.run_generate_calc_input)
         self.toolbar.addAction(self.generate_calc_input_action)
 
-        self.generate_calc_input_dlg = GenerateCalcInputDialog()
+        self.generate_calc_input_dlg = GenerateCalcInputDialog(parent=self.iface.mainWindow())
 
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
 
