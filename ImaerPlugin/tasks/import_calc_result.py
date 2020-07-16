@@ -191,7 +191,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         for res in elem.findall('imaer:result/imaer:Result', self.namespaces):
             substance = res.attrib['substance']
             val = res.findall('imaer:value', self.namespaces)[0].text
-            field_name = 'DEP_{}'.format(substance)
+            field_name = 'dep_{}'.format(substance)
             if full:
                 result['result_fields'].append(field_name)
             result[field_name] = float(val)
