@@ -14,6 +14,7 @@ from qgis.gui import (
     QgsMapLayerComboBox,
     QgsFieldComboBox
 )
+from qgis.core import QgsMapLayerProxyModel
 
 from .config import (
     emission_sectors,
@@ -42,12 +43,17 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
 
     def init_gui(self):
+        self.combo_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
+
         self.combo_sector.currentIndexChanged.connect(self.set_subsectors)
         self.set_sectors()
+
+        self.combo_layer.layerChanged.connect(self.update_field_combos)
 
 
     def __del__(self):
         self.combo_sector.currentIndexChanged.disconnect(self.set_subsectors)
+        self.combo_layer.layerChanged.disconnect(self.update_field_combos)
 
 
     def set_sectors(self):
@@ -90,6 +96,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         #self.grid_elements.update()
 
         row = self.grid_elements.rowCount()
+        print(emission_elements)
         for key, element in emission_elements.items():
             print(key, element)
             widgets = self.create_widgets(element)
@@ -106,14 +113,27 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             row += 1
 
         self.widget_registry.show()
+        self.update_field_combos()
 
 
     def create_widgets(self, element):
         #layout = QHBoxLayout(
 
-        label_widget = QLabel(element['name'], self)
+        label_widget = QLabel(element['label'], self)
         fixed_widget = QLineEdit('', self)
         field_widget = QgsFieldComboBox(self)
+        field_widget.setFilters(element['types'][0])
+        field_widget.setAllowEmptyFieldName(True)
 
         result = {'label': label_widget, 'fixed': fixed_widget, 'field': field_widget}
         return result
+
+
+    def update_field_combos(self):
+        for name in self.widget_registry:
+            for widget_key, widget in self.widget_registry[name].items():
+                if widget_key == 'field':
+                    if isinstance(widget, QgsFieldComboBox):
+                        widget.setLayer(self.combo_layer.currentLayer())
+                    else:
+                        widget.setLayer(None)
