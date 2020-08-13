@@ -17,7 +17,7 @@ from qgis.core import (
     QgsExpressionContextUtils
     )
 
-_IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NO2', 'NOX']
+_IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX', 'NO2']
 
 
 
@@ -66,11 +66,15 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
                 if event == 'start-ns':
                     self.namespaces[elem[0]] = elem[1]
+                    if elem[0] == 'imaer':
+                        self.imaer_version = self.get_imaer_version(elem[1])
+                        feature_member_tag = '{{{0}}}featureMember'.format(elem[1])
+                        receptor_point_tag = '{{{0}}}ReceptorPoint'.format(elem[1])
 
-                if event == 'end' and elem.tag == '{http://imaer.aerius.nl/2.2}featureMember':
+                if event == 'end' and elem.tag == feature_member_tag:
                     child = list(elem)[0]
                     #self.log('  {}'.format(child.tag))
-                    if child.tag == '{http://imaer.aerius.nl/2.2}ReceptorPoint':
+                    if child.tag == receptor_point_tag:
                         feat = self.process_rp(child)
                         receptors_layer.addFeature(feat)
                         rp_cnt += 1
@@ -91,6 +95,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         self.save_metadata('xml', xml_string)
         self.save_metadata('gml_fn', self.gml_fn)
         self.save_metadata('user', QgsExpressionContextUtils().globalScope().variable('user_full_name'))
+        self.save_metadata('imaer_version', self.imaer_version)
 
         return True
 
@@ -132,6 +137,13 @@ class ImportImaerCalculatorResultTask(QgsTask):
             QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
 
 
+    def get_imaer_version(self, ns_url):
+        url_parts = ns_url.split('/')
+        version_str = url_parts[-1]
+        self.log((version_str))
+        return version_str
+
+
     def create_gpkg(self):
         md = QgsProviderRegistry.instance().providerMetadata('ogr')
         self.conn = md.createConnection(self.gpkg_fn, {})
@@ -145,7 +157,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         fields.append(QgsField('point_x', QVariant.Double))
         fields.append(QgsField('point_y', QVariant.Double))
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
-            field_name = 'dep_{}'.format(substance)
+            field_name = 'DEP_{}'.format(substance)
             fields.append(QgsField(field_name, QVariant.Double))
         self.conn.createVectorTable('', 'receptors', fields, QgsWkbTypes.Polygon, QgsCoordinateReferenceSystem(28992), True, {})
 
@@ -209,7 +221,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         attributes.append(float(result['point_y']))
 
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
-            field_name = 'dep_{}'.format(substance)
+            field_name = 'DEP_{}'.format(substance)
             if field_name in result:
                 attributes.append(float(result[field_name]))
             else:
