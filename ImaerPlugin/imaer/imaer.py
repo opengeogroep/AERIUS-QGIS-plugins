@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
-from xml.dom.minidom import parseString
+
+from gml import GmlWriter
 
 
 
@@ -18,6 +19,10 @@ class FeatureCollectionCalculator():
     def __init__(self):
         self.metadata = None
         self.feature_members = []
+
+
+    def add_feature_member(self, fm):
+        self.feature_members.append(fm)
 
 
     def generate_dom(self):
@@ -38,12 +43,18 @@ class FeatureCollectionCalculator():
         comment = doc.createComment('Created using QGIS ImaerPlugin by OpenGeoGroep')
         doc.appendChild(comment)
 
+        # metadata
         md = doc.createElementNS(_imaer_ns, 'imaer:metadata')
         if self.metadata is not None:
             md.appendChild(self.metadata.generate_dom())
         fcc.appendChild(md)
 
-        #print(result)
+        # feature members
+        for feature_member in self.feature_members:
+            fm = doc.createElementNS(_imaer_ns, 'imaer:featureMember')
+            fm.appendChild(feature_member.generate_dom())
+            fcc.appendChild(fm)
+
         return doc
 
 
@@ -61,6 +72,7 @@ class AeriusCalculatorMetadata():
         self.situation = situation
         self.calculation = calculation
         self.version = version
+
 
     def generate_dom(self):
         doc = xml.dom.minidom.Document()
@@ -132,3 +144,68 @@ class AeriusCalculatorMetadata():
             metadata.appendChild(ver)
 
         return metadata
+
+
+
+
+class EmissionSource():
+
+    def __init__(self, local_id, label, geometry, emissions={}):
+        self.local_id = local_id
+        self.label = label
+        self.geometry = geometry
+        self.emissions = emissions.copy() # copy, otherwise all emissionSources point to the same dictionary
+
+
+    def add_emission(self, substance, value):
+        self.emissions[substance] = value
+
+
+    def generate_dom(self):
+        doc = xml.dom.minidom.Document()
+        emission = doc.createElementNS(_imaer_ns, 'imaer:EmissionSource')
+        emission.setAttribute('sectorId', '9999')
+        emission.setAttribute('gml:id', self.local_id)
+
+        # identifier
+        id_ele = doc.createElementNS(_imaer_ns, 'imaer:identifier')
+        nen_ele = doc.createElementNS(_imaer_ns, 'imaer:NEN3610ID')
+        ns_ele = doc.createElementNS(_imaer_ns, 'imaer:namespace')
+        ns_ele.appendChild(doc.createTextNode('NL.IMAER'))
+        nen_ele.appendChild(ns_ele)
+        lid_ele = doc.createElementNS(_imaer_ns, 'imaer:localId')
+        lid_ele.appendChild(doc.createTextNode( str(self.local_id) ))
+        nen_ele.appendChild(lid_ele)
+        id_ele.appendChild(nen_ele)
+        emission.appendChild(id_ele)
+
+        # label
+        ele = doc.createElementNS(_imaer_ns, 'imaer:label')
+        ele.appendChild(doc.createTextNode( str(self.label) ))
+        emission.appendChild(ele)
+
+        # geometry
+        geom_ele = doc.createElementNS(_imaer_ns, 'imaer:geometry')
+        esgeom_ele = doc.createElementNS(_imaer_ns, 'imaer:EmissionSourceGeometry')
+        imaer_geom = GmlWriter(self.geometry, self.local_id).as_gml3()
+        esgeom_ele.appendChild(imaer_geom)
+        geom_ele.appendChild(esgeom_ele)
+        emission.appendChild(geom_ele)
+
+        # emissions
+        substances = ['NH3', 'NOX', 'PM10', 'NO2']
+        for substance in substances:
+            if substance in self.emissions:
+                value = self.emissions[substance]
+            else:
+                value = 0.0
+            emi = doc.createElementNS(_imaer_ns, 'imaer:emission')
+            emi_ele = doc.createElementNS(_imaer_ns, 'imaer:Emission')
+            emi_ele.setAttribute('substance', substance)
+            val_ele = doc.createElementNS(_imaer_ns, 'imaer:value')
+            val_ele.appendChild(doc.createTextNode( str(value) ))
+            emi_ele.appendChild(val_ele)
+            emi.appendChild(emi_ele)
+            emission.appendChild(emi)
+
+        return emission
