@@ -12,7 +12,7 @@ os.environ['LD_LIBRARY_PATH'] = '/home/raymond/programs/qgis-3.10/lib'
 
 from qgis.core import QgsGeometry
 
-from imaer import FeatureCollectionCalculator, AeriusCalculatorMetadata, EmissionSource
+from main import FeatureCollectionCalculator, AeriusCalculatorMetadata, EmissionSource
 
 
 

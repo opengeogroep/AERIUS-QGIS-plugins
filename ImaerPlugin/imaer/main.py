@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
 
-from gml import GmlWriter
+from .gml import GmlWriter
 
 
 

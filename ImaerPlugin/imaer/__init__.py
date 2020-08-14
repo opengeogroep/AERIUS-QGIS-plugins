@@ -1,6 +1,7 @@
 from .main import FeatureCollectionCalculator
 from .main import AeriusCalculatorMetadata
 from .main import EmissionSource
+from .gml import GmlWriter
 
 # constants (todo: make these work)
 '''

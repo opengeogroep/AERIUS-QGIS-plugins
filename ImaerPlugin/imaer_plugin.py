@@ -12,6 +12,7 @@
 ################################################################################
 
 import os
+import time
 
 from PyQt5.QtWidgets import QAction, QFileDialog, QDialogButtonBox
 from PyQt5.QtGui import QIcon
@@ -31,6 +32,8 @@ from .tasks import (
     ExportImaerCalculatorResultTask)
 from .generate_calc_input import GenerateCalcInputDialog
 
+from .imaer import FeatureCollectionCalculator
+
 
 
 
@@ -47,6 +50,7 @@ class ImaerPlugin:
     def initGui(self):
         self.toolbar = self.iface.addToolBar("Imaer Toolbar")
         self.calc_file_dialog = QFileDialog()
+        self.generate_calc_input_file_dialog = QFileDialog()
 
         icon_import_calc = QIcon(os.path.join(self.plugin_dir, 'icon_import_calc_result.png'))
         self.import_calc_result_action = QAction(icon_import_calc, 'Import IMAER Calculator result gml', self.iface.mainWindow())
@@ -64,6 +68,7 @@ class ImaerPlugin:
         self.toolbar.addAction(self.generate_calc_input_action)
 
         self.generate_calc_input_dlg = GenerateCalcInputDialog(parent=self.iface.mainWindow())
+        self.generate_calc_input_dlg.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
 
@@ -72,6 +77,8 @@ class ImaerPlugin:
 
     def unload(self):
         self.iface.mapCanvas().currentLayerChanged.disconnect(self.update_export_calc_widgets)
+
+        self.generate_calc_input_dlg.button_outfile.clicked.disconnect(self.browse_generate_calc_input_file)
 
         self.import_calc_result_action.triggered.disconnect(self.run_import_calc_result)
         self.toolbar.removeAction(self.import_calc_result_action)
@@ -199,9 +206,35 @@ class ImaerPlugin:
         return self.imaer_calc_layers[layer_id]
 
 
+    def browse_generate_calc_input_file(self):
+        if self.do_log:
+            out_path = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input'
+        else:
+            out_path = '/'
+        out_fn = time.strftime("calcinput_%Y%m%d_%H%M%S.gml")
+        out_fn = os.path.join(out_path, out_fn)
+        self.generate_calc_input_file_dialog.setDirectory(out_path)
+
+        gml_outfn, filter = self.generate_calc_input_file_dialog.getSaveFileName(caption = "Save as Calculator input gml file", filter='*.gml', directory=out_fn, parent=self.iface.mainWindow())
+        self.generate_calc_input_dlg.edit_outfile.setText(gml_outfn)
+
+
     def run_generate_calc_input(self):
         self.log('run_generate_calc_input()')
         self.generate_calc_input_dlg.show()
+        result = self.generate_calc_input_dlg.exec_()
+        print(result)
+        if result:
+            self.log('starting calcinput generation ...')
+            fcc = self.get_imaer_from_gui()
+            self.log(fcc.get_pretty_xml())
+            fcc.write_to_file(self.generate_calc_input_dlg.edit_outfile.text())
+
+
+    def get_imaer_from_gui(self):
+        '''Maps items from GUI widgets to IMAER object'''
+        result = FeatureCollectionCalculator()
+        return result
 
 
     def update_export_calc_widgets(self):
