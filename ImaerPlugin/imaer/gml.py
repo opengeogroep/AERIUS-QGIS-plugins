@@ -3,7 +3,7 @@ import xml.dom.minidom
 
 
 _gml_ns = 'http://www.opengis.net/gml/3.2'
-_imaer_ns = 'http://imaer.aerius.nl/2.2'
+_imaer_ns = 'http://imaer.aerius.nl/3.1'
 
 class GmlWriter():
 
