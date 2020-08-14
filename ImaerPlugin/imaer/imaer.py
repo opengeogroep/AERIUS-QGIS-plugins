@@ -63,6 +63,12 @@ class FeatureCollectionCalculator():
         return data.toprettyxml(indent='  ', newl='\n', encoding=None)
 
 
+    def write_to_file(self, filename):
+        with open(filename, 'w') as fn:
+            fn.write(self.get_pretty_xml())
+            print('Saving XML to: {}'.format(filename))
+
+
 
 
 class AeriusCalculatorMetadata():

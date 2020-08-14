@@ -14,7 +14,7 @@ class GmlWriter():
 
 
     def as_gml3(self):
-        print(self.geometry.type())
+        #print(self.geometry.type())
         if self.geometry.type() == 0:
             gml3 = self.as_gml3_point()
         elif self.geometry.type() == 1:

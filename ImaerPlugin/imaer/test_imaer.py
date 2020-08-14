@@ -1,3 +1,5 @@
+import os
+import time
 import xml.etree.ElementTree as ET
 
 import site
@@ -47,3 +49,8 @@ dom = fcc.generate_dom()
 
 print()
 print(fcc.get_pretty_xml())
+
+out_path = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input'
+out_fn = time.strftime("calcinput_%Y%m%d_%H%M%S.gml")
+filename = os.path.join(out_path, out_fn)
+fcc.write_to_file(filename)
