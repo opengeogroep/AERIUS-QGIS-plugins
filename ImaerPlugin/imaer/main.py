@@ -156,8 +156,9 @@ class AeriusCalculatorMetadata():
 
 class EmissionSource():
 
-    def __init__(self, local_id, label, geometry, emissions={}):
+    def __init__(self, local_id, sector_id, label, geometry, emissions={}):
         self.local_id = local_id
+        self.sector_id = sector_id
         self.label = label
         self.geometry = geometry
         self.emissions = emissions.copy() # copy, otherwise all emissionSources point to the same dictionary
@@ -170,7 +171,7 @@ class EmissionSource():
     def generate_dom(self):
         doc = xml.dom.minidom.Document()
         emission = doc.createElementNS(_imaer_ns, 'imaer:EmissionSource')
-        emission.setAttribute('sectorId', '9999')
+        emission.setAttribute('sectorId', str(self.sector_id))
         emission.setAttribute('gml:id', self.local_id)
 
         # identifier
@@ -205,6 +206,7 @@ class EmissionSource():
                 value = self.emissions[substance]
             else:
                 value = 0.0
+            #print(substance, value, type(value))
             emi = doc.createElementNS(_imaer_ns, 'imaer:emission')
             emi_ele = doc.createElementNS(_imaer_ns, 'imaer:Emission')
             emi_ele.setAttribute('substance', substance)

@@ -32,7 +32,7 @@ from .tasks import (
     ExportImaerCalculatorResultTask)
 from .generate_calc_input import GenerateCalcInputDialog
 
-from .imaer import FeatureCollectionCalculator
+from .imaer import FeatureCollectionCalculator, AeriusCalculatorMetadata, EmissionSource
 
 
 
@@ -234,7 +234,36 @@ class ImaerPlugin:
     def get_imaer_from_gui(self):
         '''Maps items from GUI widgets to IMAER object'''
         result = FeatureCollectionCalculator()
+
+        metadata = AeriusCalculatorMetadata(
+            project = {'year': 2020, 'description': ''},
+            situation = {'name': 'Situatie 1', 'reference': ''},
+            version = {'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'}
+        )
+        result.metadata = metadata
+
+        input_layer = self.generate_calc_input_dlg.combo_layer.currentLayer()
+        print(input_layer)
+        emission_sources = {}
+        for feat in input_layer.getFeatures():
+            local_id = 'ES.{}'.format(feat.id())
+            sector_id = self.generate_calc_input_dlg.get_current_sector_id()
+            loc_name = self.get_widget_value('loc_name', feat)
+            es = EmissionSource(local_id, sector_id, loc_name, feat.geometry())
+            es.add_emission('NH3', self.get_widget_value('emission_nh3', feat))
+            es.add_emission('NOX', self.get_widget_value('emission_nox', feat))
+            result.add_feature_member(es)
+
         return result
+
+
+    def get_widget_value(self, var_name, feat):
+        widget_set = self.generate_calc_input_dlg.widget_registry[var_name]
+        field_name = widget_set['field'].currentField()
+        if field_name == '':
+            return widget_set['fixed'].text()
+        else:
+            return feat[field_name]
 
 
     def update_export_calc_widgets(self):
