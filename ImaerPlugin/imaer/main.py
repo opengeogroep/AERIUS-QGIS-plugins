@@ -1,6 +1,8 @@
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
 
+from PyQt5.QtCore import QVariant
+
 from .gml import GmlWriter
 
 
@@ -188,6 +190,7 @@ class EmissionSource():
 
         # label
         ele = doc.createElementNS(_imaer_ns, 'imaer:label')
+        print('label', self.label, type(self.label))
         ele.appendChild(doc.createTextNode( str(self.label) ))
         emission.appendChild(ele)
 
@@ -206,7 +209,8 @@ class EmissionSource():
                 value = self.emissions[substance]
             else:
                 value = 0.0
-            #print(substance, value, type(value))
+            if isinstance(value, QVariant) and str(value) == 'NULL':
+                value = 0.0
             emi = doc.createElementNS(_imaer_ns, 'imaer:emission')
             emi_ele = doc.createElementNS(_imaer_ns, 'imaer:Emission')
             emi_ele.setAttribute('substance', substance)

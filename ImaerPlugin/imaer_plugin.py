@@ -234,12 +234,11 @@ class ImaerPlugin:
         #print(result)
         if result:
             self.log('starting calcinput generation ...')
-            fcc = self.get_imaer_from_gui()
-            self.log(fcc.get_pretty_xml())
+            fcc = self.get_fcc_from_gui()
             fcc.write_to_file(self.generate_calc_input_dlg.edit_outfile.text())
 
 
-    def get_imaer_from_gui(self):
+    def get_fcc_from_gui(self):
         '''Maps items from GUI widgets to IMAER object'''
         result = FeatureCollectionCalculator()
 
