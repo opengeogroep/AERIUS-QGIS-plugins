@@ -215,10 +215,10 @@ class ImaerPlugin:
 
 
     def browse_generate_calc_input_file(self):
-        if self.do_log:
+        if self.dev:
             out_path = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input'
         else:
-            out_path = '/'
+            out_path = ''
         out_fn = time.strftime("calcinput_%Y%m%d_%H%M%S.gml")
         out_fn = os.path.join(out_path, out_fn)
         self.generate_calc_input_file_dialog.setDirectory(out_path)
