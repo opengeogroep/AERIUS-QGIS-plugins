@@ -24,7 +24,8 @@ from qgis.core import (
     QgsVectorLayer,
     QgsField,
     QgsProject,
-    QgsApplication)
+    QgsApplication,
+    QgsExpressionContextUtils)
 from qgis.gui import QgsMapLayerComboBox
 
 from .tasks import (
@@ -44,6 +45,12 @@ class ImaerPlugin:
         self.plugin_dir = os.path.dirname(__file__)
         self.task_manager = QgsApplication.taskManager()
         self.imaer_calc_layers = {}
+
+        # Variable self.dev is set to True if a global variable terglobo_dev exists
+        # holding the lowercase value 'on'. This is to ensure that any dev tricks
+        # will never be visible for other plugin users.
+        dev = QgsExpressionContextUtils.globalScope().variable('terglobo_dev')
+        self.dev = dev is not None and dev == 'on'
         self.do_log = True
 
 
@@ -67,7 +74,7 @@ class ImaerPlugin:
         self.generate_calc_input_action.triggered.connect(self.run_generate_calc_input)
         self.toolbar.addAction(self.generate_calc_input_action)
 
-        self.generate_calc_input_dlg = GenerateCalcInputDialog(parent=self.iface.mainWindow())
+        self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
         self.generate_calc_input_dlg.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
@@ -119,7 +126,8 @@ class ImaerPlugin:
         base = os.path.basename(gpkg_fn)
         stem, ext = os.path.splitext(base)
         layer_name = '{} receptors'.format(stem)
-        self.log(layer_name)
+        if self.dev:
+            self.log(layer_name)
         layer_data_source = '{}|layername={}'.format(gpkg_fn, 'receptors')
         receptors_layer = QgsVectorLayer(layer_data_source, layer_name, 'ogr')
 
@@ -196,7 +204,7 @@ class ImaerPlugin:
         try:
             md_layer = QgsVectorLayer(metadata_ds, 'metadata', 'ogr')
         except:
-            #print('  no metadata')
+            #print(' print no metadata')
             return self.imaer_calc_layers[layer_id]
         for md_feat in md_layer.getFeatures():
            self.imaer_calc_layers[layer_id][md_feat[1]] = md_feat[2]
@@ -223,7 +231,7 @@ class ImaerPlugin:
         self.log('run_generate_calc_input()')
         self.generate_calc_input_dlg.show()
         result = self.generate_calc_input_dlg.exec_()
-        print(result)
+        #print(result)
         if result:
             self.log('starting calcinput generation ...')
             fcc = self.get_imaer_from_gui()
@@ -243,7 +251,7 @@ class ImaerPlugin:
         result.metadata = metadata
 
         input_layer = self.generate_calc_input_dlg.combo_layer.currentLayer()
-        print(input_layer)
+        #print(input_layer)
         emission_sources = {}
         for feat in input_layer.getFeatures():
             local_id = 'ES.{}'.format(feat.id())

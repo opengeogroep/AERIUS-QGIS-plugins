@@ -32,12 +32,13 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 
 
 class GenerateCalcInputDialog(QDialog, FORM_CLASS):
-    def __init__(self, parent=None):
+    def __init__(self, plugin, parent=None):
         """Constructor."""
         super(GenerateCalcInputDialog, self).__init__(parent)
 
         self.setupUi(self)
         self.iface = iface
+        self.plugin = plugin
         self.widget_registry = WidgetRegistry(self)
         self.sector_id = 0
 
@@ -138,7 +139,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 self.widget_registry.add_widgets(key, widgets)
                 row += 1
 
-        self.widget_registry.show()
+        if self.plugin.dev:
+            self.widget_registry.show()
         self.update_field_combos()
         self.update_ok_button()
 
