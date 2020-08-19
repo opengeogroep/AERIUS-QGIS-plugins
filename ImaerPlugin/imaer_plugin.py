@@ -56,6 +56,8 @@ class ImaerPlugin:
 
     def initGui(self):
         self.toolbar = self.iface.addToolBar("Imaer Toolbar")
+        if self.dev:
+             self.toolbar.setStyleSheet("QToolBar { background-color: rgba(200, 180, 200, 255); }")
         self.calc_file_dialog = QFileDialog()
         self.generate_calc_input_file_dialog = QFileDialog()
 
