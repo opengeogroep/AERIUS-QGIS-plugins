@@ -66,12 +66,12 @@ class FeatureCollectionCalculator():
 
 
     def write_to_file(self, filename):
-        try:
+        #try:
             with open(filename, 'w') as fn:
                 fn.write(self.get_pretty_xml())
                 print('Saving XML to: {}'.format(filename))
                 return True
-        except:
+        #except:
             return False
 
 

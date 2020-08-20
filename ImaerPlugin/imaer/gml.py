@@ -51,13 +51,10 @@ class GmlWriter():
         gml_ele.setAttribute('gml:id', '{0}.CURVE'.format(self.local_id))
         pos_ele = doc.createElementNS(_gml_ns, 'gml:posList')
 
-        pos_list = []
-        for pnt in self.geometry.asPolyline():
-            pos = '{} {}'.format(pnt.x(), pnt.y())
-            pos_list.append(pos)
-        pos_list_str = ' '.join(pos_list)
-
+        polyline = self.geometry.asPolyline()
+        pos_list_str = self.polyline_to_poslist(polyline)
         pos_ele.appendChild(doc.createTextNode(pos_list_str))
+
         gml_ele.appendChild(pos_ele)
         gm_ele.appendChild(gml_ele)
 
@@ -66,4 +63,32 @@ class GmlWriter():
 
     def as_gml3_polygon(self):
         doc = xml.dom.minidom.Document()
-        return  doc.createComment(' === POLYGON NOT YET IMPLEMENTED :( ===')
+        gm_ele = doc.createElementNS(_imaer_ns, 'imaer:GM_Surface')
+        gml_ele = doc.createElementNS(_gml_ns, 'gml:Polygon')
+        gml_ele.setAttribute('srsName', 'urn:ogc:def:crs:EPSG::{0}'.format(self.epsg))
+        gml_ele.setAttribute('gml:id', '{0}.SURFACE'.format(self.local_id))
+        ext_ele = doc.createElementNS(_gml_ns, 'gml:exterior')
+        ring_ele = doc.createElementNS(_gml_ns, 'gml:LinearRing')
+        pos_ele = doc.createElementNS(_gml_ns, 'gml:posList')
+
+        polyline = self.geometry.get()[0].exteriorRing()
+        pos_list_str = self.polyline_to_poslist(polyline)
+        pos_ele.appendChild(doc.createTextNode(pos_list_str))
+
+        # TODO Add interior rings??
+
+        ring_ele.appendChild(pos_ele)
+        ext_ele.appendChild(ring_ele)
+        gml_ele.appendChild(ext_ele)
+        gm_ele.appendChild(gml_ele)
+
+        return gm_ele
+
+
+    def polyline_to_poslist(self, polyline):
+        pos_list = []
+        for pnt in polyline:
+            pos = '{} {}'.format(pnt.x(), pnt.y())
+            pos_list.append(pos)
+        pos_list_str = ' '.join(pos_list)
+        return pos_list_str
