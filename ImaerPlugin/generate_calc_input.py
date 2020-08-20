@@ -46,7 +46,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
 
     def init_gui(self):
-        self.combo_layer.setFilters(QgsMapLayerProxyModel.PointLayer) #VectorLayer)
+        self.combo_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
         self.combo_sector.currentIndexChanged.connect(self.set_subsectors)
         self.combo_subsector.currentIndexChanged.connect(self.set_elements)

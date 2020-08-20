@@ -45,7 +45,23 @@ class GmlWriter():
 
     def as_gml3_linestring(self):
         doc = xml.dom.minidom.Document()
-        return  doc.createComment(' === LINESTRING NOT YET IMPLEMENTED :( ===')
+        gm_ele = doc.createElementNS(_imaer_ns, 'imaer:GM_Curve')
+        gml_ele = doc.createElementNS(_gml_ns, 'gml:LineString')
+        gml_ele.setAttribute('srsName', 'urn:ogc:def:crs:EPSG::{0}'.format(self.epsg))
+        gml_ele.setAttribute('gml:id', '{0}.CURVE'.format(self.local_id))
+        pos_ele = doc.createElementNS(_gml_ns, 'gml:posList')
+
+        pos_list = []
+        for pnt in self.geometry.asPolyline():
+            pos = '{} {}'.format(pnt.x(), pnt.y())
+            pos_list.append(pos)
+        pos_list_str = ' '.join(pos_list)
+
+        pos_ele.appendChild(doc.createTextNode(pos_list_str))
+        gml_ele.appendChild(pos_ele)
+        gm_ele.appendChild(gml_ele)
+
+        return gm_ele
 
 
     def as_gml3_polygon(self):
