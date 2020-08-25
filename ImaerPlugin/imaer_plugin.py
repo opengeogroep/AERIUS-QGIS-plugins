@@ -25,7 +25,9 @@ from qgis.core import (
     QgsField,
     QgsProject,
     QgsApplication,
-    QgsExpressionContextUtils)
+    QgsExpressionContextUtils,
+    QgsCoordinateReferenceSystem,
+    QgsCoordinateTransform)
 from qgis.gui import QgsMapLayerComboBox
 
 from .tasks import (
@@ -249,6 +251,8 @@ class ImaerPlugin:
         result = FeatureCollectionCalculator()
 
         year = self.generate_calc_input_dlg.combo_year.currentData()
+
+
         metadata = AeriusCalculatorMetadata(
             project = {'year': year, 'description': ''},
             situation = {'name': 'Situatie 1', 'reference': ''},
@@ -257,13 +261,24 @@ class ImaerPlugin:
         result.metadata = metadata
 
         input_layer = self.generate_calc_input_dlg.combo_layer.currentLayer()
+        crs_source = input_layer.crs()
+        crs_dest_srid = self.generate_calc_input_dlg.combo_crs.currentData()
+        crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
+        if crs_source == crs_dest:
+            crs_transform = None
+        else:
+            crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
+
         #print(input_layer)
         emission_sources = {}
         for feat in input_layer.getFeatures():
             local_id = 'ES.{}'.format(feat.id())
             sector_id = self.generate_calc_input_dlg.get_current_sector_id()
             loc_name = self.get_widget_value('loc_name', feat)
-            es = EmissionSource(local_id, sector_id, loc_name, feat.geometry())
+            geom = feat.geometry()
+            if crs_transform is not None:
+                geom.transform(crs_transform)
+            es = EmissionSource(local_id, sector_id, loc_name, geom, crs_dest_srid)
             es.add_emission('NH3', self.get_widget_value('emission_nh3', feat))
             es.add_emission('NOX', self.get_widget_value('emission_nox', feat))
             result.add_feature_member(es)

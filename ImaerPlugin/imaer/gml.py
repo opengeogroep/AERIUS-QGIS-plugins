@@ -7,10 +7,10 @@ _imaer_ns = 'http://imaer.aerius.nl/3.1'
 
 class GmlWriter():
 
-    def __init__(self, geometry, local_id, epsg=28992):
+    def __init__(self, geometry, local_id, srid):
         self.geometry = geometry
         self.local_id = local_id
-        self.epsg = epsg
+        self.srid = srid
 
 
     def as_gml3(self):
@@ -30,7 +30,7 @@ class GmlWriter():
         doc = xml.dom.minidom.Document()
         gm_ele = doc.createElementNS(_imaer_ns, 'imaer:GM_Point')
         gml_ele = doc.createElementNS(_gml_ns, 'gml:Point')
-        gml_ele.setAttribute('srsName', 'urn:ogc:def:crs:EPSG::{0}'.format(self.epsg))
+        gml_ele.setAttribute('srsName', 'urn:ogc:def:crs:EPSG::{0}'.format(self.srid))
         gml_ele.setAttribute('gml:id', '{0}.POINT'.format(self.local_id))
         pos_ele = doc.createElementNS(_gml_ns, 'gml:pos')
         coord_str = '{} {}'.format(
@@ -47,7 +47,7 @@ class GmlWriter():
         doc = xml.dom.minidom.Document()
         gm_ele = doc.createElementNS(_imaer_ns, 'imaer:GM_Curve')
         gml_ele = doc.createElementNS(_gml_ns, 'gml:LineString')
-        gml_ele.setAttribute('srsName', 'urn:ogc:def:crs:EPSG::{0}'.format(self.epsg))
+        gml_ele.setAttribute('srsName', 'urn:ogc:def:crs:EPSG::{0}'.format(self.srid))
         gml_ele.setAttribute('gml:id', '{0}.CURVE'.format(self.local_id))
         pos_ele = doc.createElementNS(_gml_ns, 'gml:posList')
 
@@ -65,7 +65,7 @@ class GmlWriter():
         doc = xml.dom.minidom.Document()
         gm_ele = doc.createElementNS(_imaer_ns, 'imaer:GM_Surface')
         gml_ele = doc.createElementNS(_gml_ns, 'gml:Polygon')
-        gml_ele.setAttribute('srsName', 'urn:ogc:def:crs:EPSG::{0}'.format(self.epsg))
+        gml_ele.setAttribute('srsName', 'urn:ogc:def:crs:EPSG::{0}'.format(self.srid))
         gml_ele.setAttribute('gml:id', '{0}.SURFACE'.format(self.local_id))
         ext_ele = doc.createElementNS(_gml_ns, 'gml:exterior')
         ring_ele = doc.createElementNS(_gml_ns, 'gml:LinearRing')

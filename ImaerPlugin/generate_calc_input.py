@@ -52,8 +52,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_sector.currentIndexChanged.connect(self.set_subsectors)
         self.combo_subsector.currentIndexChanged.connect(self.set_elements)
         self.edit_outfile.textChanged.connect(self.update_ok_button)
-        self.set_years()
-        self.set_sectors()
+        self.set_fixed_options()
         self.update_ok_button()
 
         self.combo_layer.layerChanged.connect(self.update_field_combos)
@@ -66,13 +65,17 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_layer.layerChanged.disconnect(self.update_field_combos)
 
 
-    def set_years(self):
+    def set_fixed_options(self):
+        # years
         for year in ui_settings['years']:
             self.combo_year.addItem(year, year)
         self.combo_year.setCurrentIndex(self.combo_year.count() - 1)
 
+        # crs
+        for crs in ui_settings['crs']:
+            self.combo_crs.addItem(crs['name'], crs['srid'])
 
-    def set_sectors(self):
+        # sectors
         self.combo_sector.addItem('<Selecteer een sector>', 0)
         for key, value in emission_sectors.items():
             #print(key, value)
