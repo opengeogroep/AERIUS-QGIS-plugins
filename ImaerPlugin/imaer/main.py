@@ -206,21 +206,15 @@ class EmissionSource():
         emission.appendChild(geom_ele)
 
         # emissions
-        substances = ['NH3', 'NOX', 'PM10', 'NO2']
-        for substance in substances:
-            if substance in self.emissions:
-                value = self.emissions[substance]
-            else:
-                value = 0.0
-            if isinstance(value, QVariant) and str(value) == 'NULL':
-                value = 0.0
-            emi = doc.createElementNS(_imaer_ns, 'imaer:emission')
-            emi_ele = doc.createElementNS(_imaer_ns, 'imaer:Emission')
-            emi_ele.setAttribute('substance', substance)
-            val_ele = doc.createElementNS(_imaer_ns, 'imaer:value')
-            val_ele.appendChild(doc.createTextNode( str(value) ))
-            emi_ele.appendChild(val_ele)
-            emi.appendChild(emi_ele)
-            emission.appendChild(emi)
+        for substance, value in self.emissions.items():
+            if not (isinstance(value, QVariant) and str(value) == 'NULL'):
+                emi = doc.createElementNS(_imaer_ns, 'imaer:emission')
+                emi_ele = doc.createElementNS(_imaer_ns, 'imaer:Emission')
+                emi_ele.setAttribute('substance', substance)
+                val_ele = doc.createElementNS(_imaer_ns, 'imaer:value')
+                val_ele.appendChild(doc.createTextNode( str(value) ))
+                emi_ele.appendChild(val_ele)
+                emi.appendChild(emi_ele)
+                emission.appendChild(emi)
 
         return emission

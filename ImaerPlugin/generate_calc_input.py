@@ -227,8 +227,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             if crs_transform is not None:
                 geom.transform(crs_transform)
             es = EmissionSource(local_id, sector_id, loc_name, geom, crs_dest_srid)
-            es.add_emission('NH3', self.get_widget_value('emission_nh3', feat))
-            es.add_emission('NOX', self.get_widget_value('emission_nox', feat))
+            for substance_code, substance_name in {'NH3': 'emission_nh3', 'NOX': 'emission_nox'}.items():
+                em_value = self.get_widget_value(substance_name, feat)
+                if em_value is not None:
+                    es.add_emission(substance_code, em_value)
             result.add_feature_member(es)
 
         return result
@@ -238,6 +240,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         widget_set = self.widget_registry[var_name]
         field_name = widget_set['field'].currentField()
         if field_name == '':
-            return widget_set['fixed'].text()
+            return None
+            #return widget_set['fixed'].text() TODO: return fixed value after data type check (or something..)
         else:
             return feat[field_name]
