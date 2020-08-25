@@ -248,8 +248,9 @@ class ImaerPlugin:
         '''Maps items from GUI widgets to IMAER object'''
         result = FeatureCollectionCalculator()
 
+        year = self.generate_calc_input_dlg.combo_year.currentData()
         metadata = AeriusCalculatorMetadata(
-            project = {'year': 2020, 'description': ''},
+            project = {'year': year, 'description': ''},
             situation = {'name': 'Situatie 1', 'reference': ''},
             version = {'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'}
         )

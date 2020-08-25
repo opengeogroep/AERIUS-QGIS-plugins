@@ -19,7 +19,8 @@ from qgis.core import QgsMapLayerProxyModel
 
 from .config import (
     emission_sectors,
-    emission_elements
+    emission_elements,
+    ui_settings
 )
 
 from .widget_registry import WidgetRegistry
@@ -51,6 +52,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_sector.currentIndexChanged.connect(self.set_subsectors)
         self.combo_subsector.currentIndexChanged.connect(self.set_elements)
         self.edit_outfile.textChanged.connect(self.update_ok_button)
+        self.set_years()
         self.set_sectors()
         self.update_ok_button()
 
@@ -62,6 +64,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_sector.currentIndexChanged.disconnect(self.set_subsectors)
         self.combo_subsector.currentIndexChanged.disconnect(self.set_elements)
         self.combo_layer.layerChanged.disconnect(self.update_field_combos)
+
+
+    def set_years(self):
+        for year in ui_settings['years']:
+            self.combo_year.addItem(year, year)
+        self.combo_year.setCurrentIndex(self.combo_year.count() - 1)
 
 
     def set_sectors(self):

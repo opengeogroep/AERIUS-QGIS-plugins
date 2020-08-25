@@ -92,3 +92,7 @@ emission_elements = {
     'emission_nh3': {'types': [flt_num], 'label': 'Emissie NH3', 'group': 'emission', 'sector_ids': [-1]},
     'emission_nox': {'types': [flt_num], 'label': 'Emissie NOx', 'group': 'emission', 'sector_ids': [-1]},
 }
+
+ui_settings = {
+    'years': ['2019', '2020'],
+}
