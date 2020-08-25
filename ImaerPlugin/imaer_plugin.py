@@ -35,8 +35,6 @@ from .tasks import (
     ExportImaerCalculatorResultTask)
 from .generate_calc_input import GenerateCalcInputDialog
 
-from .imaer import FeatureCollectionCalculator, AeriusCalculatorMetadata, EmissionSource
-
 
 
 
@@ -238,61 +236,12 @@ class ImaerPlugin:
         #print(result)
         if result:
             self.log('starting calcinput generation ...')
-            fcc = self.get_fcc_from_gui()
+            fcc = self.generate_calc_input_dlg.get_fcc_from_gui()
             fn = self.generate_calc_input_dlg.edit_outfile.text()
             if fcc.write_to_file(fn):
                 self.iface.messageBar().pushMessage('Success', 'Imaer GML file saved as: <a href="{0}">{0}</a>'.format(fn), level=Qgis.Info, duration=10)
             else:
                 self.iface.messageBar().pushMessage('Error', 'Could not export GML file to {0}'.format(fn), level=Qgis.Critical, duration=10)
-
-
-    def get_fcc_from_gui(self):
-        '''Maps items from GUI widgets to IMAER object'''
-        result = FeatureCollectionCalculator()
-
-        year = self.generate_calc_input_dlg.combo_year.currentData()
-
-
-        metadata = AeriusCalculatorMetadata(
-            project = {'year': year, 'description': ''},
-            situation = {'name': 'Situatie 1', 'reference': ''},
-            version = {'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'}
-        )
-        result.metadata = metadata
-
-        input_layer = self.generate_calc_input_dlg.combo_layer.currentLayer()
-        crs_source = input_layer.crs()
-        crs_dest_srid = self.generate_calc_input_dlg.combo_crs.currentData()
-        crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
-        if crs_source == crs_dest:
-            crs_transform = None
-        else:
-            crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
-
-        #print(input_layer)
-        emission_sources = {}
-        for feat in input_layer.getFeatures():
-            local_id = 'ES.{}'.format(feat.id())
-            sector_id = self.generate_calc_input_dlg.get_current_sector_id()
-            loc_name = self.get_widget_value('loc_name', feat)
-            geom = feat.geometry()
-            if crs_transform is not None:
-                geom.transform(crs_transform)
-            es = EmissionSource(local_id, sector_id, loc_name, geom, crs_dest_srid)
-            es.add_emission('NH3', self.get_widget_value('emission_nh3', feat))
-            es.add_emission('NOX', self.get_widget_value('emission_nox', feat))
-            result.add_feature_member(es)
-
-        return result
-
-
-    def get_widget_value(self, var_name, feat):
-        widget_set = self.generate_calc_input_dlg.widget_registry[var_name]
-        field_name = widget_set['field'].currentField()
-        if field_name == '':
-            return widget_set['fixed'].text()
-        else:
-            return feat[field_name]
 
 
     def update_export_calc_widgets(self):

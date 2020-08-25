@@ -15,7 +15,11 @@ from qgis.gui import (
     QgsMapLayerComboBox,
     QgsFieldComboBox
 )
-from qgis.core import QgsMapLayerProxyModel
+from qgis.core import (
+    QgsMapLayerProxyModel,
+    QgsProject,
+    QgsCoordinateReferenceSystem,
+    QgsCoordinateTransform)
 
 from .config import (
     emission_sectors,
@@ -24,6 +28,8 @@ from .config import (
 )
 
 from .widget_registry import WidgetRegistry
+
+from .imaer import FeatureCollectionCalculator, AeriusCalculatorMetadata, EmissionSource
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -187,3 +193,51 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
             return
         self.buttonBox.button(QDialogButtonBox.Save).setEnabled(True)
+
+
+    def get_fcc_from_gui(self):
+        '''Maps items from GUI widgets to IMAER object'''
+        result = FeatureCollectionCalculator()
+
+        year = self.combo_year.currentData()
+
+        metadata = AeriusCalculatorMetadata(
+            project = {'year': year, 'description': ''},
+            situation = {'name': 'Situatie 1', 'reference': ''},
+            version = {'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'}
+        )
+        result.metadata = metadata
+
+        input_layer = self.combo_layer.currentLayer()
+        crs_source = input_layer.crs()
+        crs_dest_srid = self.combo_crs.currentData()
+        crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
+        if crs_source == crs_dest:
+            crs_transform = None
+        else:
+            crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
+
+        #print(input_layer)
+        emission_sources = {}
+        for feat in input_layer.getFeatures():
+            local_id = 'ES.{}'.format(feat.id())
+            sector_id = self.get_current_sector_id()
+            loc_name = self.get_widget_value('loc_name', feat)
+            geom = feat.geometry()
+            if crs_transform is not None:
+                geom.transform(crs_transform)
+            es = EmissionSource(local_id, sector_id, loc_name, geom, crs_dest_srid)
+            es.add_emission('NH3', self.get_widget_value('emission_nh3', feat))
+            es.add_emission('NOX', self.get_widget_value('emission_nox', feat))
+            result.add_feature_member(es)
+
+        return result
+
+
+    def get_widget_value(self, var_name, feat):
+        widget_set = self.widget_registry[var_name]
+        field_name = widget_set['field'].currentField()
+        if field_name == '':
+            return widget_set['fixed'].text()
+        else:
+            return feat[field_name]
