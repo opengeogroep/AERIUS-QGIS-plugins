@@ -8,7 +8,7 @@ qgisMinimumVersion=3.10
 qgisMaximumVersion=3.99
 description=!!EXPERIMENTAL PLUGIN FOR TESTING ONLY!! Plugin for generating AERIUS Calculator input IMAER files, and importing and exporting AERIUS Calculator result IMAER files.
 about=Plugin for handling AERIUS Calculator IMAER files
-version=version 3.0.2
+version=version 3.0.3
 tracker=https://github.com/opengeogroep/AERIUS-QGIS-plugins/issues
 repository=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 homepage=https://github.com/opengeogroep/AERIUS-QGIS-plugins
@@ -17,6 +17,7 @@ homepage=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 # Recommended items:
 
 changelog=
+    3.0.3   (28-08-2020) Calculator Input support for LineStrings, Polygons, CRS options, Emission Source Characteristics
     3.0.2   (19-08-2020) Generating basic Calculator Input GML for point layers
     3.0.1   (03-07-2020) New importer and exporter for Calculator Result
     3.0.0   (29-05-2020) IMAER Calculator Result GML import
