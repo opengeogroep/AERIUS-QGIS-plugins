@@ -1,6 +1,6 @@
 from qgis.core import QgsFieldProxyModel
 
-
+'''
 emission_sectors = {
     'ENERGY': {'sector_id': 2100},
     'AGRICULTURE': {
@@ -79,7 +79,6 @@ emission_sectors = {
     'PLAN': {'sector_id': 9000},
     'OTHER': {'sector_id': 9999}
 }
-'''
 
 
 flt_str = QgsFieldProxyModel.String
@@ -91,6 +90,9 @@ emission_elements = {
     'loc_name': {'types': [flt_str], 'label': 'Location Name', 'group': 'general', 'sector_ids': [-1]},
     'emission_nh3': {'types': [flt_num], 'label': 'Emissie NH3', 'group': 'emission', 'sector_ids': [-1]},
     'emission_nox': {'types': [flt_num], 'label': 'Emissie NOx', 'group': 'emission', 'sector_ids': [-1]},
+    'esc_height': {'types': [flt_num], 'label': 'Emission height', 'group': 'emission', 'sector_ids': [9000, 9999]},
+    'esc_heat_content': {'types': [flt_num], 'label': 'Heat content', 'group': 'esc', 'sector_ids': [9000, 9999]},
+    #'esc_diurnal_var': {'types': [flt_num], 'label': 'Diurnal variation', 'group': 'esc', 'sector_ids': [9999]},
 }
 
 ui_settings = {

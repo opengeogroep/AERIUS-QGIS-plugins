@@ -29,7 +29,13 @@ from .config import (
 
 from .widget_registry import WidgetRegistry
 
-from .imaer import FeatureCollectionCalculator, AeriusCalculatorMetadata, EmissionSource
+from .imaer import (
+    FeatureCollectionCalculator,
+    AeriusCalculatorMetadata,
+    EmissionSource,
+    EmissionSourceCharacteristics,
+    SpecifiedHeatContent
+)
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -226,7 +232,18 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             geom = feat.geometry()
             if crs_transform is not None:
                 geom.transform(crs_transform)
+
             es = EmissionSource(local_id, sector_id, loc_name, geom, crs_dest_srid)
+
+            # emission source characteristics
+            esc_height = self.get_widget_value('esc_height', feat, 'float')
+            esc_heat_content = self.get_widget_value('esc_heat_content', feat, 'float')
+            if esc_height is not None and esc_heat_content is not None:
+                hc = SpecifiedHeatContent(esc_heat_content)
+                esc = EmissionSourceCharacteristics(hc, esc_height)
+                es.es_characteristics = esc
+
+            # emissions
             for substance_code, substance_name in {'NH3': 'emission_nh3', 'NOX': 'emission_nox'}.items():
                 em_value = self.get_widget_value(substance_name, feat)
                 if em_value is not None:
@@ -236,11 +253,27 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         return result
 
 
-    def get_widget_value(self, var_name, feat):
+    def get_widget_value(self, var_name, feat, cast_to=None):
+        if not var_name in self.widget_registry:
+            return None
         widget_set = self.widget_registry[var_name]
         field_name = widget_set['field'].currentField()
         if field_name == '':
             return None
             #return widget_set['fixed'].text() TODO: return fixed value after data type check (or something..)
         else:
-            return feat[field_name]
+            result = feat[field_name]
+
+        '''if cast_to is not None:
+            #if cast_to == 'double':
+            #    return result.toDouble()
+            if cast_to == 'float':
+                if isinstance(result, float):
+                    return
+                if isInstance(result, QVariant):
+                    result.toFloat()
+            elif cast_to == 'integer':
+                return result.toInt()
+            elif cast_to == 'string':
+                return result.toString()'''
+        return result

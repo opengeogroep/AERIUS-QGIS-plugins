@@ -160,10 +160,11 @@ class AeriusCalculatorMetadata():
 
 class EmissionSource():
 
-    def __init__(self, local_id, sector_id, label, geometry, srid, emissions={}):
+    def __init__(self, local_id, sector_id, label, geometry, srid, emissions={}, es_characteristics=None):
         self.local_id = local_id
         self.sector_id = sector_id
         self.label = label
+        self.es_characteristics = es_characteristics
         self.geometry = geometry
         self.srid = srid
         self.emissions = emissions.copy() # copy, otherwise all emissionSources point to the same dictionary
@@ -196,6 +197,11 @@ class EmissionSource():
         print('label', self.label, type(self.label))
         ele.appendChild(doc.createTextNode( str(self.label) ))
         emission.appendChild(ele)
+
+        # emission source characteristics
+        if self.es_characteristics is not None:
+            esc = self.es_characteristics.generate_dom()
+            emission.appendChild(esc)
 
         # geometry
         geom_ele = doc.createElementNS(_imaer_ns, 'imaer:geometry')
