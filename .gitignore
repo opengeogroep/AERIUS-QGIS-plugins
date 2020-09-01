@@ -4,3 +4,4 @@ __pycache__/
 demodata/AERIUS*.gpkg
 demodata/*.gpkg-shm
 demodata/*.gpkg-wal
+test/output/output_*.gml
