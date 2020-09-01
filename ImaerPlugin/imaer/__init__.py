@@ -2,7 +2,7 @@ from .main import FeatureCollectionCalculator
 from .main import AeriusCalculatorMetadata
 from .main import EmissionSource
 from .gml import GmlWriter
-from .es_characteristics import EmissionSourceCharacteristics, SpecifiedHeatContent, CalculatedHeatContent
+from .es_characteristics import EmissionSourceCharacteristics, SpecifiedHeatContent, CalculatedHeatContent, Building
 
 # constants (todo: make these work)
 '''

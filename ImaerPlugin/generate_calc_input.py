@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
+from PyQt5.QtCore import QVariant
 from PyQt5.QtWidgets import (
     QDialog,
     QDialogButtonBox,
@@ -34,7 +35,9 @@ from .imaer import (
     AeriusCalculatorMetadata,
     EmissionSource,
     EmissionSourceCharacteristics,
-    SpecifiedHeatContent
+    SpecifiedHeatContent,
+    CalculatedHeatContent,
+    Building
 )
 
 
@@ -238,9 +241,31 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             # emission source characteristics
             esc_height = self.get_widget_value('esc_height', feat, 'float')
             esc_heat_content = self.get_widget_value('esc_heat_content', feat, 'float')
-            if esc_height is not None and esc_heat_content is not None:
+            esc_em_temp = self.get_widget_value('esc_em_temp', feat, 'float')
+            esc_of_diam = self.get_widget_value('esc_of_diam', feat, 'float')
+            esc_of_vel = self.get_widget_value('esc_of_vel', feat, 'float')
+            esc_of_dir = self.get_widget_value('esc_of_dir', feat, 'str')
+            if esc_heat_content is not None:
                 hc = SpecifiedHeatContent(esc_heat_content)
+            elif esc_em_temp is not None:
+                hc = CalculatedHeatContent(esc_em_temp, esc_of_diam, esc_of_vel, esc_of_dir)
+            else:
+                hc = None
+            if hc is not None and esc_height is not None:
                 esc = EmissionSourceCharacteristics(hc, esc_height)
+
+                esc_diurnal_var = self.get_widget_value('esc_diurnal_var', feat, 'float')
+                if esc_diurnal_var is not None:
+                    esc.diurnal_variation = esc_diurnal_var
+
+                esc_bld_height = self.get_widget_value('esc_bld_height', feat, 'float')
+                esc_bld_width = self.get_widget_value('esc_bld_width', feat, 'float')
+                esc_bld_length = self.get_widget_value('esc_bld_length', feat, 'float')
+                esc_bld_orientation = self.get_widget_value('esc_bld_orientation', feat, 'float')
+                if esc_bld_height is not None:
+                    bld = Building(esc_bld_height, esc_bld_length, esc_bld_width, esc_bld_orientation)
+                    esc.building = bld
+
                 es.es_characteristics = esc
 
             # emissions
@@ -262,7 +287,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             return None
             #return widget_set['fixed'].text() TODO: return fixed value after data type check (or something..)
         else:
-            result = feat[field_name]
+            value = feat[field_name]
+
+        # return None in case attribute value is NULL (empty cell)
+        if isinstance(value, QVariant) and str(value) == 'NULL':
+            return None
 
         '''if cast_to is not None:
             #if cast_to == 'double':
@@ -276,4 +305,4 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 return result.toInt()
             elif cast_to == 'string':
                 return result.toString()'''
-        return result
+        return value

@@ -1,8 +1,6 @@
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
 
-from PyQt5.QtCore import QVariant
-
 from .gml import GmlWriter
 
 
@@ -69,7 +67,7 @@ class FeatureCollectionCalculator():
         #try:
             with open(filename, 'w') as fn:
                 fn.write(self.get_pretty_xml())
-                print('Saving XML to: {}'.format(filename))
+                #print('Saving XML to: {}'.format(filename))
                 return True
         #except:
             return False
@@ -194,7 +192,7 @@ class EmissionSource():
 
         # label
         ele = doc.createElementNS(_imaer_ns, 'imaer:label')
-        print('label', self.label, type(self.label))
+        #print('label', self.label, type(self.label))
         ele.appendChild(doc.createTextNode( str(self.label) ))
         emission.appendChild(ele)
 
@@ -213,7 +211,7 @@ class EmissionSource():
 
         # emissions
         for substance, value in self.emissions.items():
-            if not (isinstance(value, QVariant) and str(value) == 'NULL'):
+            if value is not None:
                 emi = doc.createElementNS(_imaer_ns, 'imaer:emission')
                 emi_ele = doc.createElementNS(_imaer_ns, 'imaer:Emission')
                 emi_ele.setAttribute('substance', substance)

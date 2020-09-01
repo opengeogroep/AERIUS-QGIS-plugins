@@ -94,6 +94,33 @@ class CalculatedHeatContent(HeatContent):
         self.outflow_direction = outflow_direction
 
 
+    def generate_dom(self):
+        hc = super().generate_dom()
+        doc = xml.dom.minidom.Document()
+
+        chc = doc.createElementNS(_imaer_ns, 'imaer:CalculatedHeatContent')
+
+        em_t = doc.createElementNS(_imaer_ns, 'imaer:emissionTemperature')
+        em_t.appendChild(doc.createTextNode( str(self.emission_temperature) ))
+        chc.appendChild(em_t)
+
+        of_diam = doc.createElementNS(_imaer_ns, 'imaer:outflow_diameter')
+        of_diam.appendChild(doc.createTextNode( str(self.outflow_diameter) ))
+        chc.appendChild(of_diam)
+
+        of_v = doc.createElementNS(_imaer_ns, 'imaer:outflowVelocity')
+        of_v.appendChild(doc.createTextNode( str(self.outflow_velocity) ))
+        chc.appendChild(of_v)
+
+        of_dir = doc.createElementNS(_imaer_ns, 'imaer:outflowDirection')
+        of_dir.appendChild(doc.createTextNode( str(self.outflow_direction) ))
+        chc.appendChild(of_dir)
+
+        hc.appendChild(chc)
+
+        return hc
+
+
 
 
 class Building(object):
@@ -103,3 +130,26 @@ class Building(object):
         self.width = width
         self.length = length
         self.orientation = orientation
+
+    def generate_dom(self):
+        doc = xml.dom.minidom.Document()
+
+        bld1 = doc.createElementNS(_imaer_ns, 'imaer:building')
+        bld2 = doc.createElementNS(_imaer_ns, 'imaer:Building')
+
+        height = doc.createElementNS(_imaer_ns, 'imaer:height')
+        height.appendChild(doc.createTextNode( str(self.height) ))
+        bld2.appendChild(height)
+        width = doc.createElementNS(_imaer_ns, 'imaer:width')
+        width.appendChild(doc.createTextNode( str(self.width) ))
+        bld2.appendChild(width)
+        length = doc.createElementNS(_imaer_ns, 'imaer:length')
+        length.appendChild(doc.createTextNode( str(self.length) ))
+        bld2.appendChild(length)
+        orientation = doc.createElementNS(_imaer_ns, 'imaer:orientation')
+        orientation.appendChild(doc.createTextNode( str(self.orientation) ))
+        bld2.appendChild(orientation)
+
+        bld1.appendChild(bld2)
+
+        return bld1

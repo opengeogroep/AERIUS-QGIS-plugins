@@ -92,7 +92,15 @@ emission_elements = {
     'emission_nox': {'types': [flt_num], 'label': 'Emissie NOx', 'group': 'emission', 'sector_ids': [-1]},
     'esc_height': {'types': [flt_num], 'label': 'Emission height', 'group': 'emission', 'sector_ids': [9000, 9999]},
     'esc_heat_content': {'types': [flt_num], 'label': 'Heat content', 'group': 'esc', 'sector_ids': [9000, 9999]},
-    #'esc_diurnal_var': {'types': [flt_num], 'label': 'Diurnal variation', 'group': 'esc', 'sector_ids': [9999]},
+    'esc_em_temp': {'types': [flt_num], 'label': 'Emission Temperature', 'group': 'esc', 'sector_ids': [9000, 9999]},
+    'esc_of_diam': {'types': [flt_num], 'label': 'Emission Outflow Diameter', 'group': 'esc', 'sector_ids': [9000, 9999]},
+    'esc_of_vel': {'types': [flt_num], 'label': 'Emission Outflow Velocity', 'group': 'esc', 'sector_ids': [9000, 9999]},
+    'esc_of_dir': {'types': [flt_str], 'label': 'Emission Outflow Direction', 'group': 'esc', 'sector_ids': [9000, 9999]},
+    'esc_diurnal_var': {'types': [flt_str], 'label': 'Diurnal variation', 'group': 'esc', 'sector_ids': [9999]},
+    'esc_bld_height': {'types': [flt_num], 'label': 'Building Height', 'group': 'esc_bld', 'sector_ids': [9999]},
+    'esc_bld_width': {'types': [flt_num], 'label': 'Building Width', 'group': 'esc_bld', 'sector_ids': [9999]},
+    'esc_bld_length': {'types': [flt_num], 'label': 'Building Length', 'group': 'esc_bld', 'sector_ids': [9999]},
+    'esc_bld_orientation': {'types': [flt_num], 'label': 'Building Orientation', 'group': 'esc_bld', 'sector_ids': [9999]},
 }
 
 ui_settings = {
