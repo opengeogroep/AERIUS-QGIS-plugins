@@ -7,7 +7,7 @@
 
 ## Introduction
 
-Convert your emission source data into an IMAER GML file with AERIUS Calculator input.
+Convert your emission source data into an IMAER GML file which can be used as AERIUS Calculator input.
 
 ## Howto
 
@@ -23,6 +23,8 @@ Open your emission data as a regular vector layer in QGIS. The geometries can be
 
 After pressing `save`, the GML will be generated. A link to the file will be displayed in the message bar on top of your map. If anything goes wrong, an error will be displayed there.
 
-## IMAER Version
+## Using the exported GML file
 
-The version of the generated GML file is `IMAER 3.1` and will at this moment only work in the pre-release of AERIUS Calculator!
+The generated GML file can be imported using the interface at [Aerius Calculator (NL)](https://calculator.aerius.nl/) for starting the calculation. It is possible to import multiple files before starting the calculation, which you can use when having multiple maplayers with emission data (and different geometry types).
+
+**The version of the generated GML file is `IMAER 3.1` and will at this moment only work in the pre-release of AERIUS Calculator!!**
