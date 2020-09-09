@@ -13,6 +13,7 @@
 
 import os
 import time
+import webbrowser
 
 from PyQt5.QtWidgets import QAction, QFileDialog, QDialogButtonBox
 from PyQt5.QtGui import QIcon
@@ -79,6 +80,11 @@ class ImaerPlugin:
         self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
         self.generate_calc_input_dlg.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
+        icon_documentation = QIcon(os.path.join(self.plugin_dir, 'icon_documentation.svg'))
+        self.documentation_action = QAction(icon_documentation, 'Open online documentation', self.iface.mainWindow())
+        self.documentation_action.triggered.connect(self.open_online_documentation)
+        self.toolbar.addAction(self.documentation_action)
+
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
 
         self.update_export_calc_widgets()
@@ -100,6 +106,10 @@ class ImaerPlugin:
         self.generate_calc_input_action.triggered.disconnect(self.run_generate_calc_input)
         self.toolbar.removeAction(self.generate_calc_input_action)
         del self.generate_calc_input_action
+
+        self.documentation_action.triggered.disconnect(self.open_online_documentation)
+        self.toolbar.removeAction(self.documentation_action)
+        del self.documentation_action
 
         del self.toolbar
 
@@ -248,3 +258,8 @@ class ImaerPlugin:
         if self.iface.activeLayer() is not None:
             metadata = self.get_imaer_calc_metadata(self.iface.activeLayer())
             self.export_calc_result_action.setEnabled(metadata['is_imaer_calc_layer'])
+
+
+    def open_online_documentation(self):
+        doc_index_url = 'https://github.com/opengeogroep/AERIUS-QGIS-plugins/blob/v3new/documentation/00_index.md'
+        webbrowser.open(doc_index_url)
