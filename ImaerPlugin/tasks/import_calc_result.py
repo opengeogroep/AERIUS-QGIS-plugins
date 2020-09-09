@@ -157,7 +157,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         fields.append(QgsField('point_x', QVariant.Double))
         fields.append(QgsField('point_y', QVariant.Double))
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
-            field_name = 'DEP_{}'.format(substance)
+            field_name = 'dep_{}'.format(substance)
             fields.append(QgsField(field_name, QVariant.Double))
         self.conn.createVectorTable('', 'receptors', fields, QgsWkbTypes.Polygon, QgsCoordinateReferenceSystem(28992), True, {})
 
@@ -208,6 +208,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
                 result['result_fields'].append(field_name)
             result[field_name] = float(val)
 
+        #print(result)
         if as_dict:
             return result
 
@@ -221,7 +222,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         attributes.append(float(result['point_y']))
 
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
-            field_name = 'DEP_{}'.format(substance)
+            field_name = 'dep_{}'.format(substance)
             if field_name in result:
                 attributes.append(float(result[field_name]))
             else:
