@@ -13,7 +13,7 @@ Import AERIUS Calculator result files.
 
 Click the ![alt text](../ImaerPlugin/icon_import_calc_result.png "import buton") button in the IMAER toolbar and browse to the downloaded IMAER GML file from Aerius Calculator. (Make sure you download the "GML with calculation results".)
 
-![dialog](img/import_result_file_dialog.png)
+![dialog](img/import_result_file_dlg.png)
 
 The data will be converted into a GeoPackage (.gpkg) file at the same location your GML file is placed. Make sure you have write access to that directory.
 
