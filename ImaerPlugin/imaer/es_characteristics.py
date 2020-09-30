@@ -146,9 +146,10 @@ class Building(object):
         length = doc.createElementNS(_imaer_ns, 'imaer:length')
         length.appendChild(doc.createTextNode( str(self.length) ))
         bld2.appendChild(length)
-        orientation = doc.createElementNS(_imaer_ns, 'imaer:orientation')
-        orientation.appendChild(doc.createTextNode( str(self.orientation) ))
-        bld2.appendChild(orientation)
+        if self.orientation is not None:
+            orientation = doc.createElementNS(_imaer_ns, 'imaer:orientation')
+            orientation.appendChild(doc.createTextNode( str(self.orientation) ))
+            bld2.appendChild(orientation)
 
         bld1.appendChild(bld2)
 

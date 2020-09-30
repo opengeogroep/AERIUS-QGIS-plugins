@@ -263,7 +263,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 esc_bld_length = self.get_widget_value('esc_bld_length', feat, 'float')
                 esc_bld_orientation = self.get_widget_value('esc_bld_orientation', feat, 'float')
                 if esc_bld_height is not None:
-                    bld = Building(esc_bld_height, esc_bld_length, esc_bld_width, esc_bld_orientation)
+                    bld = Building(esc_bld_height, esc_bld_width, esc_bld_length, esc_bld_orientation)
                     esc.building = bld
 
                 es.es_characteristics = esc
