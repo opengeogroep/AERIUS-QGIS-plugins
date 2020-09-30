@@ -14,6 +14,7 @@
 import os
 import time
 import webbrowser
+import pathlib
 
 from PyQt5.QtWidgets import QAction, QFileDialog, QDialogButtonBox
 from PyQt5.QtGui import QIcon
@@ -59,8 +60,8 @@ class ImaerPlugin:
         self.toolbar = self.iface.addToolBar("Imaer Toolbar")
         if self.dev:
              self.toolbar.setStyleSheet("QToolBar { background-color: rgba(200, 180, 200, 255); }")
-        self.calc_file_dialog = QFileDialog()
-        self.generate_calc_input_file_dialog = QFileDialog()
+        self.calc_result_file_dialog = QFileDialog()
+        self.calc_input_file_dialog = QFileDialog()
 
         icon_import_calc = QIcon(os.path.join(self.plugin_dir, 'icon_import_calc_result.png'))
         self.import_calc_result_action = QAction(icon_import_calc, 'Import IMAER Calculator result gml', self.iface.mainWindow())
@@ -120,11 +121,10 @@ class ImaerPlugin:
 
 
     def run_import_calc_result(self):
-        if self.do_log:
-            self.calc_file_dialog.setDirectory('/home/raymond/git/AERIUS-QGIS-plugins/demodata/')
-        gml_fn, filter = self.calc_file_dialog.getOpenFileName(caption = "Open Calculator result gml file", filter='*.gml', parent=self.iface.mainWindow())
+        if self.dev:
+            self.calc_result_file_dialog.setDirectory('/home/raymond/git/AERIUS-QGIS-plugins/demodata/')
+        gml_fn, filter = self.calc_result_file_dialog.getOpenFileName(caption="Open Calculator result gml file", filter='*.gml', parent=self.iface.mainWindow())
         self.log(gml_fn)
-        #print(gml_fn)
 
         if os.path.exists(os.path.dirname(gml_fn)):
             gpkg_fn = gml_fn.replace('.gml', '.gpkg')
@@ -154,6 +154,14 @@ class ImaerPlugin:
             canvas.setExtent(extent)
 
 
+    def suggest_export_calc_result_fn(self, gpkg_fn):
+        time_str = time.strftime("%Y%m%d-%H%M%S")
+        gpkg_path = pathlib.Path(gpkg_fn)
+        gml_basename = f'{gpkg_path.stem}_modified-{time_str}.gml'
+        gml_fn = os.path.join(gpkg_path.parent, gml_basename)
+        return gml_fn
+
+
     def run_export_calc_result(self):
         self.log('run_export_calc_result()')
 
@@ -163,9 +171,11 @@ class ImaerPlugin:
         if not metadata['is_imaer_calc_layer']:
             self.log('active layer is not an Imaer layer') #todo messagedlg error
 
-        gpkg_fn = metadata['gpkg_fn']
-        gml_fn = gpkg_fn.replace('.gpkg', '_modified.gml')
-        print(gml_fn)
+        gml_fn = self.suggest_export_calc_result_fn(metadata['gpkg_fn'])
+        gml_fn, filter = self.calc_result_file_dialog.getSaveFileName(caption="Save as Calculator result gml file", directory=gml_fn, parent=self.iface.mainWindow())
+        #self.log(gml_fn)
+        if gml_fn == '' and filter == '':
+            return
 
         xml_lines = []
         for line in metadata['xml'].split('\n'):
@@ -233,9 +243,8 @@ class ImaerPlugin:
             out_path = ''
         out_fn = time.strftime("calcinput_%Y%m%d_%H%M%S.gml")
         out_fn = os.path.join(out_path, out_fn)
-        self.generate_calc_input_file_dialog.setDirectory(out_path)
 
-        gml_outfn, filter = self.generate_calc_input_file_dialog.getSaveFileName(caption = "Save as Calculator input gml file", filter='*.gml', directory=out_fn, parent=self.iface.mainWindow())
+        gml_outfn, filter = self.calc_input_file_dialog.getSaveFileName(caption="Save as Calculator input gml file", filter='*.gml', directory=out_fn, parent=self.iface.mainWindow())
         self.generate_calc_input_dlg.edit_outfile.setText(gml_outfn)
 
 
