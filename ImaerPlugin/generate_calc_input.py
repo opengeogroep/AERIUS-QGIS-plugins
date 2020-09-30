@@ -81,6 +81,9 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
 
     def set_fixed_options(self):
+        # name
+        self.edit_name.setText(ui_settings['situation_name'])
+
         # years
         for year in ui_settings['years']:
             self.combo_year.addItem(year, year)
@@ -209,10 +212,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         result = FeatureCollectionCalculator()
 
         year = self.combo_year.currentData()
+        situation_name = self.edit_name.text()
 
         metadata = AeriusCalculatorMetadata(
             project = {'year': year, 'description': ''},
-            situation = {'name': 'Situatie 1', 'reference': ''},
+            situation = {'name': situation_name, 'reference': ''},
             version = {'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'}
         )
         result.metadata = metadata

@@ -105,8 +105,9 @@ emission_elements = {
 
 ui_settings = {
     'years': ['2019', '2020'],
+    'situation_name': 'Situation 1',
     'crs': [
         {'name': 'Amersfoort / RD New - Netherlands', 'srid': 28992},
         {'name': 'OSGB 1936 / British National Grid', 'srid': 27700},
-        ]
+        ],
 }
