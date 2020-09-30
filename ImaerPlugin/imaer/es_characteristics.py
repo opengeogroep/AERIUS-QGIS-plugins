@@ -104,7 +104,7 @@ class CalculatedHeatContent(HeatContent):
         em_t.appendChild(doc.createTextNode( str(self.emission_temperature) ))
         chc.appendChild(em_t)
 
-        of_diam = doc.createElementNS(_imaer_ns, 'imaer:outflow_diameter')
+        of_diam = doc.createElementNS(_imaer_ns, 'imaer:outflowDiameter')
         of_diam.appendChild(doc.createTextNode( str(self.outflow_diameter) ))
         chc.appendChild(of_diam)
 
