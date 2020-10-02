@@ -36,6 +36,7 @@ from .tasks import (
     ImportImaerCalculatorResultTask,
     ExportImaerCalculatorResultTask)
 from .generate_calc_input import GenerateCalcInputDialog
+from .configuration import ConfigurationDialog
 
 
 
@@ -81,6 +82,13 @@ class ImaerPlugin:
         self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
         self.generate_calc_input_dlg.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
+        icon_configuration = QIcon(os.path.join(self.plugin_dir, 'icon_configuration.svg'))
+        self.configuration_action = QAction(icon_configuration, 'Configuration', self.iface.mainWindow())
+        self.configuration_action.triggered.connect(self.open_configuration)
+        self.toolbar.addAction(self.configuration_action)
+
+        self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
+
         icon_documentation = QIcon(os.path.join(self.plugin_dir, 'icon_documentation.svg'))
         self.documentation_action = QAction(icon_documentation, 'Open online documentation', self.iface.mainWindow())
         self.documentation_action.triggered.connect(self.open_online_documentation)
@@ -107,6 +115,10 @@ class ImaerPlugin:
         self.generate_calc_input_action.triggered.disconnect(self.run_generate_calc_input)
         self.toolbar.removeAction(self.generate_calc_input_action)
         del self.generate_calc_input_action
+
+        self.configuration_action.triggered.disconnect(self.open_configuration)
+        self.toolbar.removeAction(self.configuration_action)
+        del self.configuration_action
 
         self.documentation_action.triggered.disconnect(self.open_online_documentation)
         self.toolbar.removeAction(self.documentation_action)
@@ -272,3 +284,8 @@ class ImaerPlugin:
     def open_online_documentation(self):
         doc_index_url = 'https://github.com/opengeogroep/AERIUS-QGIS-plugins/blob/v3new/documentation/00_index.md'
         webbrowser.open(doc_index_url)
+
+
+    def open_configuration(self):
+        self.log('open_configuration()')
+        self.configuration_dlg.show()
