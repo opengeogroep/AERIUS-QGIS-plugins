@@ -12,15 +12,15 @@ from .connect import (
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'configuration_dlg.ui'))
+    os.path.dirname(__file__), 'connect_calc_dlg.ui'))
 
 
 
 
-class ConfigurationDialog(QDialog, FORM_CLASS):
+class ConnectCalcDialog(QDialog, FORM_CLASS):
 
     def __init__(self, plugin, parent=None):
-        super(ConfigurationDialog, self).__init__(parent)
+        super(ConnectCalcDialog, self).__init__(parent)
 
         self.setupUi(self)
         self.plugin = plugin
@@ -31,16 +31,14 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
 
 
     def init_gui(self):
-        self.button_get_key.clicked.connect(self.get_api_key)
-
-        #self.load_ui_from_settings()
+        self.button_validate.clicked.connect(self.validate)
 
 
     def __del__(self):
-        self.button_get_key.clicked.disconnect(self.get_api_key)
+        self.button_validate.clicked.disconnect(self.validate)
 
 
-    def load_ui_from_settings(self):
+    '''def load_ui_from_settings(self):
         print('load_ui_from_settings')
 
         email_setting = self.plugin.settings.value('variables/imaer_plugin_connect_email', defaultValue='@@@')
@@ -54,11 +52,11 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
 
     def save_ui_to_settings(self):
         self.plugin.settings.setValue('variables/imaer_plugin_connect_email', self.edit_email.text())
-        self.plugin.settings.setValue('variables/imaer_plugin_connect_key', self.edit_key.text())
+        self.plugin.settings.setValue('variables/imaer_plugin_connect_key', self.edit_key.text())'''
 
 
-    def get_api_key(self):
+    def validate(self):
         print(self.connection)
-        email = self.edit_email.text()
-        self.edit_key.setText('')
-        self.connection.generate_api_key(email)
+        #email = self.edit_email.text()
+        #self.edit_key.setText('')
+        #self.connection.generate_api_key(email)

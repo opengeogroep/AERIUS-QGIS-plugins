@@ -38,6 +38,7 @@ from .tasks import (
     ExportImaerCalculatorResultTask)
 from .generate_calc_input import GenerateCalcInputDialog
 from .configuration import ConfigurationDialog
+from .connect_calc import ConnectCalcDialog
 
 
 
@@ -91,6 +92,13 @@ class ImaerPlugin:
 
         self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
 
+        icon_connect_calc = QIcon(os.path.join(self.plugin_dir, 'icon_connect_calc.svg'))
+        self.connect_calc_action = QAction(icon_connect_calc, 'Connect calculation', self.iface.mainWindow())
+        self.connect_calc_action.triggered.connect(self.open_connect_calc)
+        self.toolbar.addAction(self.connect_calc_action)
+
+        self.connect_calc_dlg = ConnectCalcDialog(self, parent=self.iface.mainWindow())
+
         icon_documentation = QIcon(os.path.join(self.plugin_dir, 'icon_documentation.svg'))
         self.documentation_action = QAction(icon_documentation, 'Open online documentation', self.iface.mainWindow())
         self.documentation_action.triggered.connect(self.open_online_documentation)
@@ -121,6 +129,10 @@ class ImaerPlugin:
         self.configuration_action.triggered.disconnect(self.open_configuration)
         self.toolbar.removeAction(self.configuration_action)
         del self.configuration_action
+
+        self.connect_calc_action.triggered.disconnect(self.open_connect_calc)
+        self.toolbar.removeAction(self.connect_calc_action)
+        del self.connect_calc_action
 
         self.documentation_action.triggered.disconnect(self.open_online_documentation)
         self.toolbar.removeAction(self.documentation_action)
@@ -296,3 +308,9 @@ class ImaerPlugin:
         print(result)
         if result:
             self.configuration_dlg.save_ui_to_settings()
+
+
+    def open_connect_calc(self):
+        self.log('open_cconnect_calc()')
+        result = self.connect_calc_dlg.exec_()
+        print(result)
