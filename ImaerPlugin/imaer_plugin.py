@@ -29,7 +29,8 @@ from qgis.core import (
     QgsApplication,
     QgsExpressionContextUtils,
     QgsCoordinateReferenceSystem,
-    QgsCoordinateTransform)
+    QgsCoordinateTransform,
+    QgsSettings)
 from qgis.gui import QgsMapLayerComboBox
 
 from .tasks import (
@@ -48,6 +49,7 @@ class ImaerPlugin:
         self.plugin_dir = os.path.dirname(__file__)
         self.task_manager = QgsApplication.taskManager()
         self.imaer_calc_layers = {}
+        self.settings = QgsSettings()
 
         # Variable self.dev is set to True if a global variable terglobo_dev exists
         # holding the lowercase value 'on'. This is to ensure that any dev tricks
@@ -82,7 +84,7 @@ class ImaerPlugin:
         self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
         self.generate_calc_input_dlg.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
-        icon_configuration = QIcon(os.path.join(self.plugin_dir, 'icon_configuration.svg'))
+        icon_configuration = QIcon(os.path.join(self.plugin_dir, 'icon_connect_at.svg'))
         self.configuration_action = QAction(icon_configuration, 'Configuration', self.iface.mainWindow())
         self.configuration_action.triggered.connect(self.open_configuration)
         self.toolbar.addAction(self.configuration_action)
@@ -288,4 +290,9 @@ class ImaerPlugin:
 
     def open_configuration(self):
         self.log('open_configuration()')
-        self.configuration_dlg.show()
+        #self.configuration_dlg.show()
+        self.configuration_dlg.load_ui_from_settings()
+        result = self.configuration_dlg.exec_()
+        print(result)
+        if result:
+            self.configuration_dlg.save_ui_to_settings()
