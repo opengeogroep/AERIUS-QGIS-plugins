@@ -49,7 +49,7 @@
     <item row="0" column="1">
      <widget class="QLineEdit" name="edit_gml_input">
       <property name="text">
-       <string>/home/raymond/calcinput_20200930_105012.gml</string>
+       <string>/home/raymond/calcinput_20200928_165149.gml</string>
       </property>
      </widget>
     </item>

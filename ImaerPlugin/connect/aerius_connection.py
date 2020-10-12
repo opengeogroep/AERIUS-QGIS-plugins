@@ -14,6 +14,9 @@ class AeriusConnection():
         self.version = version
         self.api_key = api_key
 
+    def __str__(self):
+        return 'AeriusConnection[{}, v{}]'.format(self.api_key, self.version)
+
 
     def run_request(self, api_function, data=None):
         headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
@@ -44,3 +47,28 @@ class AeriusConnection():
         response = self.run_request(api_function, data)
         if response is not None:
             print(f'gelukt! {response}')
+
+
+    def validate(self, gml_fn):
+        print('validate')
+        api_function = 'validate'
+        data = {}
+        data['strict'] = False
+        data['validateAsPriorityProject'] = False
+
+
+        data_object = {}
+        data_object['contentType'] = 'TEXT'
+        data_object['dataType'] = 'GML'
+        with open(gml_fn) as gml_file:
+            data_object['data'] = gml_file.read()
+        #data_object['substance']
+
+        data['dataObject'] = data_object
+        #print(data)
+
+        response = self.run_request(api_function, data)
+        if response is not None:
+            print(f'gelukt! {response}')
+
+        return response

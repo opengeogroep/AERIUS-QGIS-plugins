@@ -25,7 +25,8 @@ class ConnectCalcDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.plugin = plugin
         self.iface = plugin.iface
-        self.connection = AeriusConnection()
+        api_key = self.plugin.settings.value('variables/imaer_plugin_connect_key', defaultValue='')
+        self.connection = AeriusConnection(api_key=api_key)
 
         self.init_gui()
 
@@ -57,6 +58,14 @@ class ConnectCalcDialog(QDialog, FORM_CLASS):
 
     def validate(self):
         print(self.connection)
-        #email = self.edit_email.text()
-        #self.edit_key.setText('')
-        #self.connection.generate_api_key(email)
+        gml_fn = self.edit_gml_input.text()
+        print(gml_fn)
+
+        result = self.connection.validate(gml_fn)
+
+        if result['successful']:
+            print('GML file is valid')
+        else:
+            print('GML is NOT valid:')
+            for line in result['errors']:
+                print('  {}'.format(line['message']))

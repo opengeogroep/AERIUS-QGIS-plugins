@@ -311,6 +311,6 @@ class ImaerPlugin:
 
 
     def open_connect_calc(self):
-        self.log('open_cconnect_calc()')
+        self.log('open_connect_calc()')
         result = self.connect_calc_dlg.exec_()
         print(result)
