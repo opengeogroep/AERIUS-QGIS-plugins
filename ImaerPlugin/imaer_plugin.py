@@ -106,7 +106,7 @@ class ImaerPlugin:
 
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
 
-        self.update_export_calc_widgets()
+        self.update_all_widgets()
 
 
     def unload(self):
@@ -289,10 +289,20 @@ class ImaerPlugin:
                 self.iface.messageBar().pushMessage('Error', 'Could not export GML file to {0}'.format(fn), level=Qgis.Critical, duration=10)
 
 
+    def update_all_widgets(self):
+        self.update_export_calc_widgets()
+        self.update_connect_widgets()
+
+
     def update_export_calc_widgets(self):
         if self.iface.activeLayer() is not None:
             metadata = self.get_imaer_calc_metadata(self.iface.activeLayer())
             self.export_calc_result_action.setEnabled(metadata['is_imaer_calc_layer'])
+
+
+    def update_connect_widgets(self):
+        api_key = self.settings.value('variables/imaer_plugin_connect_key', defaultValue='')
+        self.connect_calc_action.setEnabled(not api_key == '')
 
 
     def open_online_documentation(self):
@@ -308,6 +318,7 @@ class ImaerPlugin:
         print(result)
         if result:
             self.configuration_dlg.save_ui_to_settings()
+            self.update_connect_widgets()
 
 
     def open_connect_calc(self):
