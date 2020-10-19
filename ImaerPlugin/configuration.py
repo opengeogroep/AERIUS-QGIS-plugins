@@ -55,6 +55,7 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
     def save_ui_to_settings(self):
         self.plugin.settings.setValue('variables/imaer_plugin_connect_email', self.edit_email.text())
         self.plugin.settings.setValue('variables/imaer_plugin_connect_key', self.edit_key.text())
+        self.plugin.connect_calc_dlg.connection.api_key = self.edit_key.text()
 
 
     def get_api_key(self):
