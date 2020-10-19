@@ -1,4 +1,5 @@
 import json
+import urllib.parse
 
 from .network import NetworkAccessManager, RequestsException
 
@@ -19,22 +20,36 @@ class AeriusConnection():
         return 'AeriusConnection[{}, v{}]'.format(self.api_key, self.version)
 
 
-    def run_request(self, api_function, data=None):
-        print('kaas')
+    def run_request(self, api_function, method, data=None):
         headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
         url = f'{self.base_url}/{self.version}/{api_function}'
         print(url)
-        print(headers)
-        print(data)
-        if data is not None :
-            body = json.dumps(data)
-        print(body)
+
         nam = NetworkAccessManager()
-        try:
-            (response, content) = nam.request(url, method='POST', headers=headers, body=body)
-        except RequestsException as e:
-            print(f'exception: {e}')
-            return
+
+        if method == 'POST':
+            if data is not None:
+                body = json.dumps(data)
+                print(body)
+            try:
+                (response, content) = nam.request(url, method='POST', headers=headers, body=body)
+            except RequestsException as e:
+                print(f'exception: {e}')
+                return
+
+        elif method == 'GET':
+            if data is not None:
+                print(data)
+                params = urllib.parse.urlencode(data)
+                print(params)
+                url += f'?{params}'
+                print(url)
+            try:
+                (response, content) = nam.request(url, method='GET', headers=headers)
+            except RequestsException as e:
+                print(f'exception: {e}')
+                return
+
         print(response)
         print(response.status)
         print(content)
@@ -46,7 +61,17 @@ class AeriusConnection():
     def generate_api_key(self, email):
         api_function = 'generateAPIKey'
         data = {'email': email}
-        response = self.run_request(api_function, data)
+        response = self.run_request(api_function, 'POST', data)
+        if response is not None:
+            print(f'gelukt! {response}')
+
+
+    def status_jobs(self):
+        api_function = 'status/jobs'
+        data = {}
+        data['apiKey'] = self.api_key
+
+        response = self.run_request(api_function, 'GET', data)
         if response is not None:
             print(f'gelukt! {response}')
 
@@ -58,7 +83,6 @@ class AeriusConnection():
         data['strict'] = False
         data['validateAsPriorityProject'] = False
 
-
         data_object = {}
         data_object['contentType'] = 'TEXT'
         data_object['dataType'] = 'GML'
@@ -69,7 +93,7 @@ class AeriusConnection():
         data['dataObject'] = data_object
         #print(data)
 
-        response = self.run_request(api_function, data)
+        response = self.run_request(api_function, 'POST', data)
         if response is not None:
             print(f'gelukt! {response}')
 
@@ -117,14 +141,14 @@ class AeriusConnection():
             calc_data_object['data'] = gml_file.read()
         #calc_data_object['substance'] = 'NH3'
         #calc_data_object['expectRcpHeight'] = False
-        
+
         calc_data_objects.append(calc_data_object)
 
         data['calculateDataObjects'] = calc_data_objects
 
         data['strict'] = False
 
-        response = self.run_request(api_function, data)
+        response = self.run_request(api_function, 'POST', data)
         if response is not None:
             print(f'gelukt! {response}')
 
