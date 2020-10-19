@@ -33,27 +33,12 @@ class ConnectCalcDialog(QDialog, FORM_CLASS):
 
     def init_gui(self):
         self.button_validate.clicked.connect(self.validate)
+        self.button_calculate.clicked.connect(self.calculate)
 
 
     def __del__(self):
         self.button_validate.clicked.disconnect(self.validate)
-
-
-    '''def load_ui_from_settings(self):
-        print('load_ui_from_settings')
-
-        email_setting = self.plugin.settings.value('variables/imaer_plugin_connect_email', defaultValue='@@@')
-        print(email_setting)
-        self.edit_email.setText(email_setting)
-
-        key_setting = self.plugin.settings.value('variables/imaer_plugin_connect_key', defaultValue='kkk')
-        print(key_setting)
-        self.edit_key.setText(key_setting)
-
-
-    def save_ui_to_settings(self):
-        self.plugin.settings.setValue('variables/imaer_plugin_connect_email', self.edit_email.text())
-        self.plugin.settings.setValue('variables/imaer_plugin_connect_key', self.edit_key.text())'''
+        self.button_calculate.clicked.disconnect(self.calculate)
 
 
     def validate(self):
@@ -69,3 +54,12 @@ class ConnectCalcDialog(QDialog, FORM_CLASS):
             print('GML is NOT valid:')
             for line in result['errors']:
                 print('  {}'.format(line['message']))
+
+
+    def calculate(self):
+        print(self.connection)
+        gml_fn = self.edit_gml_input.text()
+        print(gml_fn)
+
+        result = self.connection.calculate(gml_fn)
+        print(result)
