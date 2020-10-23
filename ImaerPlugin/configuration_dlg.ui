@@ -6,75 +6,61 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>583</width>
-    <height>154</height>
+    <width>522</width>
+    <height>109</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>IMAER Configuration</string>
   </property>
-  <widget class="QWidget" name="formLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>10</y>
-     <width>411</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <layout class="QFormLayout" name="formLayout">
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_email">
-      <property name="text">
-       <string>Email</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="edit_email">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="edit_key"/>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_key">
-      <property name="text">
-       <string>API Key</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QPushButton" name="button_get_key">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>10</y>
-     <width>121</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Get new api key</string>
-   </property>
-  </widget>
-  <widget class="QDialogButtonBox" name="buttonBox">
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>110</y>
-     <width>166</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="edit_key"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="edit_email">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_key">
+         <property name="text">
+          <string>API Key</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_email">
+         <property name="text">
+          <string>Email</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QPushButton" name="button_get_key">
+         <property name="text">
+          <string>Get new api key</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections>
