@@ -18,7 +18,7 @@ from qgis.core import (
     )
 
 _IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX', 'NO2']
-
+_SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1']
 
 
 
@@ -38,15 +38,9 @@ class ImportImaerCalculatorResultTask(QgsTask):
     def run(self):
         self.log('Started task "{}"'.format(self.description()))
 
-        self.create_gpkg()
-
-        receptors_layer = QgsVectorLayer(self.gpkg_fn, 'receptors', 'ogr')
-        receptors_layer.startEditing()
-        #receptors_provider = receptors_layer.dataProvider()
-        #receptors_provider.layerMetadata().setAbstract('imaer_calc_result')
-        #receptors_provider.layerMetadata().saveToLayer()
-
         rp_cnt = 0
+
+        errors = False
 
         with open(self.gml_fn, 'rb') as gml_file:
             gml_file_size = float(os.fstat(gml_file.fileno()).st_size)
@@ -68,8 +62,14 @@ class ImportImaerCalculatorResultTask(QgsTask):
                     self.namespaces[elem[0]] = elem[1]
                     if elem[0] == 'imaer':
                         self.imaer_version = self.get_imaer_version(elem[1])
+                        if self.imaer_version not in _SUPPORTED_IMAER_VERSIONS:
+                            self.exception = Exception(f'IMAER version {self.imaer_version} is not supported')
+                            return False
                         feature_member_tag = '{{{0}}}featureMember'.format(elem[1])
                         receptor_point_tag = '{{{0}}}ReceptorPoint'.format(elem[1])
+                        self.create_gpkg()
+                        receptors_layer = QgsVectorLayer(self.gpkg_fn, 'receptors', 'ogr')
+                        receptors_layer.startEditing()
 
                 if event == 'end' and elem.tag == feature_member_tag:
                     child = list(elem)[0]
@@ -200,7 +200,13 @@ class ImportImaerCalculatorResultTask(QgsTask):
         if full:
             result['result_fields'] = []
 
-        for res in elem.findall('imaer:result/imaer:Result', self.namespaces):
+        # Setting these globally when detecting the imaer_version could speed up the import. (todo)
+        if self.imaer_version == '2.2':
+            result_path = 'imaer:result/imaer:Result'
+        elif self.imaer_version == '3.1':
+            result_path = 'imaer:result/imaer:CalculationResult'
+
+        for res in elem.findall(result_path, self.namespaces):
             substance = res.attrib['substance']
             val = res.findall('imaer:value', self.namespaces)[0].text
             field_name = 'dep_{}'.format(substance)
