@@ -10,6 +10,7 @@ from .. task_timer import TaskTimer
 
 
 _IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX', 'NO2']
+_SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1']
 
 tab = 'Imaer'
 
@@ -18,11 +19,12 @@ tab = 'Imaer'
 
 class ExportImaerCalculatorResultTask(QgsTask):
 
-    def __init__(self, receptor_layer, gml_fn, xml_lines):
+    def __init__(self, receptor_layer, gml_fn, xml_lines, imaer_version):
         super().__init__('Export to IMAER Calculator Result', QgsTask.CanCancel)
         self.receptor_layer = receptor_layer
         self.gml_fn = gml_fn
         self.xml_lines = xml_lines
+        self.imaer_version = imaer_version
         self.exception = None
         self.do_log = True
         #self.log(self.gml_fn)
@@ -38,6 +40,10 @@ class ExportImaerCalculatorResultTask(QgsTask):
     def run(self):
         self.tt.log('start')
         self.log('Started task "{}"'.format(self.description()))
+
+        if self.imaer_version not in _SUPPORTED_IMAER_VERSIONS:
+            self.exception = Exception(f'IMAER version {self.imaer_version} is not supported')
+            return False
 
         feat_i = 0
         feat_cnt = self.receptor_layer.featureCount()
@@ -152,11 +158,15 @@ class ExportImaerCalculatorResultTask(QgsTask):
 
     def create_result_value_xml(self, substance, value):
         #print(f'{ substance }: { value }')
+        if self.imaer_version == '2.2':
+            result_tag = 'Result'
+        elif self.imaer_version == '3.1':
+            result_tag = 'CalculationResult'
         result = f'''
             <imaer:result>
-                <imaer:Result resultType="DEPOSITION" substance="{ substance }">
+                <imaer:{ result_tag } resultType="DEPOSITION" substance="{ substance }">
                     <imaer:value>{ value }</imaer:value>
-                </imaer:Result>
+                </imaer:{ result_tag }>
             </imaer:result>'''
         return result
 

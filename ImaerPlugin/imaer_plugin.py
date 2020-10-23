@@ -209,7 +209,9 @@ class ImaerPlugin:
                 #print(line)
                 xml_lines.append(line)
 
-        task = ExportImaerCalculatorResultTask(receptor_layer, gml_fn, xml_lines)
+        layer_imaer_version = metadata['imaer_version']
+
+        task = ExportImaerCalculatorResultTask(receptor_layer, gml_fn, xml_lines, layer_imaer_version)
         self.task_manager.addTask(task)
 
 
