@@ -74,6 +74,7 @@ class AeriusConnection():
         response = self.run_request(api_function, 'GET', data)
         if response is not None:
             print(f'gelukt! {response}')
+        return response
 
 
     def validate(self, gml_fn):
@@ -96,7 +97,6 @@ class AeriusConnection():
         response = self.run_request(api_function, 'POST', data)
         if response is not None:
             print(f'gelukt! {response}')
-
         return response
 
 

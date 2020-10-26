@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import json
 
 from PyQt5.QtWidgets import (
     QDialog
@@ -43,31 +44,37 @@ class ConnectCalcDialog(QDialog, FORM_CLASS):
         self.button_jobs.clicked.disconnect(self.status_jobs)
 
 
+    def show_feedback(self, fb):
+        print(type(fb))
+        if isinstance(fb, dict):
+            print('is dict')
+            txt = json.dumps(fb, indent=4)
+            print(txt)
+            self.text_feedback.setText(txt)
+        else:
+            self.text_feedback.setText(str(fb))
+
+
     def validate(self):
-        print(self.connection)
         gml_fn = self.edit_gml_input.text()
-        print(gml_fn)
-
         result = self.connection.validate(gml_fn)
-
+        '''
         if result['successful']:
             print('GML file is valid')
         else:
             print('GML is NOT valid:')
             for line in result['errors']:
                 print('  {}'.format(line['message']))
+        '''
+        self.show_feedback(result)
 
 
     def calculate(self):
-        print(self.connection)
         gml_fn = self.edit_gml_input.text()
-        print(gml_fn)
-
         result = self.connection.calculate(gml_fn)
-        print(result)
+        self.show_feedback(result)
 
 
     def status_jobs(self):
-        print(self.connection)
         result = self.connection.status_jobs()
-        print(result)
+        self.show_feedback(result)
