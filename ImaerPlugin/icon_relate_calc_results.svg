@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32"
+   height="32"
+   viewBox="0 0 8.4666667 8.4666667"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="icon_compare_calc_results.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1346"
+     inkscape:window-height="1051"
+     id="namedview19"
+     showgrid="false"
+     inkscape:zoom="7.375"
+     inkscape:cx="16"
+     inkscape:cy="16"
+     inkscape:window-x="791"
+     inkscape:window-y="199"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg8" />
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient855">
+      <stop
+         style="stop-color:#1294ca;stop-opacity:1"
+         offset="0"
+         id="stop851" />
+      <stop
+         style="stop-color:#1a4374;stop-opacity:1"
+         offset="1"
+         id="stop853" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#linearGradient855"
+       id="linearGradient857"
+       x1="4.1161108"
+       y1="290.10425"
+       x2="4.1315813"
+       y2="295.23245"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       xlink:href="#linearGradient855"
+       id="linearGradient818"
+       gradientUnits="userSpaceOnUse"
+       x1="4.1161108"
+       y1="290.10425"
+       x2="4.1315813"
+       y2="295.23245"
+       gradientTransform="translate(8.2918527,-7.6776414)" />
+    <linearGradient
+       xlink:href="#linearGradient855"
+       id="linearGradient856"
+       x1="13.028367"
+       y1="298.40561"
+       x2="13.066781"
+       y2="300.31464"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(14.766264,0,0,14.985582,-176.93562,-4469.7145)" />
+    <linearGradient
+       gradientUnits="userSpaceOnUse"
+       y2="0.25112972"
+       x2="4.3454452"
+       y1="8.1796608"
+       x1="4.3364758"
+       id="linearGradient858"
+       xlink:href="#linearGradient855" />
+  </defs>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <rect
+     y="0.26458287"
+     x="0.26458383"
+     height="7.9375"
+     width="7.937499"
+     id="rect843"
+     style="opacity:1;fill:url(#linearGradient858);fill-opacity:1;stroke:#d59216;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <rect
+     style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#d59216;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     id="rect845"
+     width="4.3050847"
+     height="1.1838983"
+     x="2.1166663"
+     y="2.6189265"
+     ry="0.59194916" />
+  <rect
+     style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#d59216;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     id="rect845-8"
+     width="4.3050847"
+     height="1.1838983"
+     x="2.1166663"
+     y="6.0809326"
+     ry="0.59194916" />
+  <rect
+     style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#d59216;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     id="rect845-8-9"
+     width="4.3050847"
+     height="1.1838983"
+     x="1.0583334"
+     y="-4.8611579"
+     ry="0.59194916"
+     transform="rotate(90)" />
+</svg>

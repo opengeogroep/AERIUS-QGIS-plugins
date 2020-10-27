@@ -39,6 +39,7 @@ from .tasks import (
 from .generate_calc_input import GenerateCalcInputDialog
 from .configuration import ConfigurationDialog
 from .connect_calc import ConnectCalcDialog
+from .relate_calc_results import RelateCalcResultsDialog
 
 
 
@@ -85,6 +86,13 @@ class ImaerPlugin:
         self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
         self.generate_calc_input_dlg.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
+        icon_relate_calc_results = QIcon(os.path.join(self.plugin_dir, 'icon_relate_calc_results.svg'))
+        self.relate_calc_results_action = QAction(icon_relate_calc_results, 'Relate Calculator results', self.iface.mainWindow())
+        self.relate_calc_results_action.triggered.connect(self.run_relate_calc_results)
+        self.toolbar.addAction(self.relate_calc_results_action)
+
+        self.relate_calc_results_dlg = RelateCalcResultsDialog(self, parent=self.iface.mainWindow())
+
         icon_configuration = QIcon(os.path.join(self.plugin_dir, 'icon_connect_at.svg'))
         self.configuration_action = QAction(icon_configuration, 'Configuration', self.iface.mainWindow())
         self.configuration_action.triggered.connect(self.open_configuration)
@@ -125,6 +133,10 @@ class ImaerPlugin:
         self.generate_calc_input_action.triggered.disconnect(self.run_generate_calc_input)
         self.toolbar.removeAction(self.generate_calc_input_action)
         del self.generate_calc_input_action
+
+        self.relate_calc_results_action.triggered.disconnect(self.run_relate_calc_results)
+        self.toolbar.removeAction(self.relate_calc_results_action)
+        del self.relate_calc_results_action
 
         self.configuration_action.triggered.disconnect(self.open_configuration)
         self.toolbar.removeAction(self.configuration_action)
@@ -169,8 +181,8 @@ class ImaerPlugin:
         layer_data_source = '{}|layername={}'.format(gpkg_fn, 'receptors')
         receptors_layer = QgsVectorLayer(layer_data_source, layer_name, 'ogr')
 
-        hexagon_qml = os.path.join(self.plugin_dir, 'styles', 'imaer_hexagon.qml')
-        receptors_layer.loadNamedStyle(hexagon_qml)
+        qml = os.path.join(self.plugin_dir, 'styles', 'calc_result_abs.qml')
+        receptors_layer.loadNamedStyle(qml)
         QgsProject.instance().addMapLayer(receptors_layer)
 
         if zoom:
@@ -300,6 +312,8 @@ class ImaerPlugin:
         if self.iface.activeLayer() is not None:
             metadata = self.get_imaer_calc_metadata(self.iface.activeLayer())
             self.export_calc_result_action.setEnabled(metadata['is_imaer_calc_layer'])
+        else:
+            self.export_calc_result_action.setEnabled(False)
 
 
     def update_connect_widgets(self):
@@ -327,3 +341,15 @@ class ImaerPlugin:
         self.log('open_connect_calc()')
         result = self.connect_calc_dlg.exec_()
         print(result)
+
+
+    def run_relate_calc_results(self):
+        print('run_relate_calc_results')
+        result = self.relate_calc_results_dlg.exec_()
+        print(result)
+        if result == 1:
+            layer1 = self.relate_calc_results_dlg.combo_layer1.currentLayer()
+            print(layer1)
+            layer2 = self.relate_calc_results_dlg.combo_layer2.currentLayer()
+            print(layer2)
+            self.relate_calc_results_dlg.calculate_difference(layer1, layer2)
