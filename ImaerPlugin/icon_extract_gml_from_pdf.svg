@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32"
+   height="32"
+   viewBox="0 0 8.4666667 8.4666667"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="icon_extract_gml_from_pdf.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1567"
+     inkscape:window-height="1051"
+     id="namedview19"
+     showgrid="false"
+     inkscape:zoom="14.75"
+     inkscape:cx="10.791465"
+     inkscape:cy="12.246406"
+     inkscape:window-x="133"
+     inkscape:window-y="288"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg8" />
+  <defs
+     id="defs2">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 4.2333333 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="8.4666667 : 4.2333333 : 1"
+       inkscape:persp3d-origin="4.2333333 : 2.8222222 : 1"
+       id="perspective886" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient847">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop843" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop845" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient855">
+      <stop
+         style="stop-color:#1294ca;stop-opacity:1"
+         offset="0"
+         id="stop851" />
+      <stop
+         style="stop-color:#1a4374;stop-opacity:1"
+         offset="1"
+         id="stop853" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#linearGradient855"
+       id="linearGradient857"
+       x1="4.1161108"
+       y1="290.10425"
+       x2="4.1315813"
+       y2="295.23245"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       xlink:href="#linearGradient855"
+       id="linearGradient818"
+       gradientUnits="userSpaceOnUse"
+       x1="4.1161108"
+       y1="290.10425"
+       x2="4.1315813"
+       y2="295.23245"
+       gradientTransform="translate(8.2918527,-7.6776414)" />
+    <linearGradient
+       xlink:href="#linearGradient855"
+       id="linearGradient856"
+       x1="13.028367"
+       y1="298.40561"
+       x2="13.066781"
+       y2="300.31464"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(14.766264,0,0,14.985582,-176.93562,-4469.7145)" />
+    <linearGradient
+       gradientUnits="userSpaceOnUse"
+       y2="0.25112972"
+       x2="4.3454452"
+       y1="8.1796608"
+       x1="4.3364758"
+       id="linearGradient858"
+       xlink:href="#linearGradient855" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient847"
+       id="linearGradient849"
+       x1="2.2832482"
+       y1="1.6264529"
+       x2="6.7417924"
+       y2="1.6264529"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <rect
+     y="0.26458287"
+     x="0.26458383"
+     height="7.9375"
+     width="7.937499"
+     id="rect843"
+     style="opacity:1;fill:url(#linearGradient858);fill-opacity:1;stroke:#d59216;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <path
+     style="opacity:1;fill:#f56710;fill-opacity:1;stroke:#d59216;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     d="m 11.474173,-1.0707951 h 1.662098 v 1.32967862 h 0.415524 L 12.305222,1.0899326 11.058648,0.25888352 h 0.415525 z"
+     id="rect836"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="cccccccc" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.06949805"
+     x="1.7155999"
+     y="2.9099636"
+     id="text841"><tspan
+       sodipodi:role="line"
+       id="tspan839"
+       x="1.7155999"
+       y="2.9099636"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke-width:0.06949805">PDF</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;line-height:1.25;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.06949805"
+     x="1.6004034"
+     y="7.8553157"
+     id="text841-8"><tspan
+       sodipodi:role="line"
+       id="tspan839-0"
+       x="1.6004034"
+       y="7.8553157"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke-width:0.06949805">GML</tspan></text>
+  <path
+     style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#d59216;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 2.1346048,3.3487731 H 6.1885592 L 4.1615818,5.1986138 Z"
+     id="rect902"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="cccc" />
+</svg>

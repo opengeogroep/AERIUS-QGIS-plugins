@@ -35,7 +35,8 @@ from qgis.gui import QgsMapLayerComboBox
 
 from .tasks import (
     ImportImaerCalculatorResultTask,
-    ExportImaerCalculatorResultTask)
+    ExportImaerCalculatorResultTask,
+    ExtractGmlFromPdfTask)
 from .generate_calc_input import GenerateCalcInputDialog
 from .configuration import ConfigurationDialog
 from .connect_calc import ConnectCalcDialog
@@ -72,6 +73,11 @@ class ImaerPlugin:
         self.import_calc_result_action = QAction(icon_import_calc, 'Import IMAER Calculator result gml', self.iface.mainWindow())
         self.import_calc_result_action.triggered.connect(self.run_import_calc_result)
         self.toolbar.addAction(self.import_calc_result_action)
+
+        icon_extract_gml_from_pdf = QIcon(os.path.join(self.plugin_dir, 'icon_extract_gml_from_pdf.svg'))
+        self.extract_gml_from_pdf_action = QAction(icon_extract_gml_from_pdf, 'Extract GML from Aerius PDF', self.iface.mainWindow())
+        self.extract_gml_from_pdf_action.triggered.connect(self.run_extract_gml_from_pdf)
+        self.toolbar.addAction(self.extract_gml_from_pdf_action)
 
         icon_export_calc = QIcon(os.path.join(self.plugin_dir, 'icon_export_calc_result.png'))
         self.export_calc_result_action = QAction(icon_export_calc, 'Export to IMAER Calculator result gml', self.iface.mainWindow())
@@ -125,6 +131,10 @@ class ImaerPlugin:
         self.import_calc_result_action.triggered.disconnect(self.run_import_calc_result)
         self.toolbar.removeAction(self.import_calc_result_action)
         del self.import_calc_result_action
+
+        self.extract_gml_from_pdf_action.triggered.disconnect(self.run_extract_gml_from_pdf)
+        self.toolbar.removeAction(self.extract_gml_from_pdf_action)
+        del self.extract_gml_from_pdf_action
 
         self.export_calc_result_action.triggered.disconnect(self.run_export_calc_result)
         self.toolbar.removeAction(self.export_calc_result_action)
@@ -190,6 +200,28 @@ class ImaerPlugin:
             extent = receptors_layer.extent()
             extent.grow(100)
             canvas.setExtent(extent)
+
+
+    def run_extract_gml_from_pdf(self):
+        if self.dev:
+            self.calc_result_file_dialog.setDirectory('/home/raymond/tmp/')
+        pdf_fn, filter = self.calc_result_file_dialog.getOpenFileName(caption="Open IMAER PDF file", filter='*.pdf', parent=self.iface.mainWindow())
+        self.log(f'run pdf: {pdf_fn}')
+
+        if os.path.exists(os.path.dirname(pdf_fn)):
+            gml_fn = pdf_fn.replace('.pdf', '.gml')
+            task = ExtractGmlFromPdfTask(pdf_fn, gml_fn, self.extract_gml_from_pdf_callback)
+            self.task_manager.addTask(task)
+            self.log('added to task manager')
+
+
+    def extract_gml_from_pdf_callback(self, fn):
+        if fn is not None:
+            msg = 'Extracted GML file saved as: <a href="{0}">{0}</a>'.format(fn)
+            self.iface.messageBar().pushMessage('Success', msg, level=Qgis.Info, duration=10)
+        else:
+            msg = 'GML could not be extracted from PDF document.'
+            self.iface.messageBar().pushMessage('Warning', msg, level=Qgis.Warning, duration=10)
 
 
     def suggest_export_calc_result_fn(self, gpkg_fn):
