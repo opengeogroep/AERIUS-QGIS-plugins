@@ -3,8 +3,6 @@ import urllib.parse
 
 from .network import NetworkAccessManager, RequestsException
 
-_API_KEY = '75200d0463414916aba472217646c3f6' # r.nijssen@terglobo.nl
-
 
 
 
@@ -68,6 +66,17 @@ class AeriusConnection():
 
     def status_jobs(self):
         api_function = 'status/jobs'
+        data = {}
+        data['apiKey'] = self.api_key
+
+        response = self.run_request(api_function, 'GET', data)
+        if response is not None:
+            print(f'gelukt! {response}')
+        return response
+
+
+    def receptor_sets(self):
+        api_function = 'receptorSets'
         data = {}
         data['apiKey'] = self.api_key
 

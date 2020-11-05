@@ -33,15 +33,15 @@ class ConnectCalcDialog(QDialog, FORM_CLASS):
 
 
     def init_gui(self):
+        self.button_jobs.clicked.connect(self.status_jobs)
         self.button_validate.clicked.connect(self.validate)
         self.button_calculate.clicked.connect(self.calculate)
-        self.button_jobs.clicked.connect(self.status_jobs)
 
 
     def __del__(self):
+        self.button_jobs.clicked.disconnect(self.status_jobs)
         self.button_validate.clicked.disconnect(self.validate)
         self.button_calculate.clicked.disconnect(self.calculate)
-        self.button_jobs.clicked.disconnect(self.status_jobs)
 
 
     def show_feedback(self, fb):

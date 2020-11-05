@@ -39,6 +39,7 @@ from .tasks import (
     ExtractGmlFromPdfTask)
 from .generate_calc_input import GenerateCalcInputDialog
 from .configuration import ConfigurationDialog
+from .connect_receptorsets import ConnectReceptorSetsDialog
 from .connect_calc import ConnectCalcDialog
 from .relate_calc_results import RelateCalcResultsDialog
 
@@ -106,6 +107,13 @@ class ImaerPlugin:
 
         self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
 
+        icon_connect_receptorsets = QIcon(os.path.join(self.plugin_dir, 'icon_connect_receptorsets.svg'))
+        self.connect_receptorsets_action = QAction(icon_connect_receptorsets, 'Connect receptor sets', self.iface.mainWindow())
+        self.connect_receptorsets_action.triggered.connect(self.open_connect_receptorsets)
+        self.toolbar.addAction(self.connect_receptorsets_action)
+
+        self.connect_receptorsets_dlg = ConnectReceptorSetsDialog(self, parent=self.iface.mainWindow())
+
         icon_connect_calc = QIcon(os.path.join(self.plugin_dir, 'icon_connect_calc.svg'))
         self.connect_calc_action = QAction(icon_connect_calc, 'Connect calculation', self.iface.mainWindow())
         self.connect_calc_action.triggered.connect(self.open_connect_calc)
@@ -155,6 +163,10 @@ class ImaerPlugin:
         self.connect_calc_action.triggered.disconnect(self.open_connect_calc)
         self.toolbar.removeAction(self.connect_calc_action)
         del self.connect_calc_action
+
+        self.connect_receptorsets_action.triggered.disconnect(self.open_connect_receptorsets)
+        self.toolbar.removeAction(self.connect_receptorsets_action)
+        del self.connect_receptorsets_action
 
         self.documentation_action.triggered.disconnect(self.open_online_documentation)
         self.toolbar.removeAction(self.documentation_action)
@@ -367,6 +379,12 @@ class ImaerPlugin:
         if result:
             self.configuration_dlg.save_ui_to_settings()
             self.update_connect_widgets()
+
+
+    def open_connect_receptorsets(self):
+        self.log('open_connect_receptorsets()')
+        result = self.connect_receptorsets_dlg.exec_()
+        print(result)
 
 
     def open_connect_calc(self):
