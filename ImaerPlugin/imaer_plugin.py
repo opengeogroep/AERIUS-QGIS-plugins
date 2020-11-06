@@ -216,7 +216,7 @@ class ImaerPlugin:
 
     def run_extract_gml_from_pdf(self):
         if self.dev:
-            self.calc_result_file_dialog.setDirectory('/home/raymond/tmp/')
+            self.calc_result_file_dialog.setDirectory('/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata')
         pdf_fn, filter = self.calc_result_file_dialog.getOpenFileName(caption="Open IMAER PDF file", filter='*.pdf', parent=self.iface.mainWindow())
         self.log(f'run pdf: {pdf_fn}')
 

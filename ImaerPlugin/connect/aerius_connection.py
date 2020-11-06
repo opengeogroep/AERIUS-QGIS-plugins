@@ -28,14 +28,27 @@ class AeriusConnection():
         if method == 'POST':
             if data is not None:
                 body = json.dumps(data)
-                print(body)
+                #print(body)
             try:
                 (response, content) = nam.request(url, method='POST', headers=headers, body=body)
+            except RequestsException as e:
+                #print(f'exception: {e}')
+                return
+
+        elif method == 'GET':
+            if data is not None:
+                #print(data)
+                params = urllib.parse.urlencode(data)
+                #print(params)
+                url += f'?{params}'
+                print(url)
+            try:
+                (response, content) = nam.request(url, method='GET', headers=headers)
             except RequestsException as e:
                 print(f'exception: {e}')
                 return
 
-        elif method == 'GET':
+        elif method == 'DELETE':
             if data is not None:
                 print(data)
                 params = urllib.parse.urlencode(data)
@@ -43,7 +56,7 @@ class AeriusConnection():
                 url += f'?{params}'
                 print(url)
             try:
-                (response, content) = nam.request(url, method='GET', headers=headers)
+                (response, content) = nam.request(url, method='DELETE', headers=headers)
             except RequestsException as e:
                 print(f'exception: {e}')
                 return
@@ -66,17 +79,6 @@ class AeriusConnection():
 
     def status_jobs(self):
         api_function = 'status/jobs'
-        data = {}
-        data['apiKey'] = self.api_key
-
-        response = self.run_request(api_function, 'GET', data)
-        if response is not None:
-            print(f'gelukt! {response}')
-        return response
-
-
-    def receptor_sets(self):
-        api_function = 'receptorSets'
         data = {}
         data['apiKey'] = self.api_key
 
@@ -158,6 +160,58 @@ class AeriusConnection():
         data['strict'] = False
 
         response = self.run_request(api_function, 'POST', data)
+        if response is not None:
+            print(f'gelukt! {response}')
+
+        return response
+
+
+    def get_receptor_sets(self):
+        api_function = 'receptorSets'
+        data = {}
+        data['apiKey'] = self.api_key
+
+        response = self.run_request(api_function, 'GET', data)
+        if response is not None:
+            print(f'gelukt! {response}')
+        return response
+
+
+    def post_receptor_set(self, gml_fn, name, description=''):
+        '''Posts a new receptor set'''
+        print('receptor_set')
+        api_function = 'receptorSet'
+
+        data = {}
+        data['apiKey'] = self.api_key
+        data['name'] = name
+        data['description'] = description
+
+        data_object = {}
+        data_object['contentType'] = 'TEXT'
+        data_object['dataType'] = 'GML'
+        with open(gml_fn) as gml_file:
+            data_object['data'] = gml_file.read()
+        #data_object['substance'] = 'NH3'
+        #data_object['expectRcpHeight'] = False
+
+        data['dataObject'] = data_object
+
+        print(data)
+
+        response = self.run_request(api_function, 'POST', data)
+        if response is not None:
+            print(f'gelukt! {response}')
+
+        return response
+
+    def delete_receptor_set(self, name):
+        print('delete_receptor_set')
+        api_function = f'receptorSet/{name}'
+        data = {}
+        data['apiKey'] = self.api_key
+
+        response = self.run_request(api_function, 'DELETE', data)
         if response is not None:
             print(f'gelukt! {response}')
 
