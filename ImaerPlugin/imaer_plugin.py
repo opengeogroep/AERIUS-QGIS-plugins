@@ -62,117 +62,106 @@ class ImaerPlugin:
         self.dev = dev is not None and dev == 'on'
         self.do_log = True
 
+        self.action_configuration = [
+            {
+                'name': 'import_calc_result',
+                'icon': 'icon_import_calc_result.png',
+                'tool_tip': 'Import IMAER Calculator result GML',
+                'triggered_slot': self.run_import_calc_result
+            },{
+                'name': 'export_calc_result',
+                'icon': 'icon_export_calc_result.png',
+                'tool_tip': 'Export to IMAER Calculator result GML',
+                'triggered_slot': self.run_export_calc_result
+            },{
+                'name': 'extract_gml_from_pdf',
+                'icon': 'icon_extract_gml_from_pdf.svg',
+                'tool_tip': 'Extract GML from Aerius PDF',
+                'triggered_slot': self.run_extract_gml_from_pdf
+            },{
+                'name': 'generate_calc_input',
+                'icon': 'icon_generate_calc_input.png',
+                'tool_tip': 'Generate IMAER Calculator input gml',
+                'triggered_slot': self.run_generate_calc_input
+            },{
+                'name': 'relate_calc_results',
+                'icon': 'icon_relate_calc_results.svg',
+                'tool_tip': 'Relate Calculator results',
+                'triggered_slot': self.run_relate_calc_results
+            },{
+                'name': 'configuration',
+                'icon': 'icon_connect_at.svg',
+                'tool_tip': 'Configure',
+                'triggered_slot': self.open_configuration
+            },{
+                'name': 'connect_receptorsets',
+                'icon': 'icon_connect_receptorsets.svg',
+                'tool_tip': 'Configure',
+                'triggered_slot': self.open_connect_receptorsets
+            },{
+                'name': 'connect_calc',
+                'icon': 'icon_connect_calc.svg',
+                'tool_tip': 'Connect calculation',
+                'triggered_slot': self.open_connect_calc
+            },{
+                'name': 'documentation',
+                'icon': 'icon_documentation.svg',
+                'tool_tip': 'Open online documentation',
+                'triggered_slot': self.open_online_documentation
+            }
+        ]
+        self.actions = {}
+
 
     def initGui(self):
+        # Create toolbar and actions
         self.toolbar = self.iface.addToolBar("Imaer Toolbar")
         if self.dev:
              self.toolbar.setStyleSheet("QToolBar { background-color: rgba(200, 180, 200, 255); }")
+
+        for action_config in self.action_configuration:
+            icon = QIcon(os.path.join(self.plugin_dir, action_config['icon']))
+            action = QAction(icon, action_config['tool_tip'], self.iface.mainWindow())
+            action.triggered.connect(action_config['triggered_slot'])
+            self.toolbar.addAction(action)
+            self.actions[action_config['name']] = action
+
+        # Create dialogs
         self.calc_result_file_dialog = QFileDialog()
         self.calc_input_file_dialog = QFileDialog()
-
-        icon_import_calc = QIcon(os.path.join(self.plugin_dir, 'icon_import_calc_result.png'))
-        self.import_calc_result_action = QAction(icon_import_calc, 'Import IMAER Calculator result gml', self.iface.mainWindow())
-        self.import_calc_result_action.triggered.connect(self.run_import_calc_result)
-        self.toolbar.addAction(self.import_calc_result_action)
-
-        icon_extract_gml_from_pdf = QIcon(os.path.join(self.plugin_dir, 'icon_extract_gml_from_pdf.svg'))
-        self.extract_gml_from_pdf_action = QAction(icon_extract_gml_from_pdf, 'Extract GML from Aerius PDF', self.iface.mainWindow())
-        self.extract_gml_from_pdf_action.triggered.connect(self.run_extract_gml_from_pdf)
-        self.toolbar.addAction(self.extract_gml_from_pdf_action)
-
-        icon_export_calc = QIcon(os.path.join(self.plugin_dir, 'icon_export_calc_result.png'))
-        self.export_calc_result_action = QAction(icon_export_calc, 'Export to IMAER Calculator result gml', self.iface.mainWindow())
-        self.export_calc_result_action.triggered.connect(self.run_export_calc_result)
-        self.toolbar.addAction(self.export_calc_result_action)
-
-        icon_generate_calc_input = QIcon(os.path.join(self.plugin_dir, 'icon_generate_calc_input.png'))
-        self.generate_calc_input_action = QAction(icon_generate_calc_input, 'Generate IMAER Calculator input gml', self.iface.mainWindow())
-        self.generate_calc_input_action.triggered.connect(self.run_generate_calc_input)
-        self.toolbar.addAction(self.generate_calc_input_action)
 
         self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
         self.generate_calc_input_dlg.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
-        icon_relate_calc_results = QIcon(os.path.join(self.plugin_dir, 'icon_relate_calc_results.svg'))
-        self.relate_calc_results_action = QAction(icon_relate_calc_results, 'Relate Calculator results', self.iface.mainWindow())
-        self.relate_calc_results_action.triggered.connect(self.run_relate_calc_results)
-        self.toolbar.addAction(self.relate_calc_results_action)
-
         self.relate_calc_results_dlg = RelateCalcResultsDialog(self, parent=self.iface.mainWindow())
-
-        icon_configuration = QIcon(os.path.join(self.plugin_dir, 'icon_connect_at.svg'))
-        self.configuration_action = QAction(icon_configuration, 'Configuration', self.iface.mainWindow())
-        self.configuration_action.triggered.connect(self.open_configuration)
-        self.toolbar.addAction(self.configuration_action)
-
         self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
-
-        icon_connect_receptorsets = QIcon(os.path.join(self.plugin_dir, 'icon_connect_receptorsets.svg'))
-        self.connect_receptorsets_action = QAction(icon_connect_receptorsets, 'Connect receptor sets', self.iface.mainWindow())
-        self.connect_receptorsets_action.triggered.connect(self.open_connect_receptorsets)
-        self.toolbar.addAction(self.connect_receptorsets_action)
-
         self.connect_receptorsets_dlg = ConnectReceptorSetsDialog(self, parent=self.iface.mainWindow())
-
-        icon_connect_calc = QIcon(os.path.join(self.plugin_dir, 'icon_connect_calc.svg'))
-        self.connect_calc_action = QAction(icon_connect_calc, 'Connect calculation', self.iface.mainWindow())
-        self.connect_calc_action.triggered.connect(self.open_connect_calc)
-        self.toolbar.addAction(self.connect_calc_action)
-
         self.connect_calc_dlg = ConnectCalcDialog(self, parent=self.iface.mainWindow())
 
-        icon_documentation = QIcon(os.path.join(self.plugin_dir, 'icon_documentation.svg'))
-        self.documentation_action = QAction(icon_documentation, 'Open online documentation', self.iface.mainWindow())
-        self.documentation_action.triggered.connect(self.open_online_documentation)
-        self.toolbar.addAction(self.documentation_action)
-
+        # Widget update logic
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
-
         self.update_all_widgets()
 
 
     def unload(self):
+        '''Removes all plugin widgets and connections'''
+        # Clean up connections
         self.iface.mapCanvas().currentLayerChanged.disconnect(self.update_export_calc_widgets)
-
         self.generate_calc_input_dlg.button_outfile.clicked.disconnect(self.browse_generate_calc_input_file)
 
-        self.import_calc_result_action.triggered.disconnect(self.run_import_calc_result)
-        self.toolbar.removeAction(self.import_calc_result_action)
-        del self.import_calc_result_action
-
-        self.extract_gml_from_pdf_action.triggered.disconnect(self.run_extract_gml_from_pdf)
-        self.toolbar.removeAction(self.extract_gml_from_pdf_action)
-        del self.extract_gml_from_pdf_action
-
-        self.export_calc_result_action.triggered.disconnect(self.run_export_calc_result)
-        self.toolbar.removeAction(self.export_calc_result_action)
-        del self.export_calc_result_action
-
-        self.generate_calc_input_action.triggered.disconnect(self.run_generate_calc_input)
-        self.toolbar.removeAction(self.generate_calc_input_action)
-        del self.generate_calc_input_action
-
-        self.relate_calc_results_action.triggered.disconnect(self.run_relate_calc_results)
-        self.toolbar.removeAction(self.relate_calc_results_action)
-        del self.relate_calc_results_action
-
-        self.configuration_action.triggered.disconnect(self.open_configuration)
-        self.toolbar.removeAction(self.configuration_action)
-        del self.configuration_action
-
-        self.connect_calc_action.triggered.disconnect(self.open_connect_calc)
-        self.toolbar.removeAction(self.connect_calc_action)
-        del self.connect_calc_action
-
-        self.connect_receptorsets_action.triggered.disconnect(self.open_connect_receptorsets)
-        self.toolbar.removeAction(self.connect_receptorsets_action)
-        del self.connect_receptorsets_action
-
-        self.documentation_action.triggered.disconnect(self.open_online_documentation)
-        self.toolbar.removeAction(self.documentation_action)
-        del self.documentation_action
+        # Clean up actions and toolbar
+        for action_config in self.action_configuration:
+            name = action_config['name']
+            action = self.actions[name]
+            action.triggered.disconnect(action_config['triggered_slot'])
+            self.toolbar.removeAction(action)
+            del action
+            self.actions.pop(name)
 
         del self.toolbar
+
+        # TODO (?) Delete all plugin dialogs?
+        # del self.relate_calc_results_dlg
 
 
     def log(self, message, tab='Imaer'):
@@ -355,14 +344,14 @@ class ImaerPlugin:
     def update_export_calc_widgets(self):
         if self.iface.activeLayer() is not None:
             metadata = self.get_imaer_calc_metadata(self.iface.activeLayer())
-            self.export_calc_result_action.setEnabled(metadata['is_imaer_calc_layer'])
+            self.actions['export_calc_result'].setEnabled(metadata['is_imaer_calc_layer'])
         else:
-            self.export_calc_result_action.setEnabled(False)
+            self.actions['export_calc_result'].setEnabled(False)
 
 
     def update_connect_widgets(self):
         api_key = self.settings.value('variables/imaer_plugin_connect_key', defaultValue='')
-        self.connect_calc_action.setEnabled(not api_key == '')
+        self.actions['connect_calc'].setEnabled(not api_key == '')
 
 
     def open_online_documentation(self):
