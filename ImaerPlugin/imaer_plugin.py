@@ -131,8 +131,6 @@ class ImaerPlugin:
         self.calc_input_file_dialog = QFileDialog()
 
         self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
-        self.generate_calc_input_dlg.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
-
         self.relate_calc_results_dlg = RelateCalcResultsDialog(self, parent=self.iface.mainWindow())
         self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
         self.connect_receptorsets_dlg = ConnectReceptorSetsDialog(self, parent=self.iface.mainWindow())
@@ -147,7 +145,6 @@ class ImaerPlugin:
         '''Removes all plugin widgets and connections'''
         # Clean up connections
         self.iface.mapCanvas().currentLayerChanged.disconnect(self.update_export_calc_widgets)
-        self.generate_calc_input_dlg.button_outfile.clicked.disconnect(self.browse_generate_calc_input_file)
 
         # Clean up actions and toolbar
         for action_config in self.action_configuration:
@@ -307,18 +304,6 @@ class ImaerPlugin:
         self.imaer_calc_layers[layer_id]['gpkg_fn'] = gpkg_fn
 
         return self.imaer_calc_layers[layer_id]
-
-
-    def browse_generate_calc_input_file(self):
-        if self.dev:
-            out_path = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input'
-        else:
-            out_path = ''
-        out_fn = time.strftime("calcinput_%Y%m%d_%H%M%S.gml")
-        out_fn = os.path.join(out_path, out_fn)
-
-        gml_outfn, filter = self.calc_input_file_dialog.getSaveFileName(caption="Save as Calculator input gml file", filter='*.gml', directory=out_fn, parent=self.iface.mainWindow())
-        self.generate_calc_input_dlg.edit_outfile.setText(gml_outfn)
 
 
     def run_generate_calc_input(self):

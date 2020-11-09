@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import time
 
 from PyQt5.QtCore import QVariant
 from PyQt5.QtWidgets import (
@@ -71,6 +72,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.update_ok_button()
 
         self.combo_layer.layerChanged.connect(self.update_field_combos)
+        self.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
 
     def __del__(self):
@@ -78,6 +80,18 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_sector.currentIndexChanged.disconnect(self.set_subsectors)
         self.combo_subsector.currentIndexChanged.disconnect(self.set_elements)
         self.combo_layer.layerChanged.disconnect(self.update_field_combos)
+
+
+    def browse_generate_calc_input_file(self):
+        if self.plugin.dev:
+            out_path = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input'
+        else:
+            out_path = ''
+        out_fn = time.strftime("calcinput_%Y%m%d_%H%M%S.gml")
+        out_fn = os.path.join(out_path, out_fn)
+
+        gml_outfn, filter = self.plugin.calc_input_file_dialog.getSaveFileName(caption="Save as Calculator input gml file", filter='*.gml', directory=out_fn, parent=self.iface.mainWindow())
+        self.edit_outfile.setText(gml_outfn)
 
 
     def set_fixed_options(self):
