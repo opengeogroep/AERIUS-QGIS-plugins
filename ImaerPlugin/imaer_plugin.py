@@ -43,7 +43,9 @@ from .connect_receptorsets import ConnectReceptorSetsDialog
 from .connect_calc import ConnectCalcDialog
 from .relate_calc_results import RelateCalcResultsDialog
 
-
+from .connect import (
+    AeriusOpenData
+)
 
 
 class ImaerPlugin:
@@ -103,6 +105,11 @@ class ImaerPlugin:
                 'icon': 'icon_connect_calc.svg',
                 'tool_tip': 'Connect calculation',
                 'triggered_slot': self.open_connect_calc
+            },{
+                'name': 'add_open_data',
+                'icon': 'icon_add_open_data_layer.svg',
+                'tool_tip': 'Add Open Data',
+                'triggered_slot': self.open_add_open_data
             },{
                 'name': 'documentation',
                 'icon': 'icon_documentation.svg',
@@ -377,3 +384,15 @@ class ImaerPlugin:
             layer2 = self.relate_calc_results_dlg.combo_layer2.currentLayer()
             print(layer2)
             self.relate_calc_results_dlg.calculate_difference(layer1, layer2)
+
+
+    def open_add_open_data(self):
+        conn = AeriusOpenData()
+        print(conn)
+        response = conn.get_dataset('base_geometries', 'hexagons', output_format='SHAPE-ZIP')
+
+        if response is not None:
+            with open('/home/raymond/Downloads/aerius_file.zip', 'wb') as zip_file:
+                zip_file.write(response)
+        else:
+            print('No response')
