@@ -37,7 +37,8 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
 
 
     def __del__(self):
-        self.button_get_key.clicked.disconnect(self.get_api_key)
+        pass
+        #self.button_get_key.clicked.disconnect(self.get_api_key)
 
 
     def load_ui_from_settings(self):
@@ -56,6 +57,7 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         self.plugin.settings.setValue('variables/imaer_plugin_connect_email', self.edit_email.text())
         self.plugin.settings.setValue('variables/imaer_plugin_connect_key', self.edit_key.text())
         self.plugin.connect_calc_dlg.connection.api_key = self.edit_key.text()
+        self.plugin.connect_receptorsets_dlg.connection.api_key = self.edit_key.text()
 
 
     def get_api_key(self):
