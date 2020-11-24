@@ -36,7 +36,7 @@ class AeriusOpenData():
                 url += f'?{params}'
                 print(url)
             try:
-                (response, content) = nam.request(url, blocking=True)
+                (response, content) = nam.request(url, blocking=True) # TODO Turn into non-blocking and QgsTask
             except RequestsException as e:
                 print(f'exception: {e}')
                 return
@@ -62,10 +62,9 @@ class AeriusOpenData():
             'outputFormat': output_format
         }
 
-        data['cql_filter'] = 'receptor_id<293081' # TODO remove!!!
+        #data['cql_filter'] = 'receptor_id<293081' # TODO remove! Just for testing a small data set.
+        data['cql_filter'] = 'zoom_level=1'
 
         content = self.run_request(api_function, 'GET', data, headers)
-        print(content)
-        if content is not None:
-            print(f'gelukt! {content}')
+        #print(content)
         return content

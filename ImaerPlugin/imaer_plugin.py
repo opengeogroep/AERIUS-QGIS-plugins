@@ -18,7 +18,7 @@ import pathlib
 
 from PyQt5.QtWidgets import QAction, QFileDialog, QDialogButtonBox
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QVariant
+from PyQt5.QtCore import QVariant, QStandardPaths
 
 from qgis.core import (
     QgsMessageLog,
@@ -53,6 +53,7 @@ class ImaerPlugin:
     def __init__(self, iface):
         self.iface = iface
         self.plugin_dir = os.path.dirname(__file__)
+        self.download_dir = QStandardPaths.writableLocation(QStandardPaths.DownloadLocation)
         self.task_manager = QgsApplication.taskManager()
         self.imaer_calc_layers = {}
         self.settings = QgsSettings()
@@ -387,12 +388,29 @@ class ImaerPlugin:
 
 
     def open_add_open_data(self):
-        conn = AeriusOpenData()
-        print(conn)
-        response = conn.get_dataset('base_geometries', 'hexagons', output_format='SHAPE-ZIP')
+        # TODO Move this to a QgsTask when specs are clear
+        layer_ns = 'base_geometries'
+        layer_name = 'hexagons'
+        force_download = False # Option to enforce downloading for more dynamic data types
 
-        if response is not None:
-            with open('/home/raymond/Downloads/aerius_file.zip', 'wb') as zip_file:
-                zip_file.write(response)
-        else:
-            print('No response')
+        base_fn = f'imaer_{layer_ns}_{layer_name}'
+        zip_fn = os.path.join(self.download_dir, f'{base_fn}.zip')
+
+        if not os.path.isfile(zip_fn) or force_download:
+            # Download zip file
+            conn = AeriusOpenData()
+            print(conn)
+            response = conn.get_dataset(layer_ns, layer_name, output_format='SHAPE-ZIP')
+
+            if response is None:
+                print('Download failed')
+                return
+
+            with open(zip_fn, 'wb') as zip_file:
+                    zip_file.write(response)
+
+        download_layer = QgsVectorLayer(zip_fn, f'{layer_ns}:{layer_name}', 'ogr')
+
+        qml = os.path.join(self.plugin_dir, 'styles', f'{layer_ns}_{layer_name}.qml')
+        download_layer.loadNamedStyle(qml)
+        QgsProject.instance().addMapLayer(download_layer)
