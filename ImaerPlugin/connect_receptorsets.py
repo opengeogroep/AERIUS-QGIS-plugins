@@ -45,6 +45,8 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
 
     def __del__(self):
+        self.button_gml_input_browse.clicked.disconnect(self.browse_gml_file)
+
         self.button_add_receptorset.clicked.disconnect(self.post_receptor_set)
         self.button_get_receptorsets.clicked.disconnect(self.get_receptor_sets)
         self.button_delete_receptorset.clicked.disconnect(self.delete_receptor_set)

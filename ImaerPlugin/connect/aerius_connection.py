@@ -111,7 +111,7 @@ class AeriusConnection():
         return response
 
 
-    def calculate(self, gml_fn):
+    def calculate(self, gml_fn, user_options={}):
         print('calculate')
         api_function = 'calculate'
 
@@ -123,7 +123,7 @@ class AeriusConnection():
         options['year'] = 2020
         options['substances'] = ['NH3', 'NOX']
         #options['name'] = 'situatie1'
-        #options['receptorSetName'] = ''
+        #options['receptorSetName'] = 'vera'
         #options['stacking'] = True
         #options['aggregate'] = False
         #options['validate'] = True
@@ -134,6 +134,8 @@ class AeriusConnection():
         #options['meteoYear'] = '2013'
         #options['sendEmail'] = True
         #options['useReceptorHeight'] = False
+
+        options.update(user_options)
 
         output_options = {}
         output_options['resultTypes'] = ['DEPOSITION']

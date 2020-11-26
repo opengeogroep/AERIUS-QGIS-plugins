@@ -16,10 +16,24 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="1">
+      <widget class="QComboBox" name="combo_calc_type">
+       <item>
+        <property name="text">
+         <string>NBWET</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>CUSTOM_POINTS</string>
+        </property>
+       </item>
+      </widget>
+     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_gml_input">
        <property name="text">
-        <string>GML file</string>
+        <string>Input GML file</string>
        </property>
       </widget>
      </item>
@@ -42,6 +56,23 @@
         <string>...</string>
        </property>
       </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_calc_type">
+       <property name="text">
+        <string>Calculation Type</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_receptor_set">
+       <property name="text">
+        <string>Receptor set</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QComboBox" name="combo_receptor_set"/>
      </item>
     </layout>
    </item>
@@ -69,7 +100,7 @@
         </size>
        </property>
        <property name="text">
-        <string>jobs</string>
+        <string>Jobs</string>
        </property>
       </widget>
      </item>
