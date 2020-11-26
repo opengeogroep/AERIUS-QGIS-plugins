@@ -2,11 +2,11 @@
 import os
 import json
 
-from PyQt5.QtWidgets import (
+from qgis.PyQt.QtWidgets import (
     QDialog,
     QTableWidgetItem
 )
-from PyQt5 import uic
+from qgis.PyQt import uic
 
 from .connect import (
     AeriusConnection

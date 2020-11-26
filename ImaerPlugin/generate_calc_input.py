@@ -2,15 +2,15 @@
 import os
 import time
 
-from PyQt5.QtCore import QVariant
-from PyQt5.QtWidgets import (
+from qgis.PyQt.QtCore import QVariant
+from qgis.PyQt.QtWidgets import (
     QDialog,
     QDialogButtonBox,
     QLabel,
     QLineEdit,
     QHBoxLayout
 )
-from PyQt5 import uic
+from qgis.PyQt import uic
 
 from qgis.utils import iface
 from qgis.gui import (

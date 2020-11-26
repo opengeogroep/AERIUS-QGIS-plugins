@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
 
-from PyQt5.QtWidgets import (
+from qgis.PyQt.QtWidgets import (
     QDialog
 )
-from PyQt5 import uic
+from qgis.PyQt import uic
 
 from .connect import (
     AeriusConnection

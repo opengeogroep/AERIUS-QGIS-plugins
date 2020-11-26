@@ -146,7 +146,7 @@ class ExportImaerCalculatorResultTask(QgsTask):
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
             field_name = 'dep_{}'.format(substance)
             value = feat.attribute(field_name)
-            if isinstance(value, float): #empty records are returned as <class 'PyQt5.QtCore.QVariant'> NULL values
+            if isinstance(value, float): #empty records are returned as <class 'qgis.PyQt.QtCore.QVariant'> NULL values
                 result += self.create_result_value_xml(substance, value)
 
         result += '''

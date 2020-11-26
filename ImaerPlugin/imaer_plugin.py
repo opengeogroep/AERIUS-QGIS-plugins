@@ -16,9 +16,9 @@ import time
 import webbrowser
 import pathlib
 
-from PyQt5.QtWidgets import QAction, QFileDialog, QDialogButtonBox
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QVariant, QStandardPaths
+from qgis.PyQt.QtWidgets import QAction, QFileDialog, QDialogButtonBox
+from qgis.PyQt.QtGui import QIcon
+from qgis.PyQt.QtCore import QVariant, QStandardPaths
 
 from qgis.core import (
     QgsMessageLog,

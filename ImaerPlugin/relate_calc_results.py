@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import os
 
-from PyQt5.QtCore import QVariant
-from PyQt5.QtWidgets import (
+from qgis.PyQt.QtCore import QVariant
+from qgis.PyQt.QtWidgets import (
     QDialog
 )
-from PyQt5 import uic
+from qgis.PyQt import uic
 
 from qgis.core import QgsVectorLayer, QgsField, QgsProject, QgsFeature
 
