@@ -33,17 +33,17 @@ from qgis.core import (
     QgsSettings)
 from qgis.gui import QgsMapLayerComboBox
 
-from .tasks import (
+from ImaerPlugin.tasks import (
     ImportImaerCalculatorResultTask,
     ExportImaerCalculatorResultTask,
     ExtractGmlFromPdfTask)
-from .generate_calc_input import GenerateCalcInputDialog
-from .configuration import ConfigurationDialog
-from .connect_receptorsets import ConnectReceptorSetsDialog
-from .connect_calc import ConnectCalcDialog
-from .relate_calc_results import RelateCalcResultsDialog
+from ImaerPlugin.generate_calc_input import GenerateCalcInputDialog
+from ImaerPlugin.configuration import ConfigurationDialog
+from ImaerPlugin.connect_receptorsets import ConnectReceptorSetsDialog
+from ImaerPlugin.connect_calc import ConnectCalcDialog
+from ImaerPlugin.relate_calc_results import RelateCalcResultsDialog
 
-from .connect import (
+from ImaerPlugin.connect import (
     AeriusOpenData
 )
 

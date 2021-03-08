@@ -15,7 +15,7 @@
 ################################################################################
 
 
-from .imaer_plugin import ImaerPlugin
+from ImaerPlugin.imaer_plugin import ImaerPlugin
 
 def classFactory(iface):
     return ImaerPlugin(iface)

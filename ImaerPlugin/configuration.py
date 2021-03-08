@@ -6,7 +6,7 @@ from qgis.PyQt.QtWidgets import (
 )
 from qgis.PyQt import uic
 
-from .connect import (
+from ImaerPlugin.connect import (
     AeriusConnection
 )
 

@@ -23,15 +23,15 @@ from qgis.core import (
     QgsCoordinateReferenceSystem,
     QgsCoordinateTransform)
 
-from .config import (
+from ImaerPlugin.config import (
     emission_sectors,
     emission_elements,
     ui_settings
 )
 
-from .widget_registry import WidgetRegistry
+from ImaerPlugin.widget_registry import WidgetRegistry
 
-from .imaer import (
+from ImaerPlugin.imaer import (
     FeatureCollectionCalculator,
     AeriusCalculatorMetadata,
     EmissionSource,
