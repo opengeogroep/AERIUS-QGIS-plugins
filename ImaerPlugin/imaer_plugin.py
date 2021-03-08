@@ -379,12 +379,20 @@ class ImaerPlugin:
         print('run_relate_calc_results')
         result = self.relate_calc_results_dlg.exec_()
         print(result)
-        if result == 1:
-            layer1 = self.relate_calc_results_dlg.combo_layer1.currentLayer()
-            print(layer1)
-            layer2 = self.relate_calc_results_dlg.combo_layer2.currentLayer()
-            print(layer2)
-            self.relate_calc_results_dlg.calculate_difference(layer1, layer2)
+        if not result == 1:
+            return
+
+        layer1 = self.relate_calc_results_dlg.combo_layer1.currentLayer()
+        print(layer1)
+        layer2 = self.relate_calc_results_dlg.combo_layer2.currentLayer()
+        print(layer2)
+
+        calc_type = self.relate_calc_results_dlg.combo_calc_type.currentText()
+        print(calc_type)
+
+        if calc_type == 'difference':
+            if layer1 is not None and layer2 is not None:
+                self.relate_calc_results_dlg.calculate_difference(layer1, layer2)
 
 
     def open_add_open_data(self):

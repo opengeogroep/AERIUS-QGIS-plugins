@@ -7,7 +7,7 @@ from qgis.PyQt.QtWidgets import (
 )
 from qgis.PyQt import uic
 
-from qgis.core import QgsVectorLayer, QgsField, QgsProject, QgsFeature
+from qgis.core import QgsVectorLayer, QgsField, QgsProject, QgsFeature, QgsMapLayerProxyModel
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'relate_calc_results_dlg.ui'))
@@ -23,19 +23,29 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.plugin = plugin
         self.iface = plugin.iface
+        self.geometry_cache = {}
+        self.dep_field_names = ['dep_NH3', 'dep_NOX']
 
         self.init_gui()
 
 
     def init_gui(self):
-        pass
+        layer_widgets = {
+            1: self.combo_layer1,
+            2: self.combo_layer2
+        }
+        for key, widget in layer_widgets.items():
+            #print(widget)
+            widget.setFilters(QgsMapLayerProxyModel.PolygonLayer)
+            widget.setAllowEmptyLayer(True)
+            widget.setCurrentIndex(0)
 
 
     def __del__(self):
         pass
 
 
-    def create_result_layer(self, layer_name, value_fieldname, qml=None):
+    def create_result_layer(self, layer_name, qml_file_name=None):
         crs = self.plugin.iface.mapCanvas().mapSettings().destinationCrs().authid()
         feature_type = 'Polygon?crs={}'.format(crs)
         layer = QgsVectorLayer(feature_type, layer_name, 'memory')
@@ -44,54 +54,84 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
         fields = []
         fields.append(QgsField('fid', QVariant.LongLong, 'int8'))
-        fields.append(QgsField(value_fieldname, QVariant.Double))
+        for dep_field_name in self.dep_field_names:
+            fields.append(QgsField(dep_field_name, QVariant.Double))
         provider.addAttributes(fields)
         layer.updateFields()
 
         QgsProject.instance().addMapLayer(layer)
 
-        if qml is not None:
-            layer.loadNamedStyle(qml)
+        if qml_file_name is not None:
+            layer.loadNamedStyle(qml_file_name)
 
         return (layer, provider)
 
 
-    def create_result_feature(self, fid, value, geometry):
+    def create_result_feature(self, receptor_id, dep_dict):
         feat = QgsFeature()
+        geometry = self.geometry_cache[receptor_id]
         feat.setGeometry(geometry)
-        feat.setAttributes([fid, value])
+        attributes = [receptor_id]
+        for field_name in dep_dict:
+            attributes.append(dep_dict[field_name])
+        feat.setAttributes(attributes)
         return feat
 
 
-    def calculate_difference(self, layer1, layer2, substance='NH3'):
-        receptor_dict = {}
-        substance_fieldname = f'dep_{substance}'
-
-        for feat in layer1.getFeatures():
-            receptor_id = feat['fid']
-            value = feat[substance_fieldname]
-            receptor_dict[receptor_id] = {'value1': value, 'geom': feat.geometry()}
-
-        for feat in layer2.getFeatures():
-            receptor_id = feat['fid']
-            value = feat[substance_fieldname]
-            if receptor_id in receptor_dict:
-                receptor_dict[receptor_id]['value2'] = value
-            else:
-                receptor_dict[receptor_id] = {'value2': value, 'geom': feat.geometry()}
-
-        qml = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
-        result_layer, result_provider = self.create_result_layer('difference', 'diff_NH3', qml=qml)
-
-        for key in receptor_dict:
-            if 'value1' in receptor_dict[key]:
-                v1 = receptor_dict[key]['value1']
-            else:
-                v1 = 0
-            if 'value2' in receptor_dict[key]:
-                v2 = receptor_dict[key]['value2']
-            else:
-                v2 = 0
-
-            feat = self.create_result_feature(key, v1-v2, receptor_dict[key]['geom'])
+    def create_result_features(self, calc_result_dict, qml_file_name):
+        result_layer, result_provider = self.create_result_layer('difference', qml_file_name)
+        for receptor_id in calc_result_dict:
+            feat = self.create_result_feature(receptor_id, calc_result_dict[receptor_id])
             result_provider.addFeatures([feat])
+
+
+    def create_receptor_dictionary(self, layer):
+        layer_field_names = [fld.name() for fld in layer.fields()]
+        for field_name in ['fid'] + self.dep_field_names:
+            if field_name not in layer_field_names:
+                return 'x'
+        result = {}
+        for feat in layer.getFeatures():
+            receptor_id = feat['fid']
+            dep_dict = {}
+            for dep_field_name in self.dep_field_names:
+                dep_dict[dep_field_name] = feat[dep_field_name]
+            result[receptor_id] = dep_dict
+            if receptor_id not in self.geometry_cache:
+                self.geometry_cache[receptor_id] = feat.geometry()
+        return result
+
+
+    def __get_receptor_value(self, receptor_dict, receptor_id, field_name):
+        if receptor_id not in receptor_dict:
+            return 0
+        if field_name in receptor_dict[receptor_id]:
+            value = receptor_dict[receptor_id][field_name]
+        if value is None:
+            return 0
+        return value
+
+
+    def __calc_dict_difference(self, dep_dict_layer_1, dep_dict_layer_2):
+        result = {}
+        for receptor_id in self.geometry_cache:
+            dep_dict = {}
+            for dep_field_name in self.dep_field_names:
+                v1 = self.__get_receptor_value(dep_dict_layer_1, receptor_id, dep_field_name)
+                v2 = self.__get_receptor_value(dep_dict_layer_2, receptor_id, dep_field_name)
+                dep_dict[dep_field_name] = v1 -v2
+            result[receptor_id] = dep_dict
+        return result
+
+
+    def calculate_difference(self, layer_1, layer_2):
+        self.geometry_cache = {}
+
+        dep_dict_layer_1 = self.create_receptor_dictionary(layer_1)
+        dep_dict_layer_2 = self.create_receptor_dictionary(layer_2)
+
+        qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
+        calc_result_dict = self.__calc_dict_difference(dep_dict_layer_1, dep_dict_layer_2)
+        self.create_result_features(calc_result_dict, qml_file_name)
+
+        self.geometry_cache = {}
