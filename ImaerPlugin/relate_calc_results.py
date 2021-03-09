@@ -3,7 +3,8 @@ import os
 
 from qgis.PyQt.QtCore import QVariant
 from qgis.PyQt.QtWidgets import (
-    QDialog
+    QDialog,
+    QDialogButtonBox
 )
 from qgis.PyQt import uic
 
@@ -25,31 +26,46 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         self.iface = plugin.iface
         self.geometry_cache = {}
         self.dep_field_names = ['dep_NH3', 'dep_NOX']
+        self.dep_total_field_name = 'dep_TOTAL'
 
         self.init_gui()
 
 
     def init_gui(self):
-        layer_widgets = {
+        self.layer_widgets = {
             1: self.combo_layer1,
             2: self.combo_layer2
         }
-        for key, widget in layer_widgets.items():
+        for key, widget in self.layer_widgets.items():
             #print(widget)
             widget.setFilters(QgsMapLayerProxyModel.PolygonLayer)
             widget.setAllowEmptyLayer(True)
             widget.setCurrentIndex(0)
+            widget.currentIndexChanged.connect(self.gui_update_layer_combo)
 
         self.combo_calc_type.currentIndexChanged.connect(self.gui_update_calc_type)
+
+        self.gui_update_calc_type()
+        self.gui_update_layer_combo()
 
 
     def __del__(self):
         self.combo_calc_type.currentIndexChanged.disconnect(self.gui_update_calc_type)
+        for key, widget in self.layer_widgets.items():
+            widget.currentIndexChanged.connect(self.gui_update_layer_combo)
 
 
     def gui_update_calc_type(self):
         calc_type = self.combo_calc_type.currentText()
         self.edit_layer_name.setText(calc_type)
+
+
+    def gui_update_layer_combo(self):
+        calc_type = self.combo_calc_type.currentText()
+        layer_1 = self.layer_widgets[1].currentLayer()
+        layer_2 = self.layer_widgets[2].currentLayer()
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(layer_1 is not None and layer_2 is not None)
+
 
 
     def create_result_layer(self, layer_name, qml_file_name=None):
@@ -63,6 +79,10 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         fields.append(QgsField('fid', QVariant.LongLong, 'int8'))
         for dep_field_name in self.dep_field_names:
             fields.append(QgsField(dep_field_name, QVariant.Double))
+
+        if self.checkBox_add_totals.isChecked():
+            fields.append(QgsField(self.dep_total_field_name, QVariant.Double))
+
         provider.addAttributes(fields)
         layer.updateFields()
 
@@ -79,11 +99,19 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         geometry = self.geometry_cache[receptor_id]
         feat.setGeometry(geometry)
         attributes = [receptor_id]
+        dep_total = 0
         for field_name in dep_dict:
             v = dep_dict[field_name]
+            dep_total += v
             if max_decimals is not None:
                 v = round(v, max_decimals)
             attributes.append(v)
+
+        if self.checkBox_add_totals.isChecked():
+            if max_decimals is not None:
+                dep_total = round(dep_total, max_decimals)
+            attributes.append(dep_total)
+
         feat.setAttributes(attributes)
         return feat
 
