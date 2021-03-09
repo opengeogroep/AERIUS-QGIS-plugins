@@ -8,7 +8,16 @@ from qgis.PyQt.QtWidgets import (
 )
 from qgis.PyQt import uic
 
-from qgis.core import QgsVectorLayer, QgsField, QgsProject, QgsFeature, QgsMapLayerProxyModel
+from qgis.core import (
+    QgsVectorLayer,
+    QgsField,
+    QgsProject,
+    QgsFeature,
+    QgsMapLayerProxyModel,
+    Qgis
+)
+
+from qgis.gui import QgsMessageBar
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'relate_calc_results_dlg.ui'))
@@ -66,6 +75,9 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         layer_2 = self.layer_widgets[2].currentLayer()
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(layer_1 is not None and layer_2 is not None)
 
+
+    def show_error(self, msg):
+        self.iface.messageBar().pushMessage('Error', msg, level=Qgis.Critical, duration=10)
 
 
     def create_result_layer(self, layer_name, qml_file_name=None):
@@ -128,7 +140,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         layer_field_names = [fld.name() for fld in layer.fields()]
         for field_name in ['fid'] + self.dep_field_names:
             if field_name not in layer_field_names:
-                return 'x'
+                return None
         result = {}
         for feat in layer.getFeatures():
             receptor_id = feat['fid']
@@ -171,7 +183,16 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         self.geometry_cache = {}
 
         dep_dict_layer_1 = self.create_receptor_dictionary(layer_1)
+        if dep_dict_layer_1 is None:
+            layer_name = layer_1.name()
+            self.show_error(f'"{layer_name}" is not a valid deposition layer.')
+            return
+
         dep_dict_layer_2 = self.create_receptor_dictionary(layer_2)
+        if dep_dict_layer_2 is None:
+            layer_name = layer_2.name()
+            self.show_error(f'"{layer_name}" is not a valid deposition layer.')
+            return
 
         qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
         calc_result_dict = self.__calc_dict_difference(dep_dict_layer_1, dep_dict_layer_2)
@@ -200,7 +221,12 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
         dep_dicts = []
         for layer in layers:
-            dep_dicts.append(self.create_receptor_dictionary(layer))
+            dep_dict_layer = self.create_receptor_dictionary(layer)
+            if dep_dict_layer is None:
+                layer_name = layer.name()
+                self.show_error(f'"{layer_name}" is not a valid deposition layer.')
+                return
+            dep_dicts.append(dep_dict_layer)
 
         qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
         calc_result_dict = self.__calc_dict_sum(dep_dicts)
