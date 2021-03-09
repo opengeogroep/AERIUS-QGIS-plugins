@@ -40,9 +40,16 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
             widget.setAllowEmptyLayer(True)
             widget.setCurrentIndex(0)
 
+        self.combo_calc_type.currentIndexChanged.connect(self.gui_update_calc_type)
+
 
     def __del__(self):
-        pass
+        self.combo_calc_type.currentIndexChanged.disconnect(self.gui_update_calc_type)
+
+
+    def gui_update_calc_type(self):
+        calc_type = self.combo_calc_type.currentText()
+        self.edit_layer_name.setText(calc_type)
 
 
     def create_result_layer(self, layer_name, qml_file_name=None):
@@ -81,7 +88,8 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         return feat
 
 
-    def create_result_features(self, calc_result_dict, layer_name, qml_file_name):
+    def create_result_features(self, calc_result_dict, qml_file_name):
+        layer_name = self.edit_layer_name.text()
         result_layer, result_provider = self.create_result_layer(layer_name, qml_file_name)
         for receptor_id in calc_result_dict:
             feat = self.create_result_feature(receptor_id, calc_result_dict[receptor_id], 8)
@@ -139,7 +147,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
         qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
         calc_result_dict = self.__calc_dict_difference(dep_dict_layer_1, dep_dict_layer_2)
-        self.create_result_features(calc_result_dict, 'difference', qml_file_name)
+        self.create_result_features(calc_result_dict, qml_file_name)
 
         self.geometry_cache = {}
 
@@ -163,12 +171,11 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         self.geometry_cache = {}
 
         dep_dicts = []
-
         for layer in layers:
             dep_dicts.append(self.create_receptor_dictionary(layer))
 
         qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
         calc_result_dict = self.__calc_dict_sum(dep_dicts)
-        self.create_result_features(calc_result_dict, 'sum', qml_file_name)
+        self.create_result_features(calc_result_dict, qml_file_name)
 
         self.geometry_cache = {}

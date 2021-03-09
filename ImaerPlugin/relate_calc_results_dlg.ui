@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>502</width>
-    <height>305</height>
+    <height>291</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -48,6 +48,16 @@
          </item>
         </widget>
        </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_layer_name">
+         <property name="text">
+          <string>Layer name</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="edit_layer_name"/>
+       </item>
       </layout>
      </item>
      <item>
@@ -79,8 +89,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QgsMapLayerComboBox" name="combo_layer1">
-          </widget>
+          <widget class="QgsMapLayerComboBox" name="combo_layer1"/>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_layer2">
@@ -90,8 +99,7 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QgsMapLayerComboBox" name="combo_layer2">
-          </widget>
+          <widget class="QgsMapLayerComboBox" name="combo_layer2"/>
          </item>
         </layout>
        </widget>
