@@ -67,21 +67,24 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         return (layer, provider)
 
 
-    def create_result_feature(self, receptor_id, dep_dict):
+    def create_result_feature(self, receptor_id, dep_dict, max_decimals=None):
         feat = QgsFeature()
         geometry = self.geometry_cache[receptor_id]
         feat.setGeometry(geometry)
         attributes = [receptor_id]
         for field_name in dep_dict:
-            attributes.append(dep_dict[field_name])
+            v = dep_dict[field_name]
+            if max_decimals is not None:
+                v = round(v, max_decimals)
+            attributes.append(v)
         feat.setAttributes(attributes)
         return feat
 
 
-    def create_result_features(self, calc_result_dict, qml_file_name):
-        result_layer, result_provider = self.create_result_layer('difference', qml_file_name)
+    def create_result_features(self, calc_result_dict, layer_name, qml_file_name):
+        result_layer, result_provider = self.create_result_layer(layer_name, qml_file_name)
         for receptor_id in calc_result_dict:
-            feat = self.create_result_feature(receptor_id, calc_result_dict[receptor_id])
+            feat = self.create_result_feature(receptor_id, calc_result_dict[receptor_id], 8)
             result_provider.addFeatures([feat])
 
 
@@ -95,10 +98,14 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
             receptor_id = feat['fid']
             dep_dict = {}
             for dep_field_name in self.dep_field_names:
-                dep_dict[dep_field_name] = feat[dep_field_name]
+                v = feat[dep_field_name]
+                if isinstance(v, QVariant) and str(v) == 'NULL':
+                    v = None
+                dep_dict[dep_field_name] = v
             result[receptor_id] = dep_dict
             if receptor_id not in self.geometry_cache:
                 self.geometry_cache[receptor_id] = feat.geometry()
+        #print(result)
         return result
 
 
@@ -119,7 +126,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
             for dep_field_name in self.dep_field_names:
                 v1 = self.__get_receptor_value(dep_dict_layer_1, receptor_id, dep_field_name)
                 v2 = self.__get_receptor_value(dep_dict_layer_2, receptor_id, dep_field_name)
-                dep_dict[dep_field_name] = v1 -v2
+                dep_dict[dep_field_name] = v1 - v2
             result[receptor_id] = dep_dict
         return result
 
@@ -132,6 +139,36 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
         qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
         calc_result_dict = self.__calc_dict_difference(dep_dict_layer_1, dep_dict_layer_2)
-        self.create_result_features(calc_result_dict, qml_file_name)
+        self.create_result_features(calc_result_dict, 'difference', qml_file_name)
+
+        self.geometry_cache = {}
+
+
+    def __calc_dict_sum(self, in_dep_dicts):
+        result = {}
+        for receptor_id in self.geometry_cache:
+            out_dep_dict = {}
+            for in_dep_dict in in_dep_dicts:
+                for dep_field_name in self.dep_field_names:
+                    v = self.__get_receptor_value(in_dep_dict, receptor_id, dep_field_name)
+                    if dep_field_name in out_dep_dict:
+                        out_dep_dict[dep_field_name] += v
+                    else:
+                        out_dep_dict[dep_field_name] = v
+            result[receptor_id] = out_dep_dict
+        return result
+
+
+    def calculate_sum(self, layers):
+        self.geometry_cache = {}
+
+        dep_dicts = []
+
+        for layer in layers:
+            dep_dicts.append(self.create_receptor_dictionary(layer))
+
+        qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
+        calc_result_dict = self.__calc_dict_sum(dep_dicts)
+        self.create_result_features(calc_result_dict, 'sum', qml_file_name)
 
         self.geometry_cache = {}

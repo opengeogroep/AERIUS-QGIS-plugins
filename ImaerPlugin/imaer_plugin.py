@@ -372,27 +372,31 @@ class ImaerPlugin:
     def open_connect_calc(self):
         self.log('open_connect_calc()')
         result = self.connect_calc_dlg.exec_()
-        print(result)
+        #print(result)
 
 
     def run_relate_calc_results(self):
-        print('run_relate_calc_results')
+        #print('run_relate_calc_results')
         result = self.relate_calc_results_dlg.exec_()
-        print(result)
+        #print(result)
         if not result == 1:
             return
 
         layer1 = self.relate_calc_results_dlg.combo_layer1.currentLayer()
-        print(layer1)
+        #print(layer1)
         layer2 = self.relate_calc_results_dlg.combo_layer2.currentLayer()
-        print(layer2)
+        #print(layer2)
 
         calc_type = self.relate_calc_results_dlg.combo_calc_type.currentText()
-        print(calc_type)
+        #print(calc_type)
 
         if calc_type == 'difference':
             if layer1 is not None and layer2 is not None:
                 self.relate_calc_results_dlg.calculate_difference(layer1, layer2)
+
+        if calc_type == 'sum':
+            if layer1 is not None and layer2 is not None:
+                self.relate_calc_results_dlg.calculate_sum([layer1, layer2])
 
 
     def open_add_open_data(self):
