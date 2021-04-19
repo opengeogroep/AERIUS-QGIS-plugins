@@ -27,4 +27,4 @@ After pressing `save`, the GML will be generated. A link to the file will be dis
 
 The generated GML file can be imported using the interface at [Aerius Calculator (NL)](https://calculator.aerius.nl/) for starting the calculation. It is possible to import multiple files before starting the calculation, which you can use when having multiple maplayers with emission data (and different geometry types).
 
-**The version of the generated GML file is `IMAER 3.1` and will at this moment only work in the pre-release of AERIUS Calculator!!**
+**The current version of the generated GML file is `IMAER 3.1`!!**
