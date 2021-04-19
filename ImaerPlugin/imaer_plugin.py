@@ -91,26 +91,26 @@ class ImaerPlugin:
                 'icon': 'icon_relate_calc_results.svg',
                 'tool_tip': 'Relate Calculator results',
                 'triggered_slot': self.run_relate_calc_results
-            },{
-                'name': 'configuration',
-                'icon': 'icon_connect_at.svg',
-                'tool_tip': 'Configure',
-                'triggered_slot': self.open_configuration
-            },{
-                'name': 'connect_receptorsets',
-                'icon': 'icon_connect_receptorsets.svg',
-                'tool_tip': 'Configure',
-                'triggered_slot': self.open_connect_receptorsets
-            },{
-                'name': 'connect_calc',
-                'icon': 'icon_connect_calc.svg',
-                'tool_tip': 'Connect calculation',
-                'triggered_slot': self.open_connect_calc
-            },{
-                'name': 'add_open_data',
-                'icon': 'icon_add_open_data_layer.svg',
-                'tool_tip': 'Add Open Data',
-                'triggered_slot': self.open_add_open_data
+            # },{
+            #     'name': 'configuration',
+            #     'icon': 'icon_connect_at.svg',
+            #     'tool_tip': 'Configure',
+            #     'triggered_slot': self.open_configuration
+            # },{
+            #     'name': 'connect_receptorsets',
+            #     'icon': 'icon_connect_receptorsets.svg',
+            #     'tool_tip': 'Configure',
+            #     'triggered_slot': self.open_connect_receptorsets
+            # },{
+            #     'name': 'connect_calc',
+            #     'icon': 'icon_connect_calc.svg',
+            #     'tool_tip': 'Connect calculation',
+            #     'triggered_slot': self.open_connect_calc
+            # },{
+            #     'name': 'add_open_data',
+            #     'icon': 'icon_add_open_data_layer.svg',
+            #     'tool_tip': 'Add Open Data',
+            #     'triggered_slot': self.open_add_open_data
             },{
                 'name': 'documentation',
                 'icon': 'icon_documentation.svg',
@@ -140,9 +140,9 @@ class ImaerPlugin:
 
         self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
         self.relate_calc_results_dlg = RelateCalcResultsDialog(self, parent=self.iface.mainWindow())
-        self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
-        self.connect_receptorsets_dlg = ConnectReceptorSetsDialog(self, parent=self.iface.mainWindow())
-        self.connect_calc_dlg = ConnectCalcDialog(self, parent=self.iface.mainWindow())
+        #self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
+        #self.connect_receptorsets_dlg = ConnectReceptorSetsDialog(self, parent=self.iface.mainWindow())
+        #self.connect_calc_dlg = ConnectCalcDialog(self, parent=self.iface.mainWindow())
 
         # Widget update logic
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
@@ -344,7 +344,7 @@ class ImaerPlugin:
 
     def update_connect_widgets(self):
         api_key = self.settings.value('variables/imaer_plugin_connect_key', defaultValue='')
-        self.actions['connect_calc'].setEnabled(not api_key == '')
+        #self.actions['connect_calc'].setEnabled(not api_key == '')
 
 
     def open_online_documentation(self):
@@ -352,7 +352,7 @@ class ImaerPlugin:
         webbrowser.open(doc_index_url)
 
 
-    def open_configuration(self):
+    '''def open_configuration(self):
         self.log('open_configuration()')
         #self.configuration_dlg.show()
         self.configuration_dlg.load_ui_from_settings()
@@ -360,19 +360,19 @@ class ImaerPlugin:
         print(result)
         if result:
             self.configuration_dlg.save_ui_to_settings()
-            self.update_connect_widgets()
+            self.update_connect_widgets()'''
 
 
-    def open_connect_receptorsets(self):
+    '''def open_connect_receptorsets(self):
         self.log('open_connect_receptorsets()')
         result = self.connect_receptorsets_dlg.exec_()
-        print(result)
+        print(result)'''
 
 
-    def open_connect_calc(self):
+    '''def open_connect_calc(self):
         self.log('open_connect_calc()')
         result = self.connect_calc_dlg.exec_()
-        #print(result)
+        #print(result)'''
 
 
     def run_relate_calc_results(self):
@@ -399,7 +399,7 @@ class ImaerPlugin:
                 self.relate_calc_results_dlg.calculate_sum([layer1, layer2])
 
 
-    def open_add_open_data(self):
+    '''def open_add_open_data(self):
         # TODO Move this to a QgsTask when specs are clear
         layer_ns = 'base_geometries'
         layer_name = 'hexagons'
@@ -425,4 +425,4 @@ class ImaerPlugin:
 
         qml = os.path.join(self.plugin_dir, 'styles', f'{layer_ns}_{layer_name}.qml')
         download_layer.loadNamedStyle(qml)
-        QgsProject.instance().addMapLayer(download_layer)
+        QgsProject.instance().addMapLayer(download_layer)'''
