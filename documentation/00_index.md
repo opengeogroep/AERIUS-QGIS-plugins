@@ -6,5 +6,6 @@
 * [Relate Calculator results](05_relate_calc_results.md)
 
 # IMAER Plugin
+The IMAER plugin for QGIS provides a set of tools for working with your AERIUS IMAER data.
 
-Bla bla ...
+![imaer toolbar](img/imaer_plugin_toolbar.png)
