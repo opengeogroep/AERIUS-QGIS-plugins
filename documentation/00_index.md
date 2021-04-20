@@ -13,9 +13,10 @@ The IMAER plugin for QGIS provides a set of tools for working with your AERIUS I
 ## Functionality
 
 The current functionality covers:
-* Opening and editing Calculator results
-* Calculations (+ and -) on IMAER layers
-* Generating Calculator input from your own emission source layers
+* Opening and editing AERIUS Calculator results
+* Extracting GML data from AERIUS PDF files
+* Performing calculations (+ and -) on IMAER layers
+* Generating AERIUS Calculator input from your own emission source layers
 
 ## Issues
 
@@ -34,7 +35,7 @@ manually.
 
 ## License
 
-This program is free software; you can redistribute it and/or modify
+This program is free software. You can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
+the Free Software Foundation. Either version 2 of the License, or
 (at your option) any later version.
