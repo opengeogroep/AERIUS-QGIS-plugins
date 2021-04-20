@@ -16,6 +16,6 @@ AERIUS Calculator provides downloading a PDF file which contains emission source
 1. Click the ![import button](../ImaerPlugin/icon_extract_gml_from_pdf.svg "extract gml from pdf") button to open the dialog for generating Calculator input GML.
 2. Choose the PDF file containing your input data.
 
-![dialog](img/extract_gml_from_pdf.png)
+![dialog](img/extract_gml_from_pdf_dlg.png)
 
 After pressing `open`, the plugin will save the extracted data to a GML file with the same file name but `.gml` for the extension. A link to the file will be displayed in the message bar on top of your map. If anything goes wrong, an error will be displayed there.
