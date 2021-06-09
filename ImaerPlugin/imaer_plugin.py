@@ -92,25 +92,25 @@ class ImaerPlugin:
                 'tool_tip': 'Relate Calculator results',
                 'triggered_slot': self.run_relate_calc_results
             },{
-                'name': 'configuration',
-                'icon': 'icon_connect_at.svg',
-                'tool_tip': 'Configure',
-                'triggered_slot': self.open_configuration
+                'name': 'add_open_data',
+                'icon': 'icon_add_open_data_layer.svg',
+                'tool_tip': 'Add Open Data Layer',
+                'triggered_slot': self.open_add_open_data
             },{
                 'name': 'connect_receptorsets',
                 'icon': 'icon_connect_receptorsets.svg',
-                'tool_tip': 'Configure',
+                'tool_tip': 'Receptor Sets',
                 'triggered_slot': self.open_connect_receptorsets
             },{
                 'name': 'connect_calc',
                 'icon': 'icon_connect_calc.svg',
-                'tool_tip': 'Connect calculation',
+                'tool_tip': 'Calculations',
                 'triggered_slot': self.open_connect_calc
             },{
-                'name': 'add_open_data',
-                'icon': 'icon_add_open_data_layer.svg',
-                'tool_tip': 'Add Open Data',
-                'triggered_slot': self.open_add_open_data
+                'name': 'configuration',
+                'icon': 'icon_configuration.svg',
+                'tool_tip': 'Configure',
+                'triggered_slot': self.open_configuration
             },{
                 'name': 'documentation',
                 'icon': 'icon_documentation.svg',
@@ -419,7 +419,7 @@ class ImaerPlugin:
                 return
 
             with open(zip_fn, 'wb') as zip_file:
-                    zip_file.write(response)
+                zip_file.write(response)
 
         download_layer = QgsVectorLayer(zip_fn, f'{layer_ns}:{layer_name}', 'ogr')
 
