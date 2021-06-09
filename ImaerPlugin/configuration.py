@@ -35,8 +35,13 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         self.init_default_values()
         self.init_gui()
 
+        # Load and save settings once to make sure everything is up to date.
+        self.load_ui_from_settings()
+        self.save_ui_to_settings()
+
 
     def init_gui(self):
+        self.combo_connect_ver.addItems(self.plugin.aerius_connection.available_versions)
         self.file_dialog = QFileDialog()
         self.button_get_key.clicked.connect(self.get_api_key)
         self.button_browse_work_dir.clicked.connect(self.browse_work_dir)
@@ -55,6 +60,12 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
             work_dir_setting = QStandardPaths.writableLocation(QStandardPaths.TempLocation)
             self.plugin.settings.setValue('imaer_plugin/work_dir', work_dir_setting)
 
+        connect_version_setting = self.plugin.settings.value('imaer_plugin/connect_version', defaultValue=None)
+        if connect_version_setting is None:
+            connect_version_setting = self.plugin.aerius_connection.version
+            self.plugin.settings.setValue('imaer_plugin/connect_version', connect_version_setting)
+
+
 
     def load_ui_from_settings(self):
         print('load_ui_from_settings')
@@ -71,13 +82,18 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         #print(key_setting)
         self.edit_key.setText(key_setting)
 
+        connect_version_setting = self.plugin.settings.value('imaer_plugin/connect_version', defaultValue='')
+        #print(key_setting)
+        self.combo_connect_ver.setCurrentText(connect_version_setting)
+
 
     def save_ui_to_settings(self):
         self.plugin.settings.setValue('imaer_plugin/work_dir', self.edit_work_dir.text())
         self.plugin.settings.setValue('imaer_plugin/connect_email', self.edit_email.text())
         self.plugin.settings.setValue('imaer_plugin/connect_key', self.edit_key.text())
-        self.plugin.connect_calc_dlg.connection.api_key = self.edit_key.text()
-        self.plugin.connect_receptorsets_dlg.connection.api_key = self.edit_key.text()
+        self.plugin.settings.setValue('imaer_plugin/connect_version', self.combo_connect_ver.currentText())
+        self.plugin.aerius_connection.api_key = self.edit_key.text()
+        self.plugin.aerius_connection.set_version(self.combo_connect_ver.currentText())
 
 
     def get_api_key(self):

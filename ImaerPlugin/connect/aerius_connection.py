@@ -8,14 +8,35 @@ from .network import NetworkAccessManager, RequestsException
 
 class AeriusConnection():
 
-    def __init__(self, version=6, api_key=None):
-        self.base_url = 'https://connect.aerius.nl/api2020-prerelease'
-        self.base_url = 'https://connect.aerius.nl/api'
-        self.version = version
+    def __init__(self, version=None, api_key=None):
+        self.available_versions = ['5', '6', '7']
+
+        if version is None:
+            version = self.available_versions[-1]
+        else:
+            version = str(version)
+            #if self.version not in self.available_versions:
+            #    pass # TODO: Throw some error?
+        self.set_version(version)
+
+        self.base_url = None
         self.api_key = api_key
 
+
     def __str__(self):
-        return 'AeriusConnection[{}, v{}]'.format(self.api_key, self.version)
+        return 'AeriusConnection[v{}, {}, {}]'.format(
+            self.version,
+            self.api_key,
+            self.base_url
+        )
+
+    def set_version(self, version):
+        self.version = version
+        url_lookup = {
+            '6': 'https://connect.aerius.nl/api',
+            '7': 'https://connect.aerius.nl/api2020-prerelease'
+        }
+        self.base_url = url_lookup[self.version]
 
 
     def run_request(self, api_function, method, data=None):

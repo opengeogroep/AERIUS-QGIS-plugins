@@ -27,8 +27,6 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.plugin = plugin
         self.iface = plugin.iface
-        api_key = self.plugin.settings.value('variables/imaer_plugin_connect_key', defaultValue='')
-        self.connection = AeriusConnection(api_key=api_key)
         #self.open_file_dialog = QFileDialog()
 
         self.init_gui()
@@ -75,7 +73,7 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
 
     def get_receptor_sets(self):
-        result = self.connection.get_receptor_sets()
+        result = self.plugin.aerius_connection.get_receptor_sets()
         self.show_feedback(result)
 
         self.table_receptorsets.clearContents()
@@ -101,7 +99,7 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         name = self.edit_name.text()
         description = self.edit_description.text()
 
-        result = self.connection.post_receptor_set(gml_fn, name, description)
+        result = self.plugin.aerius_connection.post_receptor_set(gml_fn, name, description)
         self.show_feedback(result)
 
         if result is not None:
@@ -122,7 +120,7 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         if name is None:
             return
 
-        result = self.connection.delete_receptor_set(name)
+        result = self.plugin.aerius_connection.delete_receptor_set(name)
         self.show_feedback(result)
 
         if result is not None:

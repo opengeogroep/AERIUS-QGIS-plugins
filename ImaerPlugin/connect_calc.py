@@ -26,8 +26,6 @@ class ConnectCalcDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.plugin = plugin
         self.iface = plugin.iface
-        api_key = self.plugin.settings.value('variables/imaer_plugin_connect_key', defaultValue='')
-        self.connection = AeriusConnection(api_key=api_key)
 
         self.init_gui()
 
@@ -67,7 +65,7 @@ class ConnectCalcDialog(QDialog, FORM_CLASS):
 
     def validate(self):
         gml_fn = self.edit_gml_input.text()
-        result = self.connection.validate(gml_fn)
+        result = self.plugin.aerius_connection.validate(gml_fn)
         '''
         if result['successful']:
             print('GML file is valid')
@@ -91,12 +89,12 @@ class ConnectCalcDialog(QDialog, FORM_CLASS):
 
         #print(user_options)
 
-        result = self.connection.calculate(gml_fn, user_options)
+        result = self.plugin.aerius_connection.calculate(gml_fn, user_options)
         self.show_feedback(result)
 
 
     def status_jobs(self):
-        result = self.connection.status_jobs()
+        result = self.plugin.aerius_connection.status_jobs()
         self.show_feedback(result)
 
 
@@ -126,7 +124,7 @@ class ConnectCalcDialog(QDialog, FORM_CLASS):
         """requests available receptor sets and fills combo box """
         self.combo_receptor_set.clear()
 
-        result = self.connection.get_receptor_sets()
+        result = self.plugin.aerius_connection.get_receptor_sets()
 
         if not 'receptorSets' in result:
             return

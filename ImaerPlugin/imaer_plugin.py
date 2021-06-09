@@ -44,8 +44,11 @@ from ImaerPlugin.connect_calc import ConnectCalcDialog
 from ImaerPlugin.relate_calc_results import RelateCalcResultsDialog
 
 from ImaerPlugin.connect import (
+    AeriusConnection,
     AeriusOpenData
 )
+
+
 
 
 class ImaerPlugin:
@@ -57,6 +60,8 @@ class ImaerPlugin:
         self.task_manager = QgsApplication.taskManager()
         self.imaer_calc_layers = {}
         self.settings = QgsSettings()
+
+        self.aerius_connection = AeriusConnection()
 
         # Variable self.dev is set to True if a global variable terglobo_dev exists
         # holding the lowercase value 'on'. This is to ensure that any dev tricks
