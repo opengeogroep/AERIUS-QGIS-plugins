@@ -7,10 +7,6 @@ from qgis.PyQt.QtWidgets import (
 )
 from qgis.PyQt import uic
 
-from ImaerPlugin.connect import (
-    AeriusConnection
-)
-
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'connect_calc_dlg.ui'))

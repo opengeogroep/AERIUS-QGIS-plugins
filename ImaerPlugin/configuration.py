@@ -11,10 +11,6 @@ from qgis.PyQt.QtWidgets import (
 )
 from qgis.PyQt import uic
 
-from ImaerPlugin.connect import (
-    AeriusConnection
-)
-
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'configuration_dlg.ui'))
@@ -30,7 +26,6 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.plugin = plugin
         self.iface = plugin.iface
-        self.connection = AeriusConnection()
 
         self.init_default_values()
         self.init_gui()
@@ -46,13 +41,6 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         self.button_get_key.clicked.connect(self.get_api_key)
         self.button_browse_work_dir.clicked.connect(self.browse_work_dir)
 
-        #self.load_ui_from_settings()
-
-
-    def __del__(self):
-        pass
-        #self.button_get_key.clicked.disconnect(self.get_api_key)
-
 
     def init_default_values(self):
         work_dir_setting = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
@@ -66,9 +54,8 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
             self.plugin.settings.setValue('imaer_plugin/connect_version', connect_version_setting)
 
 
-
     def load_ui_from_settings(self):
-        print('load_ui_from_settings')
+        #print('load_ui_from_settings')
 
         work_dir_setting = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue='')
         #print(work_dir_setting)
@@ -97,10 +84,10 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
 
 
     def get_api_key(self):
-        print(self.connection)
+        #print(self.plugin.aerius_connection)
         email = self.edit_email.text()
         self.edit_key.setText('')
-        self.connection.generate_api_key(email)
+        self.plugin.aerius_connection.generate_api_key(email)
 
 
     def browse_work_dir(self):

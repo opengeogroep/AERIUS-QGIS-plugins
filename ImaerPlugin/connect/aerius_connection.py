@@ -9,7 +9,7 @@ from .network import NetworkAccessManager, RequestsException
 class AeriusConnection():
 
     def __init__(self, version=None, api_key=None):
-        self.available_versions = ['5', '6', '7']
+        self.available_versions = ['6', '7']
 
         if version is None:
             version = self.available_versions[-1]
@@ -33,15 +33,34 @@ class AeriusConnection():
     def set_version(self, version):
         self.version = version
         url_lookup = {
-            '6': 'https://connect.aerius.nl/api',
-            '7': 'https://connect.aerius.nl/api2020-prerelease'
+            '6': 'https://connect.aerius.nl/api/6',
+            #'99': 'https://connect.aerius.nl/api2020-prerelease',
+            '7': 'https://natuur-dev.aerius.nl/api',
+            #'7': 'https://connect-masterclass.aerius.nl/api',
         }
         self.base_url = url_lookup[self.version]
 
 
-    def run_request(self, api_function, method, data=None):
+    def is_valid(self, test_api_key=True, test_server=False):
+        if self.base_url is None:
+            return False
+            print('No base url')
+        if test_api_key:
+            if self.api_key is None or len(self.api_key) != 32:
+                print('No (valid) api key')
+                return False
+        if test_server:
+            return self.server_is_up()
+        return True
+
+
+    def run_request(self, api_function, method, data=None, with_version=True):
         headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
-        url = f'{self.base_url}/{self.version}/{api_function}'
+        if with_version:
+            url = f'{self.base_url}/v{self.version}/{api_function}'
+        else:
+            url = f'{self.base_url}/{api_function}'
+
         print(url)
 
         nam = NetworkAccessManager()
@@ -87,23 +106,44 @@ class AeriusConnection():
         print(content)
         if not response.status == 200:
             return
-        return json.loads(content)
+        if len(content) > 0:
+            return json.loads(content)
+
+
+    def server_is_up(self):
+        end_points = {
+            '6': 'actuator/health', # werkt niet
+            '7': 'actuator/health'
+        }
+        end_point = end_points[self.version]
+        response = self.run_request(end_point, 'GET', with_version=False)
+        return response is not None
 
 
     def generate_api_key(self, email):
-        api_function = 'generateAPIKey'
+        if not self.is_valid(test_api_key=False):
+            return
+        end_points = {
+            '6': 'generateAPIKey',
+            '7': 'user/generateApiKey'
+        }
+        end_point = end_points[self.version]
         data = {'email': email}
-        response = self.run_request(api_function, 'POST', data)
+        response = self.run_request(end_point, 'POST', data)
         if response is not None:
             print(f'gelukt! {response}')
 
 
     def status_jobs(self):
-        api_function = 'status/jobs'
+        end_points = {
+            '6': 'status/jobs',
+            '7': 'jobs'
+        }
+        end_point = end_points[self.version]
         data = {}
         data['apiKey'] = self.api_key
 
-        response = self.run_request(api_function, 'GET', data)
+        response = self.run_request(end_point, 'GET', data)
         if response is not None:
             print(f'gelukt! {response}')
         return response
