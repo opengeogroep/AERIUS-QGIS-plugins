@@ -35,8 +35,8 @@ class AeriusConnection():
         url_lookup = {
             '6': 'https://connect.aerius.nl/api/6',
             #'99': 'https://connect.aerius.nl/api2020-prerelease',
-            '7': 'https://natuur-dev.aerius.nl/api',
-            #'7': 'https://connect-masterclass.aerius.nl/api',
+            #'7': 'https://natuur-dev.aerius.nl/api', # imaer 4
+            '7': 'https://connect-masterclass.aerius.nl/api', # imaer 3
         }
         self.base_url = url_lookup[self.version]
 
