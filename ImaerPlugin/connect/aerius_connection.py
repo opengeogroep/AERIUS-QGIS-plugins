@@ -1,7 +1,25 @@
 import json
 import urllib.parse
 
+import requests
+#from qgis.PyQt.QtCore import
+
+from qgis.core import QgsNetworkAccessManager
+
 from .network import NetworkAccessManager, RequestsException
+
+from qgis.PyQt.QtCore import (
+    QFile,
+    QFileInfo,
+    QIODevice,
+    QVariant,
+    QUrl
+)
+from qgis.PyQt.QtNetwork import (
+    QHttpMultiPart,
+    QHttpPart,
+    QNetworkRequest
+)
 
 
 
@@ -23,12 +41,15 @@ class AeriusConnection():
         self.api_key = api_key
 
 
+
+
     def __str__(self):
         return 'AeriusConnection[v{}, {}, {}]'.format(
             self.version,
             self.api_key,
             self.base_url
         )
+
 
     def set_version(self, version):
         self.version = version
@@ -54,8 +75,74 @@ class AeriusConnection():
         return True
 
 
-    def run_request(self, api_function, method, data=None, with_version=True):
-        headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+    def run_multi_part_request(self, api_function, method='POST', text_parts=[], file_parts=[], with_api_key=True):
+        print('run_multi_part_request ------------------------------------------------')
+        print(text_parts)
+        print(file_parts)
+
+        manager = QgsNetworkAccessManager.instance()
+
+        url = f'{self.base_url}/v{self.version}/{api_function}'
+        print(url)
+
+        multi_part = QHttpMultiPart(QHttpMultiPart.FormDataType)
+        #print(multi_part)
+
+        '''text_parts = [
+            {'header': 'receptorSet', 'body': {'name': 'terglobo15', 'description': '... bla bla',  'expectRcpHeight': False} },
+        ]'''
+
+        for tp in text_parts:
+            print(tp)
+            header = tp['header']
+            body = json.dumps(tp['body'])
+            body = body.encode('utf-8')
+            textPart = QHttpPart()
+            textPart.setHeader(QNetworkRequest.ContentDispositionHeader, QVariant(f'form-data; name="{header}"'))
+            textPart.setBody(body)
+            multi_part.append(textPart)
+
+        file_parts = [
+            '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/AERIUS_bijlage_eigen_rekenpunten_2020.gml',
+        ]
+
+        for fp in file_parts:
+            print(fp)
+            file = QFile(fp)
+            print(QFileInfo(file).fileName())  # <= om de file name te achterhalen en te gebruiken in de dispostion header
+
+            filePart = QHttpPart()
+            filePart.setHeader(QNetworkRequest.ContentTypeHeader, QVariant("application/gml+xml"))
+            # zo ziet het eruit in curl in de echo server:
+            #Content-Disposition: form-data; name="filePart"; filename="AERIUS_bijlage_eigen_rekenpunten_2020.gml"
+            filePart.setHeader(QNetworkRequest.ContentDispositionHeader,
+                QVariant(f'form-data; name="filePart"; filename="{QFileInfo(file).fileName()}"'))
+            file.open(QIODevice.ReadOnly)
+            filePart.setBodyDevice(file)
+            file.setParent(multi_part) # we cannot delete the file now, so delete it with the multi_part
+            multi_part.append(filePart)
+
+
+        url = QUrl(url)
+        print(url)
+        request = QNetworkRequest(url)
+        print(request)
+        #if with_api_key:
+        request.setRawHeader(b'api-key', b'8f545f15cc684368a3f38a605dfb0148')
+        reply = manager.post(request, multi_part)
+        multi_part.setParent(reply)
+        return(reply)
+
+
+
+    def run_request(self, api_function, method, data=None, files=None, with_version=True, with_api_key=True):
+        print('run_request')
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'}
+        if with_api_key:
+            headers['api-key'] = self.api_key
+
         if with_version:
             url = f'{self.base_url}/v{self.version}/{api_function}'
         else:
@@ -63,14 +150,19 @@ class AeriusConnection():
 
         print(url)
 
+        #return None # just jump out
+
         nam = NetworkAccessManager()
 
         if method == 'POST':
             if data is not None:
                 body = json.dumps(data)
                 #print(body)
+
+                r = requests.post(url, files=files)
+                return r.text
             try:
-                (response, content) = nam.request(url, method='POST', headers=headers, body=body)
+                (response, content) = nam.request(url, method='POST', headers=headers, files=files)#, body=body)
             except RequestsException as e:
                 #print(f'exception: {e}')
                 return
@@ -80,7 +172,8 @@ class AeriusConnection():
                 #print(data)
                 params = urllib.parse.urlencode(data)
                 #print(params)
-                url += f'?{params}'
+                if self.version == '6':
+                    url += f'?{params}'
                 print(url)
             try:
                 (response, content) = nam.request(url, method='GET', headers=headers)
@@ -230,11 +323,14 @@ class AeriusConnection():
 
 
     def get_receptor_sets(self):
-        api_function = 'receptorSets'
+        print('get_receptor_set')
+        end_points = {
+            '7': 'receptorSets'
+        }
+        end_point = end_points[self.version]
         data = {}
-        data['apiKey'] = self.api_key
 
-        response = self.run_request(api_function, 'GET', data)
+        response = self.run_request(end_point, 'GET', data)
         if response is not None:
             print(f'gelukt! {response}')
         return response
@@ -243,30 +339,29 @@ class AeriusConnection():
     def post_receptor_set(self, gml_fn, name, description=''):
         '''Posts a new receptor set'''
         print('receptor_set')
-        api_function = 'receptorSet'
+        end_points = {
+            '7': 'receptorSets'
+        }
+        end_point = end_points[self.version]
 
-        data = {}
-        data['apiKey'] = self.api_key
-        data['name'] = name
-        data['description'] = description
+        text_parts = [
+            {'header': 'receptorSet', 'body': {'name': name, 'description': description,  'expectRcpHeight': False}},
+        ]
+        file_parts = []
+        file_parts.append(gml_fn)
+        print(file_parts)
 
-        data_object = {}
-        data_object['contentType'] = 'TEXT'
-        data_object['dataType'] = 'GML'
-        with open(gml_fn) as gml_file:
-            data_object['data'] = gml_file.read()
-        #data_object['substance'] = 'NH3'
-        #data_object['expectRcpHeight'] = False
-
-        data['dataObject'] = data_object
-
-        print(data)
-
-        response = self.run_request(api_function, 'POST', data)
+        #response = self.run_request(end_point, 'POST')
+        response = self.run_multi_part_request(end_point, text_parts=text_parts, file_parts=file_parts)
+        print(response)
+        resp = response
         if response is not None:
             print(f'gelukt! {response}')
 
+        self.last_response = response
+
         return response
+
 
     def delete_receptor_set(self, name):
         print('delete_receptor_set')

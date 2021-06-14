@@ -78,10 +78,8 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
         if result is None:
             return
-        if not 'receptorSets' in result:
-            return
 
-        for receptor_set in result['receptorSets']:
+        for receptor_set in result:
             row_num = self.table_receptorsets.rowCount()
             self.table_receptorsets.insertRow(row_num)
             if 'name' in receptor_set:
@@ -90,13 +88,16 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
                 self.table_receptorsets.setItem(row_num, 1, QTableWidgetItem(receptor_set['description']))
 
 
+
+
     def post_receptor_set(self):
         gml_fn = self.edit_gml_input.text()
         name = self.edit_name.text()
         description = self.edit_description.text()
 
         result = self.plugin.aerius_connection.post_receptor_set(gml_fn, name, description)
-        self.show_feedback(result)
+        #result = self.plugin.aerius_connection.
+        self.show_feedback(result.readAll())
 
         if result is not None:
             self.get_receptor_sets()
