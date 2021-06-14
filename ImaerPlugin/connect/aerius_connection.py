@@ -75,63 +75,60 @@ class AeriusConnection():
         return True
 
 
-    def run_multi_part_request(self, api_function, method='POST', text_parts=[], file_parts=[], with_api_key=True):
+    def run_multi_part_request(self, api_function, method, text_parts=[], file_parts=[], with_api_key=True):
         print('run_multi_part_request ------------------------------------------------')
-        print(text_parts)
-        print(file_parts)
 
         manager = QgsNetworkAccessManager.instance()
 
         url = f'{self.base_url}/v{self.version}/{api_function}'
+        #url = 'http://localhost:5000' # echo server for debugging
+
         print(url)
-
-        multi_part = QHttpMultiPart(QHttpMultiPart.FormDataType)
-        #print(multi_part)
-
-        '''text_parts = [
-            {'header': 'receptorSet', 'body': {'name': 'terglobo15', 'description': '... bla bla',  'expectRcpHeight': False} },
-        ]'''
-
-        for tp in text_parts:
-            print(tp)
-            header = tp['header']
-            body = json.dumps(tp['body'])
-            body = body.encode('utf-8')
-            textPart = QHttpPart()
-            textPart.setHeader(QNetworkRequest.ContentDispositionHeader, QVariant(f'form-data; name="{header}"'))
-            textPart.setBody(body)
-            multi_part.append(textPart)
-
-        file_parts = [
-            '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/AERIUS_bijlage_eigen_rekenpunten_2020.gml',
-        ]
-
-        for fp in file_parts:
-            print(fp)
-            file = QFile(fp)
-            print(QFileInfo(file).fileName())  # <= om de file name te achterhalen en te gebruiken in de dispostion header
-
-            filePart = QHttpPart()
-            filePart.setHeader(QNetworkRequest.ContentTypeHeader, QVariant("application/gml+xml"))
-            # zo ziet het eruit in curl in de echo server:
-            #Content-Disposition: form-data; name="filePart"; filename="AERIUS_bijlage_eigen_rekenpunten_2020.gml"
-            filePart.setHeader(QNetworkRequest.ContentDispositionHeader,
-                QVariant(f'form-data; name="filePart"; filename="{QFileInfo(file).fileName()}"'))
-            file.open(QIODevice.ReadOnly)
-            filePart.setBodyDevice(file)
-            file.setParent(multi_part) # we cannot delete the file now, so delete it with the multi_part
-            multi_part.append(filePart)
-
-
         url = QUrl(url)
         print(url)
         request = QNetworkRequest(url)
         print(request)
         #if with_api_key:
-        request.setRawHeader(b'api-key', b'8f545f15cc684368a3f38a605dfb0148')
-        reply = manager.post(request, multi_part)
-        multi_part.setParent(reply)
-        return(reply)
+        if with_api_key:
+            print(f'adding_api_key {self.api_key}')
+            request.setRawHeader(b'api-key', self.api_key.encode('utf-8'))
+            #request.setRawHeader(b'api-key', b'8f545f15cc684368a3f38a605dfb0148')
+
+        if method == 'POST':
+            print(text_parts)
+            print(file_parts)
+
+            multi_part = QHttpMultiPart(QHttpMultiPart.FormDataType)
+
+            for tp in text_parts:
+                print(tp)
+                header = tp['header']
+                body = json.dumps(tp['body'])
+                body = body.encode('utf-8')
+                text_part = QHttpPart()
+                text_part.setHeader(QNetworkRequest.ContentDispositionHeader, QVariant(f'form-data; name="{header}"'))
+                text_part.setBody(body)
+                multi_part.append(text_part)
+
+            for fp in file_parts:
+                print(fp)
+                file = QFile(fp)
+                print(QFileInfo(file).fileName())  # <= om de file name te achterhalen en te gebruiken in de dispostion header
+
+                file_part = QHttpPart()
+                file_part.setHeader(QNetworkRequest.ContentTypeHeader, QVariant("application/gml+xml"))
+                # zo ziet het eruit in curl in de echo server:
+                #Content-Disposition: form-data; name="filePart"; filename="AERIUS_bijlage_eigen_rekenpunten_2020.gml"
+                file_part.setHeader(QNetworkRequest.ContentDispositionHeader,
+                    QVariant(f'form-data; name="filePart"; filename="{QFileInfo(file).fileName()}"'))
+                file.open(QIODevice.ReadOnly)
+                file_part.setBodyDevice(file)
+                file.setParent(multi_part) # we cannot delete the file now, so delete it with the multi_part
+                multi_part.append(file_part)
+
+                reply = manager.post(request, multi_part)
+                multi_part.setParent(reply)
+                return(reply)
 
 
 
@@ -352,7 +349,7 @@ class AeriusConnection():
         print(file_parts)
 
         #response = self.run_request(end_point, 'POST')
-        response = self.run_multi_part_request(end_point, text_parts=text_parts, file_parts=file_parts)
+        response = self.run_multi_part_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
         print(response)
         resp = response
         if response is not None:
