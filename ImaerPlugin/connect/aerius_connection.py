@@ -1,10 +1,15 @@
 import json
 import urllib.parse
+import time
 
 import requests
 #from qgis.PyQt.QtCore import
 
-from qgis.core import QgsNetworkAccessManager
+from qgis.core import (
+    Qgis,
+    QgsNetworkAccessManager,
+    QgsBlockingNetworkRequest
+)
 
 from .network import NetworkAccessManager, RequestsException
 
@@ -58,6 +63,7 @@ class AeriusConnection():
             #'99': 'https://connect.aerius.nl/api2020-prerelease',
             #'7': 'https://natuur-dev.aerius.nl/api', # imaer 4
             '7': 'https://connect-masterclass.aerius.nl/api', # imaer 3
+            #'7': 'http://localhost:5000', # imaer 3
         }
         self.base_url = url_lookup[self.version]
 
@@ -75,7 +81,7 @@ class AeriusConnection():
         return True
 
 
-    def run_multi_part_request(self, api_function, method, text_parts=[], file_parts=[], with_api_key=True):
+    def run_multi_part_request(self, api_function, method, text_parts=[], file_parts=[], with_api_key=True, blocking=True):
         print('run_multi_part_request ------------------------------------------------')
 
         manager = QgsNetworkAccessManager.instance()
@@ -129,6 +135,42 @@ class AeriusConnection():
                 reply = manager.post(request, multi_part)
                 multi_part.setParent(reply)
                 return(reply)
+
+        if method == 'GET':
+            request.setRawHeader(b'Content-Type', b'application/json')
+
+            qgis_request = QgsBlockingNetworkRequest()
+
+            err = qgis_request.get(request, True)
+            #print(err)
+
+            if err > 0:
+                #TODO: return error code or None or something...
+                return None
+
+            reply = qgis_request.reply()
+            return reply.content()
+
+
+        if method == 'DELETE':
+            request.setRawHeader(b'Content-Type', b'application/json')
+
+            #print(Qgis.QGIS_VERSION_INT)
+            if Qgis.QGIS_VERSION_INT < 32000:
+                # version 3.18
+                    reply = manager.deleteResource(request)
+                    print(reply)
+            else:
+                qgis_request = QgsBlockingNetworkRequest()
+                err = qgis_request.deleteResource(request)
+                print(err)
+
+                if err > 0:
+                    #TODO: return error code or None or something...
+                    return None
+
+                reply = qgis_request.reply()
+                return reply.content()
 
 
 
@@ -320,17 +362,23 @@ class AeriusConnection():
 
 
     def get_receptor_sets(self):
-        print('get_receptor_set')
+        'Returns a dictionary of receptor sets, or None in case of network errors'
         end_points = {
             '7': 'receptorSets'
         }
         end_point = end_points[self.version]
         data = {}
 
-        response = self.run_request(end_point, 'GET', data)
-        if response is not None:
-            print(f'gelukt! {response}')
-        return response
+        #response = self.run_request(end_point, 'GET', data)
+        response = self.run_multi_part_request(end_point, 'GET')
+
+        if response is None:
+            return
+
+        print(f'gelukt! {response}')
+        self.resp = response
+        result = json.loads(bytes(response))
+        return result
 
 
     def post_receptor_set(self, gml_fn, name, description=''):
@@ -361,12 +409,10 @@ class AeriusConnection():
 
 
     def delete_receptor_set(self, name):
-        print('delete_receptor_set')
-        api_function = f'receptorSet/{name}'
-        data = {}
-        data['apiKey'] = self.api_key
+        print('delete_receptor_sets')
+        api_function = f'receptorSets/{name}'
 
-        response = self.run_request(api_function, 'DELETE', data)
+        response = self.run_multi_part_request(api_function, 'DELETE')
         if response is not None:
             print(f'gelukt! {response}')
 

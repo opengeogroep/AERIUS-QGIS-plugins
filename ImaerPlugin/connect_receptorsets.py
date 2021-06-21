@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import json
+import time
 
 from qgis.PyQt.QtWidgets import (
     QDialog,
@@ -69,17 +70,20 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
 
     def get_receptor_sets(self):
-        result = self.plugin.aerius_connection.get_receptor_sets()
-        self.show_feedback(result)
-
+        print('get_receptor_sets()')
         self.table_receptorsets.clearContents()
         while self.table_receptorsets.rowCount() > 0:
             self.table_receptorsets.removeRow(0)
 
-        if result is None:
+        result = self.plugin.aerius_connection.get_receptor_sets()
+        if result is None: # TODO check for valid response somehow and show feedback
             return
 
-        for receptor_set in result:
+        receptor_sets_dict = result
+
+        self.show_feedback(receptor_sets_dict)
+
+        for receptor_set in receptor_sets_dict:
             row_num = self.table_receptorsets.rowCount()
             self.table_receptorsets.insertRow(row_num)
             if 'name' in receptor_set:

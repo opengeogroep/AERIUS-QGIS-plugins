@@ -146,7 +146,9 @@ class ImaerPlugin:
         self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
         self.relate_calc_results_dlg = RelateCalcResultsDialog(self, parent=self.iface.mainWindow())
         self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
+        print("connect_receptorsets_dlg maken")
         self.connect_receptorsets_dlg = ConnectReceptorSetsDialog(self, parent=self.iface.mainWindow())
+        print("connect_receptorsets_dlg klaar")
         self.connect_calc_dlg = ConnectCalcDialog(self, parent=self.iface.mainWindow())
 
         # Widget update logic
