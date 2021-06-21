@@ -8,7 +8,7 @@ import requests
 from qgis.core import (
     Qgis,
     QgsNetworkAccessManager,
-    QgsBlockingNetworkRequest
+    QgsBlockingNetworkRequest,
 )
 
 from .network import NetworkAccessManager, RequestsException
@@ -18,7 +18,8 @@ from qgis.PyQt.QtCore import (
     QFileInfo,
     QIODevice,
     QVariant,
-    QUrl
+    QUrl,
+    QEventLoop
 )
 from qgis.PyQt.QtNetwork import (
     QHttpMultiPart,
@@ -93,6 +94,7 @@ class AeriusConnection():
         url = QUrl(url)
         print(url)
         request = QNetworkRequest(url)
+        #request = QgsBlockingNetworkRequest(url)
         print(request)
         #if with_api_key:
         if with_api_key:
@@ -134,7 +136,14 @@ class AeriusConnection():
 
                 reply = manager.post(request, multi_part)
                 multi_part.setParent(reply)
+
+                if blocking:
+                    loop = QEventLoop()
+                    reply.finished.connect(loop.quit)
+                    loop.exec_()
+
                 return(reply)
+
 
         if method == 'GET':
             request.setRawHeader(b'Content-Type', b'application/json')
@@ -281,26 +290,22 @@ class AeriusConnection():
         return result
 
 
-    def validate(self, gml_fn):
-        print('validate')
-        api_function = 'validate'
-        data = {}
-        data['strict'] = False
-        data['validateAsPriorityProject'] = False
+    def post_validate(self, gml_fn):
+        print('post_validate()')
+        end_points = {
+            '7': 'utility/validate'
+        }
+        end_point = end_points[self.version]
 
-        data_object = {}
-        data_object['contentType'] = 'TEXT'
-        data_object['dataType'] = 'GML'
-        with open(gml_fn) as gml_file:
-            data_object['data'] = gml_file.read()
-        #data_object['substance']
+        file_parts = []
+        file_parts.append(gml_fn)
+        print(file_parts)
 
-        data['dataObject'] = data_object
-        #print(data)
-
-        response = self.run_request(api_function, 'POST', data)
+        response = self.run_multi_part_request(end_point, 'POST', file_parts=file_parts)
+        print(response)
         if response is not None:
             print(f'gelukt! {response}')
+
         return response
 
 
@@ -330,11 +335,9 @@ class AeriusConnection():
             {'header': 'files', 'body': {'fileName': base_name, 'situation': 'REFERENCE'}}
         ]
 
-
         file_parts = []
         file_parts.append(gml_fn)
         print(file_parts)
-
 
         response = self.run_multi_part_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
         print(response)

@@ -28,9 +28,9 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
     def init_gui(self):
         self.button_gml_input_browse.clicked.connect(self.browse_gml_file)
-        self.button_jobs.clicked.connect(self.status_jobs)
+        self.button_jobs.clicked.connect(self.get_jobs)
         self.button_validate.clicked.connect(self.validate)
-        self.button_calculate.clicked.connect(self.post_calculate)
+        self.button_calculate.clicked.connect(self.calculate)
 
         self.edit_gml_input.textChanged.connect(self.update_widgets)
         self.combo_calc_type.currentTextChanged.connect(self.update_widgets)
@@ -40,7 +40,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
     def __del__(self):
         self.button_gml_input_browse.clicked.disconnect(self.browse_gml_file)
-        self.button_jobs.clicked.disconnect(self.status_jobs)
+        self.button_jobs.clicked.disconnect(self.get_jobs)
         self.button_validate.clicked.disconnect(self.validate)
         self.button_calculate.clicked.disconnect(self.calculate)
 
@@ -61,7 +61,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
     def validate(self):
         gml_fn = self.edit_gml_input.text()
-        result = self.plugin.aerius_connection.validate(gml_fn)
+        result = self.plugin.aerius_connection.post_validate(gml_fn)
         '''
         if result['successful']:
             print('GML file is valid')
@@ -70,10 +70,11 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             for line in result['errors']:
                 print('  {}'.format(line['message']))
         '''
-        self.show_feedback(result)
+        self.plugin.resp = result
+        self.show_feedback(result.readAll())
 
 
-    def post_calculate(self):
+    def calculate(self):
         gml_fn = self.edit_gml_input.text()
 
         user_options = {}
@@ -92,8 +93,8 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.show_feedback(result)
 
 
-    def status_jobs(self):
-        result = self.plugin.aerius_connection.status_jobs()
+    def get_jobs(self):
+        result = self.plugin.aerius_connection.get_jobs()
         self.show_feedback(result)
 
 
