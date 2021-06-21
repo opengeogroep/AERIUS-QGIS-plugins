@@ -9,15 +9,15 @@ from qgis.PyQt import uic
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'connect_calc_dlg.ui'))
+    os.path.dirname(__file__), 'connect_jobs_dlg.ui'))
 
 
 
 
-class ConnectCalcDialog(QDialog, FORM_CLASS):
+class ConnectJobsDialog(QDialog, FORM_CLASS):
 
     def __init__(self, plugin, parent=None):
-        super(ConnectCalcDialog, self).__init__(parent)
+        super(ConnectJobsDialog, self).__init__(parent)
 
         self.setupUi(self)
         self.plugin = plugin
@@ -30,7 +30,7 @@ class ConnectCalcDialog(QDialog, FORM_CLASS):
         self.button_gml_input_browse.clicked.connect(self.browse_gml_file)
         self.button_jobs.clicked.connect(self.status_jobs)
         self.button_validate.clicked.connect(self.validate)
-        self.button_calculate.clicked.connect(self.calculate)
+        self.button_calculate.clicked.connect(self.post_calculate)
 
         self.edit_gml_input.textChanged.connect(self.update_widgets)
         self.combo_calc_type.currentTextChanged.connect(self.update_widgets)
@@ -73,19 +73,22 @@ class ConnectCalcDialog(QDialog, FORM_CLASS):
         self.show_feedback(result)
 
 
-    def calculate(self):
+    def post_calculate(self):
         gml_fn = self.edit_gml_input.text()
 
         user_options = {}
 
-        user_options['calculationType'] = self.combo_calc_type.currentText()
-
-        if user_options['calculationType'] == 'CUSTOM_POINTS':
+        user_options['name'] = 'test calculatie' # optional name
+        user_options['calculationYear'] = 2020
+        user_options['outputType'] = 'GML' # GML or PDF
+        user_options['calculationPointsType'] = self.combo_calc_type.currentText()
+        if user_options['calculationPointsType'] == 'CUSTOM_POINTS':
             user_options['receptorSetName'] = self.combo_receptor_set.currentData()
 
         #print(user_options)
 
-        result = self.plugin.aerius_connection.calculate(gml_fn, user_options)
+        result = self.plugin.aerius_connection.post_calculate(gml_fn, user_options)
+        print(result)
         self.show_feedback(result)
 
 
@@ -101,8 +104,8 @@ class ConnectCalcDialog(QDialog, FORM_CLASS):
             self.button_calculate.setEnabled(False)
         else:
             self.button_validate.setEnabled(True)
-            if self.combo_calc_type.currentText() == 'NBWET':
-                print('nbwet')
+            if self.combo_calc_type.currentText() == 'WNB_RECEPTORS':
+                print('wnb_receptors')
                 self.combo_receptor_set.clear()
                 self.button_calculate.setEnabled(True)
                 self.label_receptor_set.setEnabled(False)

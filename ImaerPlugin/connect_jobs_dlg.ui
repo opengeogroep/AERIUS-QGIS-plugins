@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>839</width>
-    <height>390</height>
+    <width>1386</width>
+    <height>340</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <widget class="QComboBox" name="combo_calc_type">
        <item>
         <property name="text">
-         <string>NBWET</string>
+         <string>WNB_RECEPTORS</string>
         </property>
        </item>
        <item>
@@ -40,7 +40,7 @@
      <item row="0" column="1">
       <widget class="QLineEdit" name="edit_gml_input">
        <property name="text">
-        <string>/home/raymond/calcinput_20200928_165149.gml</string>
+        <string>/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/AERIUS_gml_20200820095601_v31_input/AERIUS_20200820095601_0_Situatie1.gml</string>
        </property>
       </widget>
      </item>

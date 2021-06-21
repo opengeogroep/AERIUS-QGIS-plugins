@@ -157,9 +157,9 @@ class AeriusConnection():
 
             #print(Qgis.QGIS_VERSION_INT)
             if Qgis.QGIS_VERSION_INT < 32000:
-                # version 3.18
-                    reply = manager.deleteResource(request)
-                    print(reply)
+                # version 3.18 or lower
+                reply = manager.deleteResource(request)
+                print(reply)
             else:
                 qgis_request = QgsBlockingNetworkRequest()
                 err = qgis_request.deleteResource(request)
@@ -266,19 +266,19 @@ class AeriusConnection():
             print(f'gelukt! {response}')
 
 
-    def status_jobs(self):
+    def get_jobs(self):
         end_points = {
-            '6': 'status/jobs',
             '7': 'jobs'
         }
         end_point = end_points[self.version]
-        data = {}
-        data['apiKey'] = self.api_key
 
-        response = self.run_request(end_point, 'GET', data)
-        if response is not None:
-            print(f'gelukt! {response}')
-        return response
+        response = self.run_multi_part_request(end_point, 'GET')
+        if response is None:
+            return
+
+        print(f'gelukt! {response}')
+        result = json.loads(bytes(response))
+        return result
 
 
     def validate(self, gml_fn):
@@ -304,59 +304,45 @@ class AeriusConnection():
         return response
 
 
-    def calculate(self, gml_fn, user_options={}):
-        print('calculate')
-        api_function = 'calculate'
+    def post_calculate(self, gml_fn, user_options={}):
+        print('post_calculate()')
 
-        data = {}
-        data['apiKey'] = self.api_key
+        '''Posts a new receptor set'''
+        print('receptor_set')
+        end_points = {
+            '7': 'wnb/calculate'
+        }
+        end_point = end_points[self.version]
 
         options = {}
-        options['calculationType'] = 'NBWET'
-        options['year'] = 2020
-        options['substances'] = ['NH3', 'NOX']
-        #options['name'] = 'situatie1'
-        #options['receptorSetName'] = 'vera'
-        #options['stacking'] = True
-        #options['aggregate'] = False
-        #options['validate'] = True
-        #options['range'] = 0
-        #options['tempProjectYears'] = 0
-        #options['permitCalculationRadiusType'] = 'NONE'
-        #options['roadOPS'] = 'DEFAULT'
-        #options['meteoYear'] = '2013'
-        #options['sendEmail'] = True
-        #options['useReceptorHeight'] = False
-
+        user_options['outputType'] = 'GML' # GML or PDF
+        user_options['sendEmail'] = False
+        # update default options with user options
         options.update(user_options)
 
-        output_options = {}
-        output_options['resultTypes'] = ['DEPOSITION']
-        output_options['sectorOutput'] = False
-        output_options['outputType'] = 'GML'
-        options['outputOptions'] = output_options
+        print(options)
 
-        data['options'] = options
+        base_name = QFileInfo(gml_fn).fileName()
+        print(base_name)
 
-        calc_data_objects = []
+        text_parts = [
+            {'header': 'options', 'body': options},
+            {'header': 'files', 'body': {'fileName': base_name, 'situation': 'REFERENCE'}}
+        ]
 
-        calc_data_object = {}
-        calc_data_object['contentType'] = 'TEXT'
-        calc_data_object['dataType'] = 'GML'
-        with open(gml_fn) as gml_file:
-            calc_data_object['data'] = gml_file.read()
-        #calc_data_object['substance'] = 'NH3'
-        #calc_data_object['expectRcpHeight'] = False
 
-        calc_data_objects.append(calc_data_object)
+        file_parts = []
+        file_parts.append(gml_fn)
+        print(file_parts)
 
-        data['calculateDataObjects'] = calc_data_objects
 
-        data['strict'] = False
-
-        response = self.run_request(api_function, 'POST', data)
+        response = self.run_multi_part_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
+        print(response)
+        resp = response
         if response is not None:
             print(f'gelukt! {response}')
+
+        self.last_response = response
 
         return response
 

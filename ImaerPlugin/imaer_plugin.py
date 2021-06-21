@@ -40,7 +40,7 @@ from ImaerPlugin.tasks import (
 from ImaerPlugin.generate_calc_input import GenerateCalcInputDialog
 from ImaerPlugin.configuration import ConfigurationDialog
 from ImaerPlugin.connect_receptorsets import ConnectReceptorSetsDialog
-from ImaerPlugin.connect_calc import ConnectCalcDialog
+from ImaerPlugin.connect_jobs import ConnectJobsDialog
 from ImaerPlugin.relate_calc_results import RelateCalcResultsDialog
 
 from ImaerPlugin.connect import (
@@ -107,10 +107,10 @@ class ImaerPlugin:
                 'tool_tip': 'Receptor Sets',
                 'triggered_slot': self.open_connect_receptorsets
             },{
-                'name': 'connect_calc',
-                'icon': 'icon_connect_calc.svg',
-                'tool_tip': 'Calculations',
-                'triggered_slot': self.open_connect_calc
+                'name': 'connect_jobs',
+                'icon': 'icon_connect_jobs.svg',
+                'tool_tip': 'Jobs',
+                'triggered_slot': self.open_connect_jobs
             },{
                 'name': 'configuration',
                 'icon': 'icon_configuration.svg',
@@ -146,10 +146,8 @@ class ImaerPlugin:
         self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
         self.relate_calc_results_dlg = RelateCalcResultsDialog(self, parent=self.iface.mainWindow())
         self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
-        print("connect_receptorsets_dlg maken")
         self.connect_receptorsets_dlg = ConnectReceptorSetsDialog(self, parent=self.iface.mainWindow())
-        print("connect_receptorsets_dlg klaar")
-        self.connect_calc_dlg = ConnectCalcDialog(self, parent=self.iface.mainWindow())
+        self.connect_jobs_dlg = ConnectJobsDialog(self, parent=self.iface.mainWindow())
 
         # Widget update logic
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
@@ -353,7 +351,7 @@ class ImaerPlugin:
         api_key = self.settings.value('imaer_plugin/connect_key', defaultValue='')
         has_api_key = len(api_key) == 32
         self.actions['connect_receptorsets'].setEnabled(has_api_key)
-        self.actions['connect_calc'].setEnabled(has_api_key)
+        self.actions['connect_jobs'].setEnabled(has_api_key)
 
 
     def open_online_documentation(self):
@@ -378,9 +376,9 @@ class ImaerPlugin:
         print(result)
 
 
-    def open_connect_calc(self):
-        self.log('open_connect_calc()')
-        result = self.connect_calc_dlg.exec_()
+    def open_connect_jobs(self):
+        self.log('open_connect_jobs()')
+        result = self.connect_jobs_dlg.exec_()
         #print(result)
 
 
