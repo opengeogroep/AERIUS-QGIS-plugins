@@ -350,8 +350,10 @@ class ImaerPlugin:
 
 
     def update_connect_widgets(self):
-        api_key = self.settings.value('variables/imaer_plugin_connect_key', defaultValue='')
-        self.actions['connect_calc'].setEnabled(not api_key == '')
+        api_key = self.settings.value('imaer_plugin/connect_key', defaultValue='')
+        has_api_key = len(api_key) == 32
+        self.actions['connect_receptorsets'].setEnabled(has_api_key)
+        self.actions['connect_calc'].setEnabled(has_api_key)
 
 
     def open_online_documentation(self):
