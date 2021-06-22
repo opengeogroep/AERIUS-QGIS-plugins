@@ -133,7 +133,7 @@ class ImaerPlugin:
              self.toolbar.setStyleSheet("QToolBar { background-color: rgba(200, 180, 200, 255); }")
 
         for action_config in self.action_configuration:
-            icon = QIcon(os.path.join(self.plugin_dir, action_config['icon']))
+            icon = QIcon(os.path.join(self.plugin_dir, 'img', action_config['icon']))
             action = QAction(icon, action_config['tool_tip'], self.iface.mainWindow())
             action.triggered.connect(action_config['triggered_slot'])
             self.toolbar.addAction(action)
