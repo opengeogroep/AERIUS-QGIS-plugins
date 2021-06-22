@@ -405,6 +405,10 @@ class ImaerPlugin:
             if layer1 is not None and layer2 is not None:
                 self.relate_calc_results_dlg.calculate_sum([layer1, layer2])
 
+        if calc_type == 'maximum':
+            if layer1 is not None and layer2 is not None:
+                self.relate_calc_results_dlg.calculate_maximum([layer1, layer2])
+
 
     def open_add_open_data(self):
         # TODO Move this to a QgsTask when specs are clear

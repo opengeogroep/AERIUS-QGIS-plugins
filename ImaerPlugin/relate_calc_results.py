@@ -110,13 +110,18 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         feat = QgsFeature()
         geometry = self.geometry_cache[receptor_id]
         feat.setGeometry(geometry)
+
         attributes = [receptor_id]
         dep_total = 0
-        for field_name in dep_dict:
-            v = dep_dict[field_name]
-            dep_total += v
-            if max_decimals is not None:
-                v = round(v, max_decimals)
+        for field_name in self.dep_field_names:
+            if field_name in dep_dict:
+                v = dep_dict[field_name]
+                if v is not None:
+                    dep_total += v
+                    if max_decimals is not None:
+                        v = round(v, max_decimals)
+            else:
+                v = None
             attributes.append(v)
 
         if self.checkBox_add_totals.isChecked():
@@ -137,6 +142,16 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
 
     def create_receptor_dictionary(self, layer):
+        '''
+        Returns a dictionary with receptor_id as key and a dictionary with
+        deposition_fields and values. Like this:
+        {288: {'dep_NH3': 0.0, 'dep_NOX': 0.02}, 816: {'dep_NH3': None, 'dep_NOX': 0.0}, ... }
+
+        Also adds the feature geometry in the geometry_cache dictionary.
+
+        Returns None if not all deposition fields and an "fid" field exist,
+        which will abort the calculation!
+        '''
         layer_field_names = [fld.name() for fld in layer.fields()]
         for field_name in ['fid'] + self.dep_field_names:
             if field_name not in layer_field_names:
@@ -157,14 +172,16 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         return result
 
 
-    def __get_receptor_value(self, receptor_dict, receptor_id, field_name):
+    def __get_receptor_value(self, receptor_dict, receptor_id, field_name, no_data=None):
+        '''Returns the value for the field_name if present, or otherwise the no_data value.'''
         if receptor_id not in receptor_dict:
-            return 0
-        if field_name in receptor_dict[receptor_id]:
-            value = receptor_dict[receptor_id][field_name]
-        if value is None:
-            return 0
-        return value
+            return no_data
+        if field_name not in receptor_dict[receptor_id]:
+            return no_data
+        v = receptor_dict[receptor_id][field_name]
+        if v is not None:
+                return v
+        return no_data
 
 
     def __calc_dict_difference(self, dep_dict_layer_1, dep_dict_layer_2):
@@ -172,8 +189,8 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         for receptor_id in self.geometry_cache:
             dep_dict = {}
             for dep_field_name in self.dep_field_names:
-                v1 = self.__get_receptor_value(dep_dict_layer_1, receptor_id, dep_field_name)
-                v2 = self.__get_receptor_value(dep_dict_layer_2, receptor_id, dep_field_name)
+                v1 = self.__get_receptor_value(dep_dict_layer_1, receptor_id, dep_field_name, no_data=0)
+                v2 = self.__get_receptor_value(dep_dict_layer_2, receptor_id, dep_field_name, no_data=0)
                 dep_dict[dep_field_name] = v1 - v2
             result[receptor_id] = dep_dict
         return result
@@ -207,7 +224,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
             out_dep_dict = {}
             for in_dep_dict in in_dep_dicts:
                 for dep_field_name in self.dep_field_names:
-                    v = self.__get_receptor_value(in_dep_dict, receptor_id, dep_field_name)
+                    v = self.__get_receptor_value(in_dep_dict, receptor_id, dep_field_name, no_data=0)
                     if dep_field_name in out_dep_dict:
                         out_dep_dict[dep_field_name] += v
                     else:
@@ -230,6 +247,43 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
         qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
         calc_result_dict = self.__calc_dict_sum(dep_dicts)
+        self.create_result_features(calc_result_dict, qml_file_name)
+
+        self.geometry_cache = {}
+
+
+    def __calc_dict_maximum(self, in_dep_dicts):
+        result = {}
+        for receptor_id in self.geometry_cache:
+            out_dep_dict = {}
+            for in_dep_dict in in_dep_dicts:
+                for dep_field_name in self.dep_field_names:
+                    v = self.__get_receptor_value(in_dep_dict, receptor_id, dep_field_name)
+                    if v is None:
+                        continue
+                    if dep_field_name in out_dep_dict:
+                        out_dep_dict[dep_field_name] = max(out_dep_dict[dep_field_name], v)
+                    else:
+                        out_dep_dict[dep_field_name] = v
+            result[receptor_id] = out_dep_dict
+        #print(result)
+        return result
+
+
+    def calculate_maximum(self, layers):
+        self.geometry_cache = {}
+
+        dep_dicts = []
+        for layer in layers:
+            dep_dict_layer = self.create_receptor_dictionary(layer)
+            if dep_dict_layer is None:
+                layer_name = layer.name()
+                self.show_error(f'"{layer_name}" is not a valid deposition layer.')
+                return
+            dep_dicts.append(dep_dict_layer)
+
+        qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
+        calc_result_dict = self.__calc_dict_maximum(dep_dicts)
         self.create_result_features(calc_result_dict, qml_file_name)
 
         self.geometry_cache = {}

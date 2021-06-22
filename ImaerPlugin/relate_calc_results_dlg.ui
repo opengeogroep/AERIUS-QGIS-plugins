@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>551</width>
-    <height>228</height>
+    <width>588</width>
+    <height>214</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,12 +46,17 @@
            <string>sum</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>maximum</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_layer_name">
          <property name="text">
-          <string>Layer name</string>
+          <string>New layer name</string>
          </property>
         </widget>
        </item>
