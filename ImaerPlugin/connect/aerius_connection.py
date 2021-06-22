@@ -47,8 +47,6 @@ class AeriusConnection():
         self.api_key = api_key
 
 
-
-
     def __str__(self):
         return 'AeriusConnection[v{}, {}, {}]'.format(
             self.version,
@@ -120,15 +118,16 @@ class AeriusConnection():
 
             for fp in file_parts:
                 print(fp)
-                file = QFile(fp)
+                file = QFile(fp['file_name'])
                 print(QFileInfo(file).fileName())  # <= om de file name te achterhalen en te gebruiken in de dispostion header
 
                 file_part = QHttpPart()
-                file_part.setHeader(QNetworkRequest.ContentTypeHeader, QVariant("application/gml+xml"))
+                file_part.setHeader(QNetworkRequest.ContentTypeHeader, QVariant(fp['file_type']))
                 # zo ziet het eruit in curl in de echo server:
                 #Content-Disposition: form-data; name="filePart"; filename="AERIUS_bijlage_eigen_rekenpunten_2020.gml"
+                name = fp['name']
                 file_part.setHeader(QNetworkRequest.ContentDispositionHeader,
-                    QVariant(f'form-data; name="filePart"; filename="{QFileInfo(file).fileName()}"'))
+                    QVariant(f'form-data; name="{name}"; filename="{QFileInfo(file).fileName()}"'))
                 file.open(QIODevice.ReadOnly)
                 file_part.setBodyDevice(file)
                 file.setParent(multi_part) # we cannot delete the file now, so delete it with the multi_part
@@ -298,7 +297,7 @@ class AeriusConnection():
         end_point = end_points[self.version]
 
         file_parts = []
-        file_parts.append(gml_fn)
+        file_parts.append({'name': 'filePart', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
         print(file_parts)
 
         response = self.run_multi_part_request(end_point, 'POST', file_parts=file_parts)
@@ -332,11 +331,11 @@ class AeriusConnection():
 
         text_parts = [
             {'header': 'options', 'body': options},
-            {'header': 'files', 'body': {'fileName': base_name, 'situation': 'REFERENCE'}}
+            {'header': 'files', 'body': [{'fileName': base_name, 'situation': 'REFERENCE'}]}
         ]
 
         file_parts = []
-        file_parts.append(gml_fn)
+        file_parts.append({'name': 'fileParts', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
         print(file_parts)
 
         response = self.run_multi_part_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
@@ -382,7 +381,7 @@ class AeriusConnection():
             {'header': 'receptorSet', 'body': {'name': name, 'description': description,  'expectRcpHeight': False}},
         ]
         file_parts = []
-        file_parts.append(gml_fn)
+        file_parts.append({'name': 'filePart', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
         print(file_parts)
 
         #response = self.run_request(end_point, 'POST')
