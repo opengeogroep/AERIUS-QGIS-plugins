@@ -3,7 +3,8 @@ import os
 import json
 
 from qgis.PyQt.QtWidgets import (
-    QDialog
+    QDialog,
+    QTableWidgetItem
 )
 from qgis.PyQt import uic
 
@@ -94,8 +95,36 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
 
     def get_jobs(self):
+        print('get_jobs()')
+        self.table_jobs.clearContents()
+        while self.table_jobs.rowCount() > 0:
+            self.table_jobs.removeRow(0)
+
         result = self.plugin.aerius_connection.get_jobs()
+
+        jobs_dict = result
+
         self.show_feedback(result)
+
+        cols = {0: 'name', 1: 'jobKey', 2: 'startDateTime', 3: 'status', 4: 'hectareCalculated'}
+        info_col = len(cols) # Last column
+
+        for job in jobs_dict:
+            #print(job)
+            row_num = self.table_jobs.rowCount()
+            self.table_jobs.insertRow(row_num)
+            for k,v in cols.items():
+                if v in job:
+                    self.table_jobs.setItem(row_num, k, QTableWidgetItem(str(job[v])))
+            if 'status' in job:
+                info_text = None
+
+                if job['status'] == 'ERROR' and 'errorMessage' in job:
+                    info_text = job['errorMessage']
+                if job['status'] == 'COMPLETED' and 'resultUrl' in job:
+                    info_text = job['resultUrl']
+                if info_text is not None:
+                    self.table_jobs.setItem(row_num, info_col, QTableWidgetItem(info_text))
 
 
     def update_widgets(self):

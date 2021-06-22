@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1386</width>
-    <height>340</height>
+    <height>616</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,37 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_receptor_set">
+       <property name="text">
+        <string>Receptor set</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QComboBox" name="combo_receptor_set"/>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="edit_gml_input">
+       <property name="text">
+        <string>/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/AERIUS_gml_20200820095601_v31_input/AERIUS_20200820095601_0_Situatie1.gml</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_gml_input">
+       <property name="text">
+        <string>Input GML file</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_calc_type">
+       <property name="text">
+        <string>Calculation Type</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="1">
       <widget class="QComboBox" name="combo_calc_type">
        <item>
@@ -28,20 +59,6 @@
          <string>CUSTOM_POINTS</string>
         </property>
        </item>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_gml_input">
-       <property name="text">
-        <string>Input GML file</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="edit_gml_input">
-       <property name="text">
-        <string>/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/AERIUS_gml_20200820095601_v31_input/AERIUS_20200820095601_0_Situatie1.gml</string>
-       </property>
       </widget>
      </item>
      <item row="0" column="2">
@@ -57,22 +74,12 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_calc_type">
+     <item row="0" column="3">
+      <widget class="QPushButton" name="button_validate">
        <property name="text">
-        <string>Calculation Type</string>
+        <string>Validate</string>
        </property>
       </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_receptor_set">
-       <property name="text">
-        <string>Receptor set</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QComboBox" name="combo_receptor_set"/>
      </item>
     </layout>
    </item>
@@ -92,6 +99,60 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="button_calculate">
+       <property name="text">
+        <string>Calculate</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="table_jobs">
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>200</number>
+     </attribute>
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>true</bool>
+     </attribute>
+     <column>
+      <property name="text">
+       <string>name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>jobKey</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>startDateTime</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>status</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>hectareCalculated</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>info</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
       <widget class="QPushButton" name="button_jobs">
        <property name="maximumSize">
         <size>
@@ -105,23 +166,32 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="button_validate">
-       <property name="text">
-        <string>Validate</string>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="button_calculate">
-       <property name="text">
-        <string>Calculate</string>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
        </property>
-      </widget>
+      </spacer>
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QTextEdit" name="text_feedback"/>
+    <widget class="QTextEdit" name="text_feedback">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

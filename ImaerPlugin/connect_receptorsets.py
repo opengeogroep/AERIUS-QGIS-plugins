@@ -92,8 +92,6 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
                 self.table_receptorsets.setItem(row_num, 1, QTableWidgetItem(receptor_set['description']))
 
 
-
-
     def post_receptor_set(self):
         gml_fn = self.edit_gml_input.text()
         name = self.edit_name.text()
