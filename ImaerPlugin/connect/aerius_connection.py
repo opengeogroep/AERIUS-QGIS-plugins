@@ -181,75 +181,6 @@ class AeriusConnection():
                 return reply.content()
 
 
-
-    def run_request(self, api_function, method, data=None, files=None, with_version=True, with_api_key=True):
-        print('run_request')
-        headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'}
-        if with_api_key:
-            headers['api-key'] = self.api_key
-
-        if with_version:
-            url = f'{self.base_url}/v{self.version}/{api_function}'
-        else:
-            url = f'{self.base_url}/{api_function}'
-
-        print(url)
-
-        #return None # just jump out
-
-        nam = NetworkAccessManager()
-
-        if method == 'POST':
-            if data is not None:
-                body = json.dumps(data)
-                #print(body)
-
-                r = requests.post(url, files=files)
-                return r.text
-            try:
-                (response, content) = nam.request(url, method='POST', headers=headers, files=files)#, body=body)
-            except RequestsException as e:
-                #print(f'exception: {e}')
-                return
-
-        elif method == 'GET':
-            if data is not None:
-                #print(data)
-                params = urllib.parse.urlencode(data)
-                #print(params)
-                if self.version == '6':
-                    url += f'?{params}'
-                print(url)
-            try:
-                (response, content) = nam.request(url, method='GET', headers=headers)
-            except RequestsException as e:
-                print(f'exception: {e}')
-                return
-
-        elif method == 'DELETE':
-            if data is not None:
-                print(data)
-                params = urllib.parse.urlencode(data)
-                print(params)
-                url += f'?{params}'
-                print(url)
-            try:
-                (response, content) = nam.request(url, method='DELETE', headers=headers)
-            except RequestsException as e:
-                print(f'exception: {e}')
-                return
-
-        print(response)
-        print(response.status)
-        print(content)
-        if not response.status == 200:
-            return
-        if len(content) > 0:
-            return json.loads(content)
-
-
     def server_is_up(self):
         end_points = {
             '6': 'actuator/health', # werkt niet
@@ -284,7 +215,7 @@ class AeriusConnection():
         if response is None:
             return
 
-        print(f'gelukt! {response}')
+        #print(f'gelukt! {response}')
         result = json.loads(bytes(response))
         return result
 
@@ -309,18 +240,17 @@ class AeriusConnection():
 
 
     def post_calculate(self, gml_fn, user_options={}):
+        '''Start a new calculation'''
         print('post_calculate()')
 
-        '''Posts a new receptor set'''
-        print('receptor_set')
         end_points = {
             '7': 'wnb/calculate'
         }
         end_point = end_points[self.version]
 
         options = {}
-        user_options['outputType'] = 'GML' # GML or PDF
-        user_options['sendEmail'] = False
+        options['outputType'] = 'GML' # GML or PDF
+        options['sendEmail'] = False
         # update default options with user options
         options.update(user_options)
 
@@ -339,12 +269,9 @@ class AeriusConnection():
         print(file_parts)
 
         response = self.run_multi_part_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
-        print(response)
-        resp = response
         if response is not None:
-            print(f'gelukt! {response}')
-
-        self.last_response = response
+            pass
+            #print(f'gelukt! {response}')
 
         return response
 

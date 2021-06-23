@@ -80,12 +80,13 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
         user_options = {}
 
-        user_options['name'] = 'test calculatie' # optional name
-        user_options['calculationYear'] = 2020
+        user_options['name'] = self.edit_name.text()
+        user_options['calculationYear'] = int(self.combo_year.currentText())
         user_options['outputType'] = 'GML' # GML or PDF
         user_options['calculationPointsType'] = self.combo_calc_type.currentText()
         if user_options['calculationPointsType'] == 'CUSTOM_POINTS':
             user_options['receptorSetName'] = self.combo_receptor_set.currentData()
+        user_options['sendEmail'] = self.checkBox_send_email.isChecked()
 
         #print(user_options)
 

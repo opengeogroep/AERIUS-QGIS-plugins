@@ -6,32 +6,42 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1386</width>
+    <width>1258</width>
     <height>616</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Connect Calculation</string>
+   <string>Calculation Jobs</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="0">
+     <item row="5" column="0">
       <widget class="QLabel" name="label_receptor_set">
        <property name="text">
-        <string>Receptor set</string>
+        <string>Receptor Set</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="5" column="2">
       <widget class="QComboBox" name="combo_receptor_set"/>
      </item>
-     <item row="0" column="1">
+     <item row="0" column="2">
       <widget class="QLineEdit" name="edit_gml_input">
        <property name="text">
         <string>/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/AERIUS_gml_20200820095601_v31_input/AERIUS_20200820095601_0_Situatie1.gml</string>
        </property>
       </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Calculation Year</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLineEdit" name="edit_name"/>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_gml_input">
@@ -40,14 +50,14 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="label_calc_type">
        <property name="text">
         <string>Calculation Type</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="3" column="2">
       <widget class="QComboBox" name="combo_calc_type">
        <item>
         <property name="text">
@@ -61,7 +71,35 @@
        </item>
       </widget>
      </item>
-     <item row="0" column="2">
+     <item row="0" column="4">
+      <widget class="QPushButton" name="button_validate">
+       <property name="text">
+        <string>Validate</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_name">
+       <property name="text">
+        <string>Name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QComboBox" name="combo_year">
+       <item>
+        <property name="text">
+         <string>2020</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>2021</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="0" column="3">
       <widget class="QPushButton" name="button_gml_input_browse">
        <property name="maximumSize">
         <size>
@@ -74,10 +112,13 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="3">
-      <widget class="QPushButton" name="button_validate">
+     <item row="6" column="0">
+      <widget class="QCheckBox" name="checkBox_send_email">
+       <property name="toolTip">
+        <string>Send email when calculation is ready</string>
+       </property>
        <property name="text">
-        <string>Validate</string>
+        <string>Send Email</string>
        </property>
       </widget>
      </item>
