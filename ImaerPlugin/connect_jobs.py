@@ -88,8 +88,6 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             user_options['receptorSetName'] = self.combo_receptor_set.currentData()
         user_options['sendEmail'] = self.checkBox_send_email.isChecked()
 
-        #print(user_options)
-
         result = self.plugin.aerius_connection.post_calculate(gml_fn, user_options)
         print(result)
         self.show_feedback(result)
@@ -155,11 +153,9 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.combo_receptor_set.clear()
 
         result = self.plugin.aerius_connection.get_receptor_sets()
+        print(result)
 
-        if not 'receptorSets' in result:
-            return
-
-        for receptor_set in result['receptorSets']:
+        for receptor_set in result:
             name = receptor_set['name']
             #print(name)
             description = receptor_set['description']
