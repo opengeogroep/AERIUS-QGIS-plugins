@@ -183,7 +183,6 @@ class AeriusConnection():
 
     def server_is_up(self):
         end_points = {
-            '6': 'actuator/health', # werkt niet
             '7': 'actuator/health'
         }
         end_point = end_points[self.version]
@@ -195,7 +194,6 @@ class AeriusConnection():
         if not self.is_valid(test_api_key=False):
             return
         end_points = {
-            '6': 'generateAPIKey',
             '7': 'user/generateApiKey'
         }
         end_point = end_points[self.version]
@@ -220,19 +218,14 @@ class AeriusConnection():
         return result
 
 
-    def post_validate(self, gml_fn):
-        print('post_validate()')
+    def delete_job(self, job_key):
+        print('delete_job()')
         end_points = {
-            '7': 'utility/validate'
+            '7': f'jobs/{job_key}'
         }
         end_point = end_points[self.version]
 
-        file_parts = []
-        file_parts.append({'name': 'filePart', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
-        print(file_parts)
-
-        response = self.run_multi_part_request(end_point, 'POST', file_parts=file_parts)
-        print(response)
+        response = self.run_multi_part_request(end_point, 'DELETE')
         if response is not None:
             print(f'gelukt! {response}')
 
@@ -328,6 +321,25 @@ class AeriusConnection():
         api_function = f'receptorSets/{name}'
 
         response = self.run_multi_part_request(api_function, 'DELETE')
+        if response is not None:
+            print(f'gelukt! {response}')
+
+        return response
+
+
+    def post_validate(self, gml_fn):
+        print('post_validate()')
+        end_points = {
+            '7': 'utility/validate'
+        }
+        end_point = end_points[self.version]
+
+        file_parts = []
+        file_parts.append({'name': 'filePart', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
+        print(file_parts)
+
+        response = self.run_multi_part_request(end_point, 'POST', file_parts=file_parts)
+        print(response)
         if response is not None:
             print(f'gelukt! {response}')
 

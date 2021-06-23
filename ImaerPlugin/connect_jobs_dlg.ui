@@ -150,6 +150,9 @@
    </item>
    <item>
     <widget class="QTableWidget" name="table_jobs">
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
      <property name="sortingEnabled">
       <bool>true</bool>
      </property>
@@ -194,7 +197,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QPushButton" name="button_jobs">
+      <widget class="QPushButton" name="button_get_jobs">
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -203,6 +206,27 @@
        </property>
        <property name="text">
         <string>Jobs</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_cancel">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_delete">
+       <property name="text">
+        <string>Delete</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_download">
+       <property name="text">
+        <string>Download</string>
        </property>
       </widget>
      </item>

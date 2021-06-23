@@ -29,7 +29,8 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
     def init_gui(self):
         self.button_gml_input_browse.clicked.connect(self.browse_gml_file)
-        self.button_jobs.clicked.connect(self.get_jobs)
+        self.button_get_jobs.clicked.connect(self.get_jobs)
+        self.button_delete.clicked.connect(self.delete_job)
         self.button_validate.clicked.connect(self.validate)
         self.button_calculate.clicked.connect(self.calculate)
 
@@ -41,7 +42,8 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
     def __del__(self):
         self.button_gml_input_browse.clicked.disconnect(self.browse_gml_file)
-        self.button_jobs.clicked.disconnect(self.get_jobs)
+        self.button_get_jobs.clicked.disconnect(self.get_jobs)
+        self.button_delete.clicked.disconnect(self.delete_job)
         self.button_validate.clicked.disconnect(self.validate)
         self.button_calculate.clicked.disconnect(self.calculate)
 
@@ -124,6 +126,21 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
                     info_text = job['resultUrl']
                 if info_text is not None:
                     self.table_jobs.setItem(row_num, info_col, QTableWidgetItem(info_text))
+
+
+    def delete_job(self):
+        '''Sends a delete request to the server for the selected receptor set'''
+        items = self.table_jobs.selectedItems()
+        if len(items) == 0:
+            return
+
+        for item in items:
+            if item.column() == 1: # jobKey column
+                job_key = item.text()
+                result = self.plugin.aerius_connection.delete_job(job_key)
+                self.show_feedback(result)
+
+        #self.get_jobs()
 
 
     def update_widgets(self):
