@@ -17,7 +17,7 @@ from qgis.core import (
     QgsExpressionContextUtils
     )
 
-_IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX', 'NO2']
+_IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX']
 _SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1']
 
 

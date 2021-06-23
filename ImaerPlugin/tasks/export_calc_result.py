@@ -9,7 +9,7 @@ from qgis.core import (
 from .. task_timer import TaskTimer
 
 
-_IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX', 'NO2']
+_IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX']
 _SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1']
 
 tab = 'Imaer'
