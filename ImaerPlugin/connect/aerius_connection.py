@@ -33,7 +33,7 @@ from qgis.PyQt.QtNetwork import (
 class AeriusConnection():
 
     def __init__(self, version=None, api_key=None):
-        self.available_versions = ['6', '7']
+        self.available_versions = ['7']
 
         if version is None:
             version = self.available_versions[-1]
@@ -62,7 +62,7 @@ class AeriusConnection():
             #'99': 'https://connect.aerius.nl/api2020-prerelease',
             #'7': 'https://natuur-dev.aerius.nl/api', # imaer 4
             '7': 'https://connect-masterclass.aerius.nl/api', # imaer 3
-            #'7': 'http://localhost:5000', # imaer 3
+            #'7': 'http://localhost:5000', # echo server for testing
         }
         self.base_url = url_lookup[self.version]
 
@@ -87,18 +87,16 @@ class AeriusConnection():
 
         url = f'{self.base_url}/v{self.version}/{api_function}'
         #url = 'http://localhost:5000' # echo server for debugging
-
         print(url)
         url = QUrl(url)
         print(url)
+
         request = QNetworkRequest(url)
-        #request = QgsBlockingNetworkRequest(url)
         print(request)
-        #if with_api_key:
+
         if with_api_key:
             print(f'adding_api_key {self.api_key}')
             request.setRawHeader(b'api-key', self.api_key.encode('utf-8'))
-            #request.setRawHeader(b'api-key', b'8f545f15cc684368a3f38a605dfb0148')
 
         if method == 'POST':
             print(text_parts)
@@ -117,7 +115,7 @@ class AeriusConnection():
                 multi_part.append(text_part)
 
             for fp in file_parts:
-                print(fp)
+                #print(fp)
                 file = QFile(fp['file_name'])
                 print(QFileInfo(file).fileName())  # <= om de file name te achterhalen en te gebruiken in de dispostion header
 
@@ -133,15 +131,15 @@ class AeriusConnection():
                 file.setParent(multi_part) # we cannot delete the file now, so delete it with the multi_part
                 multi_part.append(file_part)
 
-                reply = manager.post(request, multi_part)
-                multi_part.setParent(reply)
+            reply = manager.post(request, multi_part)
+            multi_part.setParent(reply)
 
-                if blocking:
-                    loop = QEventLoop()
-                    reply.finished.connect(loop.quit)
-                    loop.exec_()
+            if blocking:
+                loop = QEventLoop()
+                reply.finished.connect(loop.quit)
+                loop.exec_()
 
-                return(reply)
+            return(reply)
 
 
         if method == 'GET':
@@ -216,6 +214,20 @@ class AeriusConnection():
         #print(f'gelukt! {response}')
         result = json.loads(bytes(response))
         return result
+
+
+    def cancel_job(self, job_key):
+        print('cancel_job()')
+        end_points = {
+            '7': f'jobs/{job_key}/cancel'
+        }
+        end_point = end_points[self.version]
+
+        response = self.run_multi_part_request(end_point, 'POST')
+        if response is not None:
+            print(f'gelukt! {response}')
+
+        return response
 
 
     def delete_job(self, job_key):
