@@ -32,6 +32,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.button_get_jobs.clicked.connect(self.get_jobs)
         self.button_cancel.clicked.connect(self.cancel_jobs)
         self.button_delete.clicked.connect(self.delete_jobs)
+        self.button_download.clicked.connect(self.download_jobs)
         self.button_validate.clicked.connect(self.validate)
         self.button_calculate.clicked.connect(self.calculate)
 
@@ -39,6 +40,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.combo_calc_type.currentTextChanged.connect(self.update_widgets)
 
         self.update_widgets()
+        self.get_jobs()
 
 
     def __del__(self):
@@ -46,6 +48,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.button_get_jobs.clicked.disconnect(self.get_jobs)
         self.button_cancel.clicked.disconnect(self.cancel_jobs)
         self.button_delete.clicked.disconnect(self.delete_jobs)
+        self.button_download.clicked.disconnect(self.download_jobs)
         self.button_validate.clicked.disconnect(self.validate)
         self.button_calculate.clicked.disconnect(self.calculate)
 
@@ -135,13 +138,12 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         items = self.table_jobs.selectedItems()
 
         for item in items:
-            print(item)
             if item.column() == 1: # jobKey column
                 job_key = item.text()
                 result = self.plugin.aerius_connection.cancel_job(job_key)
                 self.show_feedback(result)
 
-        #self.get_jobs()
+        self.get_jobs()
 
 
     def delete_jobs(self):
@@ -151,11 +153,29 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         for item in items:
             if item.column() == 1: # jobKey column
                 job_key = item.text()
-                print(job_key)
                 result = self.plugin.aerius_connection.delete_job(job_key)
                 self.show_feedback(result)
 
-        #self.get_jobs()
+        self.get_jobs()
+
+
+    def download_jobs(self):
+        '''Downloads the selected job to the work directory if COMPLETED'''
+        items = self.table_jobs.selectedItems()
+
+        for item in items:
+            if item.column() == 3: # jobKey column
+                status = item.text()
+            if item.column() == 5:
+                download_url = item.text()
+                if status == 'COMPLETED':
+                    base_name = download_url.split('/')[-1]
+                    work_dir = self.plugin.settings.value('imaer_plugin/work_dir')
+                    result = self.plugin.aerius_connection.download_result_zip(download_url, work_dir, base_name)
+                    print(result)
+                    self.show_feedback(result)
+                    for gml_fn in result:
+                        self.plugin.run_import_calc_result(gml_fn=gml_fn)
 
 
     def update_widgets(self):

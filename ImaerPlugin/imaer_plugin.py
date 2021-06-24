@@ -179,11 +179,15 @@ class ImaerPlugin:
             QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
 
 
-    def run_import_calc_result(self):
+    def run_import_calc_result(self, checked=False, gml_fn=None):
+        print('run_import_calc_result()')
+        print(gml_fn)
         if self.dev:
             self.calc_result_file_dialog.setDirectory('/home/raymond/git/AERIUS-QGIS-plugins/demodata/')
-        gml_fn, filter = self.calc_result_file_dialog.getOpenFileName(caption="Open Calculator result gml file", filter='*.gml', parent=self.iface.mainWindow())
-        self.log(gml_fn)
+
+        if gml_fn is None:
+            gml_fn, filter = self.calc_result_file_dialog.getOpenFileName(caption="Open Calculator result gml file", filter='*.gml', parent=self.iface.mainWindow())
+            self.log(gml_fn)
 
         if os.path.exists(os.path.dirname(gml_fn)):
             gpkg_fn = gml_fn.replace('.gml', '.gpkg')

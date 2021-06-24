@@ -1,15 +1,6 @@
+import os
 import json
-import urllib.parse
-import time
-
-import requests
-#from qgis.PyQt.QtCore import
-
-from qgis.core import (
-    Qgis,
-    QgsNetworkAccessManager,
-    QgsBlockingNetworkRequest,
-)
+from zipfile import ZipFile
 
 from .network import NetworkAccessManager, RequestsException
 
@@ -24,8 +15,17 @@ from qgis.PyQt.QtCore import (
 from qgis.PyQt.QtNetwork import (
     QHttpMultiPart,
     QHttpPart,
-    QNetworkRequest
+    QNetworkRequest,
+    QNetworkReply,
 )
+
+from qgis.core import (
+    Qgis,
+    QgsNetworkAccessManager,
+    QgsBlockingNetworkRequest,
+)
+
+from qgis import processing
 
 
 
@@ -243,6 +243,66 @@ class AeriusConnection():
 
         return response
 
+
+    def download_result_zip(self, url, work_dir, base_name, unzip_gmls=True):
+        '''
+        Downloads a zipfile and extracts all containing gml files in the
+        same directory. Returns a list of absolute gml file names.
+        '''
+        params = {}
+        params['URL'] = url
+        zip_fn = os.path.join(work_dir, base_name)
+        params['OUTPUT'] = zip_fn
+        print(params)
+
+        alg_id = 'native:filedownloader'
+        alg_result = processing.run(alg_id, params)
+        print(alg_result)
+
+        result = []
+        if not unzip_gmls:
+            return []
+
+        with ZipFile(zip_fn) as my_zip:
+            print(my_zip)
+            for fn in my_zip.namelist():
+                if fn.lower().endswith('.gml'):
+                    print(fn)
+                    my_zip.extract(fn, work_dir)
+                    gml_fn = os.path.join(work_dir, fn)
+                    print(gml_fn)
+                    result.append(gml_fn)
+        return result
+
+
+    '''
+    def download_zip(self, download_url):
+        print('download_zip()')
+        print(download_url)
+
+        manager = QgsNetworkAccessManager.instance()
+
+        url = QUrl(download_url)
+        print(url)
+
+        request = QNetworkRequest(url)
+
+        manager.finished.connect(self.download_zip_handler)
+        manager.get(request)
+
+
+    def download_zip_handler(self, reply):
+        print(reply)
+
+        er = reply.error()
+        if not er == QNetworkReply.NoError:
+            print("Error occured: ", er)
+            print(reply.errorString())
+            return False
+        with open('/home/raymond/tmp/imaer_test.zip', 'wb') as out_file:
+            out_file.write(reply.content())
+        return True
+    '''
 
     def post_calculate(self, gml_fn, user_options={}):
         '''Start a new calculation'''
