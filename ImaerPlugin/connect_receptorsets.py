@@ -24,7 +24,6 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.plugin = plugin
         self.iface = plugin.iface
-        #self.open_file_dialog = QFileDialog()
 
         self.init_gui()
 
@@ -36,7 +35,12 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         self.button_get_receptorsets.clicked.connect(self.get_receptor_sets)
         self.button_delete_receptorset.clicked.connect(self.delete_receptor_set)
 
+        self.edit_gml_input.textChanged.connect(self.update_widgets)
+        self.table_receptorsets.itemSelectionChanged.connect(self.update_widgets)
+
         self.get_receptor_sets()
+
+        self.update_widgets()
 
 
     def __del__(self):
@@ -45,6 +49,9 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         self.button_add_receptorset.clicked.disconnect(self.post_receptor_set)
         self.button_get_receptorsets.clicked.disconnect(self.get_receptor_sets)
         self.button_delete_receptorset.clicked.disconnect(self.delete_receptor_set)
+
+        self.edit_gml_input.textChanged.disconnect(self.update_widgets)
+        self.table_receptorsets.itemSelectionChanged.disconnect(self.update_widgets)
 
 
     def browse_gml_file(self):
@@ -59,14 +66,13 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
 
     def show_feedback(self, fb):
-        print(type(fb))
         if isinstance(fb, dict):
-            print('is dict')
             txt = json.dumps(fb, indent=4)
             print(txt)
-            self.text_feedback.setText(txt)
+            #self.text_feedback.setText(txt)
         else:
-            self.text_feedback.setText(str(fb))
+            print(str(fb))
+            #self.text_feedback.setText(str(fb))
 
 
     def get_receptor_sets(self):
@@ -124,3 +130,21 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
         if result is not None:
             self.get_receptor_sets()
+
+
+
+    def update_widgets(self):
+        """logic for widget behaviour"""
+        if self.edit_gml_input.text():
+            self.button_add_receptorset.setEnabled(True)
+        else:
+            self.button_add_receptorset.setEnabled(False)
+
+        items = self.table_receptorsets.selectedItems()
+
+        receptorsets_to_delete = 0
+
+        for item in items:
+            if item.column() == 0:
+                receptorsets_to_delete += 1
+        self.button_delete_receptorset.setEnabled(receptorsets_to_delete > 0)

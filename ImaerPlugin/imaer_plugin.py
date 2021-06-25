@@ -180,8 +180,8 @@ class ImaerPlugin:
 
 
     def run_import_calc_result(self, checked=False, gml_fn=None):
-        print('run_import_calc_result()')
-        print(gml_fn)
+        #print('run_import_calc_result()')
+        #print(gml_fn)
         if self.dev:
             self.calc_result_file_dialog.setDirectory('/home/raymond/git/AERIUS-QGIS-plugins/demodata/')
 
@@ -352,10 +352,9 @@ class ImaerPlugin:
 
 
     def update_connect_widgets(self):
-        api_key = self.settings.value('imaer_plugin/connect_key', defaultValue='')
-        has_api_key = len(api_key) == 32
-        self.actions['connect_receptorsets'].setEnabled(has_api_key)
-        self.actions['connect_jobs'].setEnabled(has_api_key)
+        conn_configured = self.aerius_connection.is_valid()
+        self.actions['connect_receptorsets'].setEnabled(conn_configured)
+        self.actions['connect_jobs'].setEnabled(conn_configured)
 
 
     def open_online_documentation(self):

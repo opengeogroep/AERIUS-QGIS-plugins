@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1154</width>
-    <height>536</height>
+    <width>831</width>
+    <height>397</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,13 +16,6 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="edit_gml_input">
-       <property name="text">
-        <string>/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/AERIUS_bijlage_eigen_rekenpunten_2020.gml</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_gml_input">
        <property name="text">
@@ -62,6 +55,13 @@
      </item>
      <item row="2" column="1">
       <widget class="QLineEdit" name="edit_description"/>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="edit_gml_input">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -148,16 +148,6 @@
       </spacer>
      </item>
     </layout>
-   </item>
-   <item>
-    <widget class="QTextEdit" name="text_feedback">
-     <property name="font">
-      <font>
-       <family>Ubuntu Mono</family>
-       <pointsize>9</pointsize>
-      </font>
-     </property>
-    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

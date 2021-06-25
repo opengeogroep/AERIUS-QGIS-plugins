@@ -4,7 +4,8 @@ import json
 
 from qgis.PyQt.QtWidgets import (
     QDialog,
-    QTableWidgetItem
+    QTableWidgetItem,
+    QMessageBox
 )
 from qgis.PyQt import uic
 
@@ -28,16 +29,19 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
 
     def init_gui(self):
+        self.combo_year.setCurrentText('2021')
+
         self.button_gml_input_browse.clicked.connect(self.browse_gml_file)
+        #self.button_validate.clicked.connect(self.validate)
+        self.button_calculate.clicked.connect(self.calculate)
         self.button_get_jobs.clicked.connect(self.get_jobs)
         self.button_cancel.clicked.connect(self.cancel_jobs)
         self.button_delete.clicked.connect(self.delete_jobs)
         self.button_download.clicked.connect(self.download_jobs)
-        self.button_validate.clicked.connect(self.validate)
-        self.button_calculate.clicked.connect(self.calculate)
 
         self.edit_gml_input.textChanged.connect(self.update_widgets)
         self.combo_calc_type.currentTextChanged.connect(self.update_widgets)
+        self.table_jobs.itemSelectionChanged.connect(self.update_widgets)
 
         self.update_widgets()
         self.get_jobs()
@@ -45,26 +49,27 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
     def __del__(self):
         self.button_gml_input_browse.clicked.disconnect(self.browse_gml_file)
+        #self.button_validate.clicked.disconnect(self.validate)
+        self.button_calculate.clicked.disconnect(self.calculate)
         self.button_get_jobs.clicked.disconnect(self.get_jobs)
         self.button_cancel.clicked.disconnect(self.cancel_jobs)
         self.button_delete.clicked.disconnect(self.delete_jobs)
         self.button_download.clicked.disconnect(self.download_jobs)
-        self.button_validate.clicked.disconnect(self.validate)
-        self.button_calculate.clicked.disconnect(self.calculate)
 
         self.edit_gml_input.textChanged.disconnect(self.update_widgets)
         self.combo_calc_type.currentTextChanged.disconnect(self.update_widgets)
+        self.table_jobs.itemSelectionChanged.disconnect(self.update_widgets)
 
 
     def show_feedback(self, fb):
         print(type(fb))
         if isinstance(fb, dict):
-            print('is dict')
             txt = json.dumps(fb, indent=4)
             print(txt)
-            self.text_feedback.setText(txt)
+            #self.text_feedback.setText(txt)
         else:
-            self.text_feedback.setText(str(fb))
+            print(str(fb))
+            #self.text_feedback.setText(str(fb))
 
 
     def validate(self):
@@ -80,6 +85,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         '''
         self.plugin.resp = result
         self.show_feedback(result.readAll())
+
 
 
     def calculate(self):
@@ -99,6 +105,8 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         print(result)
         self.show_feedback(result)
 
+        self.get_jobs()
+
 
     def get_jobs(self):
         print('get_jobs()')
@@ -107,10 +115,12 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             self.table_jobs.removeRow(0)
 
         result = self.plugin.aerius_connection.get_jobs()
+        self.show_feedback(result)
+
+        if result is None:
+            return
 
         jobs_dict = result
-
-        self.show_feedback(result)
 
         cols = {0: 'name', 1: 'jobKey', 2: 'startDateTime', 3: 'status', 4: 'hectareCalculated'}
         info_col = len(cols) # Last column
@@ -181,10 +191,10 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
     def update_widgets(self):
         """logic for widget behaviour"""
         if not self.edit_gml_input.text():
-            self.button_validate.setEnabled(False)
+            #self.button_validate.setEnabled(False)
             self.button_calculate.setEnabled(False)
         else:
-            self.button_validate.setEnabled(True)
+            #self.button_validate.setEnabled(True)
             if self.combo_calc_type.currentText() == 'WNB_RECEPTORS':
                 print('wnb_receptors')
                 self.combo_receptor_set.clear()
@@ -198,6 +208,24 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
                 self.combo_receptor_set.setEnabled(True)
                 if not self.combo_receptor_set.currentText():
                     self.button_calculate.setEnabled(False)
+
+        items = self.table_jobs.selectedItems()
+
+        jobs_to_delete = 0
+        jobs_to_cancel = 0
+        jobs_to_download = 0
+
+        for item in items:
+            if item.column() == 3: # status column
+                jobs_to_delete += 1 # any job can be deleted
+                status = item.text()
+                if status == 'RUNNING':
+                    jobs_to_cancel += 1
+                if status == 'COMPLETED':
+                    jobs_to_download += 1
+        self.button_delete.setEnabled(jobs_to_delete > 0)
+        self.button_cancel.setEnabled(jobs_to_cancel > 0)
+        self.button_download.setEnabled(jobs_to_download > 0)
 
 
     def update_combo_receptor_set(self):
