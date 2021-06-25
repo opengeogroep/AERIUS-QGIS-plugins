@@ -43,7 +43,10 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
     def init_gui(self):
         self.layer_widgets = {
             1: self.combo_layer1,
-            2: self.combo_layer2
+            2: self.combo_layer2,
+            3: self.combo_layer3,
+            4: self.combo_layer4,
+            5: self.combo_layer5
         }
         for key, widget in self.layer_widgets.items():
             #print(widget)
@@ -68,12 +71,44 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         calc_type = self.combo_calc_type.currentText()
         self.edit_layer_name.setText(calc_type)
 
+        # Only enable 3+ layer combos if calc_type is not 'difference'
+        for key, widget in self.layer_widgets.items():
+            if key > 2:
+                widget.setEnabled(calc_type != 'difference')
+
+
+    def is_dep_layer(self, layer):
+        '''Checks if layer contains all mandatory fields'''
+        mandatory_fields = ['fid', 'dep_NH3', 'dep_NOX']
+
+        layer_field_names = [fld.name() for fld in layer.fields()]
+
+        for mandatory_field in mandatory_fields:
+            if not mandatory_field in layer_field_names:
+                return False
+        return True
+
+
+    def get_layer_list(self):
+        '''Returns a list of selected deposition layers in the enabled comboBoxes'''
+        result = []
+        for key, widget in self.layer_widgets.items():
+            if widget.isEnabled():
+                layer = widget.currentLayer()
+                if layer is not None:
+                    if self.is_dep_layer(layer):
+                        widget.setStyleSheet("QgsMapLayerComboBox { color : black; }")
+                        result.append(layer)
+                    else:
+                        widget.setStyleSheet("QgsMapLayerComboBox { color : red; }")
+        return result
+
 
     def gui_update_layer_combo(self):
         calc_type = self.combo_calc_type.currentText()
-        layer_1 = self.layer_widgets[1].currentLayer()
-        layer_2 = self.layer_widgets[2].currentLayer()
-        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(layer_1 is not None and layer_2 is not None)
+        layers = self.get_layer_list()
+        enable_ok_button = len(layers) >= 2
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable_ok_button)
 
 
     def show_error(self, msg):
@@ -196,8 +231,14 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         return result
 
 
-    def calculate_difference(self, layer_1, layer_2):
+    def calculate_difference(self, layers):
         self.geometry_cache = {}
+
+        if not len(layers) == 2:
+            return
+
+        layer_1 = layers[0]
+        layer_2 = layers[1]
 
         dep_dict_layer_1 = self.create_receptor_dictionary(layer_1)
         if dep_dict_layer_1 is None:

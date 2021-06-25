@@ -387,31 +387,24 @@ class ImaerPlugin:
 
 
     def run_relate_calc_results(self):
-        #print('run_relate_calc_results')
         result = self.relate_calc_results_dlg.exec_()
-        #print(result)
+
         if not result == 1:
             return
 
-        layer1 = self.relate_calc_results_dlg.combo_layer1.currentLayer()
-        #print(layer1)
-        layer2 = self.relate_calc_results_dlg.combo_layer2.currentLayer()
-        #print(layer2)
+        layers = self.relate_calc_results_dlg.get_layer_list()
+        print(layers)
 
         calc_type = self.relate_calc_results_dlg.combo_calc_type.currentText()
-        #print(calc_type)
 
         if calc_type == 'difference':
-            if layer1 is not None and layer2 is not None:
-                self.relate_calc_results_dlg.calculate_difference(layer1, layer2)
+            self.relate_calc_results_dlg.calculate_difference(layers)
 
         if calc_type == 'sum':
-            if layer1 is not None and layer2 is not None:
-                self.relate_calc_results_dlg.calculate_sum([layer1, layer2])
+            self.relate_calc_results_dlg.calculate_sum(layers)
 
         if calc_type == 'maximum':
-            if layer1 is not None and layer2 is not None:
-                self.relate_calc_results_dlg.calculate_maximum([layer1, layer2])
+            self.relate_calc_results_dlg.calculate_maximum(layers)
 
 
     def open_add_open_data(self):
