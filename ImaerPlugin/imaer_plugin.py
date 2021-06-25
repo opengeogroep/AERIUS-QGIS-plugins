@@ -94,7 +94,7 @@ class ImaerPlugin:
             },{
                 'name': 'relate_calc_results',
                 'icon': 'icon_relate_calc_results.svg',
-                'tool_tip': 'Relate Calculator results',
+                'tool_tip': 'Relate Calculation results',
                 'triggered_slot': self.run_relate_calc_results
             },{
                 'name': 'add_open_data',
