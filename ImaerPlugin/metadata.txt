@@ -4,7 +4,7 @@
 name=IMAER Plugin
 email=info@opengeogroep.nl
 author=OpenGeoGroep
-qgisMinimumVersion=3.10
+qgisMinimumVersion=3.16
 qgisMaximumVersion=3.99
 description=!!EXPERIMENTAL PLUGIN FOR TESTING ONLY!! Plugin for generating AERIUS Calculator input IMAER files, and importing and exporting AERIUS Calculator result IMAER files.
 about=Plugin for handling AERIUS Calculator IMAER files
