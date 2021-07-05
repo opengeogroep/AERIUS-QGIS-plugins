@@ -18,7 +18,8 @@ from qgis.core import (
     )
 
 _IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX']
-_SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1']
+_SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1', '4.0']
+
 
 
 
