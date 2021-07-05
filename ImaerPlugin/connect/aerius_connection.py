@@ -353,9 +353,13 @@ class AeriusConnection():
         return True
     '''
 
-    def post_calculate(self, gml_fn, user_options={}):
+    def post_calculate(self, gml_files, user_options={}):
         '''Start a new calculation'''
         print('post_calculate()')
+
+        # For now this only works on 1 GML input file
+        if not len(gml_files) == 1:
+            return
 
         end_points = {
             '7': 'wnb/calculate'
@@ -370,12 +374,15 @@ class AeriusConnection():
 
         print(options)
 
+        gml_fn = gml_files[0]['gml_fn']
+        situation = gml_files[0]['situation']
+
         base_name = QFileInfo(gml_fn).fileName()
         print(base_name)
 
         text_parts = [
             {'header': 'options', 'body': options},
-            {'header': 'files', 'body': [{'fileName': base_name, 'situation': 'REFERENCE'}]}
+            {'header': 'files', 'body': [{'fileName': base_name, 'situation': situation}]}
         ]
 
         file_parts = []

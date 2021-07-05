@@ -89,10 +89,13 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
 
     def calculate(self):
-        gml_fn = self.edit_gml_input.text()
+        gml_files = []
+        gml_file = {}
+        gml_file['gml_fn'] = self.edit_gml_input.text()
+        gml_file['situation'] = self.combo_situation.currentText()
+        gml_files.append(gml_file)
 
         user_options = {}
-
         user_options['name'] = self.edit_name.text()
         user_options['calculationYear'] = int(self.combo_year.currentText())
         user_options['outputType'] = 'GML' # GML or PDF
@@ -101,7 +104,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             user_options['receptorSetName'] = self.combo_receptor_set.currentData()
         user_options['sendEmail'] = self.checkBox_send_email.isChecked()
 
-        result = self.plugin.aerius_connection.post_calculate(gml_fn, user_options)
+        result = self.plugin.aerius_connection.post_calculate(gml_files, user_options)
         print(result)
         self.show_feedback(result)
 
