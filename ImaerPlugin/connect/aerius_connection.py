@@ -39,19 +39,28 @@ class AeriusConnection():
             version = self.available_versions[-1]
         else:
             version = str(version)
-            #if self.version not in self.available_versions:
-            #    pass # TODO: Throw some error?
         self.set_version(version)
 
-        self.base_url = None
+        #self.base_url = None
         self.api_key = api_key
+
+        self.connection_info = 'Not yet checked'
+        self.config_is_ok = False
+        self.server_is_ok = False
+        self.api_key_is_ok = False
+
+        self.check_connection()
 
 
     def __str__(self):
-        return 'AeriusConnection[v{}, {}, {}]'.format(
+        return 'AeriusConnection[v{}, {}, {}, {} {}, {}, {}]'.format(
             self.version,
             self.api_key,
-            self.base_url
+            self.base_url,
+            self.config_is_ok,
+            self.server_is_ok,
+            self.api_key_is_ok,
+            self.connection_info,
         )
 
 
@@ -60,32 +69,60 @@ class AeriusConnection():
         url_lookup = {
             '6': 'https://connect.aerius.nl/api/6',
             #'99': 'https://connect.aerius.nl/api2020-prerelease',
-            #'7': 'https://natuur-dev.aerius.nl/api', # imaer 4
-            '7': 'https://connect-masterclass.aerius.nl/api', # imaer 3
+            '7': 'https://natuur-dev.aerius.nl/api', # imaer 4
+            #'7': 'https://connect-masterclass.aerius.nl/api', # imaer 3
             #'7': 'http://localhost:5000', # echo server for testing
         }
-        self.base_url = url_lookup[self.version]
+        if self.version in url_lookup:
+            self.base_url = url_lookup[self.version]
+        else:
+            self.base_url = None
 
 
-    def is_valid(self, test_api_key=True, test_server=False):
+    def check_connection(self, test_api_key=True):
+        '''
+        Returns True if connection to server can be made, otherwise False. Sets
+        a message to the connection_info variable.
+        '''
+        self.connection_info = 'OK'
+        self.config_is_ok = False
+        self.server_is_ok = False
+        self.api_key_is_ok = False
+
         if self.base_url is None:
-            return False
-            print('No base url')
+            self.connection_info = 'No base url'
+            return
+        elif self.api_key is None or len(self.api_key) != 32:
+            self.connection_info = 'No valid api key'
+            return
+        else:
+            self.config_is_ok = True
+
+        if self.server_is_up():
+            self.server_is_ok = True
+        else:
+            self.connection_info = 'Server is not available'
+            return
+
         if test_api_key:
-            if self.api_key is None or len(self.api_key) != 32:
-                print('No (valid) api key')
-                return False
-        if test_server:
-            return self.server_is_up()
-        return True
+            # Request jobs to test access with api key:
+            if self.get_jobs() is None:
+                self.connection_info = 'Server does not accept the api key'
+                return
+            else:
+                self.api_key_is_ok = True
+        return
 
 
-    def run_multi_part_request(self, api_function, method, text_parts=[], file_parts=[], with_api_key=True, blocking=True):
-        print('run_multi_part_request ------------------------------------------------')
+    def run_request(self, api_function, method, data=None, text_parts=[], file_parts=[], with_api_key=True, blocking=True, with_version=True):
+        print('run_request ------------------------------------------------')
 
         manager = QgsNetworkAccessManager.instance()
 
-        url = f'{self.base_url}/v{self.version}/{api_function}'
+        if with_version:
+            url = f'{self.base_url}/v{self.version}/{api_function}'
+        else:
+            url = f'{self.base_url}/{api_function}'
         #url = 'http://localhost:5000' # echo server for debugging
         print(url)
         url = QUrl(url)
@@ -99,40 +136,48 @@ class AeriusConnection():
             request.setRawHeader(b'api-key', self.api_key.encode('utf-8'))
 
         if method == 'POST':
+            print(data)
             print(text_parts)
             print(file_parts)
 
-            multi_part = QHttpMultiPart(QHttpMultiPart.FormDataType)
+            if data is None:
 
-            for tp in text_parts:
-                print(tp)
-                header = tp['header']
-                body = json.dumps(tp['body'])
-                body = body.encode('utf-8')
-                text_part = QHttpPart()
-                text_part.setHeader(QNetworkRequest.ContentDispositionHeader, QVariant(f'form-data; name="{header}"'))
-                text_part.setBody(body)
-                multi_part.append(text_part)
+                multi_part = QHttpMultiPart(QHttpMultiPart.FormDataType)
 
-            for fp in file_parts:
-                #print(fp)
-                file = QFile(fp['file_name'])
-                print(QFileInfo(file).fileName())  # <= om de file name te achterhalen en te gebruiken in de dispostion header
+                for tp in text_parts:
+                    print(tp)
+                    header = tp['header']
+                    body = json.dumps(tp['body'])
+                    body = body.encode('utf-8')
+                    text_part = QHttpPart()
+                    text_part.setHeader(QNetworkRequest.ContentDispositionHeader, QVariant(f'form-data; name="{header}"'))
+                    text_part.setBody(body)
+                    multi_part.append(text_part)
 
-                file_part = QHttpPart()
-                file_part.setHeader(QNetworkRequest.ContentTypeHeader, QVariant(fp['file_type']))
-                # zo ziet het eruit in curl in de echo server:
-                #Content-Disposition: form-data; name="filePart"; filename="AERIUS_bijlage_eigen_rekenpunten_2020.gml"
-                name = fp['name']
-                file_part.setHeader(QNetworkRequest.ContentDispositionHeader,
-                    QVariant(f'form-data; name="{name}"; filename="{QFileInfo(file).fileName()}"'))
-                file.open(QIODevice.ReadOnly)
-                file_part.setBodyDevice(file)
-                file.setParent(multi_part) # we cannot delete the file now, so delete it with the multi_part
-                multi_part.append(file_part)
+                for fp in file_parts:
+                    #print(fp)
+                    file = QFile(fp['file_name'])
+                    print(QFileInfo(file).fileName())  # <= om de file name te achterhalen en te gebruiken in de dispostion header
 
-            reply = manager.post(request, multi_part)
-            multi_part.setParent(reply)
+                    file_part = QHttpPart()
+                    file_part.setHeader(QNetworkRequest.ContentTypeHeader, QVariant(fp['file_type']))
+                    # zo ziet het eruit in curl in de echo server:
+                    #Content-Disposition: form-data; name="filePart"; filename="AERIUS_bijlage_eigen_rekenpunten_2020.gml"
+                    name = fp['name']
+                    file_part.setHeader(QNetworkRequest.ContentDispositionHeader,
+                        QVariant(f'form-data; name="{name}"; filename="{QFileInfo(file).fileName()}"'))
+                    file.open(QIODevice.ReadOnly)
+                    file_part.setBodyDevice(file)
+                    file.setParent(multi_part) # we cannot delete the file now, so delete it with the multi_part
+                    multi_part.append(file_part)
+
+                reply = manager.post(request, multi_part)
+                multi_part.setParent(reply)
+            else:
+                data = json.dumps(data)
+                data = data.encode('utf-8')
+                request.setRawHeader(b'Content-Type', b'application/json')
+                reply = manager.post(request, data)
 
             if blocking:
                 loop = QEventLoop()
@@ -165,7 +210,8 @@ class AeriusConnection():
             if Qgis.QGIS_VERSION_INT < 32000:
                 # version 3.18 or lower
                 reply = manager.deleteResource(request)
-                print(reply)
+                if reply.error() == QNetworkReply.NoError:
+                    return 1 # Just not returning None
             else:
                 qgis_request = QgsBlockingNetworkRequest()
                 err = qgis_request.deleteResource(request)
@@ -184,21 +230,24 @@ class AeriusConnection():
             '7': 'actuator/health'
         }
         end_point = end_points[self.version]
-        response = self.run_request(end_point, 'GET', with_version=False)
+        response = self.run_request(end_point, 'GET', with_api_key=False, with_version=False)
         return response is not None
 
 
     def generate_api_key(self, email):
-        if not self.is_valid(test_api_key=False):
+        print('generate_api_key()')
+        if self.base_url is None:
             return
         end_points = {
             '7': 'user/generateApiKey'
         }
         end_point = end_points[self.version]
         data = {'email': email}
-        response = self.run_request(end_point, 'POST', data)
+        response = self.run_request(end_point, 'POST', data=data)
         if response is not None:
             print(f'gelukt! {response}')
+            return True
+        return
 
 
     def get_jobs(self):
@@ -207,7 +256,7 @@ class AeriusConnection():
         }
         end_point = end_points[self.version]
 
-        response = self.run_multi_part_request(end_point, 'GET')
+        response = self.run_request(end_point, 'GET')
         if response is None:
             return
 
@@ -223,7 +272,7 @@ class AeriusConnection():
         }
         end_point = end_points[self.version]
 
-        response = self.run_multi_part_request(end_point, 'POST')
+        response = self.run_request(end_point, 'POST')
         if response is not None:
             print(f'gelukt! {response}')
 
@@ -237,7 +286,7 @@ class AeriusConnection():
         }
         end_point = end_points[self.version]
 
-        response = self.run_multi_part_request(end_point, 'DELETE')
+        response = self.run_request(end_point, 'DELETE')
         if response is not None:
             print(f'gelukt! {response}')
 
@@ -333,7 +382,7 @@ class AeriusConnection():
         file_parts.append({'name': 'fileParts', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
         print(file_parts)
 
-        response = self.run_multi_part_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
+        response = self.run_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
         if response is not None:
             pass
             #print(f'gelukt! {response}')
@@ -350,7 +399,7 @@ class AeriusConnection():
         data = {}
 
         #response = self.run_request(end_point, 'GET', data)
-        response = self.run_multi_part_request(end_point, 'GET')
+        response = self.run_request(end_point, 'GET')
 
         if response is None:
             return
@@ -377,7 +426,7 @@ class AeriusConnection():
         print(file_parts)
 
         #response = self.run_request(end_point, 'POST')
-        response = self.run_multi_part_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
+        response = self.run_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
         print(response)
         resp = response
         if response is not None:
@@ -392,7 +441,7 @@ class AeriusConnection():
         print('delete_receptor_sets')
         api_function = f'receptorSets/{name}'
 
-        response = self.run_multi_part_request(api_function, 'DELETE')
+        response = self.run_request(api_function, 'DELETE')
         if response is not None:
             print(f'gelukt! {response}')
 
@@ -410,7 +459,7 @@ class AeriusConnection():
         file_parts.append({'name': 'filePart', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
         print(file_parts)
 
-        response = self.run_multi_part_request(end_point, 'POST', file_parts=file_parts)
+        response = self.run_request(end_point, 'POST', file_parts=file_parts)
         print(response)
         if response is not None:
             print(f'gelukt! {response}')

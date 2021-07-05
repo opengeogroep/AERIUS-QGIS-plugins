@@ -61,7 +61,22 @@ class ImaerPlugin:
         self.imaer_calc_layers = {}
         self.settings = QgsSettings()
 
-        self.aerius_connection = AeriusConnection()
+        connect_version_setting = self.settings.value('imaer_plugin/connect_version_setting', defaultValue=None)
+        key_setting = self.settings.value('imaer_plugin/connect_key', defaultValue='')
+        self.aerius_connection = AeriusConnection(version=connect_version_setting, api_key=key_setting)
+        print(self.aerius_connection)
+
+        # Create dialogs
+        self.calc_result_file_dialog = QFileDialog()
+        self.calc_input_file_dialog = QFileDialog()
+
+        self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
+        self.relate_calc_results_dlg = RelateCalcResultsDialog(self, parent=self.iface.mainWindow())
+
+        self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
+        self.connect_receptorsets_dlg = ConnectReceptorSetsDialog(self, parent=self.iface.mainWindow())
+        self.connect_jobs_dlg = ConnectJobsDialog(self, parent=self.iface.mainWindow())
+
 
         # Variable self.dev is set to True if a global variable terglobo_dev exists
         # holding the lowercase value 'on'. This is to ensure that any dev tricks
@@ -138,16 +153,6 @@ class ImaerPlugin:
             action.triggered.connect(action_config['triggered_slot'])
             self.toolbar.addAction(action)
             self.actions[action_config['name']] = action
-
-        # Create dialogs
-        self.calc_result_file_dialog = QFileDialog()
-        self.calc_input_file_dialog = QFileDialog()
-
-        self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
-        self.relate_calc_results_dlg = RelateCalcResultsDialog(self, parent=self.iface.mainWindow())
-        self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
-        self.connect_receptorsets_dlg = ConnectReceptorSetsDialog(self, parent=self.iface.mainWindow())
-        self.connect_jobs_dlg = ConnectJobsDialog(self, parent=self.iface.mainWindow())
 
         # Widget update logic
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
@@ -352,9 +357,10 @@ class ImaerPlugin:
 
 
     def update_connect_widgets(self):
-        conn_configured = self.aerius_connection.is_valid()
-        self.actions['connect_receptorsets'].setEnabled(conn_configured)
-        self.actions['connect_jobs'].setEnabled(conn_configured)
+        conn_ok = self.aerius_connection.api_key_is_ok
+        print(conn_ok)
+        self.actions['connect_receptorsets'].setEnabled(conn_ok)
+        self.actions['connect_jobs'].setEnabled(conn_ok)
 
 
     def open_online_documentation(self):
@@ -370,6 +376,9 @@ class ImaerPlugin:
         print(result)
         if result:
             self.configuration_dlg.save_ui_to_settings()
+            print(self.aerius_connection)
+            self.aerius_connection.check_connection()
+            print(self.aerius_connection)
             self.update_connect_widgets()
 
 

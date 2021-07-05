@@ -114,6 +114,9 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         while self.table_jobs.rowCount() > 0:
             self.table_jobs.removeRow(0)
 
+        if not self.plugin.aerius_connection.api_key_is_ok:
+            return
+
         result = self.plugin.aerius_connection.get_jobs()
         self.show_feedback(result)
 

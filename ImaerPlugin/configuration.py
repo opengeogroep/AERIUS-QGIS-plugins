@@ -84,10 +84,11 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
 
 
     def get_api_key(self):
-        #print(self.plugin.aerius_connection)
         email = self.edit_email.text()
-        self.edit_key.setText('')
-        self.plugin.aerius_connection.generate_api_key(email)
+        result = self.plugin.aerius_connection.generate_api_key(email)
+        if result:
+            self.edit_key.setText('')
+            self.plugin.settings.setValue('imaer_plugin/connect_key', '')
 
 
     def browse_work_dir(self):

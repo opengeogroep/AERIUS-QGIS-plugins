@@ -81,6 +81,9 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         while self.table_receptorsets.rowCount() > 0:
             self.table_receptorsets.removeRow(0)
 
+        if not self.plugin.aerius_connection.api_key_is_ok:
+            return
+
         result = self.plugin.aerius_connection.get_receptor_sets()
         if result is None: # TODO check for valid response somehow and show feedback
             return
