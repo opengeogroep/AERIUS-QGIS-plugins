@@ -154,6 +154,9 @@ class ImaerPlugin:
             self.toolbar.addAction(action)
             self.actions[action_config['name']] = action
 
+        # Disable Open data for now
+        self.actions['add_open_data'].setEnabled(False)
+
         # Widget update logic
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
         self.update_all_widgets()
