@@ -204,7 +204,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         # Setting these globally when detecting the imaer_version could speed up the import. (todo)
         if self.imaer_version == '2.2':
             result_path = 'imaer:result/imaer:Result'
-        elif self.imaer_version == '3.1':
+        elif self.imaer_version in ['3.1', '4.0']:
             result_path = 'imaer:result/imaer:CalculationResult'
 
         for res in elem.findall(result_path, self.namespaces):

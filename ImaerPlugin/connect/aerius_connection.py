@@ -69,8 +69,9 @@ class AeriusConnection():
         url_lookup = {
             '6': 'https://connect.aerius.nl/api/6',
             #'99': 'https://connect.aerius.nl/api2020-prerelease',
-            '7': 'https://natuur-dev.aerius.nl/api', # imaer 4
-            #'7': 'https://connect-masterclass.aerius.nl/api', # imaer 3
+            #'7': 'https://natuur-dev.aerius.nl/api', # imaer 4
+            #https://connect-masterclass.aerius.nl/api', # imaer 3
+            '7': 'https://connect2021-prerelease.aerius.nl/api',
             #'7': 'http://localhost:5000', # echo server for testing
         }
         if self.version in url_lookup:
