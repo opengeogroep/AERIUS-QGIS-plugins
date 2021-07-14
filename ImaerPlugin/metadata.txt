@@ -8,7 +8,7 @@ qgisMinimumVersion=3.16
 qgisMaximumVersion=3.99
 description=!!EXPERIMENTAL PLUGIN FOR TESTING ONLY!! Plugin for generating AERIUS Calculator input IMAER files, and importing and exporting AERIUS Calculator result IMAER files.
 about=Plugin for handling AERIUS Calculator IMAER files
-version=version 3.0.7
+version=version 3.0.8
 tracker=https://github.com/opengeogroep/AERIUS-QGIS-plugins/issues
 repository=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 homepage=https://github.com/opengeogroep/AERIUS-QGIS-plugins
@@ -17,6 +17,7 @@ homepage=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 # Recommended items:
 
 changelog=
+    3.0.8   (19-04-2021) IMAER 3.1 support, difference and sum calculations on IMAER layers (thanks DLV)
     3.0.7   (01-10-2020) Bugfix for typo in outflowDiameter
     3.0.6   (30-09-2020) File dialog for exporting GML; Optional situation name; Bugfix for building width/height swap
     3.0.5   (09-09-2020) Documentation button; Bugfix for not importing deposition values

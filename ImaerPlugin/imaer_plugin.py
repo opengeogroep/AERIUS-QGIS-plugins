@@ -155,7 +155,7 @@ class ImaerPlugin:
             self.actions[action_config['name']] = action
 
         # Disable Open data for now
-        self.actions['add_open_data'].setEnabled(False)
+        # self.actions['add_open_data'].setEnabled(False)
 
         # Widget update logic
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
@@ -367,7 +367,7 @@ class ImaerPlugin:
 
 
     def open_online_documentation(self):
-        doc_index_url = 'https://github.com/opengeogroep/AERIUS-QGIS-plugins/blob/v3new/documentation/00_index.md'
+        doc_index_url = 'https://github.com/opengeogroep/AERIUS-QGIS-plugins/tree/master/documentation/00_index.md'
         webbrowser.open(doc_index_url)
 
 
@@ -431,7 +431,7 @@ class ImaerPlugin:
             # Download zip file
             conn = AeriusOpenData()
             print(conn)
-            response = conn.get_dataset(layer_ns, layer_name, output_format='SHAPE-ZIP')
+            response = conn.get_dataset(layer_ns, layer_name, output_format='SHAPE-ZIP') #TODO Download a better file format then SHP when available
 
             if response is None:
                 print('Download failed')
