@@ -1,7 +1,7 @@
 from PyQt5.QtCore import QXmlStreamReader
 from PyQt5.QtXml import QDomDocument
 
-from generic import ParameterDef
+from generic import GuiNode
 
 
 
@@ -99,6 +99,6 @@ class AeriusCalculatorMetadata():
         return result
 
 
-    def get_parameter_defs(self):
-        result = ParameterDef('metadata', 'GROUP', label='Metadata', min_occurs=1)
+    def get_gui_nodes(self):
+        result = GuiNode('metadata', 'GROUP', label='Metadata', min_occurs=1)
         return result

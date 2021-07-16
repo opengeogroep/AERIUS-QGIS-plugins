@@ -3,7 +3,7 @@
 from PyQt5.QtCore import QXmlStreamReader
 from PyQt5.QtXml import QDomDocument
 
-from generic import ParameterDef
+from generic import GuiNode
 from metadata import AeriusCalculatorMetadata
 
 
@@ -59,10 +59,10 @@ class ImaerDocument():
             out_file.write(self.doc.toString(4))
 
 
-    def get_parameter_defs(self):
-        result = ParameterDef('main', 'GROUP', min_occurs=1)
+    def get_gui_nodes(self):
+        result = GuiNode('main', 'GROUP', min_occurs=1)
 
-        metadata_group = AeriusCalculatorMetadata().get_parameter_defs()
+        metadata_group = AeriusCalculatorMetadata().get_gui_nodes()
         result.append_child(metadata_group)
 
         return result

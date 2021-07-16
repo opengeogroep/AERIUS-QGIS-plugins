@@ -29,7 +29,7 @@ def find_xml_value(root, tag_name, object_type='text', default_value=None):
         return elem.text
 
 
-class ParameterDef():
+class GuiNode():
 
     def __init__(self, name, type, label=None, min_occurs=0, max_occurs=1, default_value=None):
         self.name = name
