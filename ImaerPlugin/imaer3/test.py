@@ -3,7 +3,7 @@ import os.path
 from __init__ import *
 
 idoc = ImaerDocument()
-print(idoc)
+#print(idoc)
 
 project = {'year': 2021, 'description': 'Bla bla bal'}
 situation = {'name': 'Situatie 1', 'reference': 'abc123xyz789'}
@@ -15,3 +15,8 @@ idoc.metadata = md
 
 fn = '/home/raymond/tmp/imaer_test.xml'
 idoc.to_xml_file(fn)
+
+pdefs = idoc.get_parameter_defs()
+#print(pdefs)
+
+print(pdefs.to_string())

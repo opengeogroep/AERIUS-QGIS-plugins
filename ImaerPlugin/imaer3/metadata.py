@@ -1,7 +1,7 @@
-#from .generic import namespaces, ET, find_xml_value
-
 from PyQt5.QtCore import QXmlStreamReader
 from PyQt5.QtXml import QDomDocument
+
+from generic import ParameterDef
 
 
 
@@ -96,4 +96,9 @@ class AeriusCalculatorMetadata():
             ver.appendChild(ver_ele)
             result.appendChild(ver)
 
+        return result
+
+
+    def get_parameter_defs(self):
+        result = ParameterDef('metadata', 'GROUP', label='Metadata', min_occurs=1)
         return result

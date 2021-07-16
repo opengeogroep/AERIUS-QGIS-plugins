@@ -3,6 +3,9 @@
 from PyQt5.QtCore import QXmlStreamReader
 from PyQt5.QtXml import QDomDocument
 
+from generic import ParameterDef
+from metadata import AeriusCalculatorMetadata
+
 
 
 class ImaerDocument():
@@ -54,3 +57,12 @@ class ImaerDocument():
 
         with open(fn, 'w') as out_file:
             out_file.write(self.doc.toString(4))
+
+
+    def get_parameter_defs(self):
+        result = ParameterDef('main', 'GROUP', min_occurs=1)
+
+        metadata_group = AeriusCalculatorMetadata().get_parameter_defs()
+        result.append_child(metadata_group)
+
+        return result

@@ -75,8 +75,6 @@ emission_sectors = {
 '''
 
 emission_sectors = {
-    'ENERGY': {'sector_id': 2100},
-    'PLAN': {'sector_id': 9000},
     'OTHER': {'sector_id': 9999}
 }
 
@@ -104,7 +102,7 @@ emission_elements = {
 }
 
 ui_settings = {
-    'years': ['2019', '2020'],
+    'years': ['2019', '2020', '2021'],
     'situation_name': 'Situation 1',
     'crs': [
         {'name': 'Amersfoort / RD New - Netherlands', 'srid': 28992},
