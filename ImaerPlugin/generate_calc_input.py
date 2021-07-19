@@ -110,14 +110,21 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             self.combo_sector.addItem(key, sid)
 
         # project
-        for year in ui_settings['project_years']:
-            self.combo_project_year.addItem(year, year)
+        for item in ui_settings['project_years']:
+            self.combo_project_year.addItem(item, item)
         self.combo_project_year.setCurrentIndex(self.combo_project_year.count() - 1)
 
         # situation
         self.edit_situation_name.setText(ui_settings['situation_name'])
         for item in ui_settings['situation_types']:
             self.combo_situation_type.addItem(item, item)
+
+        # calculation
+        for item in ui_settings['calculation_types']:
+            self.combo_calculation_type.addItem(item, item)
+        for item in ui_settings['calculation_result_types']:
+            self.combo_calculation_result_type.addItem(item, item)
+
 
 
     def set_subsectors(self):

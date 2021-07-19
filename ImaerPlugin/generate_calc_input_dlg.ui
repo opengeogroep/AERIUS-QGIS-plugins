@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>590</width>
-    <height>745</height>
+    <width>537</width>
+    <height>657</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -110,6 +110,12 @@
              <property name="title">
               <string>Situation</string>
              </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
              <layout class="QFormLayout" name="formLayout_3">
               <item row="0" column="0">
                <widget class="QLabel" name="label_situation_name">
@@ -134,6 +140,72 @@
              </layout>
             </widget>
            </item>
+           <item>
+            <widget class="QGroupBox" name="group_calculation">
+             <property name="title">
+              <string>Calculation</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+             <layout class="QFormLayout" name="formLayout_4">
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_calculation_result_type">
+                <property name="text">
+                 <string>Result type</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QComboBox" name="combo_calculation_result_type"/>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_calculation_type">
+                <property name="text">
+                 <string>Type</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="combo_calculation_type"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_calculation_substances">
+                <property name="text">
+                 <string>Substances</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_2">
+                <item>
+                 <widget class="QCheckBox" name="check_calculation_substance_nh3">
+                  <property name="text">
+                   <string>NH3</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="check_calculation_substance_nox">
+                  <property name="text">
+                   <string>NOx</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="tab_emission_sources">
@@ -151,8 +223,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>544</width>
-                <height>482</height>
+                <width>491</width>
+                <height>394</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_3">
