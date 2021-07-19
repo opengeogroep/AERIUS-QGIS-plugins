@@ -95,20 +95,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
 
     def set_fixed_options(self):
-        # name
-        self.edit_name.setText(ui_settings['situation_name'])
-
-        # years
-        for year in ui_settings['years']:
-            self.combo_year.addItem(year, year)
-        self.combo_year.setCurrentIndex(self.combo_year.count() - 1)
-
         # crs
         for crs in ui_settings['crs']:
             self.combo_crs.addItem(crs['name'], crs['srid'])
 
         # sectors
-        self.combo_sector.addItem('<Selecteer een sector>', 0)
+        self.combo_sector.addItem('<Select sector>', 0)
         for key, value in emission_sectors.items():
             #print(key, value)
             if 'sector_id' in value:
@@ -116,6 +108,16 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             else:
                 sid = 0
             self.combo_sector.addItem(key, sid)
+
+        # project
+        for year in ui_settings['project_years']:
+            self.combo_project_year.addItem(year, year)
+        self.combo_project_year.setCurrentIndex(self.combo_project_year.count() - 1)
+
+        # situation
+        self.edit_situation_name.setText(ui_settings['situation_name'])
+        for item in ui_settings['situation_types']:
+            self.combo_situation_type.addItem(item, item)
 
 
     def set_subsectors(self):
@@ -125,7 +127,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.label_subsector.setEnabled(has_subsectors)
         self.combo_subsector.setEnabled(has_subsectors)
         if has_subsectors:
-            self.combo_subsector.addItem('<Selecteer een specifieke sector>', 0)
+            self.combo_subsector.addItem('<Select specific sector>', 0)
             for key, value in emission_sectors[sector]['subsectors'].items():
                 self.combo_subsector.addItem(key, value['sector_id'])
         self.set_elements()
@@ -174,10 +176,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
                 if 'label' in widgets:
                     self.grid_elements.addWidget(widgets['label'], row, 0)
-                if 'fixed' in widgets:
-                    self.grid_elements.addWidget(widgets['fixed'], row, 1)
+                #if 'fixed' in widgets:
+                #    self.grid_elements.addWidget(widgets['fixed'], row, 1)
                 if 'field' in widgets:
-                    self.grid_elements.addWidget(widgets['field'], row, 2)
+                    self.grid_elements.addWidget(widgets['field'], row, 1)
 
                 self.widget_registry.add_widgets(key, widgets)
                 row += 1
@@ -225,11 +227,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         '''Maps items from GUI widgets to IMAER object'''
         result = FeatureCollectionCalculator()
 
-        year = self.combo_year.currentData()
-        situation_name = self.edit_name.text()
+        year = self.combo_project_year.currentData()
+        description = self.edit_project_description.text()
+        situation_name = self.edit_situation_name.text()
 
         metadata = AeriusCalculatorMetadata(
-            project = {'year': year, 'description': ''},
+            project = {'year': year, 'description': description},
             situation = {'name': situation_name, 'reference': ''},
             version = {'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'}
         )

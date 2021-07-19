@@ -101,4 +101,40 @@ class AeriusCalculatorMetadata():
 
     def get_gui_nodes(self):
         result = GuiNode('metadata', 'GROUP', label='Metadata', min_occurs=1)
+
+        # project
+        group_node = GuiNode('project', 'GROUP', label='Project', min_occurs=1)
+        value_node = GuiNode('metadata_project_year', 'VALUE', label='Year', min_occurs=1)
+        group_node.append_child(value_node)
+        value_node = GuiNode('metadata_project_description', 'VALUE', label='Description')
+        group_node.append_child(value_node)
+        result.append_child(group_node)
+
+        # situation
+        group_node = GuiNode('situation', 'GROUP', label='Situation')
+        value_node = GuiNode('metadata_situation_name', 'VALUE', label='Name')
+        group_node.append_child(value_node)
+        value_node = GuiNode('metadata_situation_reference', 'VALUE', label='Reference')
+        group_node.append_child(value_node)
+        result.append_child(group_node)
+
+        # calculation
+        group_node = GuiNode('calculation', 'GROUP', label='Calculation')
+        value_node = GuiNode('metadata_calculation_result_type', 'VALUE', label='Result type', min_occurs=1)
+        group_node.append_child(value_node)
+        value_node = GuiNode('metadata_calculation_type', 'VALUE', label='Type')
+        group_node.append_child(value_node)
+        result.append_child(group_node)
+
+
+
+        #self.calculation = calculation
+        # resultType: DEPOSITION, CONCENTRATION, EXCEEDANCE_DAYS, EXCEEDANCE_HOURS (1..n)
+        # substance: NH3, NOX, NO2, PM10, PM25, EC (1..n)
+        # type: PERMIT, NATURE_AREA, RADIUS, CUSTOM_POINTS (1)
+
+        #self.version = version
+
+
+
         return result
