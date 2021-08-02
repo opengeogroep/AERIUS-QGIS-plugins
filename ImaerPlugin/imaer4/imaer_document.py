@@ -3,8 +3,9 @@
 from PyQt5.QtCore import QXmlStreamReader
 from PyQt5.QtXml import QDomDocument
 
-from generic import GuiNode
-from metadata import AeriusCalculatorMetadata
+from .generic import GuiNode
+from .metadata import AeriusCalculatorMetadata
+from .emission_source import EmissionSource
 
 
 
@@ -65,5 +66,8 @@ class ImaerDocument():
         metadata_nodes = AeriusCalculatorMetadata().get_gui_nodes()
         metadata_nodes.min_occurs = 1
         result.append_child(metadata_nodes)
+
+        emission_source = EmissionSource(self.doc)
+        result.append_child(emission_source.get_gui_nodes())
 
         return result

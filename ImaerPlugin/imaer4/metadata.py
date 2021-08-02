@@ -1,7 +1,7 @@
 from PyQt5.QtCore import QXmlStreamReader
 from PyQt5.QtXml import QDomDocument
 
-from generic import GuiNode
+from .generic import GuiNode
 
 
 

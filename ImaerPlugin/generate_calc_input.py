@@ -31,7 +31,7 @@ from ImaerPlugin.config import (
 
 from ImaerPlugin.widget_registry import WidgetRegistry
 
-from ImaerPlugin.imaer import (
+from ImaerPlugin.imaer2 import (
     FeatureCollectionCalculator,
     AeriusCalculatorMetadata,
     EmissionSource,
@@ -40,6 +40,8 @@ from ImaerPlugin.imaer import (
     CalculatedHeatContent,
     Building
 )
+
+from ImaerPlugin.imaer4 import ImaerDocument
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -58,6 +60,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.plugin = plugin
         self.widget_registry = WidgetRegistry(self)
         self.sector_id = 0
+
+        self.root_gui_node = ImaerDocument().get_gui_nodes()
 
         self.init_gui()
 
@@ -101,13 +105,9 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         # sectors
         self.combo_sector.addItem('<Select sector>', 0)
-        for key, value in emission_sectors.items():
-            #print(key, value)
-            if 'sector_id' in value:
-                sid = value['sector_id']
-            else:
-                sid = 0
-            self.combo_sector.addItem(key, sid)
+        for node in self.root_gui_node.children:
+            print(node)
+            self.combo_sector.addItem(node.label, node)
 
         # project
         for item in ui_settings['project_years']:
