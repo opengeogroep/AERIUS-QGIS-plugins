@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>537</width>
+    <width>527</width>
     <height>657</height>
    </rect>
   </property>
@@ -65,7 +65,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget">
          <property name="currentIndex">
-          <number>1</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="tab_metadata">
           <attribute name="title">
@@ -223,19 +223,77 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>491</width>
+                <width>481</width>
                 <height>394</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_3">
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_sector_id">
+                 <property name="text">
+                  <string>sectorId</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="fcb_label"/>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="fcb_sector_id"/>
+               </item>
                <item row="0" column="0">
-                <layout class="QGridLayout" name="grid_elements"/>
+                <layout class="QVBoxLayout" name="verticalLayout_5">
+                 <item>
+                  <widget class="QLabel" name="label_label">
+                   <property name="text">
+                    <string>label</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="2" column="0" colspan="2">
+                <widget class="QGroupBox" name="groupBox_es_characteristics">
+                 <property name="title">
+                  <string>Characteristics</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <layout class="QFormLayout" name="formLayout_5">
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_diurnal_variation">
+                    <property name="text">
+                     <string>diurnalVariation</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QComboBox" name="fcb_diurnal_variation"/>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_emission_height">
+                    <property name="text">
+                     <string>emissionHeight</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QComboBox" name="fcb_emission_height"/>
+                  </item>
+                 </layout>
+                </widget>
                </item>
               </layout>
              </widget>
             </widget>
            </item>
           </layout>
+         </widget>
+         <widget class="QWidget" name="tab_road_transportation">
+          <attribute name="title">
+           <string>Roads</string>
+          </attribute>
          </widget>
         </widget>
        </item>

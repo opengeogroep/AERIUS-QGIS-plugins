@@ -75,7 +75,14 @@ emission_sectors = {
 '''
 
 emission_sectors = {
-    'OTHER': {'sector_id': 9999}
+    'ROAD_TRANSPORTATION': {
+        'subsectors': {
+            'Freeways': {'sector_id': 3111},
+            'Non-urban roads': {'sector_id': 3112},
+            'Urban roads': {'sector_id': 3113}
+        }
+    },
+    'OTHER': {'sector_id': 9999},
 }
 
 
@@ -102,7 +109,7 @@ emission_elements = {
 }
 
 ui_settings = {
-    'project_years': ['2019', '2020', '2021'],
+    'project_years': ['2019', '2020', '2021', '2022'],
     'situation_name': 'Situation 1',
     'situation_types': ['REFERENCE', 'PROPOSED', 'TEMPORARY', 'NETTING'],
     'calculation_types': ['DEPOSITION', 'CONCENTRATION'],

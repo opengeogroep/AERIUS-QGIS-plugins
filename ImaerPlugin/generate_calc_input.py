@@ -63,6 +63,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         self.root_gui_node = ImaerDocument().get_gui_nodes()
 
+        self.emission_tabs = {}
+        self.emission_tabs['ROAD_TRANSPORTATION'] = self.tab_road_transportation
+        self.emission_tabs['OTHER'] = self.tab_emission_sources
+
         self.init_gui()
 
 
@@ -70,7 +74,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
         self.combo_sector.currentIndexChanged.connect(self.set_subsectors)
-        self.combo_subsector.currentIndexChanged.connect(self.set_elements)
+        #self.combo_subsector.currentIndexChanged.connect(self.set_elements)
         self.edit_outfile.textChanged.connect(self.update_ok_button)
         self.set_fixed_options()
         self.update_ok_button()
@@ -78,12 +82,15 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_layer.layerChanged.connect(self.update_field_combos)
         self.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
+        self.set_emission_tab()
+
 
     def __del__(self):
         self.edit_outfile.textChanged.disconnect(self.update_ok_button)
         self.combo_sector.currentIndexChanged.disconnect(self.set_subsectors)
-        self.combo_subsector.currentIndexChanged.disconnect(self.set_elements)
+        #self.combo_subsector.currentIndexChanged.disconnect(self.set_elements)
         self.combo_layer.layerChanged.disconnect(self.update_field_combos)
+
 
 
     def browse_generate_calc_input_file(self):
@@ -105,9 +112,9 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         # sectors
         self.combo_sector.addItem('<Select sector>', 0)
-        for node in self.root_gui_node.children:
-            print(node)
-            self.combo_sector.addItem(node.label, node)
+        for sector_name in emission_sectors:
+            print(sector_name)
+            self.combo_sector.addItem(sector_name)
 
         # project
         for item in ui_settings['project_years']:
@@ -126,7 +133,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             self.combo_calculation_result_type.addItem(item, item)
 
 
-
     def set_subsectors(self):
         sector = self.combo_sector.currentText()
         has_subsectors = sector in emission_sectors and 'subsectors' in emission_sectors[sector]
@@ -137,11 +143,23 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             self.combo_subsector.addItem('<Select specific sector>', 0)
             for key, value in emission_sectors[sector]['subsectors'].items():
                 self.combo_subsector.addItem(key, value['sector_id'])
-        self.set_elements()
+        self.set_emission_tab()
 
 
+    def set_emission_tab(self):
+        # Remove all tabs but 'Metadata'
+        while self.tabWidget.count() > 1:
+            self.tabWidget.removeTab(1)
+        # Add selected emission tab
+        sector = self.combo_sector.currentText()
+        if sector in self.emission_tabs:
+            self.tabWidget.insertTab(1, self.emission_tabs[sector], sector)
+            self.tabWidget.setCurrentIndex(1)
+
+
+    '''
     def clear_layout(self, layout):
-        ''' recursively clears a layout from all widgets and layouts '''
+        # recursively clears a layout from all widgets and layouts
         if layout is not None:
             while layout.count():
                 child = layout.takeAt(0)
@@ -149,6 +167,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                     child.widget().deleteLater()
                 elif child.layout() is not None:
                     self.clear_layout(child.layout())
+    '''
 
 
     def get_current_sector_id(self):
@@ -161,6 +180,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         return 0
 
 
+    '''
     def set_elements(self):
         self.widget_registry.remove_all_groups()
 
@@ -195,6 +215,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             self.widget_registry.show()
         self.update_field_combos()
         self.update_ok_button()
+    '''
 
 
     def create_widgets(self, element):
