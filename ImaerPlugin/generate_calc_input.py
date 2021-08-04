@@ -82,7 +82,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_layer.layerChanged.connect(self.update_field_combos)
         self.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
+        for fcb in self.findChildren(QgsFieldComboBox):
+            fcb.setAllowEmptyFieldName(True)
+
         self.set_emission_tab()
+        self.update_field_combos()
 
 
     def __del__(self):
@@ -218,6 +222,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
     '''
 
 
+    '''
     def create_widgets(self, element):
         #layout = QHBoxLayout(
 
@@ -229,16 +234,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         result = {'label': label_widget, 'fixed': fixed_widget, 'field': field_widget}
         return result
+    '''
 
 
     def update_field_combos(self):
-        for name in self.widget_registry:
-            for widget_key, widget in self.widget_registry[name].items():
-                if widget_key == 'field':
-                    if isinstance(widget, QgsFieldComboBox):
-                        widget.setLayer(self.combo_layer.currentLayer())
-                    else:
-                        widget.setLayer(None)
+        for fcb in self.findChildren(QgsFieldComboBox):
+            fcb.setLayer(self.combo_layer.currentLayer())
 
 
     def update_ok_button(self):
