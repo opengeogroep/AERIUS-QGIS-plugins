@@ -15,8 +15,3 @@ idoc.metadata = md
 
 fn = '/home/raymond/tmp/imaer_test.xml'
 idoc.to_xml_file(fn)
-
-pdefs = idoc.get_gui_nodes()
-#print(pdefs)
-
-print(pdefs.to_string())

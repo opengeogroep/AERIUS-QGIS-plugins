@@ -61,8 +61,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.widget_registry = WidgetRegistry(self)
         self.sector_id = 0
 
-        self.root_gui_node = ImaerDocument().get_gui_nodes()
-
         self.emission_tabs = {}
         self.emission_tabs['ROAD_TRANSPORTATION'] = self.tab_road_transportation
         self.emission_tabs['OTHER'] = self.tab_emission_sources
@@ -161,19 +159,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             self.tabWidget.setCurrentIndex(1)
 
 
-    '''
-    def clear_layout(self, layout):
-        # recursively clears a layout from all widgets and layouts
-        if layout is not None:
-            while layout.count():
-                child = layout.takeAt(0)
-                if child.widget() is not None:
-                    child.widget().deleteLater()
-                elif child.layout() is not None:
-                    self.clear_layout(child.layout())
-    '''
-
-
     def get_current_sector_id(self):
         sub_sector_id = self.combo_subsector.currentData()
         if sub_sector_id is not None:
@@ -182,44 +167,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         if sector_id is not None:
             return sector_id
         return 0
-
-
-    '''
-    def set_elements(self):
-        self.widget_registry.remove_all_groups()
-
-        self.clear_layout(self.grid_elements)
-        #self.grid_elements.update()
-
-        sector_id = self.get_current_sector_id()
-        self.update_ok_button()
-
-        if sector_id == 0:
-            return
-
-        row = self.grid_elements.rowCount()
-        #print(emission_elements)
-        for key, element in emission_elements.items():
-            #print(key, element)
-            if -1 in element['sector_ids'] or sector_id in element['sector_ids']:
-                widgets = self.create_widgets(element)
-                #print(widgets)
-
-                if 'label' in widgets:
-                    self.grid_elements.addWidget(widgets['label'], row, 0)
-                #if 'fixed' in widgets:
-                #    self.grid_elements.addWidget(widgets['fixed'], row, 1)
-                if 'field' in widgets:
-                    self.grid_elements.addWidget(widgets['field'], row, 1)
-
-                self.widget_registry.add_widgets(key, widgets)
-                row += 1
-
-        if self.plugin.dev:
-            self.widget_registry.show()
-        self.update_field_combos()
-        self.update_ok_button()
-    '''
 
 
     '''

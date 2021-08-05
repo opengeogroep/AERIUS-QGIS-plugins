@@ -1,7 +1,8 @@
 from PyQt5.QtXml import QDomDocument
 
 #from .enumerations import OutflowDirectionType
-from .generic import GuiNode
+
+
 
 
 class EmissionSource():
@@ -19,15 +20,6 @@ class EmissionSource():
         self.sectorId = 9999
 
 
-    def get_gui_nodes(self):
-        result = GuiNode('EmissionSource', 'GROUP')
-
-        result.append_child(GuiNode('description', 'STR'))
-        result.append_child(EmissionSourceCharacteristics().get_gui_nodes())
-
-        return result
-
-
 
 
 class EmissionSourceCharacteristics(object):
@@ -39,15 +31,6 @@ class EmissionSourceCharacteristics(object):
         self.diurnal_variation = diurnal_variation
         self.building = building
 
-
-    def get_gui_nodes(self):
-        result = GuiNode('EmissionSourceCharacteristics', 'GROUP')
-
-        result.append_child(GuiNode('diurnalVariation', 'STR'))
-        result.append_child(GuiNode('emissionHeight', 'FLOAT', min_occurs=1))
-        result.append_child(GuiNode('spread', 'FLOAT'))
-
-        return result
 
 
 
