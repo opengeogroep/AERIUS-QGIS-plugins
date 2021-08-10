@@ -41,7 +41,7 @@ from ImaerPlugin.imaer2 import (
     Building
 )
 
-from ImaerPlugin.imaer4 import ImaerDocument
+from .imaer4.imaer_document import ImaerDocument
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
