@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>527</width>
-    <height>657</height>
+    <width>514</width>
+    <height>801</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -223,21 +223,11 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>481</width>
-                <height>394</height>
+                <width>468</width>
+                <height>538</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_3">
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_sector_id">
-                 <property name="text">
-                  <string>sectorId</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QgsFieldComboBox" name="fcb_label"/>
-               </item>
                <item row="1" column="1">
                 <widget class="QgsFieldComboBox" name="fcb_sector_id"/>
                </item>
@@ -252,12 +242,22 @@
                  </item>
                 </layout>
                </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_sector_id">
+                 <property name="text">
+                  <string>sectorId</string>
+                 </property>
+                </widget>
+               </item>
                <item row="2" column="0" colspan="2">
                 <widget class="QGroupBox" name="groupBox_es_characteristics">
                  <property name="title">
                   <string>Characteristics</string>
                  </property>
                  <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
                   <bool>true</bool>
                  </property>
                  <layout class="QFormLayout" name="formLayout_5">
@@ -280,6 +280,112 @@
                   </item>
                   <item row="0" column="1">
                    <widget class="QgsFieldComboBox" name="fcb_emission_height"/>
+                  </item>
+                  <item row="3" column="0" colspan="2">
+                   <widget class="QGroupBox" name="groupBox_building">
+                    <property name="title">
+                     <string>Building</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                    <layout class="QFormLayout" name="formLayout_7">
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_b_length">
+                       <property name="text">
+                        <string>length</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_b_width">
+                       <property name="text">
+                        <string>width</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_b_height">
+                       <property name="text">
+                        <string>height</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="label_b_orientation">
+                       <property name="text">
+                        <string>orientation</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_b_length"/>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_b_width"/>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_b_height"/>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_b_orientation"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="2" column="0" colspan="2">
+                   <widget class="QGroupBox" name="groupBox_heatContent">
+                    <property name="title">
+                     <string>heatContent</string>
+                    </property>
+                    <layout class="QFormLayout" name="formLayout_8">
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_hc_value">
+                       <property name="text">
+                        <string>value</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QgsFieldComboBox" name="mFieldComboBox"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QgsFieldComboBox" name="fcb_label"/>
+               </item>
+               <item row="3" column="0" colspan="2">
+                <widget class="QGroupBox" name="groupBox_emissions">
+                 <property name="title">
+                  <string>Emissions</string>
+                 </property>
+                 <layout class="QFormLayout" name="formLayout_6">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_em_nox">
+                    <property name="text">
+                     <string>NOX</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QgsFieldComboBox" name="fcb_em_nox"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_em_nh3">
+                    <property name="text">
+                     <string>NH3</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QgsFieldComboBox" name="fcb_em_nh3"/>
                   </item>
                  </layout>
                 </widget>
