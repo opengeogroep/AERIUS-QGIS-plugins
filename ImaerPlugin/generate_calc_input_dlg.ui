@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>555</width>
-    <height>910</height>
+    <height>1032</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -65,7 +65,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="tab_metadata">
           <attribute name="title">
@@ -74,6 +74,9 @@
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
             <widget class="QGroupBox" name="group_project">
+             <property name="focusPolicy">
+              <enum>Qt::StrongFocus</enum>
+             </property>
              <property name="title">
               <string>Project</string>
              </property>
@@ -224,7 +227,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>509</width>
-                <height>647</height>
+                <height>767</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_3">
@@ -406,7 +409,7 @@
               <property name="geometry">
                <rect>
                 <x>0</x>
-                <y>-386</y>
+                <y>0</y>
                 <width>495</width>
                 <height>1033</height>
                </rect>
@@ -590,7 +593,7 @@
                 </widget>
                </item>
                <item row="4" column="1">
-                <widget class="QgsFieldComboBox" name="mFieldComboBox_2"/>
+                <widget class="QgsFieldComboBox" name="fcb_rd_tunnel_factor"/>
                </item>
                <item row="2" column="0">
                 <widget class="QLabel" name="label_rd_elevation">
@@ -737,14 +740,51 @@
       </layout>
      </item>
      <item>
-      <widget class="QDialogButtonBox" name="buttonBox">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="standardButtons">
-        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_fn_2">
+       <item>
+        <widget class="QPushButton" name="btn_save_settings">
+         <property name="text">
+          <string>Save settings...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_load_settings">
+         <property name="text">
+          <string>Load settings...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QDialogButtonBox" name="buttonBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="standardButtons">
+          <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>

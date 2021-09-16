@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import time
+import json
 
 from qgis.PyQt.QtCore import QVariant
 from qgis.PyQt.QtWidgets import (
@@ -80,6 +81,9 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_layer.layerChanged.connect(self.update_field_combos)
         self.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
+        self.btn_save_settings.clicked.connect(self.save_settings)
+        self.btn_load_settings.clicked.connect(self.load_settings)
+
         for fcb in self.findChildren(QgsFieldComboBox):
             fcb.setAllowEmptyFieldName(True)
 
@@ -92,7 +96,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_sector.currentIndexChanged.disconnect(self.set_subsectors)
         #self.combo_subsector.currentIndexChanged.disconnect(self.set_elements)
         self.combo_layer.layerChanged.disconnect(self.update_field_combos)
+        self.button_outfile.clicked.disconnect(self.browse_generate_calc_input_file)
 
+        self.btn_save_settings.clicked.disconnect(self.save_settings)
+        self.btn_load_settings.clicked.disconnect(self.load_settings)
 
 
     def browse_generate_calc_input_file(self):
@@ -303,3 +310,71 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             elif cast_to == 'string':
                 return result.toString()'''
         return value
+
+
+    def save_settings(self):
+        work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
+        if work_dir is None:
+            raise Exception('Work dir not set')
+            return
+        # TODO: choose file name
+        base_name = 'generate_gml_config.json'
+        out_fn = os.path.join(work_dir, base_name)
+        print(out_fn)
+        field_dict = self.collect_field_settings()
+        txt = json.dumps(field_dict, indent=4)
+        with open(out_fn, 'w') as out_file:
+            out_file.write(txt)
+
+
+    def collect_field_settings(self):
+        '''Collects a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
+        result = {}
+        result['imaer_plugin_version'] = 1
+        result['fields'] = {}
+        for fcb in self.findChildren(QgsFieldComboBox):
+            k = fcb.objectName()
+            v = fcb.currentText()
+            result['fields'][k] = v
+        return result
+
+
+    def load_settings(self):
+        work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
+        if work_dir is None:
+            raise Exception('Work dir not set')
+            return
+        # TODO: choose file name
+        base_name = 'generate_gml_config.json'
+        out_fn = os.path.join(work_dir, base_name)
+        print(out_fn)
+
+        with open(out_fn, 'r') as out_file:
+            txt = out_file.read()
+
+        field_dict = json.loads(txt)
+
+        if not 'imaer_plugin_version' in field_dict:
+            print('This is not a valid field configuration file')
+            return
+
+        self.set_field_settings(field_dict['fields'])
+
+
+    def set_field_settings(self, field_cfg):
+        '''Collects a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
+        layer_fields = self.combo_layer.currentLayer().fields().names()
+        for fcb in self.findChildren(QgsFieldComboBox):
+            widget_name = fcb.objectName()
+            if not widget_name in field_cfg:
+                continue
+            new_field = field_cfg[widget_name]
+            if new_field == '':
+                fcb.setCurrentIndex(0)
+                continue
+            if new_field in layer_fields:
+                fcb.setCurrentText(new_field)
+            else:
+                # Set empty
+                fcb.setCurrentIndex(0)
+                print(f'Current input layer does not contain a field \'{new_field}\'')
