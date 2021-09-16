@@ -362,7 +362,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
 
     def set_field_settings(self, field_cfg):
-        '''Collects a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
+        '''Sets texts from a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
         layer_fields = self.combo_layer.currentLayer().fields().names()
         for fcb in self.findChildren(QgsFieldComboBox):
             widget_name = fcb.objectName()
