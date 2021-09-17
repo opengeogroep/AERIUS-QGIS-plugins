@@ -3,7 +3,7 @@ from PyQt5.QtXml import QDomDocument
 
 from .metadata import AeriusCalculatorMetadata
 from .emission_source import EmissionSource
-
+#import
 
 
 
@@ -48,7 +48,7 @@ class ImaerDocument():
         for feature_member in self.feature_members:
             feature_member_elem = self.doc.createElement('imaer:featureMember')
             fcc_elem.appendChild(feature_member_elem)
-            fcc_elem.appendChild(feature_member.to_xml_elem(self.doc))
+            feature_member_elem.appendChild(feature_member.to_xml_elem(self.doc))
 
 
     def to_xml_file(self, fn):

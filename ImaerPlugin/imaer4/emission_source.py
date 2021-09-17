@@ -1,25 +1,74 @@
 from PyQt5.QtXml import QDomDocument
 
 #from .enumerations import OutflowDirectionType
+from .gml import get_gml_element
 
 
 
+class EmissionSourceType(object):
 
-class EmissionSource():
-
-    def __init__(self, doc=None):
-        self.doc = doc
-        if self.doc is None:
-            self.doc = QDomDocument()
-
+    def __init__(self, *, local_id, sector_id, loc_name, geom):
+        self.label = None
+        self.description = None
         self.emission_source_characteristics = None
+        self.sector_id = 9999
         self.building = None
         self.emissions = []
-        self.geometry = None
-        self.identifier = None
-        self.sectorId = 9999
+        self.geometry = geom
+        self.identifier = local_id
 
 
+    def to_xml_elem(self, doc=QDomDocument()):
+        if doc is None:
+            doc = QDomDocument()
+        result = doc.createElement('imaer:EmissionSource')
+        result.setAttribute('sectorId', self.sector_id)
+
+        # identifier
+        ident_elem = doc.createElement('imaer:identifier')
+        nen_elem = doc.createElement('imaer:NEN3610ID')
+
+        elem = doc.createElement('imaer:namespace')
+        elem.appendChild(doc.createTextNode('NL.IMAER'))
+        nen_elem.appendChild(elem)
+        elem = doc.createElement('imaer:localId')
+        elem.appendChild(doc.createTextNode(str(self.identifier)))
+        nen_elem.appendChild(elem)
+
+        ident_elem.appendChild(nen_elem)
+        result.appendChild(ident_elem)
+
+        # geometry
+        geom_elem = doc.createElement('imaer:geometry')
+        es_geom_elem = doc.createElement('imaer:EmissionSourceGeometry')
+        gm_tags = {0: 'GM_Point', 1: 'GM_Curve', 2: 'GM_Surface'}
+        gm_tag = gm_tags[self.geometry.type()]
+        gm_elem = doc.createElement(f'imaer:{gm_tag}')
+
+        gml_elem = get_gml_element(self.geometry, self.identifier)
+
+        gm_elem.appendChild(gml_elem)
+        es_geom_elem.appendChild(gm_elem)
+        geom_elem.appendChild(es_geom_elem)
+        result.appendChild(geom_elem)
+
+
+
+        '''# project
+        if len(self.project) > 0:
+            pr = doc.createElement('imaer:project')
+            pr_ele = doc.createElement('imaer:ProjectMetadata')
+            if 'year' in self.project:
+                ele = doc.createElement('imaer:year')
+                ele.appendChild(doc.createTextNode( str(self.project['year']) ))
+                pr_ele.appendChild(ele)
+            if 'description' in self.project:
+                ele = doc.createElement('imaer:description')
+                ele.appendChild(doc.createTextNode( str(self.project['description']) ))
+                pr_ele.appendChild(ele)
+            pr.appendChild(pr_ele)
+            result.appendChild(pr)'''
+        return result
 
 
 class EmissionSourceCharacteristics(object):
@@ -34,10 +83,9 @@ class EmissionSourceCharacteristics(object):
 
 
 
-'''
 class HeatContent(object):
 
-    def generate_dom(self):
+    def to_xml_elem(self):
         doc = xml.dom.minidom.Document()
         hc = doc.createElementNS(_imaer_ns, 'imaer:heatContent')
         return hc
@@ -51,7 +99,7 @@ class SpecifiedHeatContent(HeatContent):
         self.value = value
 
 
-    def generate_dom(self):
+    def to_xml_elem(self):
         hc = super().generate_dom()
         doc = xml.dom.minidom.Document()
         shc = doc.createElementNS(_imaer_ns, 'imaer:SpecifiedHeatContent')
@@ -65,7 +113,7 @@ class SpecifiedHeatContent(HeatContent):
 
 
 
-
+'''
 class CalculatedHeatContent(HeatContent):
 
     def __init__(self, emission_temperature, outflow_diameter, outflow_velocity, outflow_direction):
@@ -75,7 +123,7 @@ class CalculatedHeatContent(HeatContent):
         self.outflow_direction = outflow_direction
 
 
-    def generate_dom(self):
+    def to_xml_elem(self):
         hc = super().generate_dom()
         doc = xml.dom.minidom.Document()
 
@@ -112,7 +160,7 @@ class Building(object):
         self.length = length
         self.orientation = orientation
 
-    def generate_dom(self):
+    def to_xml_elem(self):
         doc = xml.dom.minidom.Document()
 
         bld1 = doc.createElementNS(_imaer_ns, 'imaer:building')
@@ -136,3 +184,20 @@ class Building(object):
 
         return bld1
 '''
+
+
+class EmissionSource(EmissionSourceType):
+
+
+    def __init__(self, *, emissions=[], **kwargs):
+        super().__init__(**kwargs)
+        self.emissions = emissions
+
+
+    def to_xml_elem(self, doc=QDomDocument()):
+        if doc is None:
+            doc = QDomDocument()
+
+        result = super().to_xml_elem(doc)
+
+        return result

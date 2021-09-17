@@ -22,7 +22,8 @@ from qgis.core import (
     QgsMapLayerProxyModel,
     QgsProject,
     QgsCoordinateReferenceSystem,
-    QgsCoordinateTransform)
+    QgsCoordinateTransform
+)
 
 from ImaerPlugin.config import (
     emission_sectors,
@@ -30,10 +31,11 @@ from ImaerPlugin.config import (
     ui_settings
 )
 
-from ImaerPlugin.widget_registry import WidgetRegistry
-
 from ImaerPlugin.imaer4 import (
-    ImaerDocument
+    ImaerDocument,
+    AeriusCalculatorMetadata,
+    EmissionSourceType,
+    EmissionSource
 )
 
 #from .imaer4.imaer_document import ImaerDocument
@@ -53,8 +55,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.iface = iface
         self.plugin = plugin
-        ##self.widget_registry = WidgetRegistry(self)
-        ##self.sector_id = 0
 
         self.emission_tabs = {}
         self.emission_tabs['ROAD_TRANSPORTATION'] = self.tab_road_transportation
@@ -158,11 +158,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
     def get_imaer_doc_from_gui(self):
         '''Maps items from GUI widgets to IMAER object'''
 
-        doc = ImaerDocument()
-        return doc
-
-
-        '''result = FeatureCollectionCalculator()
+        imaer_doc = ImaerDocument()
 
         year = self.combo_project_year.currentData()
         description = self.edit_project_description.toPlainText()
@@ -174,7 +170,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             situation = {'name': situation_name, 'reference': ''},
             #version = {'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'}
         )
-        result.metadata = metadata
+
+        imaer_doc.metadata = metadata
 
         input_layer = self.combo_layer.currentLayer()
         crs_source = input_layer.crs()
@@ -185,8 +182,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         else:
             crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
 
+
+
+        #es = EmissionSource()
+        #imaer_doc.feature_members.append(es)
+
         #print(input_layer)
-        emission_sources = {}
         for feat in input_layer.getFeatures():
             local_id = 'ES.{}'.format(feat.id())
             ##sector_id = self.get_current_sector_id()
@@ -196,9 +197,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             if crs_transform is not None:
                 geom.transform(crs_transform)
 
-            es = EmissionSource(local_id, sector_id, loc_name, geom, crs_dest_srid)
+            es = EmissionSource(local_id=local_id, sector_id=sector_id, loc_name=loc_name, geom=geom)
+            imaer_doc.feature_members.append(es)
 
-            # emission source characteristics
+            '''# emission source characteristics
             esc_height = self.get_widget_value('esc_height', feat, 'float')
             esc_heat_content = self.get_widget_value('esc_heat_content', feat, 'float')
             esc_em_temp = self.get_widget_value('esc_em_temp', feat, 'float')
@@ -235,7 +237,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                     es.add_emission(substance_code, em_value)
             result.add_feature_member(es)'''
 
-        return result
+        return imaer_doc
 
 
     def get_widget_value(self, var_name, feat, cast_to=None):
