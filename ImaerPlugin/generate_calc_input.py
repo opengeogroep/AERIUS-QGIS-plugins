@@ -35,6 +35,7 @@ from ImaerPlugin.imaer4 import (
     ImaerDocument,
     AeriusCalculatorMetadata,
     EmissionSourceType,
+    EmissionSourceCharacteristics,
     EmissionSource
 )
 
@@ -182,53 +183,57 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         else:
             crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
 
-
-
-        #es = EmissionSource()
-        #imaer_doc.feature_members.append(es)
-
-        #print(input_layer)
         for feat in input_layer.getFeatures():
             local_id = 'ES.{}'.format(feat.id())
-            ##sector_id = self.get_current_sector_id()
-            sector_id = 0
-            loc_name = self.get_widget_value('loc_name', feat)
+
+            sector_id = self.get_feature_value(self.fcb_es_sector_id, feat)
+            label = self.get_feature_value(self.fcb_es_label, feat)
+            description = self.get_feature_value(self.fcb_es_description, feat)
+
+            # geometry
             geom = feat.geometry()
             if crs_transform is not None:
                 geom.transform(crs_transform)
 
-            es = EmissionSource(local_id=local_id, sector_id=sector_id, loc_name=loc_name, geom=geom)
+            es = EmissionSource(local_id=local_id, sector_id=sector_id, label=label, geom=geom)
+            es.description = description
+
+            # emission source characteristics
+            if self.groupBox_es_characteristics.isChecked():
+                esc_height = self.get_feature_value(self.fcb_es_emission_height, feat)
+                esc_spread = self.get_feature_value(self.fcb_es_spread, feat)
+                esc_diurnal_var = self.get_feature_value(self.fcb_es_diurnal_variation, feat)
+                esc_heat_content = self.get_feature_value(self.fcb_hc_value, feat)
+
+                es.emission_source_characteristics = EmissionSourceCharacteristics(
+                    emission_height=esc_height,
+                    spread=esc_spread,
+                    diurnal_variation=esc_diurnal_var)
+
             imaer_doc.feature_members.append(es)
 
-            '''# emission source characteristics
-            esc_height = self.get_widget_value('esc_height', feat, 'float')
-            esc_heat_content = self.get_widget_value('esc_heat_content', feat, 'float')
-            esc_em_temp = self.get_widget_value('esc_em_temp', feat, 'float')
-            esc_of_diam = self.get_widget_value('esc_of_diam', feat, 'float')
-            esc_of_vel = self.get_widget_value('esc_of_vel', feat, 'float')
-            esc_of_dir = self.get_widget_value('esc_of_dir', feat, 'str')
-            if esc_heat_content is not None:
-                hc = SpecifiedHeatContent(esc_heat_content)
-            elif esc_em_temp is not None:
-                hc = CalculatedHeatContent(esc_em_temp, esc_of_diam, esc_of_vel, esc_of_dir)
-            else:
-                hc = None
-            if hc is not None and esc_height is not None:
-                esc = EmissionSourceCharacteristics(hc, esc_height)
+            '''if esc_heat_content is not None:
+                    hc = SpecifiedHeatContent(esc_heat_content)
+                elif esc_em_temp is not None:
+                    hc = CalculatedHeatContent(esc_em_temp, esc_of_diam, esc_of_vel, esc_of_dir)
+                else:
+                    hc = None
+                if hc is not None and esc_height is not None:
+                    esc = EmissionSourceCharacteristics(hc, esc_height)
 
-                esc_diurnal_var = self.get_widget_value('esc_diurnal_var', feat, 'float')
-                if esc_diurnal_var is not None:
-                    esc.diurnal_variation = esc_diurnal_var
+                    esc_diurnal_var = self.get_widget_value('esc_diurnal_var', feat, 'float')
+                    if esc_diurnal_var is not None:
+                        esc.diurnal_variation = esc_diurnal_var
 
-                esc_bld_height = self.get_widget_value('esc_bld_height', feat, 'float')
-                esc_bld_width = self.get_widget_value('esc_bld_width', feat, 'float')
-                esc_bld_length = self.get_widget_value('esc_bld_length', feat, 'float')
-                esc_bld_orientation = self.get_widget_value('esc_bld_orientation', feat, 'float')
-                if esc_bld_height is not None:
-                    bld = Building(esc_bld_height, esc_bld_width, esc_bld_length, esc_bld_orientation)
-                    esc.building = bld
+                    esc_bld_height = self.get_widget_value('esc_bld_height', feat, 'float')
+                    esc_bld_width = self.get_widget_value('esc_bld_width', feat, 'float')
+                    esc_bld_length = self.get_widget_value('esc_bld_length', feat, 'float')
+                    esc_bld_orientation = self.get_widget_value('esc_bld_orientation', feat, 'float')
+                    if esc_bld_height is not None:
+                        bld = Building(esc_bld_height, esc_bld_width, esc_bld_length, esc_bld_orientation)
+                        esc.building = bld
 
-                es.es_characteristics = esc
+                    es.es_characteristics = esc
 
             # emissions
             for substance_code, substance_name in {'NH3': 'emission_nh3', 'NOX': 'emission_nox'}.items():
@@ -240,21 +245,16 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         return imaer_doc
 
 
-    def get_widget_value(self, var_name, feat, cast_to=None):
-        return 0
+    def get_feature_value(self, widget, feat, cast_to=None):
+        if not isinstance(widget, QgsFieldComboBox):
+            return None
+        field_name = widget.currentField()
+        if field_name == '':
+            return None
+            #return widget_set['fixed'].text() TODO: return fixed value after data type check (or something..)
+        else:
+            value = feat[field_name]
 
-
-    '''
-    def get_widget_value(self, var_name, feat, cast_to=None):
-        ##widget_set = self.widget_registry[var_name]
-        ##field_name = widget_set['field'].currentField()
-        ##if field_name == '':
-        ##    return None
-        ##    #return widget_set['fixed'].text() TODO: return fixed value after data type check (or something..)
-        ##else:
-        ##    value = feat[field_name]
-
-        # return None in case attribute value is NULL (empty cell)
         if isinstance(value, QVariant) and str(value) == 'NULL':
             return None
 
@@ -271,7 +271,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             elif cast_to == 'string':
                 return result.toString()
         return value
-    '''
+
 
     def save_settings(self):
         work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)

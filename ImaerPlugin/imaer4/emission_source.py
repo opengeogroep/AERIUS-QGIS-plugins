@@ -7,11 +7,11 @@ from .gml import get_gml_element
 
 class EmissionSourceType(object):
 
-    def __init__(self, *, local_id, sector_id, loc_name, geom):
-        self.label = None
-        self.description = None
+    def __init__(self, *, local_id, sector_id, geom, label=None, description=None):
+        self.label = label
+        self.description = description
         self.emission_source_characteristics = None
-        self.sector_id = 9999
+        self.sector_id = sector_id
         self.building = None
         self.emissions = []
         self.geometry = geom
@@ -19,8 +19,6 @@ class EmissionSourceType(object):
 
 
     def to_xml_elem(self, doc=QDomDocument()):
-        if doc is None:
-            doc = QDomDocument()
         result = doc.createElement('imaer:EmissionSource')
         result.setAttribute('sectorId', self.sector_id)
 
@@ -38,6 +36,18 @@ class EmissionSourceType(object):
         ident_elem.appendChild(nen_elem)
         result.appendChild(ident_elem)
 
+        # label
+        if self.label is not None:
+            elem = doc.createElement('imaer:label')
+            elem.appendChild(doc.createTextNode(str(self.label)))
+            result.appendChild(elem)
+
+        # description
+        if self.description is not None:
+            elem = doc.createElement('imaer:description')
+            elem.appendChild(doc.createTextNode(str(self.description)))
+            result.appendChild(elem)
+
         # geometry
         geom_elem = doc.createElement('imaer:geometry')
         es_geom_elem = doc.createElement('imaer:EmissionSourceGeometry')
@@ -52,22 +62,13 @@ class EmissionSourceType(object):
         geom_elem.appendChild(es_geom_elem)
         result.appendChild(geom_elem)
 
+        # emission source characteristics
+        if self.emission_source_characteristics is not None:
+            esc_elem = doc.createElement('imaer:emissionSourceCharacteristics')
+            esc_elem.appendChild(self.emission_source_characteristics.to_xml_elem(doc))
+            result.appendChild(esc_elem)
 
 
-        '''# project
-        if len(self.project) > 0:
-            pr = doc.createElement('imaer:project')
-            pr_ele = doc.createElement('imaer:ProjectMetadata')
-            if 'year' in self.project:
-                ele = doc.createElement('imaer:year')
-                ele.appendChild(doc.createTextNode( str(self.project['year']) ))
-                pr_ele.appendChild(ele)
-            if 'description' in self.project:
-                ele = doc.createElement('imaer:description')
-                ele.appendChild(doc.createTextNode( str(self.project['description']) ))
-                pr_ele.appendChild(ele)
-            pr.appendChild(pr_ele)
-            result.appendChild(pr)'''
         return result
 
 
@@ -80,6 +81,29 @@ class EmissionSourceCharacteristics(object):
         self.diurnal_variation = diurnal_variation
         self.building = building
 
+
+    def to_xml_elem(self, doc=QDomDocument()):
+        result = doc.createElement('imaer:EmissionSourceCharacteristics')
+
+        # emission height
+        if self.emission_height is not None:
+            elem = doc.createElement('imaer:emissionHeight')
+            elem.appendChild(doc.createTextNode(str(self.emission_height)))
+            result.appendChild(elem)
+
+        # spread
+        if self.spread is not None:
+            elem = doc.createElement('imaer:spread')
+            elem.appendChild(doc.createTextNode(str(self.spread)))
+            result.appendChild(elem)
+
+        # diurnal variation
+        if self.diurnal_variation is not None:
+            elem = doc.createElement('imaer:diurnalVariation')
+            elem.appendChild(doc.createTextNode(str(self.diurnal_variation)))
+            result.appendChild(elem)
+
+        return result
 
 
 
@@ -187,7 +211,6 @@ class Building(object):
 
 
 class EmissionSource(EmissionSourceType):
-
 
     def __init__(self, *, emissions=[], **kwargs):
         super().__init__(**kwargs)
