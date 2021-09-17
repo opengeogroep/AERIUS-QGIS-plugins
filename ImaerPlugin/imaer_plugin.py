@@ -338,12 +338,11 @@ class ImaerPlugin:
         #print(result)
         if result:
             self.log('starting calcinput generation ...')
-            fcc = self.generate_calc_input_dlg.get_fcc_from_gui()
+            imaer_doc = self.generate_calc_input_dlg.get_imaer_doc_from_gui()
             fn = self.generate_calc_input_dlg.edit_outfile.text()
-            if fcc.write_to_file(fn):
-                self.iface.messageBar().pushMessage('Success', 'Imaer GML file saved as: <a href="{0}">{0}</a>'.format(fn), level=Qgis.Info, duration=10)
-            else:
-                self.iface.messageBar().pushMessage('Error', 'Could not export GML file to {0}'.format(fn), level=Qgis.Critical, duration=10)
+            imaer_doc.to_xml_file(fn)
+            self.iface.messageBar().pushMessage('Success', 'Imaer GML file saved as: <a href="{0}">{0}</a>'.format(fn), level=Qgis.Info, duration=10)
+            #self.iface.messageBar().pushMessage('Error', 'Could not export GML file to {0}'.format(fn), level=Qgis.Critical, duration=10)
 
 
     def update_all_widgets(self):

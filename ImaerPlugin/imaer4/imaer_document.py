@@ -1,5 +1,3 @@
-#from .generic import namespaces, ET, find_xml_value
-
 from PyQt5.QtCore import QXmlStreamReader
 from PyQt5.QtXml import QDomDocument
 
