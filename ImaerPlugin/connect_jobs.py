@@ -32,7 +32,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.combo_year.setCurrentText('2021')
 
         self.button_gml_input_browse.clicked.connect(self.browse_gml_file)
-        #self.button_validate.clicked.connect(self.validate)
+        self.button_validate.clicked.connect(self.validate)
         self.button_calculate.clicked.connect(self.calculate)
         self.button_get_jobs.clicked.connect(self.get_jobs)
         self.button_cancel.clicked.connect(self.cancel_jobs)
@@ -49,7 +49,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
     def __del__(self):
         self.button_gml_input_browse.clicked.disconnect(self.browse_gml_file)
-        #self.button_validate.clicked.disconnect(self.validate)
+        self.button_validate.clicked.disconnect(self.validate)
         self.button_calculate.clicked.disconnect(self.calculate)
         self.button_get_jobs.clicked.disconnect(self.get_jobs)
         self.button_cancel.clicked.disconnect(self.cancel_jobs)
