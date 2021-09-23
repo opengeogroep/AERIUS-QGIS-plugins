@@ -51,11 +51,14 @@ class EmissionSourceType(object):
         # geometry
         geom_elem = doc.createElement('imaer:geometry')
         es_geom_elem = doc.createElement('imaer:EmissionSourceGeometry')
+
         gm_tags = {0: 'GM_Point', 1: 'GM_Curve', 2: 'GM_Surface'}
         gm_tag = gm_tags[self.geometry.type()]
-        gm_elem = doc.createElement(f'imaer:{gm_tag}')
+        gml_types = {0: 'POINT', 1: 'CURVE', 2: 'SURFACE'}
+        gml_type = gml_types[self.geometry.type()]
 
-        gml_elem = get_gml_element(self.geometry, self.identifier)
+        gm_elem = doc.createElement(f'imaer:{gm_tag}')
+        gml_elem = get_gml_element(self.geometry, f'{self.identifier}.{gml_type}')
 
         gm_elem.appendChild(gml_elem)
         es_geom_elem.appendChild(gm_elem)
