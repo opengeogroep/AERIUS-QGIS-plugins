@@ -36,7 +36,8 @@ from ImaerPlugin.imaer4 import (
     AeriusCalculatorMetadata,
     EmissionSourceType,
     EmissionSourceCharacteristics,
-    EmissionSource
+    EmissionSource,
+    SpecifiedHeatContent
 )
 
 #from .imaer4.imaer_document import ImaerDocument
@@ -199,16 +200,24 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             es.description = description
 
             # emission source characteristics
+
+            hc_value = self.get_feature_value(self.fcb_es_hc_value, feat)
+            if hc_value is not None:
+                hc = SpecifiedHeatContent(value=hc_value)
+            else:
+                hc = None
+
             if self.groupBox_es_characteristics.isChecked():
                 esc_height = self.get_feature_value(self.fcb_es_emission_height, feat)
                 esc_spread = self.get_feature_value(self.fcb_es_spread, feat)
-                esc_diurnal_var = self.get_feature_value(self.fcb_es_diurnal_variation, feat)
-                esc_heat_content = self.get_feature_value(self.fcb_hc_value, feat)
+                #esc_diurnal_var = self.get_feature_value(self.fcb_es_diurnal_variation, feat)
 
                 es.emission_source_characteristics = EmissionSourceCharacteristics(
                     emission_height=esc_height,
                     spread=esc_spread,
-                    diurnal_variation=esc_diurnal_var)
+                    heat_content=hc,
+                    #diurnal_variation=esc_diurnal_var
+                )
 
             imaer_doc.feature_members.append(es)
 

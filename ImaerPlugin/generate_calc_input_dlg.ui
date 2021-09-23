@@ -227,18 +227,18 @@
                   <item row="3" column="0" colspan="2">
                    <widget class="QGroupBox" name="groupBox_heatContent">
                     <property name="title">
-                     <string>Heat content</string>
+                     <string>Specified heat content</string>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_5">
                      <item row="0" column="0">
-                      <widget class="QLabel" name="label_hc_value">
+                      <widget class="QLabel" name="label_es_hc_value">
                        <property name="text">
                         <string>value</string>
                        </property>
                       </widget>
                      </item>
                      <item row="0" column="1">
-                      <widget class="QgsFieldComboBox" name="fcb_hc_value"/>
+                      <widget class="QgsFieldComboBox" name="fcb_es_hc_value"/>
                      </item>
                     </layout>
                    </widget>

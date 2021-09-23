@@ -71,8 +71,27 @@ class EmissionSourceType(object):
             esc_elem.appendChild(self.emission_source_characteristics.to_xml_elem(doc))
             result.appendChild(esc_elem)
 
+        return result
+
+
+
+
+class EmissionSource(EmissionSourceType):
+
+    def __init__(self, *, emissions=[], **kwargs):
+        super().__init__(**kwargs)
+        self.emissions = emissions
+
+
+    def to_xml_elem(self, doc=QDomDocument()):
+        if doc is None:
+            doc = QDomDocument()
+
+        result = super().to_xml_elem(doc)
 
         return result
+
+
 
 
 class EmissionSourceCharacteristics(object):
@@ -106,37 +125,46 @@ class EmissionSourceCharacteristics(object):
             elem.appendChild(doc.createTextNode(str(self.diurnal_variation)))
             result.appendChild(elem)
 
+        if self.heat_content is not None:
+            elem = self.heat_content.to_xml_elem(doc)
+            result.appendChild(elem)
+
         return result
+
 
 
 
 class HeatContent(object):
 
-    def to_xml_elem(self):
-        doc = xml.dom.minidom.Document()
-        hc = doc.createElementNS(_imaer_ns, 'imaer:heatContent')
-        return hc
+    def __init__(self):
+        pass
+
+
+    def to_xml_elem(self, doc=QDomDocument()):
+        result = doc.createElement('imaer:heatContent')
+        return result
 
 
 
 
 class SpecifiedHeatContent(HeatContent):
 
-    def __init__(self, value):
+    def __init__(self, *, value, **kwargs):
+        super().__init__(**kwargs)
         self.value = value
 
 
-    def to_xml_elem(self):
-        hc = super().generate_dom()
-        doc = xml.dom.minidom.Document()
-        shc = doc.createElementNS(_imaer_ns, 'imaer:SpecifiedHeatContent')
-        v = doc.createElementNS(_imaer_ns, 'imaer:value')
+    def to_xml_elem(self, doc=QDomDocument()):
+        result = super().to_xml_elem(doc)
+
+        shc = doc.createElement('imaer:SpecifiedHeatContent')
+        v = doc.createElement('imaer:value')
         v.appendChild(doc.createTextNode( str(self.value) ))
 
         shc.appendChild(v)
-        hc.appendChild(shc)
+        result.appendChild(shc)
 
-        return hc
+        return result
 
 
 
@@ -211,19 +239,3 @@ class Building(object):
 
         return bld1
 '''
-
-
-class EmissionSource(EmissionSourceType):
-
-    def __init__(self, *, emissions=[], **kwargs):
-        super().__init__(**kwargs)
-        self.emissions = emissions
-
-
-    def to_xml_elem(self, doc=QDomDocument()):
-        if doc is None:
-            doc = QDomDocument()
-
-        result = super().to_xml_elem(doc)
-
-        return result
