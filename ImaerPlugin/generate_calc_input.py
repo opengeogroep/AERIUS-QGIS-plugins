@@ -37,7 +37,8 @@ from ImaerPlugin.imaer4 import (
     EmissionSourceType,
     EmissionSourceCharacteristics,
     EmissionSource,
-    SpecifiedHeatContent
+    SpecifiedHeatContent,
+    Emission
 )
 
 #from .imaer4.imaer_document import ImaerDocument
@@ -164,13 +165,18 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         year = self.combo_project_year.currentData()
         description = self.edit_project_description.toPlainText()
-        situation_name = self.edit_situation_name.text()
-        #situation_type = self.combo_situation_type.currentData()
+
+        if self.group_situation.isChecked():
+             situation_name = self.edit_situation_name.text()
+             situation_reference = self.edit_situation_reference.text()
+             situation_type = self.combo_situation_type.currentText()
+             situation = {'name': situation_name, 'reference': situation_reference, 'type': situation_type}
+        else:
+            situation = None
 
         metadata = AeriusCalculatorMetadata(
             project = {'year': year, 'description': description},
-            situation = {'name': situation_name, 'reference': ''},
-            #version = {'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'}
+            situation = situation,
         )
 
         imaer_doc.metadata = metadata
@@ -197,42 +203,29 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 geom.transform(crs_transform)
 
             es = EmissionSource(local_id=local_id, sector_id=sector_id, label=label, geom=geom)
+            print('1:', type(es), es.emissions, es.description)
+
             es.description = description
 
             # emission source characteristics
-
-            hc_value = self.get_feature_value(self.fcb_es_hc_value, feat)
-            if hc_value is not None:
-                hc = SpecifiedHeatContent(value=hc_value)
-            else:
-                hc = None
-
             if self.groupBox_es_characteristics.isChecked():
                 esc_height = self.get_feature_value(self.fcb_es_emission_height, feat)
                 esc_spread = self.get_feature_value(self.fcb_es_spread, feat)
-                #esc_diurnal_var = self.get_feature_value(self.fcb_es_diurnal_variation, feat)
+
+                hc_value = self.get_feature_value(self.fcb_es_hc_value, feat)
+                if hc_value is not None:
+                    hc = SpecifiedHeatContent(value=hc_value)
+                else:
+                    hc = None
 
                 es.emission_source_characteristics = EmissionSourceCharacteristics(
                     emission_height=esc_height,
                     spread=esc_spread,
                     heat_content=hc,
-                    #diurnal_variation=esc_diurnal_var
                 )
 
-            imaer_doc.feature_members.append(es)
-
-            '''if esc_heat_content is not None:
-                    hc = SpecifiedHeatContent(esc_heat_content)
-                elif esc_em_temp is not None:
-                    hc = CalculatedHeatContent(esc_em_temp, esc_of_diam, esc_of_vel, esc_of_dir)
-                else:
-                    hc = None
-                if hc is not None and esc_height is not None:
+            '''if hc is not None and esc_height is not None:
                     esc = EmissionSourceCharacteristics(hc, esc_height)
-
-                    esc_diurnal_var = self.get_widget_value('esc_diurnal_var', feat, 'float')
-                    if esc_diurnal_var is not None:
-                        esc.diurnal_variation = esc_diurnal_var
 
                     esc_bld_height = self.get_widget_value('esc_bld_height', feat, 'float')
                     esc_bld_width = self.get_widget_value('esc_bld_width', feat, 'float')
@@ -242,14 +235,18 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                         bld = Building(esc_bld_height, esc_bld_width, esc_bld_length, esc_bld_orientation)
                         esc.building = bld
 
-                    es.es_characteristics = esc
+                    es.es_characteristics = esc'''
 
             # emissions
-            for substance_code, substance_name in {'NH3': 'emission_nh3', 'NOX': 'emission_nox'}.items():
-                em_value = self.get_widget_value(substance_name, feat)
-                if em_value is not None:
-                    es.add_emission(substance_code, em_value)
-            result.add_feature_member(es)'''
+            es.emissions = [] # TODO: Figure out why and fix this! (Without setting this clean list, emissions from former features are present.)
+            em = self.get_feature_value(self.fcb_em_nox, feat)
+            if em is not None:
+                es.emissions.append(Emission('NOX', em))
+            em = self.get_feature_value(self.fcb_em_nh3, feat)
+            if em is not None:
+                es.emissions.append(Emission('NH3', em))
+
+            imaer_doc.feature_members.append(es)
 
         return imaer_doc
 

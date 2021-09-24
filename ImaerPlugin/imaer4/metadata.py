@@ -6,7 +6,7 @@ from PyQt5.QtXml import QDomDocument
 
 class AeriusCalculatorMetadata():
 
-    def __init__(self, project={}, situation={}, calculation={}, version={}):
+    def __init__(self, project, situation=None, calculation=None, version=None):
         self.project = project
         # year
         # description
@@ -45,7 +45,7 @@ class AeriusCalculatorMetadata():
 
 
         # situation
-        if len(self.situation) > 0:
+        if self.situation is not None:
             sit = doc.createElement('imaer:situation')
             sit_ele = doc.createElement('imaer:SituationMetadata')
             if 'name' in self.situation:
@@ -56,11 +56,15 @@ class AeriusCalculatorMetadata():
                 ele = doc.createElement('imaer:reference')
                 ele.appendChild(doc.createTextNode( str(self.situation['reference']) ))
                 sit_ele.appendChild(ele)
+            if 'type' in self.situation:
+                ele = doc.createElement('imaer:situationType')
+                ele.appendChild(doc.createTextNode( str(self.situation['type']) ))
+                sit_ele.appendChild(ele)
             sit.appendChild(sit_ele)
             result.appendChild(sit)
 
         # calculation
-        if len(self.calculation) > 0:
+        if self.calculation is not None:
             calc = doc.createElement('imaer:calculation')
             calc_ele = doc.createElement('imaer:CalculationMetadata')
             if 'type' in self.calculation:
@@ -80,7 +84,7 @@ class AeriusCalculatorMetadata():
             result.appendChild(calc)
 
         # version
-        if len(self.version) > 0:
+        if self.version is not None:
             ver = doc.createElement('imaer:version')
             ver_ele = doc.createElement('imaer:VersionMetadata')
             if 'aeriusVersion' in self.version:

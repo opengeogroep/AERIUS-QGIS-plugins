@@ -55,7 +55,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tab_metadata">
           <attribute name="title">
@@ -116,26 +116,40 @@
               <item row="0" column="0">
                <widget class="QLabel" name="label_situation_name">
                 <property name="text">
-                 <string>Name</string>
+                 <string>name</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="1">
                <widget class="QLineEdit" name="edit_situation_name">
                 <property name="text">
-                 <string>hallo</string>
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_situation_type">
+                <property name="text">
+                 <string>type</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QComboBox" name="combo_situation_type"/>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="edit_situation_reference">
+                <property name="text">
+                 <string/>
                 </property>
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QLabel" name="label_situation_type">
+               <widget class="QLabel" name="label_situation_reference">
                 <property name="text">
-                 <string>Type</string>
+                 <string>reference</string>
                 </property>
                </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QComboBox" name="combo_situation_type"/>
               </item>
              </layout>
             </widget>

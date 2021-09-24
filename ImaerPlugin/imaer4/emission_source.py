@@ -15,12 +15,13 @@ class EmissionSourceType(object):
         self.building = None
         self.emissions = []
         self.geometry = geom
-        self.identifier = local_id
+        self.local_id = local_id
 
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement('imaer:EmissionSource')
         result.setAttribute('sectorId', self.sector_id)
+        result.setAttribute('gml:id', self.local_id)
 
         # identifier
         ident_elem = doc.createElement('imaer:identifier')
@@ -30,7 +31,7 @@ class EmissionSourceType(object):
         elem.appendChild(doc.createTextNode('NL.IMAER'))
         nen_elem.appendChild(elem)
         elem = doc.createElement('imaer:localId')
-        elem.appendChild(doc.createTextNode(str(self.identifier)))
+        elem.appendChild(doc.createTextNode(str(self.local_id)))
         nen_elem.appendChild(elem)
 
         ident_elem.appendChild(nen_elem)
@@ -48,6 +49,12 @@ class EmissionSourceType(object):
             elem.appendChild(doc.createTextNode(str(self.description)))
             result.appendChild(elem)
 
+        # emission source characteristics
+        if self.emission_source_characteristics is not None:
+            esc_elem = doc.createElement('imaer:emissionSourceCharacteristics')
+            esc_elem.appendChild(self.emission_source_characteristics.to_xml_elem(doc))
+            result.appendChild(esc_elem)
+
         # geometry
         geom_elem = doc.createElement('imaer:geometry')
         es_geom_elem = doc.createElement('imaer:EmissionSourceGeometry')
@@ -58,18 +65,12 @@ class EmissionSourceType(object):
         gml_type = gml_types[self.geometry.type()]
 
         gm_elem = doc.createElement(f'imaer:{gm_tag}')
-        gml_elem = get_gml_element(self.geometry, f'{self.identifier}.{gml_type}')
+        gml_elem = get_gml_element(self.geometry, f'{self.local_id}.{gml_type}')
 
         gm_elem.appendChild(gml_elem)
         es_geom_elem.appendChild(gm_elem)
         geom_elem.appendChild(es_geom_elem)
         result.appendChild(geom_elem)
-
-        # emission source characteristics
-        if self.emission_source_characteristics is not None:
-            esc_elem = doc.createElement('imaer:emissionSourceCharacteristics')
-            esc_elem.appendChild(self.emission_source_characteristics.to_xml_elem(doc))
-            result.appendChild(esc_elem)
 
         return result
 
@@ -89,6 +90,10 @@ class EmissionSource(EmissionSourceType):
 
         result = super().to_xml_elem(doc)
 
+        for em in self.emissions:
+            elem = em.to_xml_elem(doc)
+            result.appendChild(elem)
+
         return result
 
 
@@ -107,6 +112,11 @@ class EmissionSourceCharacteristics(object):
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement('imaer:EmissionSourceCharacteristics')
 
+        # heat content
+        if self.heat_content is not None:
+            elem = self.heat_content.to_xml_elem(doc)
+            result.appendChild(elem)
+
         # emission height
         if self.emission_height is not None:
             elem = doc.createElement('imaer:emissionHeight')
@@ -123,10 +133,6 @@ class EmissionSourceCharacteristics(object):
         if self.diurnal_variation is not None:
             elem = doc.createElement('imaer:diurnalVariation')
             elem.appendChild(doc.createTextNode(str(self.diurnal_variation)))
-            result.appendChild(elem)
-
-        if self.heat_content is not None:
-            elem = self.heat_content.to_xml_elem(doc)
             result.appendChild(elem)
 
         return result
@@ -166,6 +172,28 @@ class SpecifiedHeatContent(HeatContent):
 
         return result
 
+
+
+
+class Emission(object):
+
+    def __init__(self, substance, value):
+        self.substance = substance
+        self.value = value
+
+
+    def to_xml_elem(self, doc=QDomDocument()):
+        result = doc.createElement('imaer:emission')
+
+        em_elem = doc.createElement('imaer:Emission')
+        em_elem.setAttribute('substance', self.substance)
+        v_elem = doc.createElement('imaer:value')
+        v_elem.appendChild(doc.createTextNode( str(self.value) ))
+
+        em_elem.appendChild(v_elem)
+        result.appendChild(em_elem)
+
+        return result
 
 
 '''

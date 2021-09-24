@@ -109,11 +109,9 @@ emission_elements = {
 }
 
 ui_settings = {
-    'project_years': ['2019', '2020', '2021', '2022'],
+    'project_years': ['2019', '2020', '2021', '2022', '2023'],
     'situation_name': 'Situation 1',
     'situation_types': ['REFERENCE', 'PROPOSED', 'TEMPORARY', 'NETTING'],
-    'calculation_types': ['DEPOSITION', 'CONCENTRATION'],
-    'calculation_result_types': ['PERMIT', 'NATURE AREA', 'RADIUS', 'CUSTOM_POINTS'],
     'crs': [
         {'name': 'Amersfoort / RD New - Netherlands', 'srid': 28992},
         {'name': 'OSGB 1936 / British National Grid', 'srid': 27700},

@@ -33,7 +33,8 @@ class ImaerDocument():
 
         fcc_elem = self.doc.createElement('imaer:FeatureCollectionCalculator')
         fcc_elem.setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')
-        fcc_elem.setAttribute('xmlns:imaer', 'http://www.kadaster.nl/schemas/geovalidaties/manifestbestand/v20181101')
+        #fcc_elem.setAttribute('xmlns:imaer', 'http://www.kadaster.nl/schemas/geovalidaties/manifestbestand/v20181101')
+        fcc_elem.setAttribute('xmlns:imaer', 'http://imaer.aerius.nl/4.0')
         fcc_elem.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
         fcc_elem.setAttribute('xmlns:gml', 'http://www.opengis.net/gml/3.2')
         fcc_elem.setAttribute('gml:id', 'NL.IMAER.Collection')

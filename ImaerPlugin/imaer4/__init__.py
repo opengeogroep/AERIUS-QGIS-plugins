@@ -4,6 +4,7 @@ from .emission_source import (
     EmissionSourceType,
     EmissionSource,
     EmissionSourceCharacteristics,
-    SpecifiedHeatContent
+    SpecifiedHeatContent,
+    Emission
 )
 from .gml import get_gml_element
