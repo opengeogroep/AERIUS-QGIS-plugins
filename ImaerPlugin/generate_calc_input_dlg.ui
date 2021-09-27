@@ -55,7 +55,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget">
          <property name="currentIndex">
-          <number>2</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="tab_metadata">
           <attribute name="title">
@@ -221,12 +221,11 @@
                   <bool>true</bool>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_6">
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="label_es_diurnal_variation">
-                    <property name="text">
-                     <string>diurnal variation</string>
-                    </property>
-                   </widget>
+                  <item row="0" column="1">
+                   <widget class="QgsFieldComboBox" name="fcb_es_emission_height"/>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QgsFieldComboBox" name="fcb_es_diurnal_variation"/>
                   </item>
                   <item row="0" column="0">
                    <widget class="QLabel" name="label_es_emission_height">
@@ -234,9 +233,6 @@
                      <string>emission height</string>
                     </property>
                    </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QgsFieldComboBox" name="fcb_es_emission_height"/>
                   </item>
                   <item row="3" column="0" colspan="2">
                    <widget class="QGroupBox" name="groupBox_heatContent">
@@ -257,63 +253,15 @@
                     </layout>
                    </widget>
                   </item>
-                  <item row="4" column="0" colspan="2">
-                   <widget class="QGroupBox" name="groupBox_building">
-                    <property name="title">
-                     <string>Building</string>
-                    </property>
-                    <property name="checkable">
-                     <bool>true</bool>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                    <layout class="QGridLayout" name="gridLayout_4">
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_b_length">
-                       <property name="text">
-                        <string>length</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QgsFieldComboBox" name="fcb_b_length"/>
-                     </item>
-                     <item row="1" column="0">
-                      <widget class="QLabel" name="label_b_width">
-                       <property name="text">
-                        <string>width</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="1">
-                      <widget class="QgsFieldComboBox" name="fcb_b_width"/>
-                     </item>
-                     <item row="2" column="0">
-                      <widget class="QLabel" name="label_b_height">
-                       <property name="text">
-                        <string>height</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="1">
-                      <widget class="QgsFieldComboBox" name="fcb_b_height"/>
-                     </item>
-                     <item row="3" column="0">
-                      <widget class="QLabel" name="label_b_orientation">
-                       <property name="text">
-                        <string>orientation</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="3" column="1">
-                      <widget class="QgsFieldComboBox" name="fcb_b_orientation"/>
-                     </item>
-                    </layout>
-                   </widget>
+                  <item row="1" column="1">
+                   <widget class="QgsFieldComboBox" name="fcb_es_spread"/>
                   </item>
-                  <item row="2" column="1">
-                   <widget class="QgsFieldComboBox" name="fcb_es_diurnal_variation"/>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_es_diurnal_variation">
+                    <property name="text">
+                     <string>diurnal variation</string>
+                    </property>
+                   </widget>
                   </item>
                   <item row="1" column="0">
                    <widget class="QLabel" name="label_es_emission_spread">
@@ -321,9 +269,6 @@
                      <string>spread</string>
                     </property>
                    </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QgsFieldComboBox" name="fcb_es_spread"/>
                   </item>
                  </layout>
                 </widget>
@@ -400,7 +345,7 @@
               <property name="geometry">
                <rect>
                 <x>0</x>
-                <y>-438</y>
+                <y>0</y>
                 <width>495</width>
                 <height>1406</height>
                </rect>
