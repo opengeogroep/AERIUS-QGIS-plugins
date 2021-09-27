@@ -38,11 +38,10 @@ from ImaerPlugin.imaer4 import (
     EmissionSourceCharacteristics,
     EmissionSource,
     SpecifiedHeatContent,
-    Emission
+    Emission,
+    SRM2Road,
+    RoadSideBarrier
 )
-
-#from .imaer4.imaer_document import ImaerDocument
-
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'generate_calc_input_dlg.ui'))
@@ -190,65 +189,96 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         else:
             crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
 
+        # Loop all features
         for feat in input_layer.getFeatures():
             local_id = 'ES.{}'.format(feat.id())
-
-            sector_id = self.get_feature_value(self.fcb_es_sector_id, feat)
-            label = self.get_feature_value(self.fcb_es_label, feat)
-            description = self.get_feature_value(self.fcb_es_description, feat)
 
             # geometry
             geom = feat.geometry()
             if crs_transform is not None:
                 geom.transform(crs_transform)
 
-            es = EmissionSource(local_id=local_id, sector_id=sector_id, label=label, geom=geom)
-            print('1:', type(es), es.emissions, es.description)
-
-            es.description = description
-
-            # emission source characteristics
-            if self.groupBox_es_characteristics.isChecked():
-                esc_height = self.get_feature_value(self.fcb_es_emission_height, feat)
-                esc_spread = self.get_feature_value(self.fcb_es_spread, feat)
-
-                hc_value = self.get_feature_value(self.fcb_es_hc_value, feat)
-                if hc_value is not None:
-                    hc = SpecifiedHeatContent(value=hc_value)
-                else:
-                    hc = None
-
-                es.emission_source_characteristics = EmissionSourceCharacteristics(
-                    emission_height=esc_height,
-                    spread=esc_spread,
-                    heat_content=hc,
-                )
-
-            '''if hc is not None and esc_height is not None:
-                    esc = EmissionSourceCharacteristics(hc, esc_height)
-
-                    esc_bld_height = self.get_widget_value('esc_bld_height', feat, 'float')
-                    esc_bld_width = self.get_widget_value('esc_bld_width', feat, 'float')
-                    esc_bld_length = self.get_widget_value('esc_bld_length', feat, 'float')
-                    esc_bld_orientation = self.get_widget_value('esc_bld_orientation', feat, 'float')
-                    if esc_bld_height is not None:
-                        bld = Building(esc_bld_height, esc_bld_width, esc_bld_length, esc_bld_orientation)
-                        esc.building = bld
-
-                    es.es_characteristics = esc'''
-
-            # emissions
-            es.emissions = [] # TODO: Figure out why and fix this! (Without setting this clean list, emissions from former features are present.)
-            em = self.get_feature_value(self.fcb_em_nox, feat)
-            if em is not None:
-                es.emissions.append(Emission('NOX', em))
-            em = self.get_feature_value(self.fcb_em_nh3, feat)
-            if em is not None:
-                es.emissions.append(Emission('NH3', em))
+            sector_name = self.combo_sector.currentText()
+            print(sector_name)
+            if sector_name == 'OTHER':
+                es = self.get_emission_source_from_gui(feat, geom, local_id)
+            elif sector_name == 'ROAD_TRANSPORTATION':
+                es = self.get_srm2_road_from_gui(feat, geom, local_id)
+            else:
+                raise Exception('Invalid sector')
 
             imaer_doc.feature_members.append(es)
+            #self.plugin.tempes = es # For debugging
 
         return imaer_doc
+
+
+    # Emission Source
+    def get_emission_source_from_gui(self, feat, geom, local_id):
+        sector_id = self.get_feature_value(self.fcb_es_sector_id, feat)
+        label = self.get_feature_value(self.fcb_es_label, feat)
+        description = self.get_feature_value(self.fcb_es_description, feat)
+
+        es = EmissionSource(local_id=local_id, sector_id=sector_id, label=label, geom=geom)
+        es.description = description
+
+        # emission source characteristics
+        if self.groupBox_es_characteristics.isChecked():
+            esc_height = self.get_feature_value(self.fcb_es_emission_height, feat)
+            esc_spread = self.get_feature_value(self.fcb_es_spread, feat)
+
+            hc_value = self.get_feature_value(self.fcb_es_hc_value, feat)
+            if hc_value is not None:
+                hc = SpecifiedHeatContent(value=hc_value)
+            else:
+                hc = None
+
+            es.emission_source_characteristics = EmissionSourceCharacteristics(
+                emission_height=esc_height,
+                spread=esc_spread,
+                heat_content=hc,
+            )
+
+        # emissions
+        es.emissions = [] # TODO: Figure out why and fix this! (Without setting this clean list, emissions from former features are present.)
+        em = self.get_feature_value(self.fcb_em_nox, feat)
+        if em is not None:
+            es.emissions.append(Emission('NOX', em))
+        em = self.get_feature_value(self.fcb_em_nh3, feat)
+        if em is not None:
+            es.emissions.append(Emission('NH3', em))
+
+        return es
+
+
+    # SRM2Road
+    def get_srm2_road_from_gui(self, feat, geom, local_id):
+        sector_id = self.get_feature_value(self.fcb_rd_sector_id, feat)
+        label = self.get_feature_value(self.fcb_rd_label, feat)
+
+        es = SRM2Road(local_id=local_id, sector_id=sector_id, label=label, geom=geom, is_freeway=True)
+        es.description = self.get_feature_value(self.fcb_rd_description, feat)
+
+        es.tunnel_factor = self.get_feature_value(self.fcb_rd_tunnel_factor, feat)
+        es.elevation = self.get_feature_value(self.fcb_rd_elevation, feat)
+        es.elevation_height = self.get_feature_value(self.fcb_rd_elevation_height, feat)
+
+        for side in ['left', 'right']:
+            fcb = getattr(self, f'fcb_rd_b_{side}_type')
+            b_type = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_b_{side}_height')
+            b_height = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_b_{side}_distance')
+            b_distance = self.get_feature_value(fcb, feat)
+
+            if not (b_type is None and b_height is None and b_distance is None):
+                rsb = RoadSideBarrier(b_type, b_height, b_distance)
+                if side == 'left':
+                    es.barrier_left = rsb
+                else:
+                    es.barrier_right = rsb
+
+        return es
 
 
     def get_feature_value(self, widget, feat, cast_to=None):

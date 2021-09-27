@@ -19,7 +19,10 @@ class EmissionSourceType(object):
 
 
     def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:EmissionSource')
+        #print('class:', self.__class__.__name__)
+        class_name = self.__class__.__name__
+        result = doc.createElement(f'imaer:{class_name}')
+
         result.setAttribute('sectorId', self.sector_id)
         result.setAttribute('gml:id', self.local_id)
 

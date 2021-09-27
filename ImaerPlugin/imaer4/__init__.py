@@ -7,4 +7,8 @@ from .emission_source import (
     SpecifiedHeatContent,
     Emission
 )
+from .roads import (
+    SRM2Road,
+    RoadSideBarrier
+)
 from .gml import get_gml_element
