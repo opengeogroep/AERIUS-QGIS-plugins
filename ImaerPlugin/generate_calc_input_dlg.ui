@@ -400,9 +400,9 @@
               <property name="geometry">
                <rect>
                 <x>0</x>
-                <y>-264</y>
+                <y>-438</y>
                 <width>495</width>
-                <height>1070</height>
+                <height>1406</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout">
@@ -438,57 +438,8 @@
                   <string>Vehicles</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_10">
-                  <item row="0" column="0">
-                   <widget class="QGroupBox" name="groupBox_rd_v_lt">
-                    <property name="title">
-                     <string>Light traffic</string>
-                    </property>
-                    <layout class="QGridLayout" name="gridLayout_11">
-                     <item row="5" column="0">
-                      <widget class="QLabel" name="label_rd_v_lt1_strict">
-                       <property name="text">
-                        <string>strict enforcement</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="0">
-                      <widget class="QLabel" name="label_rd_v_lt1_stagnation">
-                       <property name="text">
-                        <string>stagnation factor</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="5" column="1">
-                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt1_strict"/>
-                     </item>
-                     <item row="2" column="1">
-                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt1_maxspeed"/>
-                     </item>
-                     <item row="2" column="0">
-                      <widget class="QLabel" name="label_rd_v_lt1_maxspeed">
-                       <property name="text">
-                        <string>maximum speed</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="1">
-                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt1_stagnation"/>
-                     </item>
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_rd_v_lt1_vehicles_per_time">
-                       <property name="text">
-                        <string>vehicles per day</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt1_vehicles_per_time"/>
-                     </item>
-                    </layout>
-                   </widget>
-                  </item>
                   <item row="1" column="0">
-                   <widget class="QGroupBox" name="groupBox_rd_v_lt_2">
+                   <widget class="QGroupBox" name="groupBox_rd_v_lt2">
                     <property name="title">
                      <string>Light traffic dynamic speed</string>
                     </property>
@@ -581,6 +532,153 @@
                      </item>
                      <item row="1" column="1">
                       <widget class="QgsFieldComboBox" name="fcb_rd_v_nf_stagnation"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QGroupBox" name="groupBox_rd_v_hf">
+                    <property name="title">
+                     <string>Heavy freight</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_15">
+                     <item row="5" column="0">
+                      <widget class="QLabel" name="label_rd_v_hf_strict">
+                       <property name="text">
+                        <string>strict enforcement</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_rd_v_hf_vehicles_per_time">
+                       <property name="text">
+                        <string>vehicles per day</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_hf_vehicles_per_time"/>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_hf_maxspeed"/>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_rd_v_hf_maxspeed">
+                       <property name="text">
+                        <string>maximum speed</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_hf_strict"/>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_rd_v_hf_stagnation">
+                       <property name="text">
+                        <string>stagnation factor</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_hf_stagnation"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QGroupBox" name="groupBox_rd_v_lt1">
+                    <property name="title">
+                     <string>Light traffic</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_11">
+                     <item row="5" column="0">
+                      <widget class="QLabel" name="label_rd_v_lt1_strict">
+                       <property name="text">
+                        <string>strict enforcement</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_rd_v_lt1_stagnation">
+                       <property name="text">
+                        <string>stagnation factor</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt1_strict"/>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt1_maxspeed"/>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_rd_v_lt1_maxspeed">
+                       <property name="text">
+                        <string>maximum speed</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt1_stagnation"/>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_rd_v_lt1_vehicles_per_time">
+                       <property name="text">
+                        <string>vehicles per day</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt1_vehicles_per_time"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QGroupBox" name="groupBox_rd_v_ab">
+                    <property name="title">
+                     <string>Auto bus</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_16">
+                     <item row="5" column="0">
+                      <widget class="QLabel" name="label_rd_v_ab_strict">
+                       <property name="text">
+                        <string>strict enforcement</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_rd_v_ab_vehicles_per_time">
+                       <property name="text">
+                        <string>vehicles per day</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_ab_vehicles_per_time"/>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_ab_maxspeed"/>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_rd_v_ab_maxspeed">
+                       <property name="text">
+                        <string>maximum speed</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_ab_strict"/>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_rd_v_ab_stagnation">
+                       <property name="text">
+                        <string>stagnation factor</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_ab_stagnation"/>
                      </item>
                     </layout>
                    </widget>

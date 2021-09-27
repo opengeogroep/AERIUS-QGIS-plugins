@@ -286,8 +286,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             'lt1': 'LIGHT_TRAFFIC',
             'lt2': 'LIGHT_TRAFFIC_DYNAMIC_SPEED',
             'nf': 'NORMAL_FREIGHT',
-            #'hf': 'HEAVY_FREIGHT',
-            #'ab': 'AUTO_BUS']
+            'hf': 'HEAVY_FREIGHT',
+            'ab': 'AUTO_BUS'
         }
         for veh_type_key, veh_type_name in vehicle_types.items():
 
