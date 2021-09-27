@@ -40,7 +40,8 @@ from ImaerPlugin.imaer4 import (
     SpecifiedHeatContent,
     Emission,
     SRM2Road,
-    RoadSideBarrier
+    RoadSideBarrier,
+    StandardVehicle
 )
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -199,7 +200,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 geom.transform(crs_transform)
 
             sector_name = self.combo_sector.currentText()
-            print(sector_name)
+            #print(sector_name)
             if sector_name == 'OTHER':
                 es = self.get_emission_source_from_gui(feat, geom, local_id)
             elif sector_name == 'ROAD_TRANSPORTATION':
@@ -263,6 +264,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         es.elevation = self.get_feature_value(self.fcb_rd_elevation, feat)
         es.elevation_height = self.get_feature_value(self.fcb_rd_elevation_height, feat)
 
+        # barriers
         for side in ['left', 'right']:
             fcb = getattr(self, f'fcb_rd_b_{side}_type')
             b_type = self.get_feature_value(fcb, feat)
@@ -277,6 +279,41 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                     es.barrier_left = rsb
                 else:
                     es.barrier_right = rsb
+
+        # vehicles
+        vehicles = []
+        vehicle_types = {
+            'lt1': 'LIGHT_TRAFFIC',
+            'lt2': 'LIGHT_TRAFFIC_DYNAMIC_SPEED',
+            'nf': 'NORMAL_FREIGHT',
+            #'hf': 'HEAVY_FREIGHT',
+            #'ab': 'AUTO_BUS']
+        }
+        for veh_type_key, veh_type_name in vehicle_types.items():
+
+            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_vehicles_per_time')
+            veh_number = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_stagnation')
+            veh_stagnation = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_maxspeed')
+            veh_speed = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_strict')
+            veh_strict = self.get_feature_value(fcb, feat)
+
+            if not(veh_number is None and veh_stagnation is None and veh_speed is None and veh_strict is None):
+                vehicle = StandardVehicle(
+                    vehicles_per_time_unit=veh_number,
+                    time_unit='DAY',
+                    stagnation_factor=veh_stagnation,
+                    vehicle_type=veh_type_name,
+                    maximum_speed=veh_speed,
+                    strict_enforcement=veh_strict
+                )
+                vehicles.append(vehicle)
+
+            es.vehicles = vehicles
+
+
 
         return es
 

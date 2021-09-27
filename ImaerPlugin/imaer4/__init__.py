@@ -9,6 +9,7 @@ from .emission_source import (
 )
 from .roads import (
     SRM2Road,
-    RoadSideBarrier
+    RoadSideBarrier,
+    StandardVehicle
 )
 from .gml import get_gml_element
