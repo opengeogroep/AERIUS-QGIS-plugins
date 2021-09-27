@@ -6,21 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>590</width>
-    <height>817</height>
+    <width>555</width>
+    <height>1032</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Generate Aerius Calculator Input</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="1">
-        <widget class="QgsMapLayerComboBox" name="combo_layer"/>
-       </item>
+      <layout class="QFormLayout" name="formLayout_2">
        <item row="0" column="0">
         <widget class="QLabel" name="label_layer">
          <property name="text">
@@ -28,77 +25,749 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_sector">
-         <property name="text">
-          <string>Sector</string>
-         </property>
-        </widget>
+       <item row="0" column="1">
+        <widget class="QgsMapLayerComboBox" name="combo_layer"/>
        </item>
-       <item row="5" column="1">
-        <widget class="QComboBox" name="combo_sector"/>
-       </item>
-       <item row="6" column="1">
-        <widget class="QComboBox" name="combo_subsector"/>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_subsector">
-         <property name="text">
-          <string>Subsector</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_year">
-         <property name="text">
-          <string>Year</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QComboBox" name="combo_year"/>
-       </item>
-       <item row="4" column="1">
-        <widget class="QComboBox" name="combo_crs"/>
-       </item>
-       <item row="4" column="0">
+       <item row="1" column="0">
         <widget class="QLabel" name="label_crs">
          <property name="text">
           <string>CRS</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_name">
+       <item row="1" column="1">
+        <widget class="QComboBox" name="combo_crs"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_sector">
          <property name="text">
-          <string>Name</string>
+          <string>Sector</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="edit_name"/>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="combo_sector"/>
        </item>
       </layout>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QScrollArea" name="scrollArea">
-         <property name="widgetResizable">
-          <bool>true</bool>
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="currentIndex">
+          <number>1</number>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>566</width>
-            <height>541</height>
-           </rect>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <layout class="QGridLayout" name="grid_elements"/>
+         <widget class="QWidget" name="tab_metadata">
+          <attribute name="title">
+           <string>Metadata</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QGroupBox" name="group_project">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::StrongFocus</enum>
+             </property>
+             <property name="title">
+              <string>Project</string>
+             </property>
+             <layout class="QFormLayout" name="formLayout">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_project_year">
+                <property name="text">
+                 <string>year</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="combo_project_year"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_project_description">
+                <property name="text">
+                 <string>description</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QTextEdit" name="edit_project_description">
+                <property name="acceptRichText">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="group_situation">
+             <property name="title">
+              <string>Situation</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+             <layout class="QFormLayout" name="formLayout_3">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_situation_name">
+                <property name="text">
+                 <string>name</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="edit_situation_name">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_situation_type">
+                <property name="text">
+                 <string>type</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QComboBox" name="combo_situation_type"/>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="edit_situation_reference">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_situation_reference">
+                <property name="text">
+                 <string>reference</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tab_emission_sources">
+          <attribute name="title">
+           <string>Emission Sources</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QScrollArea" name="scrollArea">
+             <property name="widgetResizable">
+              <bool>true</bool>
+             </property>
+             <widget class="QWidget" name="scrollAreaWidgetContents">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>509</width>
+                <height>798</height>
+               </rect>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_3">
+               <item row="5" column="0">
+                <spacer name="verticalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_es_sector_id">
+                 <property name="text">
+                  <string>sector id</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0" colspan="2">
+                <widget class="QGroupBox" name="groupBox_es_characteristics">
+                 <property name="title">
+                  <string>Characteristics</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_6">
+                  <item row="0" column="1">
+                   <widget class="QgsFieldComboBox" name="fcb_es_emission_height"/>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QgsFieldComboBox" name="fcb_es_diurnal_variation"/>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_es_emission_height">
+                    <property name="text">
+                     <string>emission height</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0" colspan="2">
+                   <widget class="QGroupBox" name="groupBox_heatContent">
+                    <property name="title">
+                     <string>Specified heat content</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_5">
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_es_hc_value">
+                       <property name="text">
+                        <string>value</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_es_hc_value"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QgsFieldComboBox" name="fcb_es_spread"/>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_es_diurnal_variation">
+                    <property name="text">
+                     <string>diurnal variation</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_es_emission_spread">
+                    <property name="text">
+                     <string>spread</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QgsFieldComboBox" name="fcb_es_sector_id"/>
+               </item>
+               <item row="4" column="0" colspan="2">
+                <widget class="QGroupBox" name="groupBox_emissions">
+                 <property name="title">
+                  <string>Emissions</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_7">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_em_nox">
+                    <property name="text">
+                     <string>NOX</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QgsFieldComboBox" name="fcb_em_nox"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_em_nh3">
+                    <property name="text">
+                     <string>NH3</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QgsFieldComboBox" name="fcb_em_nh3"/>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QgsFieldComboBox" name="fcb_es_label"/>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_es_label">
+                 <property name="text">
+                  <string>label</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_es_description">
+                 <property name="text">
+                  <string>description</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QgsFieldComboBox" name="fcb_es_description"/>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tab_road_transportation">
+          <attribute name="title">
+           <string>Roads</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QScrollArea" name="scrollArea_2">
+             <property name="widgetResizable">
+              <bool>true</bool>
+             </property>
+             <widget class="QWidget" name="scrollAreaWidgetContents_2">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>495</width>
+                <height>1406</height>
+               </rect>
+              </property>
+              <layout class="QGridLayout" name="gridLayout">
+               <item row="1" column="1">
+                <widget class="QgsFieldComboBox" name="fcb_rd_label"/>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_rd_elevation_height">
+                 <property name="text">
+                  <string>elevation height</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <spacer name="verticalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="5" column="1">
+                <widget class="QgsFieldComboBox" name="fcb_rd_elevation_height"/>
+               </item>
+               <item row="8" column="0" colspan="2">
+                <widget class="QGroupBox" name="groupBox_rd_vehicles">
+                 <property name="title">
+                  <string>Vehicles</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_10">
+                  <item row="1" column="0">
+                   <widget class="QGroupBox" name="groupBox_rd_v_lt2">
+                    <property name="title">
+                     <string>Light traffic dynamic speed</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_13">
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_rd_v_lt2_vehicles_per_time">
+                       <property name="text">
+                        <string>vehicles per day</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt2_vehicles_per_time"/>
+                     </item>
+                     <item row="5" column="0">
+                      <widget class="QLabel" name="label_rd_v_lt2_strict">
+                       <property name="text">
+                        <string>strict enforcement</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_rd_v_lt2_maxspeed">
+                       <property name="text">
+                        <string>maximum speed</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt2_strict"/>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt2_maxspeed"/>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_rd_v_lt2_stagnation">
+                       <property name="text">
+                        <string>stagnation factor</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt2_stagnation"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QGroupBox" name="groupBox_rd_v_nf">
+                    <property name="title">
+                     <string>Normal freight</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_14">
+                     <item row="5" column="0">
+                      <widget class="QLabel" name="label_rd_v_nf_strict">
+                       <property name="text">
+                        <string>strict enforcement</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_rd_v_nf_vehicles_per_time">
+                       <property name="text">
+                        <string>vehicles per day</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_nf_vehicles_per_time"/>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_nf_maxspeed"/>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_rd_v_nf_maxspeed">
+                       <property name="text">
+                        <string>maximum speed</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_nf_strict"/>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_rd_v_nf_stagnation">
+                       <property name="text">
+                        <string>stagnation factor</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_nf_stagnation"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QGroupBox" name="groupBox_rd_v_hf">
+                    <property name="title">
+                     <string>Heavy freight</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_15">
+                     <item row="5" column="0">
+                      <widget class="QLabel" name="label_rd_v_hf_strict">
+                       <property name="text">
+                        <string>strict enforcement</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_rd_v_hf_vehicles_per_time">
+                       <property name="text">
+                        <string>vehicles per day</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_hf_vehicles_per_time"/>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_hf_maxspeed"/>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_rd_v_hf_maxspeed">
+                       <property name="text">
+                        <string>maximum speed</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_hf_strict"/>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_rd_v_hf_stagnation">
+                       <property name="text">
+                        <string>stagnation factor</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_hf_stagnation"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QGroupBox" name="groupBox_rd_v_lt1">
+                    <property name="title">
+                     <string>Light traffic</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_11">
+                     <item row="5" column="0">
+                      <widget class="QLabel" name="label_rd_v_lt1_strict">
+                       <property name="text">
+                        <string>strict enforcement</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_rd_v_lt1_stagnation">
+                       <property name="text">
+                        <string>stagnation factor</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt1_strict"/>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt1_maxspeed"/>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_rd_v_lt1_maxspeed">
+                       <property name="text">
+                        <string>maximum speed</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt1_stagnation"/>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_rd_v_lt1_vehicles_per_time">
+                       <property name="text">
+                        <string>vehicles per day</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_lt1_vehicles_per_time"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QGroupBox" name="groupBox_rd_v_ab">
+                    <property name="title">
+                     <string>Auto bus</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_16">
+                     <item row="5" column="0">
+                      <widget class="QLabel" name="label_rd_v_ab_strict">
+                       <property name="text">
+                        <string>strict enforcement</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_rd_v_ab_vehicles_per_time">
+                       <property name="text">
+                        <string>vehicles per day</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_ab_vehicles_per_time"/>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_ab_maxspeed"/>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_rd_v_ab_maxspeed">
+                       <property name="text">
+                        <string>maximum speed</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_ab_strict"/>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_rd_v_ab_stagnation">
+                       <property name="text">
+                        <string>stagnation factor</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_v_ab_stagnation"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_rd_description">
+                 <property name="text">
+                  <string>description</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_rd_elevation">
+                 <property name="text">
+                  <string>elevation</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QgsFieldComboBox" name="fcb_rd_sector_id"/>
+               </item>
+               <item row="7" column="0" colspan="2">
+                <widget class="QGroupBox" name="groupBox_rd_barriers">
+                 <property name="title">
+                  <string>Road side barriers</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_9">
+                  <item row="0" column="0">
+                   <widget class="QGroupBox" name="groupBox_rd_b_left">
+                    <property name="title">
+                     <string>Left</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_2">
+                     <item row="0" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_b_left_type"/>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_rd_b_left_height">
+                       <property name="text">
+                        <string>height</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_rd_b_left_type">
+                       <property name="text">
+                        <string>type</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_b_left_height"/>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="label_rd_b_left_distance">
+                       <property name="text">
+                        <string>distance</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_b_left_distance"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QGroupBox" name="groupBox_rd_b_right">
+                    <property name="title">
+                     <string>Right</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_8">
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_rd_b_right_type">
+                       <property name="text">
+                        <string>type</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_b_right_height"/>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_b_right_type"/>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_rd_b_right_height">
+                       <property name="text">
+                        <string>height</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="label_rd_b_right_distance">
+                       <property name="text">
+                        <string>distance</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QgsFieldComboBox" name="fcb_rd_b_right_distance"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QgsFieldComboBox" name="fcb_rd_description"/>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_rd_sector_id">
+                 <property name="text">
+                  <string>sector id</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_rd_label">
+                 <property name="text">
+                  <string>label</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QgsFieldComboBox" name="fcb_rd_elevation"/>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_rd_tunnel_factor">
+                 <property name="text">
+                  <string>tunnel factor</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QgsFieldComboBox" name="fcb_rd_tunnel_factor"/>
+               </item>
+              </layout>
+             </widget>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -128,20 +797,62 @@
       </layout>
      </item>
      <item>
-      <widget class="QDialogButtonBox" name="buttonBox">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="standardButtons">
-        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_fn_2">
+       <item>
+        <widget class="QPushButton" name="btn_save_settings">
+         <property name="text">
+          <string>Save settings...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_load_settings">
+         <property name="text">
+          <string>Load settings...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QDialogButtonBox" name="buttonBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="standardButtons">
+          <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>QgsFieldComboBox</class>
+   <extends>QComboBox</extends>
+   <header>qgsfieldcombobox.h</header>
+  </customwidget>
   <customwidget>
    <class>QgsMapLayerComboBox</class>
    <extends>QComboBox</extends>

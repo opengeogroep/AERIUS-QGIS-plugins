@@ -75,9 +75,14 @@ emission_sectors = {
 '''
 
 emission_sectors = {
-    'ENERGY': {'sector_id': 2100},
-    'PLAN': {'sector_id': 9000},
-    'OTHER': {'sector_id': 9999}
+    'ROAD_TRANSPORTATION': {
+        'subsectors': {
+            'Freeways': {'sector_id': 3111},
+            'Non-urban roads': {'sector_id': 3112},
+            'Urban roads': {'sector_id': 3113}
+        }
+    },
+    'OTHER': {'sector_id': 9999},
 }
 
 
@@ -104,8 +109,9 @@ emission_elements = {
 }
 
 ui_settings = {
-    'years': ['2019', '2020'],
+    'project_years': ['2019', '2020', '2021', '2022', '2023'],
     'situation_name': 'Situation 1',
+    'situation_types': ['REFERENCE', 'PROPOSED', 'TEMPORARY', 'NETTING'],
     'crs': [
         {'name': 'Amersfoort / RD New - Netherlands', 'srid': 28992},
         {'name': 'OSGB 1936 / British National Grid', 'srid': 27700},

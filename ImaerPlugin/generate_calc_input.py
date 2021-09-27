@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import time
+import json
 
 from qgis.PyQt.QtCore import QVariant
 from qgis.PyQt.QtWidgets import (
@@ -21,7 +22,8 @@ from qgis.core import (
     QgsMapLayerProxyModel,
     QgsProject,
     QgsCoordinateReferenceSystem,
-    QgsCoordinateTransform)
+    QgsCoordinateTransform
+)
 
 from ImaerPlugin.config import (
     emission_sectors,
@@ -29,18 +31,18 @@ from ImaerPlugin.config import (
     ui_settings
 )
 
-from ImaerPlugin.widget_registry import WidgetRegistry
-
-from ImaerPlugin.imaer import (
-    FeatureCollectionCalculator,
+from ImaerPlugin.imaer4 import (
+    ImaerDocument,
     AeriusCalculatorMetadata,
-    EmissionSource,
+    EmissionSourceType,
     EmissionSourceCharacteristics,
+    EmissionSource,
     SpecifiedHeatContent,
-    CalculatedHeatContent,
-    Building
+    Emission,
+    SRM2Road,
+    RoadSideBarrier,
+    StandardVehicle
 )
-
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'generate_calc_input_dlg.ui'))
@@ -56,8 +58,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.iface = iface
         self.plugin = plugin
-        self.widget_registry = WidgetRegistry(self)
-        self.sector_id = 0
+
+        self.emission_tabs = {}
+        self.emission_tabs['ROAD_TRANSPORTATION'] = self.tab_road_transportation
+        self.emission_tabs['OTHER'] = self.tab_emission_sources
 
         self.init_gui()
 
@@ -65,21 +69,33 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
     def init_gui(self):
         self.combo_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
-        self.combo_sector.currentIndexChanged.connect(self.set_subsectors)
-        self.combo_subsector.currentIndexChanged.connect(self.set_elements)
+        self.combo_sector.currentIndexChanged.connect(self.set_emission_tab)
+        ##self.combo_subsector.currentIndexChanged.connect(self.set_elements)
         self.edit_outfile.textChanged.connect(self.update_ok_button)
-        self.set_fixed_options()
-        self.update_ok_button()
 
         self.combo_layer.layerChanged.connect(self.update_field_combos)
         self.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
+        self.btn_save_settings.clicked.connect(self.save_settings)
+        self.btn_load_settings.clicked.connect(self.load_settings)
+
+        for fcb in self.findChildren(QgsFieldComboBox):
+            fcb.setAllowEmptyFieldName(True)
+
+        self.set_fixed_options()
+        self.update_field_combos()
+        self.update_ok_button()
+        self.set_emission_tab()
+
 
     def __del__(self):
         self.edit_outfile.textChanged.disconnect(self.update_ok_button)
-        self.combo_sector.currentIndexChanged.disconnect(self.set_subsectors)
-        self.combo_subsector.currentIndexChanged.disconnect(self.set_elements)
+        self.combo_sector.currentIndexChanged.disconnect(self.set_emission_tab)
         self.combo_layer.layerChanged.disconnect(self.update_field_combos)
+        self.button_outfile.clicked.disconnect(self.browse_generate_calc_input_file)
+
+        self.btn_save_settings.clicked.disconnect(self.save_settings)
+        self.btn_load_settings.clicked.disconnect(self.load_settings)
 
 
     def browse_generate_calc_input_file(self):
@@ -95,145 +111,75 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
 
     def set_fixed_options(self):
-        # name
-        self.edit_name.setText(ui_settings['situation_name'])
-
-        # years
-        for year in ui_settings['years']:
-            self.combo_year.addItem(year, year)
-        self.combo_year.setCurrentIndex(self.combo_year.count() - 1)
-
         # crs
         for crs in ui_settings['crs']:
             self.combo_crs.addItem(crs['name'], crs['srid'])
 
         # sectors
-        self.combo_sector.addItem('<Selecteer een sector>', 0)
-        for key, value in emission_sectors.items():
-            #print(key, value)
-            if 'sector_id' in value:
-                sid = value['sector_id']
-            else:
-                sid = 0
-            self.combo_sector.addItem(key, sid)
+        self.combo_sector.addItem('<Select sector>', 0)
+        for sector_name in emission_sectors:
+            ##print(sector_name)
+            self.combo_sector.addItem(sector_name)
+
+        # project
+        for item in ui_settings['project_years']:
+            self.combo_project_year.addItem(item, item)
+        self.combo_project_year.setCurrentIndex(self.combo_project_year.count() - 1)
+
+        # situation
+        self.edit_situation_name.setText(ui_settings['situation_name'])
+        for item in ui_settings['situation_types']:
+            self.combo_situation_type.addItem(item, item)
 
 
-    def set_subsectors(self):
+    def set_emission_tab(self):
+        # Remove all tabs but 'Metadata'
+        while self.tabWidget.count() > 1:
+            self.tabWidget.removeTab(1)
+        # Add selected emission tab
         sector = self.combo_sector.currentText()
-        has_subsectors = sector in emission_sectors and 'subsectors' in emission_sectors[sector]
-        self.combo_subsector.clear()
-        self.label_subsector.setEnabled(has_subsectors)
-        self.combo_subsector.setEnabled(has_subsectors)
-        if has_subsectors:
-            self.combo_subsector.addItem('<Selecteer een specifieke sector>', 0)
-            for key, value in emission_sectors[sector]['subsectors'].items():
-                self.combo_subsector.addItem(key, value['sector_id'])
-        self.set_elements()
-
-
-    def clear_layout(self, layout):
-        ''' recursively clears a layout from all widgets and layouts '''
-        if layout is not None:
-            while layout.count():
-                child = layout.takeAt(0)
-                if child.widget() is not None:
-                    child.widget().deleteLater()
-                elif child.layout() is not None:
-                    self.clear_layout(child.layout())
-
-
-    def get_current_sector_id(self):
-        sub_sector_id = self.combo_subsector.currentData()
-        if sub_sector_id is not None:
-            return sub_sector_id
-        sector_id = self.combo_sector.currentData()
-        if sector_id is not None:
-            return sector_id
-        return 0
-
-
-    def set_elements(self):
-        self.widget_registry.remove_all_groups()
-
-        self.clear_layout(self.grid_elements)
-        #self.grid_elements.update()
-
-        sector_id = self.get_current_sector_id()
-        self.update_ok_button()
-
-        if sector_id == 0:
-            return
-
-        row = self.grid_elements.rowCount()
-        #print(emission_elements)
-        for key, element in emission_elements.items():
-            #print(key, element)
-            if -1 in element['sector_ids'] or sector_id in element['sector_ids']:
-                widgets = self.create_widgets(element)
-                #print(widgets)
-
-                if 'label' in widgets:
-                    self.grid_elements.addWidget(widgets['label'], row, 0)
-                if 'fixed' in widgets:
-                    self.grid_elements.addWidget(widgets['fixed'], row, 1)
-                if 'field' in widgets:
-                    self.grid_elements.addWidget(widgets['field'], row, 2)
-
-                self.widget_registry.add_widgets(key, widgets)
-                row += 1
-
-        if self.plugin.dev:
-            self.widget_registry.show()
-        self.update_field_combos()
-        self.update_ok_button()
-
-
-    def create_widgets(self, element):
-        #layout = QHBoxLayout(
-
-        label_widget = QLabel(element['label'], self)
-        fixed_widget = QLineEdit('', self)
-        field_widget = QgsFieldComboBox(self)
-        field_widget.setFilters(element['types'][0])
-        field_widget.setAllowEmptyFieldName(True)
-
-        result = {'label': label_widget, 'fixed': fixed_widget, 'field': field_widget}
-        return result
+        if sector in self.emission_tabs:
+            self.tabWidget.insertTab(1, self.emission_tabs[sector], sector)
+            self.tabWidget.setCurrentIndex(1)
 
 
     def update_field_combos(self):
-        for name in self.widget_registry:
-            for widget_key, widget in self.widget_registry[name].items():
-                if widget_key == 'field':
-                    if isinstance(widget, QgsFieldComboBox):
-                        widget.setLayer(self.combo_layer.currentLayer())
-                    else:
-                        widget.setLayer(None)
+        for fcb in self.findChildren(QgsFieldComboBox):
+            fcb.setLayer(self.combo_layer.currentLayer())
 
 
     def update_ok_button(self):
         if self.edit_outfile.text() == '':
             self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
             return
-        if self.get_current_sector_id() == 0:
-            self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
-            return
+        ##if self.get_current_sector_id() == 0:
+        ##    self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
+        ##    return
         self.buttonBox.button(QDialogButtonBox.Save).setEnabled(True)
 
 
-    def get_fcc_from_gui(self):
+    def get_imaer_doc_from_gui(self):
         '''Maps items from GUI widgets to IMAER object'''
-        result = FeatureCollectionCalculator()
 
-        year = self.combo_year.currentData()
-        situation_name = self.edit_name.text()
+        imaer_doc = ImaerDocument()
+
+        year = self.combo_project_year.currentData()
+        description = self.edit_project_description.toPlainText()
+
+        if self.group_situation.isChecked():
+             situation_name = self.edit_situation_name.text()
+             situation_reference = self.edit_situation_reference.text()
+             situation_type = self.combo_situation_type.currentText()
+             situation = {'name': situation_name, 'reference': situation_reference, 'type': situation_type}
+        else:
+            situation = None
 
         metadata = AeriusCalculatorMetadata(
-            project = {'year': year, 'description': ''},
-            situation = {'name': situation_name, 'reference': ''},
-            version = {'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'}
+            project = {'year': year, 'description': description},
+            situation = situation,
         )
-        result.metadata = metadata
+
+        imaer_doc.metadata = metadata
 
         input_layer = self.combo_layer.currentLayer()
         crs_source = input_layer.crs()
@@ -244,74 +190,148 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         else:
             crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
 
-        #print(input_layer)
-        emission_sources = {}
+        # Loop all features
         for feat in input_layer.getFeatures():
             local_id = 'ES.{}'.format(feat.id())
-            sector_id = self.get_current_sector_id()
-            loc_name = self.get_widget_value('loc_name', feat)
+
+            # geometry
             geom = feat.geometry()
             if crs_transform is not None:
                 geom.transform(crs_transform)
 
-            es = EmissionSource(local_id, sector_id, loc_name, geom, crs_dest_srid)
+            sector_name = self.combo_sector.currentText()
+            #print(sector_name)
+            if sector_name == 'OTHER':
+                es = self.get_emission_source_from_gui(feat, geom, local_id)
+            elif sector_name == 'ROAD_TRANSPORTATION':
+                es = self.get_srm2_road_from_gui(feat, geom, local_id)
+            else:
+                raise Exception('Invalid sector')
 
-            # emission source characteristics
-            esc_height = self.get_widget_value('esc_height', feat, 'float')
-            esc_heat_content = self.get_widget_value('esc_heat_content', feat, 'float')
-            esc_em_temp = self.get_widget_value('esc_em_temp', feat, 'float')
-            esc_of_diam = self.get_widget_value('esc_of_diam', feat, 'float')
-            esc_of_vel = self.get_widget_value('esc_of_vel', feat, 'float')
-            esc_of_dir = self.get_widget_value('esc_of_dir', feat, 'str')
-            if esc_heat_content is not None:
-                hc = SpecifiedHeatContent(esc_heat_content)
-            elif esc_em_temp is not None:
-                hc = CalculatedHeatContent(esc_em_temp, esc_of_diam, esc_of_vel, esc_of_dir)
+            imaer_doc.feature_members.append(es)
+            #self.plugin.tempes = es # For debugging
+
+        return imaer_doc
+
+
+    # Emission Source
+    def get_emission_source_from_gui(self, feat, geom, local_id):
+        sector_id = self.get_feature_value(self.fcb_es_sector_id, feat)
+        label = self.get_feature_value(self.fcb_es_label, feat)
+        description = self.get_feature_value(self.fcb_es_description, feat)
+
+        es = EmissionSource(local_id=local_id, sector_id=sector_id, label=label, geom=geom)
+        es.description = description
+
+        # emission source characteristics
+        if self.groupBox_es_characteristics.isChecked():
+            esc_height = self.get_feature_value(self.fcb_es_emission_height, feat)
+            esc_spread = self.get_feature_value(self.fcb_es_spread, feat)
+
+            hc_value = self.get_feature_value(self.fcb_es_hc_value, feat)
+            if hc_value is not None:
+                hc = SpecifiedHeatContent(value=hc_value)
             else:
                 hc = None
-            if hc is not None and esc_height is not None:
-                esc = EmissionSourceCharacteristics(hc, esc_height)
 
-                esc_diurnal_var = self.get_widget_value('esc_diurnal_var', feat, 'float')
-                if esc_diurnal_var is not None:
-                    esc.diurnal_variation = esc_diurnal_var
+            es.emission_source_characteristics = EmissionSourceCharacteristics(
+                emission_height=esc_height,
+                spread=esc_spread,
+                heat_content=hc,
+            )
 
-                esc_bld_height = self.get_widget_value('esc_bld_height', feat, 'float')
-                esc_bld_width = self.get_widget_value('esc_bld_width', feat, 'float')
-                esc_bld_length = self.get_widget_value('esc_bld_length', feat, 'float')
-                esc_bld_orientation = self.get_widget_value('esc_bld_orientation', feat, 'float')
-                if esc_bld_height is not None:
-                    bld = Building(esc_bld_height, esc_bld_width, esc_bld_length, esc_bld_orientation)
-                    esc.building = bld
+        # emissions
+        es.emissions = [] # TODO: Figure out why and fix this! (Without setting this clean list, emissions from former features are present.)
+        em = self.get_feature_value(self.fcb_em_nox, feat)
+        if em is not None:
+            es.emissions.append(Emission('NOX', em))
+        em = self.get_feature_value(self.fcb_em_nh3, feat)
+        if em is not None:
+            es.emissions.append(Emission('NH3', em))
 
-                es.es_characteristics = esc
-
-            # emissions
-            for substance_code, substance_name in {'NH3': 'emission_nh3', 'NOX': 'emission_nox'}.items():
-                em_value = self.get_widget_value(substance_name, feat)
-                if em_value is not None:
-                    es.add_emission(substance_code, em_value)
-            result.add_feature_member(es)
-
-        return result
+        return es
 
 
-    def get_widget_value(self, var_name, feat, cast_to=None):
-        if not var_name in self.widget_registry:
+    # SRM2Road
+    def get_srm2_road_from_gui(self, feat, geom, local_id):
+        sector_id = self.get_feature_value(self.fcb_rd_sector_id, feat)
+        label = self.get_feature_value(self.fcb_rd_label, feat)
+
+        es = SRM2Road(local_id=local_id, sector_id=sector_id, label=label, geom=geom, is_freeway=True)
+        es.description = self.get_feature_value(self.fcb_rd_description, feat)
+
+        es.tunnel_factor = self.get_feature_value(self.fcb_rd_tunnel_factor, feat)
+        es.elevation = self.get_feature_value(self.fcb_rd_elevation, feat)
+        es.elevation_height = self.get_feature_value(self.fcb_rd_elevation_height, feat)
+
+        # barriers
+        for side in ['left', 'right']:
+            fcb = getattr(self, f'fcb_rd_b_{side}_type')
+            b_type = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_b_{side}_height')
+            b_height = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_b_{side}_distance')
+            b_distance = self.get_feature_value(fcb, feat)
+
+            if not (b_type is None and b_height is None and b_distance is None):
+                rsb = RoadSideBarrier(b_type, b_height, b_distance)
+                if side == 'left':
+                    es.barrier_left = rsb
+                else:
+                    es.barrier_right = rsb
+
+        # vehicles
+        vehicles = []
+        vehicle_types = {
+            'lt1': 'LIGHT_TRAFFIC',
+            'lt2': 'LIGHT_TRAFFIC',
+            'nf': 'NORMAL_FREIGHT',
+            'hf': 'HEAVY_FREIGHT',
+            'ab': 'AUTO_BUS'
+        }
+        for veh_type_key, veh_type_name in vehicle_types.items():
+
+            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_vehicles_per_time')
+            veh_number = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_stagnation')
+            veh_stagnation = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_maxspeed')
+            veh_speed = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_strict')
+            veh_strict = self.get_feature_value(fcb, feat)
+
+            if not(veh_number is None or veh_stagnation is None):
+                vehicle = StandardVehicle(
+                    vehicles_per_time_unit=veh_number,
+                    time_unit='DAY',
+                    stagnation_factor=veh_stagnation,
+                    vehicle_type=veh_type_name,
+                    maximum_speed=veh_speed,
+                    strict_enforcement=veh_strict
+                )
+                vehicles.append(vehicle)
+
+            es.vehicles = vehicles
+
+
+
+        return es
+
+
+    def get_feature_value(self, widget, feat, cast_to=None):
+        if not isinstance(widget, QgsFieldComboBox):
             return None
-        widget_set = self.widget_registry[var_name]
-        field_name = widget_set['field'].currentField()
+        field_name = widget.currentField()
         if field_name == '':
             return None
             #return widget_set['fixed'].text() TODO: return fixed value after data type check (or something..)
         else:
             value = feat[field_name]
 
-        # return None in case attribute value is NULL (empty cell)
         if isinstance(value, QVariant) and str(value) == 'NULL':
             return None
 
-        '''if cast_to is not None:
+        if cast_to is not None:
             #if cast_to == 'double':
             #    return result.toDouble()
             if cast_to == 'float':
@@ -322,5 +342,73 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             elif cast_to == 'integer':
                 return result.toInt()
             elif cast_to == 'string':
-                return result.toString()'''
+                return result.toString()
         return value
+
+
+    def save_settings(self):
+        work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
+        if work_dir is None:
+            raise Exception('Work dir not set')
+            return
+        # TODO: choose file name
+        base_name = 'generate_gml_config.json'
+        out_fn = os.path.join(work_dir, base_name)
+        print(out_fn)
+        field_dict = self.collect_field_settings()
+        txt = json.dumps(field_dict, indent=4)
+        with open(out_fn, 'w') as out_file:
+            out_file.write(txt)
+
+
+    def collect_field_settings(self):
+        '''Collects a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
+        result = {}
+        result['imaer_plugin_version'] = 1
+        result['fields'] = {}
+        for fcb in self.findChildren(QgsFieldComboBox):
+            k = fcb.objectName()
+            v = fcb.currentText()
+            result['fields'][k] = v
+        return result
+
+
+    def load_settings(self):
+        work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
+        if work_dir is None:
+            raise Exception('Work dir not set')
+            return
+        # TODO: choose file name
+        base_name = 'generate_gml_config.json'
+        out_fn = os.path.join(work_dir, base_name)
+        print(out_fn)
+
+        with open(out_fn, 'r') as out_file:
+            txt = out_file.read()
+
+        field_dict = json.loads(txt)
+
+        if not 'imaer_plugin_version' in field_dict:
+            print('This is not a valid field configuration file')
+            return
+
+        self.set_field_settings(field_dict['fields'])
+
+
+    def set_field_settings(self, field_cfg):
+        '''Sets texts from a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
+        layer_fields = self.combo_layer.currentLayer().fields().names()
+        for fcb in self.findChildren(QgsFieldComboBox):
+            widget_name = fcb.objectName()
+            if not widget_name in field_cfg:
+                continue
+            new_field = field_cfg[widget_name]
+            if new_field == '':
+                fcb.setCurrentIndex(0)
+                continue
+            if new_field in layer_fields:
+                fcb.setCurrentText(new_field)
+            else:
+                # Set empty
+                fcb.setCurrentIndex(0)
+                print(f'Current input layer does not contain a field \'{new_field}\'')
