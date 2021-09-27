@@ -284,7 +284,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         vehicles = []
         vehicle_types = {
             'lt1': 'LIGHT_TRAFFIC',
-            'lt2': 'LIGHT_TRAFFIC_DYNAMIC_SPEED',
+            'lt2': 'LIGHT_TRAFFIC',
             'nf': 'NORMAL_FREIGHT',
             'hf': 'HEAVY_FREIGHT',
             'ab': 'AUTO_BUS'
@@ -300,7 +300,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_strict')
             veh_strict = self.get_feature_value(fcb, feat)
 
-            if not(veh_number is None and veh_stagnation is None and veh_speed is None and veh_strict is None):
+            if not(veh_number is None or veh_stagnation is None):
                 vehicle = StandardVehicle(
                     vehicles_per_time_unit=veh_number,
                     time_unit='DAY',
