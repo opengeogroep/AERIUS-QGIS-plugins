@@ -86,30 +86,12 @@ emission_sectors = {
 }
 
 
-flt_str = QgsFieldProxyModel.String
-flt_num = QgsFieldProxyModel.Numeric
-#flt_int = QgsFieldProxyModel.Int
-#flt_longlong = QgsFieldProxyModel.LongLong
-
-emission_elements = {
-    'loc_name': {'types': [flt_str], 'label': 'Location Name', 'group': 'general', 'sector_ids': [-1]},
-    'emission_nh3': {'types': [flt_num], 'label': 'Emissie NH3', 'group': 'emission', 'sector_ids': [-1]},
-    'emission_nox': {'types': [flt_num], 'label': 'Emissie NOx', 'group': 'emission', 'sector_ids': [-1]},
-    'esc_height': {'types': [flt_num], 'label': 'Emission height', 'group': 'emission', 'sector_ids': [9000, 9999]},
-    'esc_heat_content': {'types': [flt_num], 'label': 'Heat content', 'group': 'esc', 'sector_ids': [9000, 9999]},
-    'esc_em_temp': {'types': [flt_num], 'label': 'Emission Temperature', 'group': 'esc', 'sector_ids': [9000, 9999]},
-    'esc_of_diam': {'types': [flt_num], 'label': 'Emission Outflow Diameter', 'group': 'esc', 'sector_ids': [9000, 9999]},
-    'esc_of_vel': {'types': [flt_num], 'label': 'Emission Outflow Velocity', 'group': 'esc', 'sector_ids': [9000, 9999]},
-    'esc_of_dir': {'types': [flt_str], 'label': 'Emission Outflow Direction', 'group': 'esc', 'sector_ids': [9000, 9999]},
-    'esc_diurnal_var': {'types': [flt_str], 'label': 'Diurnal variation', 'group': 'esc', 'sector_ids': [9999]},
-    'esc_bld_height': {'types': [flt_num], 'label': 'Building Height', 'group': 'esc_bld', 'sector_ids': [9999]},
-    'esc_bld_width': {'types': [flt_num], 'label': 'Building Width', 'group': 'esc_bld', 'sector_ids': [9999]},
-    'esc_bld_length': {'types': [flt_num], 'label': 'Building Length', 'group': 'esc_bld', 'sector_ids': [9999]},
-    'esc_bld_orientation': {'types': [flt_num], 'label': 'Building Orientation', 'group': 'esc_bld', 'sector_ids': [9999]},
-}
-
 ui_settings = {
-    'project_years': ['2019', '2020', '2021', '2022', '2023'],
+    'project_years': ['2019',
+        '2020', '2021', '2022', '2023', '2024',
+        '2025', '2026', '2027', '2028', '2029',
+        '2030', '2031', '2032', '2033', '2034',
+        '2035'],
     'situation_name': 'Situation 1',
     'situation_types': ['REFERENCE', 'PROPOSED', 'TEMPORARY', 'NETTING'],
     'crs': [

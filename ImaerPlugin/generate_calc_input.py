@@ -27,7 +27,6 @@ from qgis.core import (
 
 from ImaerPlugin.config import (
     emission_sectors,
-    emission_elements,
     ui_settings
 )
 
@@ -312,8 +311,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 vehicles.append(vehicle)
 
             es.vehicles = vehicles
-
-
 
         return es
 
