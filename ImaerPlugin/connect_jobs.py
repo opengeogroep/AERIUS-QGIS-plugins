@@ -83,9 +83,20 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             for line in result['errors']:
                 print('  {}'.format(line['message']))
         '''
-        self.plugin.resp = result
-        self.show_feedback(result.readAll())
+        #self.plugin.resp = result # for debugging
+        bstr = result.readAll()
+        #self.show_feedback(bstr)
 
+        try:
+            result_dict = json.loads(bytes(bstr))
+        except:
+            print('No json in response')
+            return
+
+        if 'successful' in result_dict and result_dict['successful']:
+            print('GML is valid')
+        else:
+            print('GML is not valid')
 
 
     def calculate(self):
@@ -105,8 +116,8 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         user_options['sendEmail'] = self.checkBox_send_email.isChecked()
 
         result = self.plugin.aerius_connection.post_calculate(gml_files, user_options)
-        print(result)
-        self.show_feedback(result)
+        #print(result)
+        #self.show_feedback(result)
 
         self.get_jobs()
 

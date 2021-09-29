@@ -113,7 +113,7 @@ class AeriusConnection():
         #print(request)
 
         if with_api_key:
-            print(f'adding_api_key {self.api_key}')
+            #print(f'adding_api_key {self.api_key}')
             request.setRawHeader(b'api-key', self.api_key.encode('utf-8'))
 
         if method == 'POST':
@@ -165,7 +165,7 @@ class AeriusConnection():
                 reply.finished.connect(loop.quit)
                 loop.exec_()
 
-            return(reply)
+            return reply
 
 
         if method == 'GET':
@@ -379,7 +379,6 @@ class AeriusConnection():
         response = self.run_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
         if response is not None:
             pass
-            #print(f'gelukt! {response}')
 
         return response
 
