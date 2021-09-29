@@ -302,7 +302,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_strict')
             veh_strict = self.get_feature_value(fcb, feat)
 
-            if not(veh_number is None or veh_stagnation is None):
+            if not (veh_number is None and veh_stagnation is None):
                 vehicle = StandardVehicle(
                     vehicles_per_time_unit=veh_number,
                     time_unit='DAY',
