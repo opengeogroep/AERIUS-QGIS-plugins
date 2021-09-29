@@ -183,9 +183,13 @@ class ImaerPlugin:
         # del self.relate_calc_results_dlg
 
 
-    def log(self, message, tab='Imaer'):
+    def log(self, message, tab='Imaer', lvl='Info', bar=False):
+        # lvl: Info, Warning, Critical
+        level=getattr(Qgis, lvl)
         if self.do_log:
-            QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
+            QgsMessageLog.logMessage(str(message), tab, level=level)
+        if bar:
+            self.iface.messageBar().pushMessage(lvl, str(message), level)
 
 
     def run_import_calc_result(self, checked=False, gml_fn=None):

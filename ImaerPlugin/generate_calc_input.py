@@ -9,7 +9,8 @@ from qgis.PyQt.QtWidgets import (
     QDialogButtonBox,
     QLabel,
     QLineEdit,
-    QHBoxLayout
+    QHBoxLayout,
+    QSizePolicy
 )
 from qgis.PyQt import uic
 
@@ -66,6 +67,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
 
     def init_gui(self):
+        # Add message bar
+
         self.combo_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
         self.combo_sector.currentIndexChanged.connect(self.set_emission_tab)
@@ -351,7 +354,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         # TODO: choose file name
         base_name = 'generate_gml_config.json'
         out_fn = os.path.join(work_dir, base_name)
-        print(out_fn)
+        #print(out_fn)
         field_dict = self.collect_field_settings()
         txt = json.dumps(field_dict, indent=4)
         with open(out_fn, 'w') as out_file:
@@ -378,7 +381,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         # TODO: choose file name
         base_name = 'generate_gml_config.json'
         out_fn = os.path.join(work_dir, base_name)
-        print(out_fn)
+        #print(out_fn)
 
         with open(out_fn, 'r') as out_file:
             txt = out_file.read()
@@ -386,10 +389,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         field_dict = json.loads(txt)
 
         if not 'imaer_plugin_version' in field_dict:
-            print('This is not a valid field configuration file')
+            self.plugin.log('This is not a valid field configuration file', lvl='Warning', bar=True)
             return
 
         self.set_field_settings(field_dict['fields'])
+        self.plugin.log('Configuration file loaded', bar=True)
 
 
     def set_field_settings(self, field_cfg):
@@ -408,4 +412,4 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             else:
                 # Set empty
                 fcb.setCurrentIndex(0)
-                print(f'Current input layer does not contain a field \'{new_field}\'')
+                #print(f'Current input layer does not contain a field \'{new_field}\'')
