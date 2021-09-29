@@ -32,16 +32,13 @@ from qgis import processing
 
 class AeriusConnection():
 
-    def __init__(self, version=None, api_key=None):
+    def __init__(self, base_url=None, version=None, api_key=None, do_check_connection=True):
         self.available_versions = ['7']
+        self.default_base_url = 'https://connect2021-prerelease.aerius.nl/api'
+        self.default_version = '7'
 
-        if version is None:
-            version = self.available_versions[-1]
-        else:
-            version = str(version)
-        self.set_version(version)
-
-        #self.base_url = None
+        self.base_url = base_url
+        self.version = version
         self.api_key = api_key
 
         self.connection_info = 'Not yet checked'
@@ -49,35 +46,20 @@ class AeriusConnection():
         self.server_is_ok = False
         self.api_key_is_ok = False
 
-        self.check_connection()
+        if do_check_connection:
+            self.check_connection()
 
 
     def __str__(self):
         return 'AeriusConnection[v{}, {}, {}, {} {}, {}, {}]'.format(
+            self.base_url,
             self.version,
             self.api_key,
-            self.base_url,
             self.config_is_ok,
             self.server_is_ok,
             self.api_key_is_ok,
             self.connection_info,
         )
-
-
-    def set_version(self, version):
-        self.version = version
-        url_lookup = {
-            '6': 'https://connect.aerius.nl/api/6',
-            #'99': 'https://connect.aerius.nl/api2020-prerelease',
-            #'7': 'https://natuur-dev.aerius.nl/api', # imaer 4
-            #https://connect-masterclass.aerius.nl/api', # imaer 3
-            '7': 'https://connect2021-prerelease.aerius.nl/api',
-            #'7': 'http://localhost:5000', # echo server for testing
-        }
-        if self.version in url_lookup:
-            self.base_url = url_lookup[self.version]
-        else:
-            self.base_url = None
 
 
     def check_connection(self, test_api_key=True):
@@ -93,11 +75,10 @@ class AeriusConnection():
         if self.base_url is None:
             self.connection_info = 'No base url'
             return
-        elif self.api_key is None or len(self.api_key) != 32:
+        if self.api_key is None or len(self.api_key) != 32:
             self.connection_info = 'No valid api key'
             return
-        else:
-            self.config_is_ok = True
+        self.config_is_ok = True
 
         if self.server_is_up():
             self.server_is_ok = True
@@ -125,21 +106,20 @@ class AeriusConnection():
         else:
             url = f'{self.base_url}/{api_function}'
         #url = 'http://localhost:5000' # echo server for debugging
-        print(url)
+        #print(url)
         url = QUrl(url)
-        print(url)
 
         request = QNetworkRequest(url)
-        print(request)
+        #print(request)
 
         if with_api_key:
             print(f'adding_api_key {self.api_key}')
             request.setRawHeader(b'api-key', self.api_key.encode('utf-8'))
 
         if method == 'POST':
-            print(data)
-            print(text_parts)
-            print(file_parts)
+            #print(data)
+            #print(text_parts)
+            #print(file_parts)
 
             if data is None:
 
@@ -246,12 +226,13 @@ class AeriusConnection():
         data = {'email': email}
         response = self.run_request(end_point, 'POST', data=data)
         if response is not None:
-            print(f'gelukt! {response}')
+            #print(f'gelukt! {response}')
             return True
         return
 
 
     def get_jobs(self):
+        print('get_jobs()')
         end_points = {
             '7': 'jobs'
         }
@@ -262,8 +243,11 @@ class AeriusConnection():
             return
 
         #print(f'gelukt! {response}')
-        result = json.loads(bytes(response))
-        return result
+        try:
+            result = json.loads(bytes(response))
+            return result
+        except:
+            print('Response is not json')
 
 
     def cancel_job(self, job_key):
@@ -275,7 +259,8 @@ class AeriusConnection():
 
         response = self.run_request(end_point, 'POST')
         if response is not None:
-            print(f'gelukt! {response}')
+            pass
+            #print(f'gelukt! {response}')
 
         return response
 
@@ -289,7 +274,8 @@ class AeriusConnection():
 
         response = self.run_request(end_point, 'DELETE')
         if response is not None:
-            print(f'gelukt! {response}')
+            pass
+            #print(f'gelukt! {response}')
 
         return response
 
@@ -373,13 +359,13 @@ class AeriusConnection():
         # update default options with user options
         options.update(user_options)
 
-        print(options)
+        #print(options)
 
         gml_fn = gml_files[0]['gml_fn']
         situation = gml_files[0]['situation']
 
         base_name = QFileInfo(gml_fn).fileName()
-        print(base_name)
+        #print(base_name)
 
         text_parts = [
             {'header': 'options', 'body': options},
@@ -412,7 +398,7 @@ class AeriusConnection():
         if response is None:
             return
 
-        print(f'gelukt! {response}')
+        #print(f'gelukt! {response}')
         self.resp = response
         result = json.loads(bytes(response))
         return result
@@ -431,14 +417,15 @@ class AeriusConnection():
         ]
         file_parts = []
         file_parts.append({'name': 'filePart', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
-        print(file_parts)
+        #print(file_parts)
 
         #response = self.run_request(end_point, 'POST')
         response = self.run_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
-        print(response)
+        #print(response)
         resp = response
         if response is not None:
-            print(f'gelukt! {response}')
+            pass
+            #print(f'gelukt! {response}')
 
         self.last_response = response
 
@@ -451,7 +438,8 @@ class AeriusConnection():
 
         response = self.run_request(api_function, 'DELETE')
         if response is not None:
-            print(f'gelukt! {response}')
+            pass
+            #print(f'gelukt! {response}')
 
         return response
 
@@ -470,6 +458,7 @@ class AeriusConnection():
         response = self.run_request(end_point, 'POST', file_parts=file_parts)
         print(response)
         if response is not None:
+            pass
             print(f'gelukt! {response}')
 
         return response

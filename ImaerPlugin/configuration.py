@@ -48,39 +48,43 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
             work_dir_setting = QStandardPaths.writableLocation(QStandardPaths.TempLocation)
             self.plugin.settings.setValue('imaer_plugin/work_dir', work_dir_setting)
 
-        connect_version_setting = self.plugin.settings.value('imaer_plugin/connect_version', defaultValue=None)
-        if connect_version_setting is None:
-            connect_version_setting = self.plugin.aerius_connection.version
-            self.plugin.settings.setValue('imaer_plugin/connect_version', connect_version_setting)
+        connect_base_url = self.plugin.settings.value('imaer_plugin/connect_base_url', defaultValue=None)
+        if connect_base_url is None:
+            default_base_url = self.plugin.aerius_connection.default_base_url
+            self.plugin.settings.setValue('imaer_plugin/connect_base_url', default_base_url)
+            default_version = self.plugin.aerius_connection.default_version
+            self.plugin.settings.setValue('imaer_plugin/connect_version', default_version)
 
 
     def load_ui_from_settings(self):
         #print('load_ui_from_settings')
 
         work_dir_setting = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue='')
-        #print(work_dir_setting)
         self.edit_work_dir.setText(work_dir_setting)
 
+        connect_server_setting = self.plugin.settings.value('imaer_plugin/connect_base_url', defaultValue='')
+        self.edit_connect_base_url.setText(connect_server_setting)
+
+        connect_version_setting = self.plugin.settings.value('imaer_plugin/connect_version', defaultValue='')
+        self.combo_connect_ver.setCurrentText(connect_version_setting)
+
         email_setting = self.plugin.settings.value('imaer_plugin/connect_email', defaultValue='')
-        #print(email_setting)
         self.edit_email.setText(email_setting)
 
         key_setting = self.plugin.settings.value('imaer_plugin/connect_key', defaultValue='')
-        #print(key_setting)
         self.edit_key.setText(key_setting)
-
-        connect_version_setting = self.plugin.settings.value('imaer_plugin/connect_version', defaultValue='')
-        #print(key_setting)
-        self.combo_connect_ver.setCurrentText(connect_version_setting)
 
 
     def save_ui_to_settings(self):
         self.plugin.settings.setValue('imaer_plugin/work_dir', self.edit_work_dir.text())
+        self.plugin.settings.setValue('imaer_plugin/connect_base_url', self.edit_connect_base_url.text())
+        self.plugin.settings.setValue('imaer_plugin/connect_version', self.combo_connect_ver.currentText())
         self.plugin.settings.setValue('imaer_plugin/connect_email', self.edit_email.text())
         self.plugin.settings.setValue('imaer_plugin/connect_key', self.edit_key.text())
-        self.plugin.settings.setValue('imaer_plugin/connect_version', self.combo_connect_ver.currentText())
+        self.plugin.aerius_connection.base_url = self.edit_connect_base_url.text()
+        self.plugin.aerius_connection.version = self.combo_connect_ver.currentText()
         self.plugin.aerius_connection.api_key = self.edit_key.text()
-        self.plugin.aerius_connection.set_version(self.combo_connect_ver.currentText())
+        self.plugin.aerius_connection.check_connection()
 
 
     def get_api_key(self):

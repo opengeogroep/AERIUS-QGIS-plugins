@@ -112,7 +112,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
 
     def get_jobs(self):
-        print('get_jobs()')
+        #print('get_jobs()')
         self.table_jobs.clearContents()
         while self.table_jobs.rowCount() > 0:
             self.table_jobs.removeRow(0)
@@ -121,7 +121,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             return
 
         result = self.plugin.aerius_connection.get_jobs()
-        self.show_feedback(result)
+        #self.show_feedback(result)
 
         if result is None:
             return

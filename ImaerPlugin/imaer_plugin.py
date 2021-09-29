@@ -61,9 +61,11 @@ class ImaerPlugin:
         self.imaer_calc_layers = {}
         self.settings = QgsSettings()
 
-        connect_version_setting = self.settings.value('imaer_plugin/connect_version_setting', defaultValue=None)
-        key_setting = self.settings.value('imaer_plugin/connect_key', defaultValue='')
-        self.aerius_connection = AeriusConnection(version=connect_version_setting, api_key=key_setting)
+        # Create connection
+        connect_base_url = self.settings.value('imaer_plugin/connect_base_url', defaultValue=None)
+        connect_version = self.settings.value('imaer_plugin/connect_version', defaultValue=None)
+        connect_key = self.settings.value('imaer_plugin/connect_key', defaultValue='')
+        self.aerius_connection = AeriusConnection(base_url=connect_base_url, version=connect_version, api_key=connect_key)
         print(self.aerius_connection)
 
         # Create dialogs
@@ -73,10 +75,9 @@ class ImaerPlugin:
         self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
         self.relate_calc_results_dlg = RelateCalcResultsDialog(self, parent=self.iface.mainWindow())
 
-        self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
         self.connect_receptorsets_dlg = ConnectReceptorSetsDialog(self, parent=self.iface.mainWindow())
         self.connect_jobs_dlg = ConnectJobsDialog(self, parent=self.iface.mainWindow())
-
+        self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
 
         # Variable self.dev is set to True if a global variable terglobo_dev exists
         # holding the lowercase value 'on'. This is to ensure that any dev tricks
@@ -361,8 +362,15 @@ class ImaerPlugin:
     def update_connect_widgets(self):
         conn_ok = self.aerius_connection.api_key_is_ok
         print(conn_ok)
+        old_state = self.actions['connect_receptorsets'].isEnabled()
+
         self.actions['connect_receptorsets'].setEnabled(conn_ok)
         self.actions['connect_jobs'].setEnabled(conn_ok)
+
+        # If buttons have been enabled, update dialog tables content.
+        if (not old_state) and conn_ok:
+            self.connect_receptorsets_dlg.get_receptor_sets()
+            self.connect_jobs_dlg.get_jobs()
 
 
     def open_online_documentation(self):

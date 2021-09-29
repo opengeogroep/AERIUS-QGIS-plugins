@@ -90,7 +90,7 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
         receptor_sets_dict = result
 
-        self.show_feedback(receptor_sets_dict)
+        #self.show_feedback(receptor_sets_dict)
 
         for receptor_set in receptor_sets_dict:
             row_num = self.table_receptorsets.rowCount()
@@ -133,7 +133,6 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
         if result is not None:
             self.get_receptor_sets()
-
 
 
     def update_widgets(self):
