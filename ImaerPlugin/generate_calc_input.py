@@ -126,7 +126,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         # project
         for item in ui_settings['project_years']:
             self.combo_project_year.addItem(item, item)
-        self.combo_project_year.setCurrentIndex(self.combo_project_year.count() - 1)
+        self.combo_project_year.setCurrentText(ui_settings['project_default_year'])
 
         # situation
         self.edit_situation_name.setText(ui_settings['situation_name'])

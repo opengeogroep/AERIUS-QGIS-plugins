@@ -9,6 +9,7 @@ from qgis.PyQt.QtWidgets import (
 )
 from qgis.PyQt import uic
 
+from ImaerPlugin.config import ui_settings
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'connect_jobs_dlg.ui'))
@@ -29,8 +30,6 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
 
     def init_gui(self):
-        self.combo_year.setCurrentText('2021')
-
         self.button_gml_input_browse.clicked.connect(self.browse_gml_file)
         self.button_validate.clicked.connect(self.validate)
         self.button_calculate.clicked.connect(self.calculate)
@@ -43,6 +42,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.combo_calc_type.currentTextChanged.connect(self.update_widgets)
         self.table_jobs.itemSelectionChanged.connect(self.update_widgets)
 
+        self.set_fixed_options()
         self.update_widgets()
         self.get_jobs()
 
@@ -195,6 +195,18 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
                     #self.show_feedback(result)
                     for gml_fn in result:
                         self.plugin.run_import_calc_result(gml_fn=gml_fn)
+
+
+    def set_fixed_options(self):
+        # data
+        for item in ui_settings['project_years']:
+            self.combo_year.addItem(item, item)
+        self.combo_year.setCurrentText(ui_settings['project_default_year'])
+
+        # calcuation
+        #self.edit_name.setText(ui_settings['situation_name'])
+        for item in ui_settings['situation_types']:
+            self.combo_situation.addItem(item, item)
 
 
     def update_widgets(self):

@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="groupBox_emission">
      <property name="title">
       <string>Emission Data</string>
      </property>
@@ -65,177 +65,80 @@
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QComboBox" name="combo_situation">
-        <item>
-         <property name="text">
-          <string>PROPOSED</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>REFERENCE</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>TEMPORARY</string>
-         </property>
-        </item>
-       </widget>
+       <widget class="QComboBox" name="combo_situation"/>
       </item>
      </layout>
     </widget>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_receptor_set">
-       <property name="text">
-        <string>Receptor Set</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Calculation Year</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_calc_type">
-       <property name="text">
-        <string>Calculation Type</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QComboBox" name="combo_calc_type">
-       <item>
+    <widget class="QGroupBox" name="groupBox_calculation">
+     <property name="title">
+      <string>Calculation</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_name">
         <property name="text">
-         <string>WNB_RECEPTORS</string>
+         <string>Name</string>
         </property>
-       </item>
-       <item>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="edit_name"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label">
         <property name="text">
-         <string>CUSTOM_POINTS</string>
+         <string>Year</string>
         </property>
-       </item>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_name">
-       <property name="text">
-        <string>Name</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QComboBox" name="combo_year">
-       <item>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="combo_year"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_calc_type">
         <property name="text">
-         <string>2019</string>
+         <string>Type</string>
         </property>
-       </item>
-       <item>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="combo_calc_type">
+        <item>
+         <property name="text">
+          <string>WNB_RECEPTORS</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>CUSTOM_POINTS</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_receptor_set">
         <property name="text">
-         <string>2020</string>
+         <string>Receptor Set</string>
         </property>
-       </item>
-       <item>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QComboBox" name="combo_receptor_set"/>
+      </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="checkBox_send_email">
+        <property name="toolTip">
+         <string>Send email when calculation is ready</string>
+        </property>
         <property name="text">
-         <string>2021</string>
+         <string>Send Email</string>
         </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2022</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2023</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2024</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2025</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2026</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2027</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2028</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2029</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2030</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2031</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2032</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2033</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2034</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2035</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QCheckBox" name="checkBox_send_email">
-       <property name="toolTip">
-        <string>Send email when calculation is ready</string>
-       </property>
-       <property name="text">
-        <string>Send Email</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLineEdit" name="edit_name"/>
-     </item>
-     <item row="6" column="2">
-      <widget class="QComboBox" name="combo_receptor_set"/>
-     </item>
-    </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
