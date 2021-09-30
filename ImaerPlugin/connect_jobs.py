@@ -62,7 +62,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
 
     def show_feedback(self, fb):
-        print(type(fb))
+        self.plugin.log(type(fb), user='dev')
         if isinstance(fb, dict):
             txt = json.dumps(fb, indent=4)
             print(txt)
@@ -75,14 +75,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
     def validate(self):
         gml_fn = self.edit_gml_input.text()
         result = self.plugin.aerius_connection.post_validate(gml_fn)
-        '''
-        if result['successful']:
-            print('GML file is valid')
-        else:
-            print('GML is NOT valid:')
-            for line in result['errors']:
-                print('  {}'.format(line['message']))
-        '''
+
         #self.plugin.resp = result # for debugging
         bstr = result.readAll()
         #self.show_feedback(bstr)
@@ -90,13 +83,13 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         try:
             result_dict = json.loads(bytes(bstr))
         except:
-            print('No json in response')
+            #print('No json in response')
             return
 
         if 'successful' in result_dict and result_dict['successful']:
-            print('GML is valid')
+            self.plugin.log('GML is valid', lvl='Info', bar=True)
         else:
-            print('GML is not valid')
+            self.plugin.log('GML is NOT valid', lvl='Critical', bar=True)
 
 
     def calculate(self):
@@ -123,7 +116,6 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
 
     def get_jobs(self):
-        #print('get_jobs()')
         self.table_jobs.clearContents()
         while self.table_jobs.rowCount() > 0:
             self.table_jobs.removeRow(0)
@@ -168,7 +160,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             if item.column() == 1: # jobKey column
                 job_key = item.text()
                 result = self.plugin.aerius_connection.cancel_job(job_key)
-                self.show_feedback(result)
+                #self.show_feedback(result)
 
         self.get_jobs()
 
@@ -181,7 +173,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             if item.column() == 1: # jobKey column
                 job_key = item.text()
                 result = self.plugin.aerius_connection.delete_job(job_key)
-                self.show_feedback(result)
+                #self.show_feedback(result)
 
         self.get_jobs()
 
@@ -199,8 +191,8 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
                     base_name = download_url.split('/')[-1]
                     work_dir = self.plugin.settings.value('imaer_plugin/work_dir')
                     result = self.plugin.aerius_connection.download_result_zip(download_url, work_dir, base_name)
-                    print(result)
-                    self.show_feedback(result)
+                    #print(result)
+                    #self.show_feedback(result)
                     for gml_fn in result:
                         self.plugin.run_import_calc_result(gml_fn=gml_fn)
 
@@ -208,23 +200,25 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
     def update_widgets(self):
         """logic for widget behaviour"""
         if not self.edit_gml_input.text():
-            #self.button_validate.setEnabled(False)
+            self.button_validate.setEnabled(False)
             self.button_calculate.setEnabled(False)
         else:
-            #self.button_validate.setEnabled(True)
-            if self.combo_calc_type.currentText() == 'WNB_RECEPTORS':
-                print('wnb_receptors')
-                self.combo_receptor_set.clear()
+            self.button_validate.setEnabled(True)
+        if self.combo_calc_type.currentText() == 'WNB_RECEPTORS':
+            self.plugin.log('wnb_receptors', user='dev')
+            self.combo_receptor_set.clear()
+            self.button_calculate.setEnabled(True)
+            self.label_receptor_set.setEnabled(False)
+            self.combo_receptor_set.setEnabled(False)
+        elif self.combo_calc_type.currentText() == 'CUSTOM_POINTS':
+            self.plugin.log('custom_points', user='dev')
+            self.update_combo_receptor_set()
+            self.label_receptor_set.setEnabled(True)
+            self.combo_receptor_set.setEnabled(True)
+            if self.combo_receptor_set.currentText():
                 self.button_calculate.setEnabled(True)
-                self.label_receptor_set.setEnabled(False)
-                self.combo_receptor_set.setEnabled(False)
-            elif self.combo_calc_type.currentText() == 'CUSTOM_POINTS':
-                print('custom_points')
-                self.update_combo_receptor_set()
-                self.label_receptor_set.setEnabled(True)
-                self.combo_receptor_set.setEnabled(True)
-                if not self.combo_receptor_set.currentText():
-                    self.button_calculate.setEnabled(False)
+            else:
+                self.button_calculate.setEnabled(False)
 
         items = self.table_jobs.selectedItems()
 
@@ -250,7 +244,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.combo_receptor_set.clear()
 
         result = self.plugin.aerius_connection.get_receptor_sets()
-        print(result)
+        #print(result)
 
         for receptor_set in result:
             name = receptor_set['name']

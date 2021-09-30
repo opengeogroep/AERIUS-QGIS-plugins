@@ -54,6 +54,12 @@ from ImaerPlugin.connect import (
 class ImaerPlugin:
 
     def __init__(self, iface):
+        # Variable self.dev is set to True if a global variable terglobo_dev exists
+        # holding the lowercase value 'on'. This is to ensure that any dev tricks
+        # will never be visible for other plugin users.
+        dev = QgsExpressionContextUtils.globalScope().variable('terglobo_dev')
+        self.dev = dev is not None and dev == 'on'
+
         self.iface = iface
         self.plugin_dir = os.path.dirname(__file__)
         self.download_dir = QStandardPaths.writableLocation(QStandardPaths.DownloadLocation)
@@ -65,8 +71,8 @@ class ImaerPlugin:
         connect_base_url = self.settings.value('imaer_plugin/connect_base_url', defaultValue=None)
         connect_version = self.settings.value('imaer_plugin/connect_version', defaultValue=None)
         connect_key = self.settings.value('imaer_plugin/connect_key', defaultValue='')
-        self.aerius_connection = AeriusConnection(base_url=connect_base_url, version=connect_version, api_key=connect_key)
-        print(self.aerius_connection)
+        self.aerius_connection = AeriusConnection(self, base_url=connect_base_url, version=connect_version, api_key=connect_key)
+        self.log(self.aerius_connection, user='user')
 
         # Create dialogs
         self.calc_result_file_dialog = QFileDialog()
@@ -79,12 +85,6 @@ class ImaerPlugin:
         self.connect_jobs_dlg = ConnectJobsDialog(self, parent=self.iface.mainWindow())
         self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
 
-        # Variable self.dev is set to True if a global variable terglobo_dev exists
-        # holding the lowercase value 'on'. This is to ensure that any dev tricks
-        # will never be visible for other plugin users.
-        dev = QgsExpressionContextUtils.globalScope().variable('terglobo_dev')
-        self.dev = dev is not None and dev == 'on'
-        self.do_log = True
 
         self.action_configuration = [
             {
@@ -156,7 +156,8 @@ class ImaerPlugin:
             self.actions[action_config['name']] = action
 
         # Disable Open data for now
-        # self.actions['add_open_data'].setEnabled(False)
+        if not self.dev:
+            self.actions['add_open_data'].setEnabled(False)
 
         # Widget update logic
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
@@ -181,20 +182,21 @@ class ImaerPlugin:
 
         # TODO (?) Delete all plugin dialogs?
         # del self.relate_calc_results_dlg
+        self.log('ImaerPlugin unloaded', user='dev')
 
 
-    def log(self, message, tab='Imaer', lvl='Info', bar=False):
+    def log(self, message, tab='Imaer', lvl='Info', bar=False, user='user', duration=3):
         # lvl: Info, Warning, Critical
+        # user: user, dev
         level=getattr(Qgis, lvl)
-        if self.do_log:
+        if bar or (user=='user') or (user=='dev' and self.dev):
             QgsMessageLog.logMessage(str(message), tab, level=level)
         if bar:
-            self.iface.messageBar().pushMessage(lvl, str(message), level)
+            self.iface.messageBar().pushMessage(lvl, str(message), level, duration=duration)
 
 
     def run_import_calc_result(self, checked=False, gml_fn=None):
-        #print('run_import_calc_result()')
-        #print(gml_fn)
+        self.log('run_import_calc_result()', user='dev')
         if self.dev:
             self.calc_result_file_dialog.setDirectory('/home/raymond/git/AERIUS-QGIS-plugins/demodata/')
 
@@ -234,13 +236,13 @@ class ImaerPlugin:
         if self.dev:
             self.calc_result_file_dialog.setDirectory('/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata')
         pdf_fn, filter = self.calc_result_file_dialog.getOpenFileName(caption="Open IMAER PDF file", filter='*.pdf', parent=self.iface.mainWindow())
-        self.log(f'run pdf: {pdf_fn}')
+        self.log(f'run pdf: {pdf_fn}', user='dev')
 
         if os.path.exists(os.path.dirname(pdf_fn)):
             gml_fn = pdf_fn.replace('.pdf', '.gml')
             task = ExtractGmlFromPdfTask(pdf_fn, gml_fn, self.extract_gml_from_pdf_callback)
             self.task_manager.addTask(task)
-            self.log('added to task manager')
+            self.log('added ExtractGmlFromPdfTask to task manager', user='dev')
 
 
     def extract_gml_from_pdf_callback(self, fn):
@@ -261,17 +263,17 @@ class ImaerPlugin:
 
 
     def run_export_calc_result(self):
-        self.log('run_export_calc_result()')
+        self.log('run_export_calc_result()', user='dev')
 
         receptor_layer = self.iface.activeLayer()
         metadata = self.get_imaer_calc_metadata(receptor_layer)
 
         if not metadata['is_imaer_calc_layer']:
-            self.log('active layer is not an Imaer layer') #todo messagedlg error
+            self.log('active layer is not an Imaer layer', lvl='Warning')
 
         gml_fn = self.suggest_export_calc_result_fn(metadata['gpkg_fn'])
         gml_fn, filter = self.calc_result_file_dialog.getSaveFileName(caption="Save as Calculator result gml file", directory=gml_fn, parent=self.iface.mainWindow())
-        #self.log(gml_fn)
+        #self.log(gml_fn, user='dev')
         if gml_fn == '' and filter == '':
             return
 
@@ -288,30 +290,27 @@ class ImaerPlugin:
 
 
     def get_imaer_calc_metadata(self, layer):
+        '''Returns IMAER gpkg metadata from cache or attempts
+        to find metadata.'''
         if layer is None:
-            #print('layer is None')
             return
 
         layer_id = layer.id()
 
         if layer_id in self.imaer_calc_layers:
-            #print('  in cache')
             return self.imaer_calc_layers[layer_id]
 
         self.imaer_calc_layers[layer_id] = {}
         self.imaer_calc_layers[layer_id]['is_imaer_calc_layer'] = False
 
         if not isinstance(layer, QgsVectorLayer):
-            #print('  not vector')
             return self.imaer_calc_layers[layer_id]
 
         provider = layer.dataProvider()
         if not provider.wkbType() == 3:
-            #print('  not polygon')
             return self.imaer_calc_layers[layer_id]
 
         ds = provider.dataSourceUri()
-        #print(' ', ds)
         if '|layername=' in ds:
             gpkg_fn, gpkg_layer = ds.split('|layername=')
             #print(' ', gpkg_fn, gpkg_layer)
@@ -326,7 +325,7 @@ class ImaerPlugin:
         try:
             md_layer = QgsVectorLayer(metadata_ds, 'metadata', 'ogr')
         except:
-            #print(' print no metadata')
+            #print('no metadata')
             return self.imaer_calc_layers[layer_id]
         for md_feat in md_layer.getFeatures():
            self.imaer_calc_layers[layer_id][md_feat[1]] = md_feat[2]
@@ -337,17 +336,17 @@ class ImaerPlugin:
 
 
     def run_generate_calc_input(self):
-        self.log('run_generate_calc_input()')
+        self.log('run_generate_calc_input()', user='dev')
         self.generate_calc_input_dlg.show()
         result = self.generate_calc_input_dlg.exec_()
         #print(result)
         if result:
-            self.log('starting calcinput generation ...')
+            self.log('starting calcinput generation ...', user='user')
             imaer_doc = self.generate_calc_input_dlg.get_imaer_doc_from_gui()
             fn = self.generate_calc_input_dlg.edit_outfile.text()
             imaer_doc.to_xml_file(fn)
-            self.iface.messageBar().pushMessage('Success', 'Imaer GML file saved as: <a href="{0}">{0}</a>'.format(fn), level=Qgis.Info, duration=10)
-            #self.iface.messageBar().pushMessage('Error', 'Could not export GML file to {0}'.format(fn), level=Qgis.Critical, duration=10)
+            self.log('Imaer GML file saved as: <a href="{0}">{0}</a>'.format(fn), lvl='Info', bar=True, duration=10)
+        #self.log('Could not export GML file to {0}'.format(fn), lvl='Critical', bar=True, duration=10)
 
 
     def update_all_widgets(self):
@@ -365,7 +364,6 @@ class ImaerPlugin:
 
     def update_connect_widgets(self):
         conn_ok = self.aerius_connection.api_key_is_ok
-        print(conn_ok)
         old_state = self.actions['connect_receptorsets'].isEnabled()
 
         self.actions['connect_receptorsets'].setEnabled(conn_ok)
@@ -383,27 +381,23 @@ class ImaerPlugin:
 
 
     def open_configuration(self):
-        self.log('open_configuration()')
-        #self.configuration_dlg.show()
+        self.log('open_configuration()', user='dev')
         self.configuration_dlg.load_ui_from_settings()
         result = self.configuration_dlg.exec_()
-        print(result)
         if result:
             self.configuration_dlg.save_ui_to_settings()
-            print(self.aerius_connection)
             self.aerius_connection.check_connection()
-            print(self.aerius_connection)
             self.update_connect_widgets()
 
 
     def open_connect_receptorsets(self):
-        self.log('open_connect_receptorsets()')
+        self.log('open_connect_receptorsets()', user='dev')
         result = self.connect_receptorsets_dlg.exec_()
-        print(result)
+        #print(result)
 
 
     def open_connect_jobs(self):
-        self.log('open_connect_jobs()')
+        self.log('open_connect_jobs()', user='dev')
         result = self.connect_jobs_dlg.exec_()
         #print(result)
 
@@ -415,7 +409,7 @@ class ImaerPlugin:
             return
 
         layers = self.relate_calc_results_dlg.get_layer_list()
-        print(layers)
+        #print(layers)
 
         calc_type = self.relate_calc_results_dlg.combo_calc_type.currentText()
 
@@ -441,11 +435,11 @@ class ImaerPlugin:
         if not os.path.isfile(zip_fn) or force_download:
             # Download zip file
             conn = AeriusOpenData()
-            print(conn)
+            self.log(conn, user='dev')
             response = conn.get_dataset(layer_ns, layer_name, output_format='SHAPE-ZIP') #TODO Download a better file format then SHP when available
 
             if response is None:
-                print('Download failed')
+                self.log('Download failed', user='user')
                 return
 
             with open(zip_fn, 'wb') as zip_file:

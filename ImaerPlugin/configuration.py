@@ -93,6 +93,9 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         if result:
             self.edit_key.setText('')
             self.plugin.settings.setValue('imaer_plugin/connect_key', '')
+            self.plugin.log('Requested new Connect API key', bar=True)
+        else:
+            self.plugin.log('Requesting new Connect API key failed', lvl='Critical', bar=True)
 
 
     def browse_work_dir(self):

@@ -32,7 +32,8 @@ from qgis import processing
 
 class AeriusConnection():
 
-    def __init__(self, base_url=None, version=None, api_key=None, do_check_connection=True):
+    def __init__(self, plugin, base_url=None, version=None, api_key=None, do_check_connection=True):
+        self.plugin = plugin
         self.available_versions = ['7']
         self.default_base_url = 'https://connect2021-prerelease.aerius.nl/api'
         self.default_version = '7'
@@ -51,7 +52,7 @@ class AeriusConnection():
 
 
     def __str__(self):
-        return 'AeriusConnection[v{}, {}, {}, {} {}, {}, {}]'.format(
+        return 'AeriusConnection[{}, {}, {}, {} {}, {}, {}]'.format(
             self.base_url,
             self.version,
             self.api_key,
@@ -97,7 +98,7 @@ class AeriusConnection():
 
 
     def run_request(self, api_function, method, data=None, text_parts=[], file_parts=[], with_api_key=True, blocking=True, with_version=True):
-        print('run_request ------------------------------------------------')
+        self.plugin.log(f'run_request: {method} {api_function}', user='dev')
 
         manager = QgsNetworkAccessManager.instance()
 
@@ -126,7 +127,7 @@ class AeriusConnection():
                 multi_part = QHttpMultiPart(QHttpMultiPart.FormDataType)
 
                 for tp in text_parts:
-                    print(tp)
+                    #print(tp)
                     header = tp['header']
                     body = json.dumps(tp['body'])
                     body = body.encode('utf-8')
@@ -138,7 +139,7 @@ class AeriusConnection():
                 for fp in file_parts:
                     #print(fp)
                     file = QFile(fp['file_name'])
-                    print(QFileInfo(file).fileName())  # <= om de file name te achterhalen en te gebruiken in de dispostion header
+                    #print(QFileInfo(file).fileName())  # <= om de file name te achterhalen en te gebruiken in de dispostion header
 
                     file_part = QHttpPart()
                     file_part.setHeader(QNetworkRequest.ContentTypeHeader, QVariant(fp['file_type']))
@@ -196,7 +197,7 @@ class AeriusConnection():
             else:
                 qgis_request = QgsBlockingNetworkRequest()
                 err = qgis_request.deleteResource(request)
-                print(err)
+                #print(err)
 
                 if err > 0:
                     #TODO: return error code or None or something...
@@ -216,7 +217,7 @@ class AeriusConnection():
 
 
     def generate_api_key(self, email):
-        print('generate_api_key()')
+        self.plugin.log('generate_api_key()', user='dev')
         if self.base_url is None:
             return
         end_points = {
@@ -232,7 +233,7 @@ class AeriusConnection():
 
 
     def get_jobs(self):
-        print('get_jobs()')
+        self.plugin.log('get_jobs()', user='dev')
         end_points = {
             '7': 'jobs'
         }
@@ -247,36 +248,28 @@ class AeriusConnection():
             result = json.loads(bytes(response))
             return result
         except:
-            print('Response is not json')
+            self.plugin.log('Response is not json', lvl='Warning')
 
 
     def cancel_job(self, job_key):
-        print('cancel_job()')
+        self.plugin.log('cancel_job()', user='dev')
         end_points = {
             '7': f'jobs/{job_key}/cancel'
         }
         end_point = end_points[self.version]
 
         response = self.run_request(end_point, 'POST')
-        if response is not None:
-            pass
-            #print(f'gelukt! {response}')
-
         return response
 
 
     def delete_job(self, job_key):
-        print('delete_job()')
+        self.plugin.log('delete_job()', user='dev')
         end_points = {
             '7': f'jobs/{job_key}'
         }
         end_point = end_points[self.version]
 
         response = self.run_request(end_point, 'DELETE')
-        if response is not None:
-            pass
-            #print(f'gelukt! {response}')
-
         return response
 
 
@@ -285,28 +278,29 @@ class AeriusConnection():
         Downloads a zipfile and extracts all containing gml files in the
         same directory. Returns a list of absolute gml file names.
         '''
+        self.plugin.log('download_result_zip()', user='dev')
         params = {}
         params['URL'] = url
         zip_fn = os.path.join(work_dir, base_name)
         params['OUTPUT'] = zip_fn
-        print(params)
+        #print(params)
 
         alg_id = 'native:filedownloader'
         alg_result = processing.run(alg_id, params)
-        print(alg_result)
+        #print(alg_result)
 
         result = []
         if not unzip_gmls:
             return []
 
         with ZipFile(zip_fn) as my_zip:
-            print(my_zip)
+            #print(my_zip)
             for fn in my_zip.namelist():
                 if fn.lower().endswith('.gml'):
-                    print(fn)
+                    #print(fn)
                     my_zip.extract(fn, work_dir)
                     gml_fn = os.path.join(work_dir, fn)
-                    print(gml_fn)
+                    #print(gml_fn)
                     result.append(gml_fn)
         return result
 
@@ -340,9 +334,10 @@ class AeriusConnection():
         return True
     '''
 
+
     def post_calculate(self, gml_files, user_options={}):
         '''Start a new calculation'''
-        print('post_calculate()')
+        self.plugin.log('post_calculate()', user='dev')
 
         # For now this only works on 1 GML input file
         if not len(gml_files) == 1:
@@ -374,30 +369,26 @@ class AeriusConnection():
 
         file_parts = []
         file_parts.append({'name': 'fileParts', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
-        print(file_parts)
+        #print(file_parts)
 
         response = self.run_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
-        if response is not None:
-            pass
-
         return response
 
 
     def get_receptor_sets(self):
         'Returns a dictionary of receptor sets, or None in case of network errors'
+        self.plugin.log('get_receptor_sets()', user='dev')
         end_points = {
             '7': 'receptorSets'
         }
         end_point = end_points[self.version]
         data = {}
 
-        #response = self.run_request(end_point, 'GET', data)
         response = self.run_request(end_point, 'GET')
 
         if response is None:
             return
 
-        #print(f'gelukt! {response}')
         self.resp = response
         result = json.loads(bytes(response))
         return result
@@ -405,7 +396,7 @@ class AeriusConnection():
 
     def post_receptor_set(self, gml_fn, name, description=''):
         '''Posts a new receptor set'''
-        print('receptor_set')
+        self.plugin.log('post_receptor_set()', user='dev')
         end_points = {
             '7': 'receptorSets'
         }
@@ -422,29 +413,22 @@ class AeriusConnection():
         response = self.run_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
         #print(response)
         resp = response
-        if response is not None:
-            pass
-            #print(f'gelukt! {response}')
 
         self.last_response = response
-
         return response
 
 
     def delete_receptor_set(self, name):
-        print('delete_receptor_sets')
+        self.plugin.log('delete_receptor_set()', user='dev')
         api_function = f'receptorSets/{name}'
 
         response = self.run_request(api_function, 'DELETE')
-        if response is not None:
-            pass
-            #print(f'gelukt! {response}')
 
         return response
 
 
     def post_validate(self, gml_fn):
-        print('post_validate()')
+        self.plugin.log('post_validate()', user='dev')
         end_points = {
             '7': 'utility/validate'
         }
@@ -452,12 +436,9 @@ class AeriusConnection():
 
         file_parts = []
         file_parts.append({'name': 'filePart', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
-        print(file_parts)
+        #print(file_parts)
 
         response = self.run_request(end_point, 'POST', file_parts=file_parts)
-        print(response)
-        if response is not None:
-            pass
-            print(f'gelukt! {response}')
+        #print(response)
 
         return response

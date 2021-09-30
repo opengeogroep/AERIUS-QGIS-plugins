@@ -65,18 +65,8 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         self.edit_gml_input.setText(gml_fn)
 
 
-    def show_feedback(self, fb):
-        if isinstance(fb, dict):
-            txt = json.dumps(fb, indent=4)
-            print(txt)
-            #self.text_feedback.setText(txt)
-        else:
-            print(str(fb))
-            #self.text_feedback.setText(str(fb))
-
-
     def get_receptor_sets(self):
-        print('get_receptor_sets()')
+        #self.plugin.log('get_receptor_sets()', user='dev')
         self.table_receptorsets.clearContents()
         while self.table_receptorsets.rowCount() > 0:
             self.table_receptorsets.removeRow(0)
@@ -89,8 +79,6 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
             return
 
         receptor_sets_dict = result
-
-        #self.show_feedback(receptor_sets_dict)
 
         for receptor_set in receptor_sets_dict:
             row_num = self.table_receptorsets.rowCount()
@@ -108,7 +96,6 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
         result = self.plugin.aerius_connection.post_receptor_set(gml_fn, name, description)
         #result = self.plugin.aerius_connection.
-        self.show_feedback(result.readAll())
 
         if result is not None:
             self.get_receptor_sets()
@@ -129,7 +116,6 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
             return
 
         result = self.plugin.aerius_connection.delete_receptor_set(name)
-        self.show_feedback(result)
 
         if result is not None:
             self.get_receptor_sets()
