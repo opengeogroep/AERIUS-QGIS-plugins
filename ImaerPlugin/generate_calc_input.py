@@ -170,9 +170,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         if self.group_situation.isChecked():
              situation_name = self.edit_situation_name.text()
-             situation_reference = self.edit_situation_reference.text()
              situation_type = self.combo_situation_type.currentText()
-             situation = {'name': situation_name, 'reference': situation_reference, 'type': situation_type}
+             situation = {'name': situation_name, 'type': situation_type}
         else:
             situation = None
 
