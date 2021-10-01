@@ -197,6 +197,13 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
             # geometry
             geom = feat.geometry()
+
+            geom2 = self.make_single_part(geom)
+            if geom2 is None:
+                self.plugin.log(f'Input data contains multipart geometry: {geom.asWkt(precision=3)}', bar=True, lvl='Critical')
+                return
+            geom = geom2
+
             if crs_transform is not None:
                 geom.transform(crs_transform)
 
@@ -360,18 +367,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             out_file.write(txt)
 
 
-    def collect_field_settings(self):
-        '''Collects a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
-        result = {}
-        result['imaer_plugin_version'] = 1
-        result['fields'] = {}
-        for fcb in self.findChildren(QgsFieldComboBox):
-            k = fcb.objectName()
-            v = fcb.currentText()
-            result['fields'][k] = v
-        return result
-
-
     def load_settings(self):
         work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
         if work_dir is None:
@@ -395,6 +390,18 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.plugin.log('Configuration file loaded', bar=True)
 
 
+    def collect_field_settings(self):
+        '''Collects a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
+        result = {}
+        result['imaer_plugin_version'] = 1
+        result['fields'] = {}
+        for fcb in self.findChildren(QgsFieldComboBox):
+            k = fcb.objectName()
+            v = fcb.currentText()
+            result['fields'][k] = v
+        return result
+
+
     def set_field_settings(self, field_cfg):
         '''Sets texts from a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
         layer_fields = self.combo_layer.currentLayer().fields().names()
@@ -412,3 +419,14 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 # Set empty
                 fcb.setCurrentIndex(0)
                 #print(f'Current input layer does not contain a field \'{new_field}\'')
+
+
+    def make_single_part(self, geom):
+        '''Returns single part geometry or None if input has more than 1 part'''
+        parts = geom.asGeometryCollection()
+        if len(parts) == 1:
+            result = parts[0]
+            # Make sure the type is Point, LineString or Polygon
+            if result.wkbType() in [1, 2, 3]:
+                return result
+        return None
