@@ -2,8 +2,6 @@ import os
 import json
 from zipfile import ZipFile
 
-from .network import NetworkAccessManager, RequestsException
-
 from qgis.PyQt.QtCore import (
     QFile,
     QFileInfo,
