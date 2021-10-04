@@ -378,7 +378,7 @@ class ImaerPlugin:
 
 
     def open_online_documentation(self):
-        doc_index_url = 'https://github.com/opengeogroep/AERIUS-QGIS-plugins/tree/master/documentation/00_index.md'
+        doc_index_url = 'http://opengeogroep.github.io/AERIUS-QGIS-plugins/'
         webbrowser.open(doc_index_url)
 
 
