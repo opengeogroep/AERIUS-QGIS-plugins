@@ -1,6 +1,15 @@
-import urllib.parse
+from qgis.PyQt.QtNetwork import (
+    QNetworkRequest
+)
 
-from .network import NetworkAccessManager, RequestsException
+from qgis.core import (
+    QgsBlockingNetworkRequest
+)
+
+from qgis.PyQt.QtCore import (
+    QUrl,
+    QUrlQuery
+)
 
 
 
@@ -8,7 +17,7 @@ from .network import NetworkAccessManager, RequestsException
 class AeriusOpenData():
 
     def __init__(self):
-        self.base_url = 'https://connect.aerius.nl/opendata/wfs'
+        self.base_url = 'https://connect.aerius.nl/opendata/base_geometries/wfs/'
         self.mime_types_dict = {'CSV': 'text/csv', 'SHAPE-ZIP': 'application/zip'}
 
 
@@ -17,7 +26,6 @@ class AeriusOpenData():
 
 
     def run_request(self, api_function, method, data=None, headers=None):
-
         if headers is None:
             headers = {'Accept': '*/*'}
         print(headers)
@@ -25,29 +33,25 @@ class AeriusOpenData():
         url = f'{self.base_url}/{api_function}'
         print(url)
 
-        nam = NetworkAccessManager()
-        nam.debug = True
+        url = QUrl(url)
+        if data is not None:
+            query = QUrlQuery()
+            for k, v in data.items():
+                query.addQueryItem(k, v)
+        url.setQuery(query)
 
-        if method == 'GET':
-            if data is not None:
-                #print(data)
-                params = urllib.parse.urlencode(data)
-                #print(params)
-                url += f'?{params}'
-                print(url)
-            try:
-                (response, content) = nam.request(url, blocking=True) # TODO Turn into non-blocking and QgsTask
-            except RequestsException as e:
-                print(f'exception: {e}')
-                return
-        #print('result:', nam.httpResult())
+        request = QNetworkRequest(url)
 
-        #print('response: ', response)
-        #print('content: ', content)
-        print(response.status)
-        #print(content)
-        if response.status == 200:
-            return content
+        qgis_request = QgsBlockingNetworkRequest()
+
+        err = qgis_request.get(request, True)
+        print(err)
+
+        if err > 0:
+            return None
+
+        reply = qgis_request.reply()
+        return reply.content()
 
 
     def get_dataset(self, namespace, layer, output_format='SHAPE-ZIP'):

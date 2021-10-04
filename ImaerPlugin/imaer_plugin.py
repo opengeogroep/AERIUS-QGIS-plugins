@@ -85,7 +85,6 @@ class ImaerPlugin:
         self.connect_jobs_dlg = ConnectJobsDialog(self, parent=self.iface.mainWindow())
         self.configuration_dlg = ConfigurationDialog(self, parent=self.iface.mainWindow())
 
-
         self.action_configuration = [
             {
                 'name': 'import_calc_result',
@@ -426,23 +425,25 @@ class ImaerPlugin:
             self.relate_calc_results_dlg.calculate_maximum(layers)
 
 
-    def open_add_open_data(self):
+    def open_add_open_data(self, layer_ns='base_geometries', layer_name='hexagons', allow_cache=True):
         # TODO Move this to a QgsTask when specs are clear
-        layer_ns = 'base_geometries'
-        layer_name = 'hexagons'
-        force_download = False # Option to enforce downloading for more dynamic data types
 
         base_fn = f'imaer_{layer_ns}_{layer_name}'
-        zip_fn = os.path.join(self.download_dir, f'{base_fn}.zip')
 
-        if not os.path.isfile(zip_fn) or force_download:
-            # Download zip file
+        work_dir = self.settings.value('imaer_plugin/work_dir', defaultValue=None)
+        if work_dir is None:
+            raise Exception('Work dir not set')
+            return
+        zip_fn = os.path.join(work_dir, f'{base_fn}.zip')
+
+        if not os.path.isfile(zip_fn) or not allow_cache:
+            # Download data
             conn = AeriusOpenData()
-            self.log(conn, user='dev')
+            print(conn)
             response = conn.get_dataset(layer_ns, layer_name, output_format='SHAPE-ZIP') #TODO Download a better file format then SHP when available
 
             if response is None:
-                self.log('Download failed', user='user')
+                print('Download failed')
                 return
 
             with open(zip_fn, 'wb') as zip_file:
