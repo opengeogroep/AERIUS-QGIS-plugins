@@ -75,8 +75,9 @@ class ImaerPlugin:
         self.log(self.aerius_connection, user='user')
 
         # Create dialogs
+        work_dir = self.settings.value('imaer_plugin/work_dir', defaultValue=None)
         self.calc_result_file_dialog = QFileDialog()
-        self.calc_input_file_dialog = QFileDialog()
+        self.calc_input_file_dialog = QFileDialog(directory=work_dir)
 
         self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
         self.relate_calc_results_dlg = RelateCalcResultsDialog(self, parent=self.iface.mainWindow())

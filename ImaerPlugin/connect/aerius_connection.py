@@ -367,6 +367,8 @@ class AeriusConnection():
 
         file_parts = []
         file_parts.append({'name': 'fileParts', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
+        #file_parts.append({'name': 'fileParts', 'file_name': gml_fn, 'file_type': 'application/zip'})
+
         #print(file_parts)
 
         response = self.run_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)

@@ -62,34 +62,53 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
 
     def show_feedback(self, fb):
-        self.plugin.log(type(fb), user='dev')
+        if not self.plugin.dev:
+            return
+
+        #self.plugin.log('show_feedback()', user='dev')
+        #self.plugin.log(str(type(fb)), user='dev')
+
         if isinstance(fb, dict):
             txt = json.dumps(fb, indent=4)
             print(txt)
+            return
             #self.text_feedback.setText(txt)
-        else:
-            print(str(fb))
-            #self.text_feedback.setText(str(fb))
 
 
     def validate(self):
         gml_fn = self.edit_gml_input.text()
         result = self.plugin.aerius_connection.post_validate(gml_fn)
 
-        #self.plugin.resp = result # for debugging
+        self.plugin.resp = result # for debugging
+        #print(result)
         bstr = result.readAll()
-        #self.show_feedback(bstr)
+
+        msg_box = QMessageBox(windowTitle='Validation result', parent=self)
+        msg_box.setSizeGripEnabled(True)
 
         try:
             result_dict = json.loads(bytes(bstr))
+            #print(result_dict)
         except:
-            #print('No json in response')
+            self.plugin.log('Server error, no validation response.', lvl='Critical', bar=True)
+            msg_box.setText('Server error, no validation response.')
+            msg_box.exec()
             return
 
         if 'successful' in result_dict and result_dict['successful']:
             self.plugin.log('GML is valid', lvl='Info', bar=True)
+            msg_box.setText('GML is valid')
         else:
-            self.plugin.log('GML is NOT valid', lvl='Critical', bar=True)
+            self.plugin.log('GML is NOT valid.', lvl='Warning', bar=True)
+            if 'message' in result_dict:
+                error_txt = result_dict['message']
+                error_txt = error_txt.replace(' cvc-', '\ncvc-') # Ugly bug fix for ugly response
+                msg_box.setText(error_txt)
+                for error_line in error_txt.split('\n'):
+                    self.plugin.log(error_line, lvl='Warning')
+            else:
+                msg_box.setText('GML is NOT valid')
+        msg_box.exec()
 
 
     def calculate(self):
@@ -266,11 +285,6 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
 
     def browse_gml_file(self):
-        if self.plugin.dev:
-            out_path = '/home/raymond/calcinput_20200928_165149.gml'
-        else:
-            out_path = ''
-
-        gml_fn, filter = self.plugin.calc_input_file_dialog.getOpenFileName(caption="Calculation input GML file", filter='*.gml', directory=out_path, parent=self.iface.mainWindow())
+        gml_fn, filter = self.plugin.calc_input_file_dialog.getOpenFileName(caption="Input GML file", filter='*.gml', parent=self)
         self.plugin.log(gml_fn, filter)
         self.edit_gml_input.setText(gml_fn)
