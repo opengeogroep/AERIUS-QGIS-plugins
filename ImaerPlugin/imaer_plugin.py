@@ -76,7 +76,7 @@ class ImaerPlugin:
 
         # Create dialogs
         work_dir = self.settings.value('imaer_plugin/work_dir', defaultValue=None)
-        self.calc_result_file_dialog = QFileDialog()
+        self.calc_result_file_dialog = QFileDialog(directory=work_dir)
         self.calc_input_file_dialog = QFileDialog(directory=work_dir)
 
         self.generate_calc_input_dlg = GenerateCalcInputDialog(self, parent=self.iface.mainWindow())
@@ -197,22 +197,29 @@ class ImaerPlugin:
 
     def run_import_calc_result(self, checked=False, gml_fn=None):
         self.log('run_import_calc_result()', user='dev')
-        if self.dev:
-            self.calc_result_file_dialog.setDirectory('/home/raymond/git/AERIUS-QGIS-plugins/demodata/')
 
         if gml_fn is None:
-            gml_fn, filter = self.calc_result_file_dialog.getOpenFileName(caption="Open Calculator result gml file", filter='*.gml', parent=self.iface.mainWindow())
+            gml_fn, filter = self.calc_result_file_dialog.getOpenFileName(caption="Open Calculator result GML file", filter='*.gml', parent=self.iface.mainWindow())
             self.log(gml_fn)
 
         if os.path.exists(os.path.dirname(gml_fn)):
             gpkg_fn = gml_fn.replace('.gml', '.gpkg')
             task = ImportImaerCalculatorResultTask(gml_fn, gpkg_fn, self.load_calc_layer)
             self.task_manager.addTask(task)
-            self.log('added to task manager')
+            #self.log('added to task manager')
 
 
-    def load_calc_layer(self, gpkg_fn, zoom=True):
+    def load_calc_layer(self, gpkg_fn, feat_cnt, rp_without_geom_cnt=None, zoom=True):
         '''Callback function from the task after finishing the gpkg'''
+        # Prevent loading an empty layer
+        if feat_cnt == 0:
+            msg = 'Layer does not contain calculation results.'
+            if rp_without_geom_cnt > 0:
+                msg += f' (Could not import {rp_without_geom_cnt} receptors without hexagon geometry.)'
+            self.log(msg, lvl='Warning', bar=True, duration=5)
+            os.remove(gpkg_fn)
+            return
+
         base = os.path.basename(gpkg_fn)
         stem, ext = os.path.splitext(base)
         layer_name = '{} receptors'.format(stem)
@@ -230,6 +237,9 @@ class ImaerPlugin:
             extent = receptors_layer.extent()
             extent.grow(100)
             canvas.setExtent(extent)
+
+        if rp_without_geom_cnt is not None and rp_without_geom_cnt > 0:
+            self.log(f'Could not import {rp_without_geom_cnt} receptors without hexagon geometry.', lvl='Warning', bar=True, duration=5)
 
 
     def run_extract_gml_from_pdf(self):

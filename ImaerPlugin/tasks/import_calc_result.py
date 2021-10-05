@@ -39,7 +39,9 @@ class ImportImaerCalculatorResultTask(QgsTask):
     def run(self):
         self.log('Started task "{}"'.format(self.description()))
 
-        rp_cnt = 0
+        elem_cnt = 0
+        self.feat_cnt = 0
+        self.rp_without_geom_cnt = 0
 
         errors = False
 
@@ -68,6 +70,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
                             return False
                         feature_member_tag = '{{{0}}}featureMember'.format(elem[1])
                         receptor_point_tag = '{{{0}}}ReceptorPoint'.format(elem[1])
+                        calculation_point_tag = '{{{0}}}CalculationPoint'.format(elem[1])
                         self.create_gpkg()
                         receptors_layer = QgsVectorLayer(self.gpkg_fn, 'receptors', 'ogr')
                         receptors_layer.startEditing()
@@ -77,11 +80,18 @@ class ImportImaerCalculatorResultTask(QgsTask):
                     #self.log('  {}'.format(child.tag))
                     if child.tag == receptor_point_tag:
                         feat = self.process_rp(child)
-                        receptors_layer.addFeature(feat)
-                        rp_cnt += 1
+                        if feat is not None:
+                            receptors_layer.addFeature(feat)
+                            self.feat_cnt += 1
+                        else:
+                            self.rp_without_geom_cnt += 1
                         elem.clear()
+                        elem_cnt += 1
+                    if child.tag == calculation_point_tag: # Also count calculationPoints allthough these aren't processed (yet)
+                        self.rp_without_geom_cnt += 1
+                        elem_cnt += 1
 
-                if (rp_cnt) % step == 0:
+                if (elem_cnt) % step == 0:
                     self.setProgress( (gml_file.tell() / gml_file_size) * 100)
 
                 if self.isCanceled():
@@ -108,7 +118,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
             self.log(
                 'ImaerResultToGpkgTask "{name}" completed'.format(
                   name=self.description()))
-            self.load_layer_callback(self.gpkg_fn)
+            self.load_layer_callback(self.gpkg_fn, feat_cnt=self.feat_cnt, rp_without_geom_cnt=self.rp_without_geom_cnt)
         else:
             if self.exception is None:
                 self.log(
@@ -122,7 +132,6 @@ class ImportImaerCalculatorResultTask(QgsTask):
                         name=self.description(),
                         exception=self.exception))
                 raise self.exception
-        #self.conn.close()
 
 
     def cancel(self):
@@ -141,11 +150,11 @@ class ImportImaerCalculatorResultTask(QgsTask):
     def get_imaer_version(self, ns_url):
         url_parts = ns_url.split('/')
         version_str = url_parts[-1]
-        self.log((version_str))
+        self.log(version_str)
         return version_str
 
 
-    def create_gpkg(self):
+    def create_gpkg(self, epsg_id=28992):
         md = QgsProviderRegistry.instance().providerMetadata('ogr')
         self.conn = md.createConnection(self.gpkg_fn, {})
 
@@ -160,7 +169,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
             field_name = 'dep_{}'.format(substance)
             fields.append(QgsField(field_name, QVariant.Double))
-        self.conn.createVectorTable('', 'receptors', fields, QgsWkbTypes.Polygon, QgsCoordinateReferenceSystem(28992), True, {})
+        self.conn.createVectorTable('', 'receptors', fields, QgsWkbTypes.Polygon, QgsCoordinateReferenceSystem(epsg_id), True, {})
 
 
     def save_metadata(self, key, value):
@@ -186,17 +195,18 @@ class ImportImaerCalculatorResultTask(QgsTask):
         result['point_x'] = pos[0]
         result['point_y'] = pos[1]
 
-        coords = elem.findall('imaer:representation/gml:Polygon/gml:exterior/gml:LinearRing/gml:posList', self.namespaces)[0].text
-        gml_numbers = coords.split()
-        if not len(gml_numbers) == 14:
-            pass
-        wkt_coord_list = []
-        i = 0
-        while i < len(gml_numbers):
-            wkt_coord_list.append('{} {}'.format(gml_numbers[i], gml_numbers[i+1]))
-            i += 2
-        wkt_coords = ', '.join(wkt_coord_list)
-        result['polygon_wkt'] = 'POLYGON(({}))'.format(wkt_coords)
+        coords = elem.findall('imaer:representation/gml:Polygon/gml:exterior/gml:LinearRing/gml:posList', self.namespaces)
+        if len(coords) == 1:
+            coords = coords[0].text
+            gml_numbers = coords.split()
+            if len(gml_numbers) == 14:
+                wkt_coord_list = []
+                i = 0
+                while i < len(gml_numbers):
+                    wkt_coord_list.append('{} {}'.format(gml_numbers[i], gml_numbers[i+1]))
+                    i += 2
+                wkt_coords = ', '.join(wkt_coord_list)
+                result['polygon_wkt'] = 'POLYGON(({}))'.format(wkt_coords)
 
         if full:
             result['result_fields'] = []
@@ -218,6 +228,10 @@ class ImportImaerCalculatorResultTask(QgsTask):
         #print(result)
         if as_dict:
             return result
+
+        if not 'polygon_wkt' in result:
+            # Cannot create feature because of lacking hexagon info (TODO: Support points as well)
+            return None
 
         feat = QgsFeature()
         geom = QgsGeometry.fromWkt(result['polygon_wkt'])
