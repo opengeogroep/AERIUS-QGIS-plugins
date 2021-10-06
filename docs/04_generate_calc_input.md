@@ -9,6 +9,8 @@
 * [Connect - Jobs](08_connect_jobs.md)
 * [Configuration](09_configuration.md)
 
+<img src="img/icons/icon_generate_calc_input.svg" alt="button" width="96"/>
+
 # Generate Calculator Input
 
 ## Introduction
@@ -21,7 +23,7 @@ Open your emission data as a regular vector layer in QGIS. The geometries can be
 
 ![dialog](img/generate_aerius_calculator_input_dlg.png)
 
-1. Click the ![import button](../ImaerPlugin/icon_generate_calc_input.png "import button") button to open the dialog for generating Calculator input GML.
+1. Click the Generate input GML button to open the dialog for generating Calculator input GML.
 2. Choose the layer with your input data, the year and coordinate reference system (CRS).
 3. Choose the sector (and sub sector) for your data. (Currently only 3 sectors are available, and only `OTHER` should really work.)
 4. Choose the fields from your layer for every variable you want to store in the GML file.

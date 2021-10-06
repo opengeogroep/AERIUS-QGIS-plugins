@@ -9,6 +9,8 @@
 * [Connect - Jobs](08_connect_jobs.md)
 * [Configuration](09_configuration.md)
 
+<img src="img/icons/icon_extract_gml_from_pdf.svg" alt="button" width="96"/>
+
 # Extract GML from AERIUS PDF
 
 ## Introduction
@@ -17,7 +19,7 @@ AERIUS Calculator provides downloading a PDF file which contains emission source
 
 ## Howto
 
-1. Click the ![import button](../ImaerPlugin/icon_extract_gml_from_pdf.svg "extract gml from pdf") button to open the dialog for generating Calculator input GML.
+1. Click the PDF/GML button to open the dialog for generating Calculator input GML.
 2. Choose the PDF file containing your input data.
 
 ![dialog](img/extract_gml_from_pdf_dlg.png)
