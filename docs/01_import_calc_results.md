@@ -12,15 +12,14 @@
 ![import calc result button](../ImaerPlugin/img/icon_import_calc_result.svg)
 # Import AERIUS Calculator results
 
-## Introduction
-
-Import AERIUS Calculator result files.
+Import AERIUS Calculator result files and add them as QGIS vector layers.
 
 ## Howto
 
-Click the ![import button](../ImaerPlugin/icon_import_calc_result.svg) button in the IMAER toolbar and browse to the downloaded IMAER GML file from Aerius Calculator. (Make sure you download the "GML with calculation results".)
+Click the ![import](../ImaerPlugin/icon_import_calc_result.svg) button in the IMAER toolbar and browse to the downloaded IMAER GML file from Aerius Calculator. (Make sure you download the "GML with calculation results".)
 
 ![dialog](img/import_result_file_dlg.png)
+![button](img/icon_import_calc_result.svg)
 
 The data will be converted into a GeoPackage (.gpkg) file at the same location your GML file is placed. Make sure you have write access to that directory.
 
