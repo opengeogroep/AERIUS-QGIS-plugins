@@ -9,6 +9,7 @@
 * [Connect - Jobs](08_connect_jobs.md)
 * [Configuration](09_configuration.md)
 
+![import_calc_result](../ImaerPlugin/img/icon_import_calc_result.png)
 # Import AERIUS Calculator results
 
 ## Introduction
