@@ -169,8 +169,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>513</width>
-            <height>568</height>
+            <width>242</width>
+            <height>398</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
@@ -321,7 +321,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>499</width>
+            <width>286</width>
             <height>1406</height>
            </rect>
           </property>
@@ -774,14 +774,14 @@
      <item>
       <widget class="QPushButton" name="btn_save_settings">
        <property name="text">
-        <string>Save settings...</string>
+        <string>Save settings</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="btn_load_settings">
        <property name="text">
-        <string>Load settings...</string>
+        <string>Load settings</string>
        </property>
       </widget>
      </item>
