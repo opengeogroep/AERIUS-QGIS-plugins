@@ -10,7 +10,8 @@
 * [Configuration](09_configuration.md)
 
 # IMAER Plugin
-The IMAER plugin for QGIS provides a set of tools for working with your AERIUS IMAER data.
+The IMAER plugin for QGIS provides a set of tools for working with your AERIUS
+IMAER data.
 
 ![imaer toolbar](img/imaer_plugin_toolbar.png)
 
@@ -19,23 +20,25 @@ The IMAER plugin for QGIS provides a set of tools for working with your AERIUS I
 The current functionality covers:
 * Opening and editing AERIUS Calculator results
 * Extracting GML data from AERIUS PDF files
-* Performing calculations (+ and -) on IMAER layers
 * Generating AERIUS Calculator input from your own emission source layers
+* Performing calculations on Calculation result layers
+* Perform operations on the AERIUS Connect API
+
+## Installation
+
+The plugin is regularly updated in the QGIS plugin repository, so the easiest way
+to install it is by using the Plugin Manager within QGIS. Currently you will need to
+enable 'experimental plugins' to find it. The most recent plugin requires QGIS version
+3.16.x or higher.
+
+Of course you can also clone the code from the github repository and install it
+manually in QGIS.
 
 ## Issues
 
 If you meet any issues with this plugin, please file a bug report on the
 github issue [page](https://github.com/opengeogroep/AERIUS-QGIS-plugins/issues).
 You can also suggest ideas for improvements or enhancements.
-
-## Installation
-
-The plugin is regularly published in the QGIS plugin repository, so the easiest way
-to install it is by using the Plugin Manager within QGIS. Currently you will need to
-enable 'experimental plugins' to find it.
-
-Of course you can also clone the code from the github repository and install it
-manually.
 
 ## License
 

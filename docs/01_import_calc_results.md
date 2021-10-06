@@ -23,8 +23,14 @@ Click the import button in the IMAER toolbar and browse to the downloaded IMAER 
 
 The data will be converted into a GeoPackage (.gpkg) file at the same location your GML file is placed. Make sure you have write access to that directory.
 
-After conversion, the calculation result hexagons will be opened as a normal polygon vector layer in QGIS. The attribute table contains the deposition values.
+After conversion, the calculation result hexagons will be opened as a normal polygon vector layer in QGIS. The attribute table contains the deposition values in fileds starting with `dep_`.
 
 ![deposition map and attribute table](img/import_result_map_and_table.png)
 
 You can use all standard QGIS functionality for viewing, analysing and editing the data.
+
+## Mind!
+
+* This functionality can only import calculation results on **receptor points** that
+contain hexagon information. Results on **calculation points** are skipped during the
+import.
