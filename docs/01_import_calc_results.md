@@ -9,13 +9,15 @@
 * [Connect - Jobs](08_connect_jobs.md)
 * [Configuration](09_configuration.md)
 
-<img src="img/icon_import_calc_result.svg" alt="import calc result button" width="96"/># Import AERIUS Calculator results
+<img src="img/icon_import_calc_result.svg" alt="button" width="96"/>
+
+# Import AERIUS Calculator results
 
 Import AERIUS Calculator result files and add them as QGIS vector layers.
 
 ## Howto
 
-Click the <img src="img/icon_import_calc_result.svg" alt="import calc result button" width="32"/> button in the IMAER toolbar and browse to the downloaded IMAER GML file from Aerius Calculator. (Make sure you download the "GML with calculation results".)
+Click the import button in the IMAER toolbar and browse to the downloaded IMAER GML file from Aerius Calculator. (Make sure you download the "GML with calculation results".)
 
 ![dialog](img/import_result_file_dlg.png)
 
