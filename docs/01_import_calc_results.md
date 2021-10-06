@@ -20,7 +20,7 @@ Click the ![import](../ImaerPlugin/icon_import_calc_result.svg) button in the IM
 
 ![dialog](img/import_result_file_dlg.png)
 ![button1](img/icon_import_calc_result.svg)
-![button2](../ImaerPlugin/icon_import_calc_result.svg)
+![button2](../ImaerPlugin/img/icon_import_calc_result.svg)
 <img src="img/icon_import_calc_result.svg" alt="button3" width="48"/>
 
 The data will be converted into a GeoPackage (.gpkg) file at the same location your GML file is placed. Make sure you have write access to that directory.
