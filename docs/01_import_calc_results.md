@@ -9,7 +9,7 @@
 * [Connect - Jobs](08_connect_jobs.md)
 * [Configuration](09_configuration.md)
 
-![import_calc_result](../ImaerPlugin/img/icon_import_calc_result.svg)
+![import calc result button](../ImaerPlugin/img/icon_import_calc_result.svg)
 # Import AERIUS Calculator results
 
 ## Introduction
@@ -18,7 +18,7 @@ Import AERIUS Calculator result files.
 
 ## Howto
 
-Click the ![import button](../ImaerPlugin/icon_import_calc_result.svg "import buton") button in the IMAER toolbar and browse to the downloaded IMAER GML file from Aerius Calculator. (Make sure you download the "GML with calculation results".)
+Click the ![import button](../ImaerPlugin/icon_import_calc_result.svg) button in the IMAER toolbar and browse to the downloaded IMAER GML file from Aerius Calculator. (Make sure you download the "GML with calculation results".)
 
 ![dialog](img/import_result_file_dlg.png)
 
