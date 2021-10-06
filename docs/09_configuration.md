@@ -11,4 +11,37 @@
 
 # Configuration
 
-## Introduction
+Some plugin configurations can be set in the Configuration dialog. Most of them are related to Connect.
+
+![dialog](img/configuration_dlg.png)
+
+### Work directory:
+This is the default local directory on your system. Opening and saving
+
+### Server base URL:
+Location of the Connect API URL. Should by default point to the current production
+URL.
+
+Some examples:
+* https://connect.aerius.nl/api
+* https://connect2021-prerelease.aerius.nl/api
+* https://natuur-dev.aerius.nl/api/
+
+### Version:
+Connect version. The version is displayed on the Connect swagger page. Just visit
+the Server base URL with your web browser to find it.
+
+### Email:
+The email address you want to use for Connect. This is also your account name, and
+the address that will receive notifications.
+
+### API Key:
+Connect API key that you will receive by email after requisting it. You can clicked
+the `Request new API key` button to ge (a new) one.
+
+After receiving the new API key in your mailbox, simply copy the 32 character key
+to the configuration screen.
+
+## Save
+When saving the settings, the plugin will attempt to make a connection by firing
+a few rquests. They will also update the content of the connect plugin dialogs.
