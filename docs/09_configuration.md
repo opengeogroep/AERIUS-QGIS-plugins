@@ -9,6 +9,8 @@
 * [Connect - Jobs](08_connect_jobs.md)
 * [Configuration](09_configuration.md)
 
+<img src="img/icons/icon_configuration.svg" alt="button" width="96"/>
+
 # Configuration
 
 Some plugin configurations can be set in the Configuration dialog. Most of them are related to Connect.

@@ -9,6 +9,8 @@
 * [Connect - Jobs](08_connect_jobs.md)
 * [Configuration](09_configuration.md)
 
+<img src="img/icons/icon_connect_jobs.svg" alt="button" width="96"/>
+
 # Connect - Jobs
 
 ## Introduction

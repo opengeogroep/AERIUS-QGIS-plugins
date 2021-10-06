@@ -9,6 +9,8 @@
 * [Connect - Jobs](08_connect_jobs.md)
 * [Configuration](09_configuration.md)
 
+<img src="img/icons/icon_relate_calc_results.svg" alt="button" width="96"/>
+
 # Relate Calculator results
 
 ## Introduction
@@ -19,7 +21,7 @@ Relate IMAER layers to one another by calculating the sum or difference of the r
 
 You will need at least 2 IMAER layers, loaded with the Import IMAER GML tool.
 
-1. Click the ![import button](../ImaerPlugin/icon_relate_calc_results.svg "relate calculator results") button to open the dialog.
+1. Click the Relate calculation results button to open the dialog.
 2. Choose the `calculation type` (difference or sum).
 3. By default, the name for the new layer will be the calculation type. You can choose a more specific name in the `layer name` input widget.
 4. Choose the layers to perform the calculation on. (In case of calculating the difference, is will be layer1 minus layer2)

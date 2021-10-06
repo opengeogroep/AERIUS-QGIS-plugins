@@ -9,6 +9,12 @@
 * [Connect - Jobs](08_connect_jobs.md)
 * [Configuration](09_configuration.md)
 
+<img src="img/icons/icon_add_open_data_layer.svg" alt="button" width="96"/>
+
 # Open Data Layers
 
+Easily add a CONNECT Open Data layer to your QGIS project.
+
 ## Introduction
+
+This function is currently disabled and waiting for a new implementation.
