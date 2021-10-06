@@ -24,4 +24,11 @@ AERIUS Calculator provides downloading a PDF file which contains emission source
 
 ![dialog](img/extract_gml_from_pdf_dlg.png)
 
-After pressing `open`, the plugin will save the extracted data to a GML file with the same file name but `.gml` for the extension. A link to the file will be displayed in the message bar on top of your map. If anything goes wrong, an error will be displayed there.
+After pressing `open`, the plugin will save the extracted data to a GML file with the
+same file name but `.gml` for the extension. A link to the file will be displayed in
+the message bar on top of your map. If anything goes wrong, an error will be displayed there.
+
+## Limitations
+
+* The plugin can only extract 1 single GML file. PDF's containing more than
+1 GML file have not been testen and will probably not work.

@@ -29,7 +29,7 @@ After conversion, the calculation result hexagons will be opened as a normal pol
 
 You can use all standard QGIS functionality for viewing, analysing and editing the data.
 
-## Mind!
+## Limitations
 
 * This functionality can only import calculation results on **receptor points** that
 contain hexagon information. Results on **calculation points** are skipped during the
