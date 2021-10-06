@@ -29,8 +29,9 @@ After conversion, the calculation result hexagons will be opened as a normal pol
 
 You can use all standard QGIS functionality for viewing, analysing and editing the data.
 
-## Limitations
+## Remarks
 
 * This functionality can only import calculation results on **receptor points** that
 contain hexagon information. Results on **calculation points** are skipped during the
 import.
+* Should work on IMAER versions 2.2, 3.1 and 4.0 data.
