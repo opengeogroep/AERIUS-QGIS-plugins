@@ -24,11 +24,24 @@ lines or polygons.
 
 1. Click the Generate input GML button to open the dialog for generating Calculator input GML.
 2. Choose the layer with your input data and coordinate reference system (CRS).
-3. Choose the sector for your data. (Currently only 2 sectors are available, `ROAD_TRANSPORTATION` and `OTHER`)
+3. Choose the sector for your data. Currently only 2 sectors are available, `ROAD_TRANSPORTATION` and `OTHER` (for generic emission sources).
 4. In both the Metadata and Sector tabs, choose the fields from your layer for every variable you want to store in the GML file.
 5. Choose a file name for your GML file. The dialog will suggest a name including the current date and time (like `calcinput_20200907_193245.gml`)
 
 After pressing Save, the GML file will be generated. A link to the file will be displayed in the message bar on top of your map. If anything goes wrong, an error will be displayed there.
+
+## Saving and loading settings
+
+Because picking all the fields is a lot of work, there's a way to store the current
+field settings in a file. This is done with the `Save settings` and `Load settings` buttons
+at the bottom of the dialog.
+Loading the settings will set the field names.
+* In case the current input layer does not contain that field name, the entry will be cleared.
+* Empty values are stored as well.
+* The settings are stored in the work directory in a file called `generate_gml_config.json`
+which will be overwritten on every save operation.
+
+![roads tab](img/generate_aerius_calculator_input_dlg_3.png)
 
 ## Using the exported GML file
 
@@ -48,5 +61,3 @@ create your own software to connect to it.
 convert your data in case it has a multi type, as single geometry data is often staored as multi geometry in GIS.
 * Your data must contain the exact values that should end up in the GML file. The plugin
 does not attempt to convert values in some smart way.
-
-![roads tab](img/generate_aerius_calculator_input_dlg_3.png)

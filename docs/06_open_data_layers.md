@@ -13,8 +13,8 @@
 
 # Open Data Layers
 
-Easily add a CONNECT Open Data layer to your QGIS project.
+Easily add an AERIUS Connect Open Data layer to your QGIS project.
 
-## Introduction
+## Remarks
 
-This function is currently disabled and waiting for a new implementation.
+* This function is currently disabled and waiting for a new implementation.
