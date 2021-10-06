@@ -82,6 +82,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.plugin.resp = result # for debugging
         #print(result)
         bstr = result.readAll()
+        #print(bstr)
 
         msg_box = QMessageBox(windowTitle='Validation result', parent=self)
         msg_box.setSizeGripEnabled(True)
@@ -100,14 +101,22 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             msg_box.setText('GML is valid')
         else:
             self.plugin.log('GML is NOT valid.', lvl='Warning', bar=True)
+
+            msg_box.setText('GML is NOT valid. (Errors can not be parsed)')
+            error_txt = None
             if 'message' in result_dict:
                 error_txt = result_dict['message']
+            elif 'errors' in result_dict:
+                errors = result_dict['errors']
+                if len(errors) > 0:
+                    error1 = errors[0]
+                    if 'message' in error1:
+                        error_txt = error1['message']
+            if error_txt is not None:
                 error_txt = error_txt.replace(' cvc-', '\ncvc-') # Ugly bug fix for ugly response
                 msg_box.setText(error_txt)
                 for error_line in error_txt.split('\n'):
                     self.plugin.log(error_line, lvl='Warning')
-            else:
-                msg_box.setText('GML is NOT valid')
         msg_box.exec()
 
 
