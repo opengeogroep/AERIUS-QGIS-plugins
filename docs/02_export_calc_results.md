@@ -9,6 +9,8 @@
 * [Connect - Jobs](08_connect_jobs.md)
 * [Configuration](09_configuration.md)
 
+<img src="img/icons/icon_export_calc_result.svg" alt="button" width="96"/>
+
 # Export edited AERIUS Calculator results
 
 ## Introduction
