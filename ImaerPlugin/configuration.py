@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
+from qgis.PyQt import uic
 from qgis.PyQt.QtCore import (
     QVariant,
     QStandardPaths
@@ -9,8 +10,9 @@ from qgis.PyQt.QtWidgets import (
     QDialog,
     QFileDialog
 )
-from qgis.PyQt import uic
+from qgis.PyQt.QtCore import Qt
 
+from qgis.core import QgsApplication
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'configuration_dlg.ui'))
@@ -89,7 +91,11 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
 
     def get_api_key(self):
         email = self.edit_email.text()
+
+        QgsApplication.setOverrideCursor(Qt.WaitCursor)
         result = self.plugin.aerius_connection.generate_api_key(email)
+        QgsApplication.restoreOverrideCursor()
+
         if result:
             self.edit_key.setText('')
             self.plugin.settings.setValue('imaer_plugin/connect_key', '')

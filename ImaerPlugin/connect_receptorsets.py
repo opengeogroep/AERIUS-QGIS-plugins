@@ -3,11 +3,14 @@ import os
 import json
 import time
 
+from qgis.PyQt import uic
 from qgis.PyQt.QtWidgets import (
     QDialog,
     QTableWidgetItem
 )
-from qgis.PyQt import uic
+from qgis.PyQt.QtCore import Qt
+
+from qgis.core import QgsApplication
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -72,9 +75,13 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
             self.table_receptorsets.removeRow(0)
 
         if not self.plugin.aerius_connection.api_key_is_ok:
+            QgsApplication.restoreOverrideCursor()
             return
 
+        QgsApplication.setOverrideCursor(Qt.WaitCursor)
         result = self.plugin.aerius_connection.get_receptor_sets()
+        QgsApplication.restoreOverrideCursor()
+
         if result is None: # TODO check for valid response somehow and show feedback
             return
 
@@ -94,8 +101,9 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         name = self.edit_name.text()
         description = self.edit_description.text()
 
+        QgsApplication.setOverrideCursor(Qt.WaitCursor)
         result = self.plugin.aerius_connection.post_receptor_set(gml_fn, name, description)
-        #result = self.plugin.aerius_connection.
+        QgsApplication.restoreOverrideCursor()
 
         if result is not None:
             self.get_receptor_sets()
@@ -115,7 +123,9 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         if name is None:
             return
 
+        QgsApplication.setOverrideCursor(Qt.WaitCursor)
         result = self.plugin.aerius_connection.delete_receptor_set(name)
+        QgsApplication.restoreOverrideCursor()
 
         if result is not None:
             self.get_receptor_sets()

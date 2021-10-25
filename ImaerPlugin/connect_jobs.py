@@ -2,12 +2,15 @@
 import os
 import json
 
+from qgis.PyQt import uic
 from qgis.PyQt.QtWidgets import (
     QDialog,
     QTableWidgetItem,
     QMessageBox
 )
-from qgis.PyQt import uic
+from qgis.PyQt.QtCore import Qt
+
+from qgis.core import QgsApplication
 
 from ImaerPlugin.config import ui_settings
 
@@ -77,9 +80,12 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
     def validate(self):
         gml_fn = self.edit_gml_input.text()
-        result = self.plugin.aerius_connection.post_validate(gml_fn)
 
-        self.plugin.resp = result # for debugging
+        QgsApplication.setOverrideCursor(Qt.WaitCursor)
+        result = self.plugin.aerius_connection.post_validate(gml_fn)
+        QgsApplication.restoreOverrideCursor()
+
+        #self.plugin.resp = result # for debugging
         #print(result)
         bstr = result.readAll()
         #print(bstr)
@@ -136,7 +142,10 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             user_options['receptorSetName'] = self.combo_receptor_set.currentData()
         user_options['sendEmail'] = self.checkBox_send_email.isChecked()
 
+        QgsApplication.setOverrideCursor(Qt.WaitCursor)
         result = self.plugin.aerius_connection.post_calculate(gml_files, user_options)
+        QgsApplication.restoreOverrideCursor()
+
         #print(result)
         #self.show_feedback(result)
 
@@ -151,7 +160,9 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         if not self.plugin.aerius_connection.api_key_is_ok:
             return
 
+        QgsApplication.setOverrideCursor(Qt.WaitCursor)
         result = self.plugin.aerius_connection.get_jobs()
+        QgsApplication.restoreOverrideCursor()
         #self.show_feedback(result)
 
         if result is None:
@@ -184,11 +195,13 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         '''Sends a cancel request to the server for the selected jobs'''
         items = self.table_jobs.selectedItems()
 
+        QgsApplication.setOverrideCursor(Qt.WaitCursor)
         for item in items:
             if item.column() == 1: # jobKey column
                 job_key = item.text()
                 result = self.plugin.aerius_connection.cancel_job(job_key)
                 #self.show_feedback(result)
+        QgsApplication.restoreOverrideCursor()
 
         self.get_jobs()
 
@@ -197,11 +210,13 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         '''Sends a delete request to the server for the selected jobs'''
         items = self.table_jobs.selectedItems()
 
+        QgsApplication.setOverrideCursor(Qt.WaitCursor)
         for item in items:
             if item.column() == 1: # jobKey column
                 job_key = item.text()
                 result = self.plugin.aerius_connection.delete_job(job_key)
                 #self.show_feedback(result)
+        QgsApplication.restoreOverrideCursor()
 
         self.get_jobs()
 
@@ -210,6 +225,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         '''Downloads the selected job to the work directory if COMPLETED'''
         items = self.table_jobs.selectedItems()
 
+        QgsApplication.setOverrideCursor(Qt.WaitCursor)
         for item in items:
             if item.column() == 3: # jobKey column
                 status = item.text()
@@ -223,6 +239,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
                     #self.show_feedback(result)
                     for gml_fn in result:
                         self.plugin.run_import_calc_result(gml_fn=gml_fn)
+        QgsApplication.restoreOverrideCursor()
 
 
     def set_fixed_options(self):

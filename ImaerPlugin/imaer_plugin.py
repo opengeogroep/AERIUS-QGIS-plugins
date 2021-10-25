@@ -18,7 +18,7 @@ import pathlib
 
 from qgis.PyQt.QtWidgets import QAction, QFileDialog, QDialogButtonBox
 from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtCore import QVariant, QStandardPaths
+from qgis.PyQt.QtCore import QVariant, QStandardPaths, Qt
 
 from qgis.core import (
     QgsMessageLog,
@@ -450,8 +450,11 @@ class ImaerPlugin:
         if not os.path.isfile(zip_fn) or not allow_cache:
             # Download data
             conn = AeriusOpenData()
-            print(conn)
+            #print(conn)
+
+            QgsApplication.setOverrideCursor(Qt.WaitCursor)
             response = conn.get_dataset(layer_ns, layer_name, output_format='SHAPE-ZIP') #TODO Download a better file format then SHP when available
+            QgsApplication.restoreOverrideCursor()
 
             if response is None:
                 print('Download failed')
