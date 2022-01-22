@@ -26,8 +26,6 @@ URL.
 
 Some examples:
 * https://connect.aerius.nl/api
-* https://connect2021-prerelease.aerius.nl/api
-* https://natuur-dev.aerius.nl/api/
 
 ### Version:
 Connect version. The version is displayed on the Connect swagger page. Just visit

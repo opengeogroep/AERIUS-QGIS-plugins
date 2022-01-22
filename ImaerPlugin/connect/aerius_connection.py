@@ -33,7 +33,7 @@ class AeriusConnection():
     def __init__(self, plugin, base_url=None, version=None, api_key=None, do_check_connection=True):
         self.plugin = plugin
         self.available_versions = ['7']
-        self.default_base_url = 'https://connect2021-prerelease.aerius.nl/api'
+        self.default_base_url = 'https://connect.aerius.nl/api'
         self.default_version = '7'
 
         self.base_url = base_url

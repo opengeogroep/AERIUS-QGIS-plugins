@@ -18,7 +18,7 @@ class AeriusOpenData():
 
     def __init__(self):
         self.base_url = 'https://connect.aerius.nl/opendata/base_geometries/wfs/'
-        self.mime_types_dict = {'CSV': 'text/csv', 'SHAPE-ZIP': 'application/zip'}
+        self.mime_types_dict = {'CSV': 'text/csv', 'SHAPE-ZIP': 'application/zip', 'geopackage': 'application/x-sqlite3'}
 
 
     def __str__(self):
@@ -65,6 +65,7 @@ class AeriusOpenData():
             'typeName': f'{namespace}:{layer}',
             'outputFormat': output_format
         }
+        print(data)
 
         #data['cql_filter'] = 'receptor_id<293081' # TODO remove! Just for testing a small data set.
         data['cql_filter'] = 'zoom_level=1'

@@ -436,7 +436,11 @@ class ImaerPlugin:
             self.relate_calc_results_dlg.calculate_maximum(layers)
 
 
-    def open_add_open_data(self, layer_ns='base_geometries', layer_name='hexagons', allow_cache=True):
+    def open_add_open_data(self):
+        layer_ns = 'base_geometries'
+        layer_name = 'hexagons'
+        allow_cache=True
+
         # TODO Move this to a QgsTask when specs are clear
 
         base_fn = f'imaer_{layer_ns}_{layer_name}'
@@ -445,7 +449,10 @@ class ImaerPlugin:
         if work_dir is None:
             raise Exception('Work dir not set')
             return
-        zip_fn = os.path.join(work_dir, f'{base_fn}.zip')
+        ##zip_fn = os.path.join(work_dir, f'{base_fn}.zip')
+        zip_fn = os.path.join(work_dir, f'{base_fn}.gpkg')
+
+
 
         if not os.path.isfile(zip_fn) or not allow_cache:
             # Download data
@@ -453,7 +460,7 @@ class ImaerPlugin:
             #print(conn)
 
             QgsApplication.setOverrideCursor(Qt.WaitCursor)
-            response = conn.get_dataset(layer_ns, layer_name, output_format='SHAPE-ZIP') #TODO Download a better file format then SHP when available
+            response = conn.get_dataset(layer_ns, layer_name, output_format='geopackage') #TODO Download a better file format then SHP when available
             QgsApplication.restoreOverrideCursor()
 
             if response is None:
