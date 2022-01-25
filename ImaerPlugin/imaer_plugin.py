@@ -67,6 +67,13 @@ class ImaerPlugin:
         self.imaer_calc_layers = {}
         self.settings = QgsSettings()
 
+        # Making sure users will NOT keep on using the prerelease.
+        # TODO: Make a future proof generic solution for URL management
+        connect_base_url = self.settings.value('imaer_plugin/connect_base_url', defaultValue=None)
+        if not self.dev:
+            if isinstance(connect_base_url, str) and 'connect2021-prerelease' in connect_base_url:
+                self.settings.setValue('imaer_plugin/connect_base_url', None)
+
         # Create connection
         connect_base_url = self.settings.value('imaer_plugin/connect_base_url', defaultValue=None)
         connect_version = self.settings.value('imaer_plugin/connect_version', defaultValue=None)
