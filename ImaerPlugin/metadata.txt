@@ -4,8 +4,8 @@
 name=IMAER Plugin
 email=info@opengeogroep.nl
 author=OpenGeoGroep
-qgisMinimumVersion=3.16
-qgisMaximumVersion=3.22
+qgisMinimumVersion=3.16.0
+qgisMaximumVersion=3.22.99
 description=Plugin for handling AERIUS Calculator IMAER files
 about=Plugin for working with AERIUS Calculator IMAER files.
         - Imports and exports AERIUS Calculator result IMAER files as QGIS layers.
@@ -22,7 +22,8 @@ homepage=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 # Recommended items:
 
 changelog=
-    3.1.0   (25-01-2022) AERIUS Connect functionality, Calculator input generation and much more. First non experimental release.
+    3.1.1   (25-01-2022) Bug fix in metadata: set point release to x.x.99
+    3.1.0   (25-01-2022) AERIUS Connect functionality, Calculator input generation and much more. First non experimental release
     3.0.8   (19-04-2021) IMAER 3.1 support, difference and sum calculations on IMAER layers (thanks DLV)
     3.0.7   (01-10-2020) Bugfix for typo in outflowDiameter
     3.0.6   (30-09-2020) File dialog for exporting GML; Optional situation name; Bugfix for building width/height swap
