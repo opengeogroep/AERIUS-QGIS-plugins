@@ -92,7 +92,7 @@ ui_settings = {
         '2025', '2026', '2027', '2028', '2029',
         '2030', '2031', '2032', '2033', '2034',
         '2035'],
-    'project_default_year': '2021',
+    'project_default_year': '2022',
     'situation_name': 'Situation 1',
     'situation_types': ['REFERENCE', 'PROPOSED', 'TEMPORARY', 'NETTING'],
     'crs': [
