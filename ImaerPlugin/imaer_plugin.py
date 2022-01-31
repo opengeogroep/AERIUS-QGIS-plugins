@@ -256,19 +256,20 @@ class ImaerPlugin:
         self.log(f'run pdf: {pdf_fn}', user='dev')
 
         if os.path.exists(os.path.dirname(pdf_fn)):
-            gml_fn = pdf_fn.replace('.pdf', '.gml')
+            gml_fn = pdf_fn.replace('.pdf', '_{0}.gml')
             task = ExtractGmlFromPdfTask(pdf_fn, gml_fn, self.extract_gml_from_pdf_callback)
             self.task_manager.addTask(task)
             self.log('added ExtractGmlFromPdfTask to task manager', user='dev')
 
 
-    def extract_gml_from_pdf_callback(self, fn):
-        if fn is not None:
+    def extract_gml_from_pdf_callback(self, fns):
+        if len(fns) == 0:
+            msg = 'No GML found in the PDF document.'
+            self.iface.messageBar().pushMessage('Warning', msg, level=Qgis.Warning, duration=10)
+            return
+        for fn in fns:
             msg = 'Extracted GML file saved as: <a href="{0}">{0}</a>'.format(fn)
             self.iface.messageBar().pushMessage('Success', msg, level=Qgis.Info, duration=10)
-        else:
-            msg = 'GML could not be extracted from PDF document.'
-            self.iface.messageBar().pushMessage('Warning', msg, level=Qgis.Warning, duration=10)
 
 
     def suggest_export_calc_result_fn(self, gpkg_fn):
