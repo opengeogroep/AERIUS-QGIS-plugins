@@ -1,5 +1,7 @@
 import xml.etree.ElementTree as ET
 
+#from PyQt5.QtXml import QDomDocument
+
 from qgis.core import (
     Qgis,
     QgsTask,
@@ -10,7 +12,8 @@ from .. task_timer import TaskTimer
 
 
 _IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX']
-_SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1']
+_SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1', '4.0', '5.0']
+_EDGE_EFFECT_VALUES = {0: 'false', 1: 'true'}
 
 tab = 'Imaer'
 
@@ -149,6 +152,13 @@ class ExportImaerCalculatorResultTask(QgsTask):
             if isinstance(value, float): #empty records are returned as <class 'qgis.PyQt.QtCore.QVariant'> NULL values
                 result += self.create_result_value_xml(substance, value)
 
+        # Add edgeEffect info for IMAER >= 5.0
+        if self.imaer_version in ['5.0']:
+            value = feat.attribute('edge_effect')
+            if value in _EDGE_EFFECT_VALUES:
+                result += f'''
+            <imaer:edgeEffect>{ _EDGE_EFFECT_VALUES[value] }</imaer:edgeEffect>'''
+
         result += '''
         </imaer:ReceptorPoint>
     </imaer:featureMember>'''
@@ -157,10 +167,9 @@ class ExportImaerCalculatorResultTask(QgsTask):
 
 
     def create_result_value_xml(self, substance, value):
-        #print(f'{ substance }: { value }')
         if self.imaer_version == '2.2':
             result_tag = 'Result'
-        elif self.imaer_version == '3.1':
+        elif self.imaer_version in ['3.1', '4.0', '5.0']:
             result_tag = 'CalculationResult'
         result = f'''
             <imaer:result>
