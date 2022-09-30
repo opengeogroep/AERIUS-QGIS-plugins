@@ -529,7 +529,7 @@ class ImaerPlugin:
         #print(result)
         if result:
             self.log('starting generation of receptor gml ...', user='user')
-            imaer_doc = self.generate_receptor_gml_dlg.get_imaer_doc_from_gui()
+            imaer_doc = self.generate_receptor_gml_dlg.Nicolas_function()
             if imaer_doc is None: # Something went wrong during IMAER doc generation...
                 self.log('Something went wrong making the gml file.')
                 return

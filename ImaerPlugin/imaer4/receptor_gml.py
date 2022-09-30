@@ -6,7 +6,7 @@ from .gml import get_gml_element
 
 class ReceptorGMLType(object):
 
-    def __init__(self, *, local_id, sector_id, geom, label=None, description=None):
+    def __init__(self, *, local_id, geom, label=None, description=None):
         self.label = label
         self.description = description
         self.emission_source_characteristics = None
@@ -66,9 +66,9 @@ class ReceptorGMLType(object):
 
 class Receptor(ReceptorGMLType):
 
-    def __init__(self, *, emissions=[], **kwargs):
+    def __init__(self, *, receptor=[], **kwargs):
         super().__init__(**kwargs)
-        self.emissions = emissions
+        self.receptor = receptor
 
 
     def to_xml_elem(self, doc=QDomDocument()):
@@ -77,7 +77,7 @@ class Receptor(ReceptorGMLType):
 
         result = super().to_xml_elem(doc)
 
-        for em in self.emissions:
+        for em in self.receptor:
             elem = em.to_xml_elem(doc)
             result.appendChild(elem)
 

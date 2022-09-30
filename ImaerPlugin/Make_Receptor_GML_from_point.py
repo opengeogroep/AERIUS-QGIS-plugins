@@ -219,7 +219,7 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
 
         input_layer = self.combo_layer.currentLayer()
         crs_source = input_layer.crs()
-        crs_dest_srid = self.combo_crs.currentData()
+        crs_dest_srid = 'EPSG:28992' # HARDCODING FOR NOW 
         crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
         if crs_source == crs_dest:
             crs_transform = None
@@ -230,16 +230,16 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
         # Loop all features
         
         for feat in input_layer.getFeatures():
-            self.log("Starting new feature", user='dev')
+            #self.log("Starting new feature", user='dev')
             local_id = 'CP.{}'.format(feat.id())
 
             # geometry
             geom = feat.geometry()
 
-            geom2 = self.generate_calc_input_dlg.make_single_part(geom)
+            geom2 = self.make_single_part(geom)
             
             if geom2 is None:
-                self.plugin.log(f'Input data contains multipart geometry: {geom.asWkt(precision=3)}', bar=True, lvl='Critical')
+                #self.plugin.log(f'Input data contains multipart geometry: {geom.asWkt(precision=3)}', bar=True, lvl='Critical')
                 return
             geom = geom2
 
