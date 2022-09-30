@@ -96,7 +96,7 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
     def browse_generate_calc_input_file(self):
         
         out_path = ''
-        out_fn = time.strftime("calcinput_%Y%m%d_%H%M%S.gml")
+        out_fn = time.strftime("receptorGML_%Y%m%d_%H%M%S.gml")
         out_fn = os.path.join(out_path, out_fn)
 
         gml_outfn, filter = self.plugin.calc_input_file_dialog.getSaveFileName(caption="Save as receptor gml file", filter='*.gml', directory=out_fn, parent=self.iface.mainWindow())
