@@ -142,8 +142,8 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
         #for fcb in self.findChildren(QgsFieldComboBox):
         #    fcb.setLayer(self.combo_layer.currentLayer())
         layers = self.get_layer_list()
-        enable_ok_button = len(layers) >= 2
-        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable_ok_button)
+        #enable_ok_button = len(layers) >= 2
+        #self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable_ok_button)
 
     def get_layer_list(self):
         '''Returns a list of selected deposition layers in the enabled comboBoxes'''
@@ -159,9 +159,10 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
                     else:
                         widget.setStyleSheet("QgsMapLayerComboBox { color : red; }")
         '''
-        layerList = QgsProject.instance().layerTreeRoot().findLayers()
+        layerList = QgsProject.instance().mapLayers().values()#QgsProject.instance().layerTreeRoot().findLayers()
         for layer in layerList:
-            if layer.geometryType() == Qgis.Point:
+            #if layer.geometryType() == QgsWkbTypes.PointGeometry:
+            if layer.wkbType() == 1:
                 result.append(layer)
 
         return result
