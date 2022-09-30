@@ -207,7 +207,7 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
         # setup metadata (not sure this is needed for a receptor file, using hard coded values for now)
         year = 2022 # hardcoded this just now, not sure it matters for the receptor file
         description = "na" # not sure this matters for the receptor file
-        situation = "na" # not sure this matters for the receptor file
+        situation = {'name': 'receptors','type': 'PROPOSED'} # this is still needed else fails to load in aerius. Adding dummy data for testing (need to see if matters what is in this section)
         
         metadata = AeriusCalculatorMetadata(
             project = {'year': year, 'description': description},
