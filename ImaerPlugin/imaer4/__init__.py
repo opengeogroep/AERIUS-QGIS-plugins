@@ -12,4 +12,9 @@ from .roads import (
     RoadSideBarrier,
     StandardVehicle
 )
+from .receptor_gml import (
+    ReceptorGMLType,
+    Receptor
+)
+
 from .gml import get_gml_element

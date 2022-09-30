@@ -4,7 +4,6 @@ from PyQt5.QtXml import QDomDocument
 from .gml import get_gml_element
 
 
-
 class ReceptorGMLType(object):
 
     def __init__(self, *, local_id, sector_id, geom, label=None, description=None):
@@ -52,18 +51,6 @@ class ReceptorGMLType(object):
             elem.appendChild(doc.createTextNode(str(self.description)))
             result.appendChild(elem)
 
-        ## emission source characteristics
-        #if self.emission_source_characteristics is not None:
-        #    esc_elem = doc.createElement('imaer:emissionSourceCharacteristics')
-        #    esc_elem.appendChild(self.emission_source_characteristics.to_xml_elem(doc))
-        #    result.appendChild(esc_elem)
-
-        ## geometry
-        #geom_elem = doc.createElement('imaer:geometry')
-        #es_geom_elem = doc.createElement('imaer:EmissionSourceGeometry')
-
-        #gm_tags = {0: 'GM_Point', 1: 'GM_Curve', 2: 'GM_Surface'}
-        #gm_tag = gm_tags[self.geometry.type()]
         gml_types = {0: 'POINT', 1: 'CURVE', 2: 'SURFACE'}
         gml_type = gml_types[self.geometry.type()]#
 
@@ -76,9 +63,6 @@ class ReceptorGMLType(object):
         result.appendChild(gm_elem)#(geom_elem)
 
         return result
-
-
-
 
 class Receptor(ReceptorGMLType):
 
@@ -98,103 +82,3 @@ class Receptor(ReceptorGMLType):
             result.appendChild(elem)
 
         return result
-
-
-
-'''
-class EmissionSourceCharacteristics(object):
-
-    def __init__(self, heat_content=None, emission_height=None, spread=None, diurnal_variation=None, building=None):
-        self.heat_content = heat_content
-        self.emission_height = emission_height
-        self.spread = spread
-        self.diurnal_variation = diurnal_variation
-        self.building = building
-
-
-    def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:EmissionSourceCharacteristics')
-
-        # heat content
-        if self.heat_content is not None:
-            elem = self.heat_content.to_xml_elem(doc)
-            result.appendChild(elem)
-
-        # emission height
-        if self.emission_height is not None:
-            elem = doc.createElement('imaer:emissionHeight')
-            elem.appendChild(doc.createTextNode(str(self.emission_height)))
-            result.appendChild(elem)
-
-        # spread
-        if self.spread is not None:
-            elem = doc.createElement('imaer:spread')
-            elem.appendChild(doc.createTextNode(str(self.spread)))
-            result.appendChild(elem)
-
-        # diurnal variation
-        if self.diurnal_variation is not None:
-            elem = doc.createElement('imaer:diurnalVariation')
-            elem.appendChild(doc.createTextNode(str(self.diurnal_variation)))
-            result.appendChild(elem)
-
-        return result
-
-
-
-
-class HeatContent(object):
-
-    def __init__(self):
-        pass
-
-
-    def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:heatContent')
-        return result
-
-
-
-
-class SpecifiedHeatContent(HeatContent):
-
-    def __init__(self, *, value, **kwargs):
-        super().__init__(**kwargs)
-        self.value = value
-
-
-    def to_xml_elem(self, doc=QDomDocument()):
-        result = super().to_xml_elem(doc)
-
-        shc = doc.createElement('imaer:SpecifiedHeatContent')
-        v = doc.createElement('imaer:value')
-        v.appendChild(doc.createTextNode( str(self.value) ))
-
-        shc.appendChild(v)
-        result.appendChild(shc)
-
-        return result
-
-
-
-
-class Emission(object):
-
-    def __init__(self, substance, value):
-        self.substance = substance
-        self.value = value
-
-
-    def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:emission')
-
-        em_elem = doc.createElement('imaer:Emission')
-        em_elem.setAttribute('substance', self.substance)
-        v_elem = doc.createElement('imaer:value')
-        v_elem.appendChild(doc.createTextNode( str(self.value) ))
-
-        em_elem.appendChild(v_elem)
-        result.appendChild(em_elem)
-
-        return result
-'''

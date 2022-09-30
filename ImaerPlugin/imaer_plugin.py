@@ -148,10 +148,10 @@ class ImaerPlugin:
                 'tool_tip': 'Open online documentation',
                 'triggered_slot': self.open_online_documentation
             },{
-                'name':'Nicola_Testing',
+                'name':'Make_receptor_gml',
                 'icon':'NicolaDummy.svg',
-                'tool_tip':'Nicolas dummy function',
-                'triggered_slot':self.Nicolas_function
+                'tool_tip':'Make Receptor GML File',
+                'triggered_slot':self.run_generate_receptor_gml
             }
         ]
         self.actions = {}
