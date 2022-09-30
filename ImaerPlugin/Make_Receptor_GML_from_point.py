@@ -149,6 +149,7 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
         imaer_doc.metadata = metadata
 
         input_layer = self.combo_layer.currentLayer()
+        
         crs_source = input_layer.crs()
         crs_dest_srid = 'EPSG:28992' # HARDCODING FOR NOW 
         crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
@@ -189,11 +190,39 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
         ''' 
         funciton to make gml parts for receports
         '''
-        
-        es = Receptor(local_id=local_id, geom=geom)
+        fcb = getattr(self, 'fcb_combo_layer')
+        label = self.get_feature_value(fcb, feat)
+        #es = Receptor(local_id=local_id, geom=geom)
+        es = Receptor(local_id=local_id, geom=geom, label=label)
 
         return es
 
+    def get_feature_value(self, widget, feat, cast_to=None):
+        if not isinstance(widget, QgsFieldComboBox):
+            return None
+        field_name = widget.currentField()
+        if field_name == '':
+            return None
+            #return widget_set['fixed'].text() TODO: return fixed value after data type check (or something..)
+        else:
+            value = feat[field_name]
+
+        if isinstance(value, QVariant) and str(value) == 'NULL':
+            return None
+
+        if cast_to is not None:
+            #if cast_to == 'double':
+            #    return result.toDouble()
+            if cast_to == 'float':
+                if isinstance(result, float):
+                    return
+                if isInstance(result, QVariant):
+                    result.toFloat()
+            elif cast_to == 'integer':
+                return result.toInt()
+            elif cast_to == 'string':
+                return result.toString()
+        return value
         
     def make_single_part(self, geom):
         '''Returns single part geometry or None if input has more than 1 part'''
