@@ -41,88 +41,205 @@ from ImaerPlugin.imaer4 import (
     Emission,
     SRM2Road,
     RoadSideBarrier,
-    StandardVehicle
+    StandardVehicle,
+    ReceptorGMLType, 
+    Receptor
 )
 
-'''
-def Nicolas_function(self):
-        #
-        #This function aims to take a shapefile of points and convert this to a gml file ready to load into AERIUS
-        #name can be udpated later
-        #
 
-        # open a popup box and let the user select the shapefile to be converted
-        shp_fn, filter = self.nicolas_function_dialog.getOpenFileName(caption="Open a point shp file ", filter='*.shp', parent=self.iface.mainWindow())
-        self.log(f'run shp: {shp_fn}', user='dev')
 
-        # load the shapefile in QGIS
-        if os.path.exists(shp_fn):
-            name_of_file = os.path.basename(shp_fn)[:-4]
-            eq_layer=QgsVectorLayer(shp_fn,name_of_file,"ogr")
-            QgsProject.instance().addMapLayer(eq_layer)
-        else:
-            self.log("Unable to read the shp at the path provided")
+FORM_CLASS, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'Make_Receptor_GML_from_point_dlg.ui'))
+
+
+class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
+    def __init__(self, plugin, parent=None):
+        """Constructor."""
+        super(GenerateReceptorGMLDialog, self).__init__(parent)
+
+        self.setupUi(self)
+        self.iface = iface
+        self.plugin = plugin
+
+        self.init_gui()
+
+
+    def init_gui(self):
+        # Add message bar
+
+        self.combo_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
+
+        self.edit_outfile.textChanged.connect(self.update_ok_button)
+
+        self.combo_layer.layerChanged.connect(self.update_field_combos)
+        self.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
+
+        self.btn_save_settings.clicked.connect(self.save_settings)
+        self.btn_load_settings.clicked.connect(self.load_settings)
+
+        for fcb in self.findChildren(QgsFieldComboBox):
+            fcb.setAllowEmptyFieldName(True)
+
+        #self.set_fixed_options()
+        self.update_field_combos()
+        self.update_ok_button()
+        self.set_emission_tab()
+
+
+    def __del__(self):
+        self.edit_outfile.textChanged.disconnect(self.update_ok_button)
+        self.combo_sector.currentIndexChanged.disconnect(self.set_emission_tab)
+        self.combo_layer.layerChanged.disconnect(self.update_field_combos)
+        self.button_outfile.clicked.disconnect(self.browse_generate_calc_input_file)
+
+        self.btn_save_settings.clicked.disconnect(self.save_settings)
+        self.btn_load_settings.clicked.disconnect(self.load_settings)
+
+
+    def browse_generate_calc_input_file(self):
+        
+        out_path = ''
+        out_fn = time.strftime("calcinput_%Y%m%d_%H%M%S.gml")
+        out_fn = os.path.join(out_path, out_fn)
+
+        gml_outfn, filter = self.plugin.calc_input_file_dialog.getSaveFileName(caption="Save as receptor gml file", filter='*.gml', directory=out_fn, parent=self.iface.mainWindow())
+        self.edit_outfile.setText(gml_outfn)
+
+
+    '''
+    def set_fixed_options(self):
+        # crs
+        for crs in ui_settings['crs']:
+            self.combo_crs.addItem(crs['name'], crs['srid'])
+
+        # sectors
+        self.combo_sector.addItem('<Select sector>', 0)
+        for sector_name in emission_sectors:
+            ##print(sector_name)
+            self.combo_sector.addItem(sector_name)
+
+        # project
+        for item in ui_settings['project_years']:
+            self.combo_project_year.addItem(item, item)
+        self.combo_project_year.setCurrentText(ui_settings['project_default_year'])
+
+        # situation
+        self.edit_situation_name.setText(ui_settings['situation_name'])
+        for item in ui_settings['situation_types']:
+            self.combo_situation_type.addItem(item, item)
+    '''
+
+    '''
+    def set_emission_tab(self):
+        # Remove all tabs but 'Metadata'
+        while self.tabWidget.count() > 1:
+            self.tabWidget.removeTab(1)
+        # Add selected emission tab
+        sector = self.combo_sector.currentText()
+        if sector in self.emission_tabs:
+            self.tabWidget.insertTab(1, self.emission_tabs[sector], sector)
+            self.tabWidget.setCurrentIndex(1)
+    '''
+
+    def update_field_combos(self):
+        for fcb in self.findChildren(QgsFieldComboBox):
+            fcb.setLayer(self.combo_layer.currentLayer())
+
+
+    def update_ok_button(self):
+        if self.edit_outfile.text() == '':
+            self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
             return
-        
-        
-        # Now need to get info about e.g. geometry to be able to add to the gml file
-        from ImaerPlugin.imaer4 import (ImaerDocument,AeriusCalculatorMetadata)
+        ##if self.get_current_sector_id() == 0:
+        ##    self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
+        ##    return
+        self.buttonBox.button(QDialogButtonBox.Save).setEnabled(True)
 
-        # get the generic gml file loaded
-        imaer_doc = ImaerDocument()
-        
-        # setup metadata (not sure this is needed for a receptor file, using hard coded values for now)
-        year = 2022 # hardcoded this just now, not sure it matters for the receptor file
-        description = "na" # not sure this matters for the receptor file
-        situation = "na" # not sure this matters for the receptor file
-        
-        metadata = AeriusCalculatorMetadata(
-            project = {'year': year, 'description': description},
-            situation = situation,
-        )
 
-        # add metadata to imaer document
-        imaer_doc.metadata = metadata
+        def Nicolas_function(self):
+            #
+            #This function aims to take a shapefile of points and convert this to a gml file ready to load into AERIUS
+            #name can be udpated later
+            #
 
-        # now to add receptor data
-        # Loop all features
-        
-        for feat in eq_layer.getFeatures():
-            self.log("Starting new feature", user='dev')
-            local_id = 'CP.{}'.format(feat.id())
+            '''
+            # open a popup box and let the user select the shapefile to be converted
+            shp_fn, filter = self.nicolas_function_dialog.getOpenFileName(caption="Open a point shp file ", filter='*.shp', parent=self.iface.mainWindow())
+            self.log(f'run shp: {shp_fn}', user='dev')
 
-            # geometry
-            geom = feat.geometry()
-
-            geom2 = self.generate_calc_input_dlg.make_single_part(geom)
-            
-            if geom2 is None:
-                self.plugin.log(f'Input data contains multipart geometry: {geom.asWkt(precision=3)}', bar=True, lvl='Critical')
+            # load the shapefile in QGIS
+            if os.path.exists(shp_fn):
+                name_of_file = os.path.basename(shp_fn)[:-4]
+                eq_layer=QgsVectorLayer(shp_fn,name_of_file,"ogr")
+                QgsProject.instance().addMapLayer(eq_layer)
+            else:
+                self.log("Unable to read the shp at the path provided")
                 return
-            geom = geom2
-
-            # this is where need new function to write the receptor part of the gml file
-            es = self.get_receptor_source_gml(feat, geom, local_id)
+            '''
             
-            imaer_doc.feature_members.append(es)
+            # get the generic gml file loaded
+            imaer_doc = ImaerDocument()
+            
+            # setup metadata (not sure this is needed for a receptor file, using hard coded values for now)
+            year = 2022 # hardcoded this just now, not sure it matters for the receptor file
+            description = "na" # not sure this matters for the receptor file
+            situation = "na" # not sure this matters for the receptor file
+            
+            metadata = AeriusCalculatorMetadata(
+                project = {'year': year, 'description': description},
+                situation = situation,
+            )
 
-        
-        if imaer_doc is None: # Something went wrong during IMAER doc generation...
-                self.log('Something went wrong during IMAER doc generation.')
-                return
-        
-        # this where the file is saved - figure out where saving is occuring (what folder, file name etc)       
-        fn = os.path.join(os.path.dirname(shp_fn),str(name_of_file + ".gml"))  
+            # add metadata to imaer document
+            imaer_doc.metadata = metadata
 
-        imaer_doc.to_xml_file(fn)
+            input_layer = self.combo_layer.currentLayer()
+            crs_source = input_layer.crs()
+            crs_dest_srid = self.combo_crs.currentData()
+            crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
+            if crs_source == crs_dest:
+                crs_transform = None
+            else:
+                crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
 
-        self.log('Imaer GML file saved as: <a href="{0}">{0}</a>'.format(fn), lvl='Info', bar=True, duration=10)
-'''        
-'''
+            # now to add receptor data
+            # Loop all features
+            
+            for feat in input_layer.getFeatures():
+                self.log("Starting new feature", user='dev')
+                local_id = 'CP.{}'.format(feat.id())
+
+                # geometry
+                geom = feat.geometry()
+
+                geom2 = self.generate_calc_input_dlg.make_single_part(geom)
+                
+                if geom2 is None:
+                    self.plugin.log(f'Input data contains multipart geometry: {geom.asWkt(precision=3)}', bar=True, lvl='Critical')
+                    return
+                geom = geom2
+
+                if crs_transform is not None:
+                    geom.transform(crs_transform)
+
+                # this is where need new function to write the receptor part of the gml file
+                es = self.get_receptor_source_gml(feat, geom, local_id)
+                
+                imaer_doc.feature_members.append(es)
+
+            return imaer_doc
+
+
     def get_receptor_source_gml(self, feat, geom, local_id):
-        # 
+        ''' 
         funciton to make gml parts for receports
-        # 
+        '''
+        
+        es = Receptor(local_id=local_id, geom=geom)
+
+        return es
+
+        '''
         from PyQt5.QtXml import QDomDocument        
         
         doc = QDomDocument()
@@ -166,4 +283,13 @@ def Nicolas_function(self):
         result.appendChild(ident_elem)
 
         return result
-'''
+        '''
+    def make_single_part(self, geom):
+        '''Returns single part geometry or None if input has more than 1 part'''
+        parts = geom.asGeometryCollection()
+        if len(parts) == 1:
+            result = parts[0]
+            # Make sure the type is Point, LineString or Polygon
+            if result.wkbType() in [1, 2, 3]:
+                return result
+        return None
