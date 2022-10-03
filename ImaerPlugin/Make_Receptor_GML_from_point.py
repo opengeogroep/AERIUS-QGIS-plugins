@@ -67,7 +67,7 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
     def init_gui(self):
         # Add message bar
 
-        self.combo_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
+        self.combo_layer.setFilters(QgsMapLayerProxyModel.PointLayer) # VectorLayer
 
         self.edit_outfile.textChanged.connect(self.update_ok_button)
 
@@ -100,8 +100,8 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
     def update_field_combos(self):
         for fcb in self.findChildren(QgsFieldComboBox):
             fcb.setLayer(self.combo_layer.currentLayer())
-     
-        
+
+
     def get_layer_list(self):
         '''Returns a list of selected deposition layers in the enabled comboBoxes'''
         result = []
