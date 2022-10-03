@@ -49,7 +49,7 @@ from ImaerPlugin.imaer4 import (
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'Make_Receptor_GML_from_point_dlg.ui'))
+    os.path.dirname(__file__), 'make_receptor_gml_from_point_dlg.ui'))
 
 
 class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
@@ -100,6 +100,7 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
     def update_field_combos(self):
         for fcb in self.findChildren(QgsFieldComboBox):
             fcb.setLayer(self.combo_layer.currentLayer())
+     
         
     def get_layer_list(self):
         '''Returns a list of selected deposition layers in the enabled comboBoxes'''
@@ -113,19 +114,11 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
 
         return result
 
+
     def update_ok_button(self):
         pass
          
-        '''
-        if self.edit_outfile.text() == '':
-            self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
-            return
-        ##if self.get_current_sector_id() == 0:
-        ##    self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
-        ##    return
-        self.buttonBox.button(QDialogButtonBox.Save).setEnabled(True)
-        '''
-
+       
     def Nicolas_function(self):
         #
         #This function aims to take a shapefile of points and convert this to a gml file ready to load into AERIUS
@@ -158,9 +151,7 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
         else:
             crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
 
-        # now to add receptor data
-        # Loop all features
-        
+        # now to add receptor data - loop through features
         for feat in input_layer.getFeatures():
             #self.log("Starting new feature", user='dev')
             local_id = 'CP.{}'.format(feat.id())
@@ -197,6 +188,7 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
 
         return es
 
+
     def get_feature_value(self, widget, feat, cast_to=None):
         if not isinstance(widget, QgsFieldComboBox):
             return None
@@ -223,7 +215,8 @@ class GenerateReceptorGMLDialog(QDialog, FORM_CLASS):
             elif cast_to == 'string':
                 return result.toString()
         return value
-        
+
+
     def make_single_part(self, geom):
         '''Returns single part geometry or None if input has more than 1 part'''
         parts = geom.asGeometryCollection()

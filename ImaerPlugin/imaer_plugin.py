@@ -42,7 +42,7 @@ from ImaerPlugin.configuration import ConfigurationDialog
 from ImaerPlugin.connect_receptorsets import ConnectReceptorSetsDialog
 from ImaerPlugin.connect_jobs import ConnectJobsDialog
 from ImaerPlugin.relate_calc_results import RelateCalcResultsDialog
-from ImaerPlugin.Make_Receptor_GML_from_point import GenerateReceptorGMLDialog
+from ImaerPlugin.make_receptor_gml_from_point import GenerateReceptorGMLDialog
 
 from ImaerPlugin.connect import (
     AeriusConnection,
@@ -148,7 +148,7 @@ class ImaerPlugin:
                 'tool_tip': 'Open online documentation',
                 'triggered_slot': self.open_online_documentation
             },{
-                'name':'Make_receptor_gml',
+                'name':'make_receptor_gml',
                 'icon':'NicolaDummy.svg',
                 'tool_tip':'Make Receptor GML File',
                 'triggered_slot':self.run_generate_receptor_gml
@@ -492,40 +492,12 @@ class ImaerPlugin:
         download_layer.loadNamedStyle(qml)
         QgsProject.instance().addMapLayer(download_layer)
 
-    def Nicolas_function_csv(self):
-        '''
-        Nicola's dummy function to test adding buttons to UI and add messages to the log file 
-        '''
-        self.log("Hiya - this is how to add text to the Imaer log in QGIS")
-
-        # lets open a file dialogue box that the user should select a csv file
-        csv_fn, filter = self.nicolas_function_dialog.getOpenFileName(caption="Open a csv file ", filter='*.csv', parent=self.iface.mainWindow())
-        self.log(f'run csv: {csv_fn}', user='dev') 
-
-        # load the csv file in qgis
-        if os.path.exists(csv_fn):
-            uri = str("file:///%s?encoding=%s&delimiter=%s&xField=%s&yField=%s&crs=%s" % (csv_fn,"UTF-8",",", "x", "y","epsg:28992"))
-            #self.log(uri)
-
-            # get name of file from string
-            name_of_file = os.path.basename(csv_fn)[:-4]
-            
-            #Make a vector layer
-            eq_layer=QgsVectorLayer(uri,name_of_file,"delimitedtext")
-
-            # add to gis
-            QgsProject.instance().addMapLayer(eq_layer)
-
-            self.log("csv file added as layer")
-
-        else:
-            self.log("Unable to add csv file to GIS")
-            return
 
     def run_generate_receptor_gml(self):
         self.log('run_generate_receptor_gml()', user='dev')
         self.generate_receptor_gml_dlg.show()
         result = self.generate_receptor_gml_dlg.exec_()
+
         #print(result)
         if result:
             self.log('starting generation of receptor gml ...', user='user')

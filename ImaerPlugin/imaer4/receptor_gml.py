@@ -39,8 +39,6 @@ class ReceptorGMLType(object):
         ident_elem.appendChild(nen_elem)
         result.appendChild(ident_elem)
 
-        
-
         # description
         if self.description is not None:
             elem = doc.createElement('imaer:description')
@@ -54,9 +52,7 @@ class ReceptorGMLType(object):
         gml_elem = get_gml_element(self.geometry, f'{self.local_id}.{gml_type}')
 
         gm_elem.appendChild(gml_elem)
-        #es_geom_elem.appendChild(gm_elem)
-        #geom_elem.appendChild(es_geom_elem)
-        result.appendChild(gm_elem)#(geom_elem)
+        result.appendChild(gm_elem)
 
         # label
         if self.label is not None:
