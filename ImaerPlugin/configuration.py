@@ -4,15 +4,18 @@ import os
 from qgis.PyQt import uic
 from qgis.PyQt.QtCore import (
     QVariant,
-    QStandardPaths
+    QStandardPaths,
+    Qt
 )
 from qgis.PyQt.QtWidgets import (
     QDialog,
     QFileDialog
 )
-from qgis.PyQt.QtCore import Qt
 
 from qgis.core import QgsApplication
+
+from ImaerPlugin.config import ui_settings
+
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'configuration_dlg.ui'))
@@ -38,6 +41,10 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
 
 
     def init_gui(self):
+        self.combo_country.addItems([''] + ui_settings['countries'])
+        self.combo_crs.addItem('')
+        for crs in ui_settings['crs']:
+            self.combo_crs.addItem(crs['name'], crs['srid'])
         self.combo_connect_ver.addItems(self.plugin.aerius_connection.available_versions)
         self.file_dialog = QFileDialog()
         self.button_get_key.clicked.connect(self.get_api_key)
@@ -59,7 +66,14 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
 
 
     def load_ui_from_settings(self):
-        #print('load_ui_from_settings')
+        country_setting = self.plugin.settings.value('imaer_plugin/country', defaultValue='')
+        self.combo_country.setCurrentText(country_setting)
+
+        crs_setting = self.plugin.settings.value('imaer_plugin/crs', defaultValue='')
+        crs_index = self.combo_crs.findData(crs_setting)
+        if crs_index == -1: # not found
+            crs_idex = 0
+        self.combo_crs.setCurrentIndex(crs_index)
 
         work_dir_setting = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue='')
         self.edit_work_dir.setText(work_dir_setting)
@@ -78,6 +92,8 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
 
 
     def save_ui_to_settings(self):
+        self.plugin.settings.setValue('imaer_plugin/country', self.combo_country.currentText())
+        self.plugin.settings.setValue('imaer_plugin/crs', self.combo_crs.currentData())
         self.plugin.settings.setValue('imaer_plugin/work_dir', self.edit_work_dir.text())
         self.plugin.settings.setValue('imaer_plugin/connect_base_url', self.edit_connect_base_url.text())
         self.plugin.settings.setValue('imaer_plugin/connect_version', self.combo_connect_ver.currentText())
