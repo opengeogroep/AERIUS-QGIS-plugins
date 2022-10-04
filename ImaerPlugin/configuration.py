@@ -44,7 +44,8 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         self.combo_country.addItems([''] + ui_settings['countries'])
         self.combo_crs.addItem('')
         for crs in ui_settings['crs']:
-            self.combo_crs.addItem(crs['name'], crs['srid'])
+            crs_name = f"{crs['name']} ({crs['srid']})"
+            self.combo_crs.addItem(crs_name, crs['srid'])
         self.combo_connect_ver.addItems(self.plugin.aerius_connection.available_versions)
         self.file_dialog = QFileDialog()
         self.button_get_key.clicked.connect(self.get_api_key)
