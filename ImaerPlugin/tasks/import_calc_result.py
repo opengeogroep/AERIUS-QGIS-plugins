@@ -14,11 +14,12 @@ from qgis.core import (
     QgsFeature,
     QgsGeometry,
     QgsVectorLayer,
-    QgsExpressionContextUtils
+    QgsExpressionContextUtils,
+    QgsSettings
     )
 
 _IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX']
-_SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1', '4.0', '5.0']
+_SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1', '4.0', '5.0','5.1']
 _EDGE_EFFECT_VALUES = {'false': 0, 'true': 1}
 
 
@@ -34,7 +35,8 @@ class ImportImaerCalculatorResultTask(QgsTask):
         self.do_log = True
         #self.log(self.gml_fn)
         self.namespaces = {}
-
+        self.settings = QgsSettings()
+        
 
     def run(self):
         self.log('Started task "{}"'.format(self.description()))
@@ -71,7 +73,8 @@ class ImportImaerCalculatorResultTask(QgsTask):
                         feature_member_tag = '{{{0}}}featureMember'.format(elem[1])
                         receptor_point_tag = '{{{0}}}ReceptorPoint'.format(elem[1])
                         calculation_point_tag = '{{{0}}}CalculationPoint'.format(elem[1])
-                        self.create_gpkg()
+                        epsg = self.settings.value('imaer_plugin/crs', defaultValue=None)
+                        self.create_gpkg(epsg)
                         receptors_layer = QgsVectorLayer(self.gpkg_fn, 'receptors', 'ogr')
                         receptors_layer.startEditing()
 
@@ -154,7 +157,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         return version_str
 
 
-    def create_gpkg(self, epsg_id=28992):
+    def create_gpkg(self, epsg_id):
         md = QgsProviderRegistry.instance().providerMetadata('ogr')
         self.conn = md.createConnection(self.gpkg_fn, {})
 
@@ -169,7 +172,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
             field_name = 'dep_{}'.format(substance)
             fields.append(QgsField(field_name, QVariant.Double))
-        if self.imaer_version in ['5.0']:
+        if self.imaer_version in ['5.0','5.1']:
             fields.append(QgsField('edge_effect', QVariant.LongLong))
         self.conn.createVectorTable('', 'receptors', fields, QgsWkbTypes.Polygon, QgsCoordinateReferenceSystem(epsg_id), True, {})
 
@@ -216,7 +219,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         # Setting these globally when detecting the imaer_version could speed up the import. (todo)
         if self.imaer_version == '2.2':
             result_path = 'imaer:result/imaer:Result'
-        elif self.imaer_version in ['3.1', '4.0', '5.0']:
+        elif self.imaer_version in ['3.1', '4.0', '5.0','5.1']:
             result_path = 'imaer:result/imaer:CalculationResult'
 
         for res in elem.findall(result_path, self.namespaces):
@@ -228,7 +231,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
             result[field_name] = float(val)
 
         # edge effect
-        if self.imaer_version in ['5.0']:
+        if self.imaer_version in ['5.0','5.1']:
             result['edge_effect'] = None
             edge_effects = elem.findall('imaer:edgeEffect', self.namespaces)
             if len(edge_effects) == 1:
@@ -258,7 +261,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
                 attributes.append(float(result[field_name]))
             else:
                 attributes.append(None)
-        if self.imaer_version in ['5.0']:
+        if self.imaer_version in ['5.0','5.1']:
             attributes.append(result['edge_effect'])
 
         feat.setAttributes(attributes)
