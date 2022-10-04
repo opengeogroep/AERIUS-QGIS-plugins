@@ -14,13 +14,13 @@ from qgis.core import (
     QgsFeature,
     QgsGeometry,
     QgsVectorLayer,
-    QgsExpressionContextUtils
-    )
+    QgsExpressionContextUtils,
+    QgsSettings
+)
 
 _IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX']
-_SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1', '4.0', '5.0']
+_SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1', '4.0', '5.0', '5.1']
 _EDGE_EFFECT_VALUES = {'false': 0, 'true': 1}
-
 
 
 class ImportImaerCalculatorResultTask(QgsTask):
@@ -32,10 +32,10 @@ class ImportImaerCalculatorResultTask(QgsTask):
         self.load_layer_callback = load_layer_callback
         self.exception = None
         self.do_log = True
-        #self.log(self.gml_fn)
+        # self.log(self.gml_fn)
         self.namespaces = {}
-
-
+        self.settings = QgsSettings()
+        
     def run(self):
         self.log('Started task "{}"'.format(self.description()))
 
@@ -55,7 +55,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
             root = None
             for event, elem in context:
 
-                #self.log('{}, {}'.format(event, elem))
+                # self.log('{}, {}'.format(event, elem))
 
                 # set the first element as root
                 if root is None and event == 'start':
@@ -71,13 +71,18 @@ class ImportImaerCalculatorResultTask(QgsTask):
                         feature_member_tag = '{{{0}}}featureMember'.format(elem[1])
                         receptor_point_tag = '{{{0}}}ReceptorPoint'.format(elem[1])
                         calculation_point_tag = '{{{0}}}CalculationPoint'.format(elem[1])
-                        self.create_gpkg()
+                        epsg = self.settings.value('imaer_plugin/crs', defaultValue=None)
+                        if epsg is None:
+                            self.log("No crs has been selected by the user")
+                            self.exception = Exception(f'No crs has been selected by the user in the Configure options')
+                            return False
+                        self.create_gpkg(epsg)
                         receptors_layer = QgsVectorLayer(self.gpkg_fn, 'receptors', 'ogr')
                         receptors_layer.startEditing()
 
                 if event == 'end' and elem.tag == feature_member_tag:
                     child = list(elem)[0]
-                    #self.log('  {}'.format(child.tag))
+                    # self.log('  {}'.format(child.tag))
                     if child.tag == receptor_point_tag:
                         feat = self.process_rp(child)
                         if feat is not None:
@@ -87,12 +92,12 @@ class ImportImaerCalculatorResultTask(QgsTask):
                             self.rp_without_geom_cnt += 1
                         elem.clear()
                         elem_cnt += 1
-                    if child.tag == calculation_point_tag: # Also count calculationPoints allthough these aren't processed (yet)
+                    if child.tag == calculation_point_tag:  # Also count calculation Points allthough these aren't processed (yet)
                         self.rp_without_geom_cnt += 1
                         elem_cnt += 1
 
                 if (elem_cnt) % step == 0:
-                    self.setProgress( (gml_file.tell() / gml_file_size) * 100)
+                    self.setProgress((gml_file.tell() / gml_file_size) * 100)
 
                 if self.isCanceled():
                     return False
@@ -102,7 +107,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
             ET.register_namespace(key, self.namespaces[key])
         xml_string = ET.tostring(root).decode('utf-8')
         xml_string = xml_string.replace('<imaer:featureMember />', '')
-        #self.log(xml_string)
+        # self.log(xml_string)
         self.save_metadata('xml', xml_string)
         self.save_metadata('gml_fn', self.gml_fn)
         self.save_metadata('user', QgsExpressionContextUtils().globalScope().variable('user_full_name'))
@@ -110,20 +115,18 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
         return True
 
-
     def finished(self, result):
         self.log('finished task')
-        #self.conn.close()
+        # self.conn.close()
         if result:
             self.log(
-                'ImaerResultToGpkgTask "{name}" completed'.format(
-                  name=self.description()))
+                'ImaerResultToGpkgTask "{name}" completed'.format(name=self.description()))
             self.load_layer_callback(self.gpkg_fn, feat_cnt=self.feat_cnt, rp_without_geom_cnt=self.rp_without_geom_cnt)
         else:
             if self.exception is None:
                 self.log(
-                    'Task "{name}" not successful but without '\
-                    'exception (probably the task was manually '\
+                    'Task "{name}" not successful but without '
+                    'exception (probably the task was manually '
                     'canceled by the user)'.format(
                         name=self.description()))
             else:
@@ -133,19 +136,16 @@ class ImportImaerCalculatorResultTask(QgsTask):
                         exception=self.exception))
                 raise self.exception
 
-
     def cancel(self):
         self.log(
             'Task "{name}" was canceled'.format(
                 name=self.description()))
-                # TODO delete gpkg file
+        # TODO delete gpkg file
         super().cancel()
-
 
     def log(self, message, tab='Imaer'):
         if self.do_log:
             QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
-
 
     def get_imaer_version(self, ns_url):
         url_parts = ns_url.split('/')
@@ -153,8 +153,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         self.log(version_str)
         return version_str
 
-
-    def create_gpkg(self, epsg_id=28992):
+    def create_gpkg(self, epsg_id):
         md = QgsProviderRegistry.instance().providerMetadata('ogr')
         self.conn = md.createConnection(self.gpkg_fn, {})
 
@@ -169,10 +168,9 @@ class ImportImaerCalculatorResultTask(QgsTask):
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
             field_name = 'dep_{}'.format(substance)
             fields.append(QgsField(field_name, QVariant.Double))
-        if self.imaer_version in ['5.0']:
+        if self.imaer_version in ['5.0', '5.1']:
             fields.append(QgsField('edge_effect', QVariant.LongLong))
         self.conn.createVectorTable('', 'receptors', fields, QgsWkbTypes.Polygon, QgsCoordinateReferenceSystem(epsg_id), True, {})
-
 
     def save_metadata(self, key, value):
         layer = QgsVectorLayer('{}|layername={}'.format(self.gpkg_fn, 'imaer_metadata'), 'metadata', 'ogr')
@@ -181,7 +179,6 @@ class ImportImaerCalculatorResultTask(QgsTask):
         feat = QgsFeature()
         feat.setAttributes([None, key, value])
         provider.addFeatures([feat])
-
 
     def process_rp(self, elem, as_dict=False, full=False):
         result = {}
@@ -205,7 +202,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
                 wkt_coord_list = []
                 i = 0
                 while i < len(gml_numbers):
-                    wkt_coord_list.append('{} {}'.format(gml_numbers[i], gml_numbers[i+1]))
+                    wkt_coord_list.append('{} {}'.format(gml_numbers[i], gml_numbers[i + 1]))
                     i += 2
                 wkt_coords = ', '.join(wkt_coord_list)
                 result['polygon_wkt'] = 'POLYGON(({}))'.format(wkt_coords)
@@ -216,7 +213,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         # Setting these globally when detecting the imaer_version could speed up the import. (todo)
         if self.imaer_version == '2.2':
             result_path = 'imaer:result/imaer:Result'
-        elif self.imaer_version in ['3.1', '4.0', '5.0']:
+        elif self.imaer_version in ['3.1', '4.0', '5.0', '5.1']:
             result_path = 'imaer:result/imaer:CalculationResult'
 
         for res in elem.findall(result_path, self.namespaces):
@@ -228,18 +225,18 @@ class ImportImaerCalculatorResultTask(QgsTask):
             result[field_name] = float(val)
 
         # edge effect
-        if self.imaer_version in ['5.0']:
+        if self.imaer_version in ['5.0', '5.1']:
             result['edge_effect'] = None
             edge_effects = elem.findall('imaer:edgeEffect', self.namespaces)
             if len(edge_effects) == 1:
                 value = edge_effects[0].text
                 result['edge_effect'] = _EDGE_EFFECT_VALUES.get(value, None)
 
-        #print(result)
+        # print(result)
         if as_dict:
             return result
 
-        if not 'polygon_wkt' in result:
+        if 'polygon_wkt' not in result:
             # Cannot create feature because of lacking hexagon info (TODO: Support points as well)
             return None
 
@@ -258,7 +255,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
                 attributes.append(float(result[field_name]))
             else:
                 attributes.append(None)
-        if self.imaer_version in ['5.0']:
+        if self.imaer_version in ['5.0', '5.1']:
             attributes.append(result['edge_effect'])
 
         feat.setAttributes(attributes)
