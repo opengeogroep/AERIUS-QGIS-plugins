@@ -49,8 +49,6 @@ from ImaerPlugin.connect import (
 )
 
 
-
-
 class ImaerPlugin:
 
     def __init__(self, iface):
@@ -99,47 +97,47 @@ class ImaerPlugin:
                 'icon': 'icon_import_calc_result.svg',
                 'tool_tip': 'Import IMAER Calculator result GML',
                 'triggered_slot': self.run_import_calc_result
-            },{
+            }, {
                 'name': 'export_calc_result',
                 'icon': 'icon_export_calc_result.svg',
                 'tool_tip': 'Export to IMAER Calculator result GML',
                 'triggered_slot': self.run_export_calc_result
-            },{
+            }, {
                 'name': 'extract_gml_from_pdf',
                 'icon': 'icon_extract_gml_from_pdf.svg',
                 'tool_tip': 'Extract GML from Aerius PDF',
                 'triggered_slot': self.run_extract_gml_from_pdf
-            },{
+            }, {
                 'name': 'generate_calc_input',
                 'icon': 'icon_generate_calc_input.svg',
                 'tool_tip': 'Generate IMAER Calculator input gml',
                 'triggered_slot': self.run_generate_calc_input
-            },{
+            }, {
                 'name': 'relate_calc_results',
                 'icon': 'icon_relate_calc_results.svg',
                 'tool_tip': 'Relate Calculation results',
                 'triggered_slot': self.run_relate_calc_results
-            },{
+            }, {
                 'name': 'add_open_data',
                 'icon': 'icon_add_open_data_layer.svg',
                 'tool_tip': 'Add Open Data Layer',
                 'triggered_slot': self.open_add_open_data
-            },{
+            }, {
                 'name': 'connect_receptorsets',
                 'icon': 'icon_connect_receptorsets.svg',
                 'tool_tip': 'Receptor Sets',
                 'triggered_slot': self.open_connect_receptorsets
-            },{
+            }, {
                 'name': 'connect_jobs',
                 'icon': 'icon_connect_jobs.svg',
                 'tool_tip': 'Jobs',
                 'triggered_slot': self.open_connect_jobs
-            },{
+            }, {
                 'name': 'configuration',
                 'icon': 'icon_configuration.svg',
                 'tool_tip': 'Configure',
                 'triggered_slot': self.open_configuration
-            },{
+            }, {
                 'name': 'documentation',
                 'icon': 'icon_documentation.svg',
                 'tool_tip': 'Open online documentation',
@@ -148,12 +146,11 @@ class ImaerPlugin:
         ]
         self.actions = {}
 
-
     def initGui(self):
         # Create toolbar and actions
         self.toolbar = self.iface.addToolBar("Imaer Toolbar")
         if self.dev:
-             self.toolbar.setStyleSheet("QToolBar { background-color: rgba(200, 180, 200, 255); }")
+            self.toolbar.setStyleSheet("QToolBar { background-color: rgba(200, 180, 200, 255); }")
 
         for action_config in self.action_configuration:
             icon = QIcon(os.path.join(self.plugin_dir, 'img', action_config['icon']))
@@ -169,7 +166,6 @@ class ImaerPlugin:
         # Widget update logic
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
         self.update_all_widgets()
-
 
     def unload(self):
         '''Removes all plugin widgets and connections'''
@@ -191,16 +187,14 @@ class ImaerPlugin:
         # del self.relate_calc_results_dlg
         self.log('ImaerPlugin unloaded', user='dev')
 
-
     def log(self, message, tab='Imaer', lvl='Info', bar=False, user='user', duration=3):
         # lvl: Info, Warning, Critical
         # user: user, dev
-        level=getattr(Qgis, lvl)
-        if bar or (user=='user') or (user=='dev' and self.dev):
+        level = getattr(Qgis, lvl)
+        if bar or (user == 'user') or (user == 'dev' and self.dev):
             QgsMessageLog.logMessage(str(message), tab, level=level)
         if bar:
             self.iface.messageBar().pushMessage(lvl, str(message), level, duration=duration)
-
 
     def run_import_calc_result(self, checked=False, gml_fn=None):
         self.log('run_import_calc_result()', user='dev')
@@ -213,8 +207,6 @@ class ImaerPlugin:
             gpkg_fn = gml_fn.replace('.gml', '.gpkg')
             task = ImportImaerCalculatorResultTask(gml_fn, gpkg_fn, self.load_calc_layer)
             self.task_manager.addTask(task)
-            #self.log('added to task manager')
-
 
     def load_calc_layer(self, gpkg_fn, feat_cnt, rp_without_geom_cnt=None, zoom=True):
         '''Callback function from the task after finishing the gpkg'''
@@ -248,7 +240,6 @@ class ImaerPlugin:
         if rp_without_geom_cnt is not None and rp_without_geom_cnt > 0:
             self.log(f'Could not import {rp_without_geom_cnt} receptors without hexagon geometry.', lvl='Warning', bar=True, duration=5)
 
-
     def run_extract_gml_from_pdf(self):
         if self.dev:
             self.calc_result_file_dialog.setDirectory('/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata')
@@ -261,7 +252,6 @@ class ImaerPlugin:
             self.task_manager.addTask(task)
             self.log('added ExtractGmlFromPdfTask to task manager', user='dev')
 
-
     def extract_gml_from_pdf_callback(self, fns):
         if len(fns) == 0:
             msg = 'No GML found in the PDF document.'
@@ -271,14 +261,12 @@ class ImaerPlugin:
             msg = 'Extracted GML file saved as: <a href="{0}">{0}</a>'.format(fn)
             self.iface.messageBar().pushMessage('Success', msg, level=Qgis.Info, duration=10)
 
-
     def suggest_export_calc_result_fn(self, gpkg_fn):
         time_str = time.strftime("%Y%m%d-%H%M%S")
         gpkg_path = pathlib.Path(gpkg_fn)
         gml_basename = f'{gpkg_path.stem}_modified-{time_str}.gml'
         gml_fn = os.path.join(gpkg_path.parent, gml_basename)
         return gml_fn
-
 
     def run_export_calc_result(self):
         self.log('run_export_calc_result()', user='dev')
@@ -291,21 +279,20 @@ class ImaerPlugin:
 
         gml_fn = self.suggest_export_calc_result_fn(metadata['gpkg_fn'])
         gml_fn, filter = self.calc_result_file_dialog.getSaveFileName(caption="Save as Calculator result gml file", directory=gml_fn, parent=self.iface.mainWindow())
-        #self.log(gml_fn, user='dev')
+        # self.log(gml_fn, user = 'dev')
         if gml_fn == '' and filter == '':
             return
 
         xml_lines = []
         for line in metadata['xml'].split('\n'):
             if not line.strip() == '':
-                #print(line)
+                # print(line)
                 xml_lines.append(line)
 
         layer_imaer_version = metadata['imaer_version']
 
         task = ExportImaerCalculatorResultTask(receptor_layer, gml_fn, xml_lines, layer_imaer_version)
         self.task_manager.addTask(task)
-
 
     def get_imaer_calc_metadata(self, layer):
         '''Returns IMAER gpkg metadata from cache or attempts
@@ -331,49 +318,46 @@ class ImaerPlugin:
         ds = provider.dataSourceUri()
         if '|layername=' in ds:
             gpkg_fn, gpkg_layer = ds.split('|layername=')
-            #print(' ', gpkg_fn, gpkg_layer)
+            # print(' ', gpkg_fn, gpkg_layer)
         else:
             return self.imaer_calc_layers[layer_id]
         if not gpkg_layer == 'receptors':
-            #print('  not receptors')
+            # print('  not receptors')
             return self.imaer_calc_layers[layer_id]
 
         metadata_ds = '{}|layername=imaer_metadata'.format(gpkg_fn)
-        #print(metadata_ds)
+        # print(metadata_ds)
         try:
             md_layer = QgsVectorLayer(metadata_ds, 'metadata', 'ogr')
         except:
-            #print('no metadata')
+            # print('no metadata')
             return self.imaer_calc_layers[layer_id]
         for md_feat in md_layer.getFeatures():
-           self.imaer_calc_layers[layer_id][md_feat[1]] = md_feat[2]
+            self.imaer_calc_layers[layer_id][md_feat[1]] = md_feat[2]
         self.imaer_calc_layers[layer_id]['is_imaer_calc_layer'] = True
         self.imaer_calc_layers[layer_id]['gpkg_fn'] = gpkg_fn
 
         return self.imaer_calc_layers[layer_id]
 
-
     def run_generate_calc_input(self):
         self.log('run_generate_calc_input()', user='dev')
         self.generate_calc_input_dlg.show()
         result = self.generate_calc_input_dlg.exec_()
-        #print(result)
+        # print(result)
         if result:
             self.log('starting calcinput generation ...', user='user')
             imaer_doc = self.generate_calc_input_dlg.get_imaer_doc_from_gui()
-            if imaer_doc is None: # Something went wrong during IMAER doc generation...
+            if imaer_doc is None:  # Something went wrong during IMAER doc generation...
                 self.log('Something went wrong during IMAER doc generation.')
                 return
             fn = self.generate_calc_input_dlg.edit_outfile.text()
             imaer_doc.to_xml_file(fn)
             self.log('Imaer GML file saved as: <a href="{0}">{0}</a>'.format(fn), lvl='Info', bar=True, duration=10)
-        #self.log('Could not export GML file to {0}'.format(fn), lvl='Critical', bar=True, duration=10)
-
+        # self.log('Could not export GML file to {0}'.format(fn), lvl='Critical', bar=True, duration=10)
 
     def update_all_widgets(self):
         self.update_export_calc_widgets()
         self.update_connect_widgets()
-
 
     def update_export_calc_widgets(self):
         if self.iface.activeLayer() is not None:
@@ -381,7 +365,6 @@ class ImaerPlugin:
             self.actions['export_calc_result'].setEnabled(metadata['is_imaer_calc_layer'])
         else:
             self.actions['export_calc_result'].setEnabled(False)
-
 
     def update_connect_widgets(self):
         conn_ok = self.aerius_connection.api_key_is_ok
@@ -395,11 +378,9 @@ class ImaerPlugin:
             self.connect_receptorsets_dlg.get_receptor_sets()
             self.connect_jobs_dlg.get_jobs()
 
-
     def open_online_documentation(self):
         doc_index_url = 'http://opengeogroep.github.io/AERIUS-QGIS-plugins/'
         webbrowser.open(doc_index_url)
-
 
     def open_configuration(self):
         self.log('open_configuration()', user='dev')
@@ -410,18 +391,13 @@ class ImaerPlugin:
             self.aerius_connection.check_connection()
             self.update_connect_widgets()
 
-
     def open_connect_receptorsets(self):
         self.log('open_connect_receptorsets()', user='dev')
         result = self.connect_receptorsets_dlg.exec_()
-        #print(result)
-
 
     def open_connect_jobs(self):
         self.log('open_connect_jobs()', user='dev')
         result = self.connect_jobs_dlg.exec_()
-        #print(result)
-
 
     def run_relate_calc_results(self):
         result = self.relate_calc_results_dlg.exec_()
@@ -430,7 +406,6 @@ class ImaerPlugin:
             return
 
         layers = self.relate_calc_results_dlg.get_layer_list()
-        #print(layers)
 
         calc_type = self.relate_calc_results_dlg.combo_calc_type.currentText()
 
@@ -443,11 +418,10 @@ class ImaerPlugin:
         if calc_type == 'maximum':
             self.relate_calc_results_dlg.calculate_maximum(layers)
 
-
     def open_add_open_data(self):
         layer_ns = 'base_geometries'
         layer_name = 'hexagons'
-        allow_cache=True
+        allow_cache = True
 
         # TODO Move this to a QgsTask when specs are clear
 
@@ -457,18 +431,15 @@ class ImaerPlugin:
         if work_dir is None:
             raise Exception('Work dir not set')
             return
-        ##zip_fn = os.path.join(work_dir, f'{base_fn}.zip')
+        # zip_fn = os.path.join(work_dir, f'{base_fn}.zip')
         zip_fn = os.path.join(work_dir, f'{base_fn}.gpkg')
-
-
 
         if not os.path.isfile(zip_fn) or not allow_cache:
             # Download data
             conn = AeriusOpenData()
-            #print(conn)
 
             QgsApplication.setOverrideCursor(Qt.WaitCursor)
-            response = conn.get_dataset(layer_ns, layer_name, output_format='geopackage') #TODO Download a better file format then SHP when available
+            response = conn.get_dataset(layer_ns, layer_name, output_format='geopackage')  # TODO Download a better file format then SHP when available
             QgsApplication.restoreOverrideCursor()
 
             if response is None:
