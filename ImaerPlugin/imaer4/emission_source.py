@@ -1,8 +1,7 @@
 from PyQt5.QtXml import QDomDocument
 
-#from .enumerations import OutflowDirectionType
+# from .enumerations import OutflowDirectionType
 from .gml import get_gml_element
-
 
 
 class EmissionSourceType(object):
@@ -17,9 +16,8 @@ class EmissionSourceType(object):
         self.geometry = geom
         self.local_id = local_id
 
-
     def to_xml_elem(self, doc=QDomDocument()):
-        #print('class:', self.__class__.__name__)
+        # print('class:', self.__class__.__name__)
         class_name = self.__class__.__name__
         result = doc.createElement(f'imaer:{class_name}')
 
@@ -78,14 +76,11 @@ class EmissionSourceType(object):
         return result
 
 
-
-
 class EmissionSource(EmissionSourceType):
 
     def __init__(self, *, emissions=[], **kwargs):
         super().__init__(**kwargs)
         self.emissions = emissions
-
 
     def to_xml_elem(self, doc=QDomDocument()):
         if doc is None:
@@ -100,8 +95,6 @@ class EmissionSource(EmissionSourceType):
         return result
 
 
-
-
 class EmissionSourceCharacteristics(object):
 
     def __init__(self, heat_content=None, emission_height=None, spread=None, diurnal_variation=None, building=None):
@@ -110,7 +103,6 @@ class EmissionSourceCharacteristics(object):
         self.spread = spread
         self.diurnal_variation = diurnal_variation
         self.building = building
-
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement('imaer:EmissionSourceCharacteristics')
@@ -141,19 +133,14 @@ class EmissionSourceCharacteristics(object):
         return result
 
 
-
-
 class HeatContent(object):
 
     def __init__(self):
         pass
 
-
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement('imaer:heatContent')
         return result
-
-
 
 
 class SpecifiedHeatContent(HeatContent):
@@ -162,20 +149,17 @@ class SpecifiedHeatContent(HeatContent):
         super().__init__(**kwargs)
         self.value = value
 
-
     def to_xml_elem(self, doc=QDomDocument()):
         result = super().to_xml_elem(doc)
 
         shc = doc.createElement('imaer:SpecifiedHeatContent')
         v = doc.createElement('imaer:value')
-        v.appendChild(doc.createTextNode( str(self.value) ))
+        v.appendChild(doc.createTextNode(str(self.value)))
 
         shc.appendChild(v)
         result.appendChild(shc)
 
         return result
-
-
 
 
 class Emission(object):
@@ -184,14 +168,13 @@ class Emission(object):
         self.substance = substance
         self.value = value
 
-
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement('imaer:emission')
 
         em_elem = doc.createElement('imaer:Emission')
         em_elem.setAttribute('substance', self.substance)
         v_elem = doc.createElement('imaer:value')
-        v_elem.appendChild(doc.createTextNode( str(self.value) ))
+        v_elem.appendChild(doc.createTextNode(str(self.value)))
 
         em_elem.appendChild(v_elem)
         result.appendChild(em_elem)

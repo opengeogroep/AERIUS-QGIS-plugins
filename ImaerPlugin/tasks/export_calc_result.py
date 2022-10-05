@@ -1,12 +1,12 @@
 import xml.etree.ElementTree as ET
 
-#from PyQt5.QtXml import QDomDocument
+# from PyQt5.QtXml import QDomDocument
 
 from qgis.core import (
     Qgis,
     QgsTask,
     QgsMessageLog
-    )
+)
 
 from .. task_timer import TaskTimer
 
@@ -16,8 +16,6 @@ _SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1', '4.0', '5.0']
 _EDGE_EFFECT_VALUES = {0: 'false', 1: 'true'}
 
 tab = 'Imaer'
-
-
 
 
 class ExportImaerCalculatorResultTask(QgsTask):
@@ -30,15 +28,13 @@ class ExportImaerCalculatorResultTask(QgsTask):
         self.imaer_version = imaer_version
         self.exception = None
         self.do_log = True
-        #self.log(self.gml_fn)
+        # self.log(self.gml_fn)
 
         self.tt = TaskTimer()
-
 
     def log(self, message, tab='Imaer'):
         if self.do_log:
             QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
-
 
     def run(self):
         self.tt.log('start')
@@ -50,7 +46,6 @@ class ExportImaerCalculatorResultTask(QgsTask):
 
         feat_i = 0
         feat_cnt = self.receptor_layer.featureCount()
-
 
         with open(self.gml_fn, 'w') as gml_file:
             self.tt.log('writing header')
@@ -73,7 +68,7 @@ class ExportImaerCalculatorResultTask(QgsTask):
                 if self.isCanceled():
                     return False
 
-            #gml_file.write('    <!-- qgis generated imaer gml-->\n')
+            # gml_file.write('    <!-- qgis generated imaer gml-->\n')
 
             self.tt.log('writing footer')
             gml_file.write('\n')
@@ -81,20 +76,21 @@ class ExportImaerCalculatorResultTask(QgsTask):
 
         return True
 
-
     def finished(self, result):
         self.log('finished task')
-        #self.tt.show()
-        #self.conn.close()
+        # self.tt.show()
+        # self.conn.close()
         if result:
             self.log(
                 'ImaerResultToGpkgTask "{name}" completed'.format(
-                  name=self.description()))
+                    name=self.description()
+                )
+            )
         else:
             if self.exception is None:
                 self.log(
-                    'Task "{name}" not successful but without '\
-                    'exception (probably the task was manually '\
+                    f'Task "{name}" not successful but without '
+                    'exception (probably the task was manually '
                     'canceled by the user)'.format(
                         name=self.description()))
             else:
@@ -104,23 +100,21 @@ class ExportImaerCalculatorResultTask(QgsTask):
                         exception=self.exception))
                 raise self.exception
 
-
     def cancel(self):
         self.log(
             'Task "{name}" was canceled'.format(
                 name=self.description()))
-                # TODO delete gpkg file
+        # TODO delete gpkg file
         super().cancel()
 
-
     def create_receptor_xml(self, feat):
-        #self.tt.log('attrs')
+        # self.tt.log('attrs')
         id = feat['fid']
         x = feat['point_x']
         y = feat['point_y']
-        #self.tt.log('poslist')
+        # self.tt.log('poslist')
         poslist = self.poslist_from_polygon(feat)
-        #self.tt.log('format')
+        # self.tt.log('format')
         result = f'''
     <imaer:featureMember>
         <imaer:ReceptorPoint receptorPointId="{ id }" gml:id="CP.{ id }">
@@ -145,11 +139,11 @@ class ExportImaerCalculatorResultTask(QgsTask):
                 </gml:Polygon>
             </imaer:representation>'''
 
-        #self.tt.log('substances')
+        # self.tt.log('substances')
         for substance in _IMAER_DEPOSITION_SUBSTANCES:
             field_name = 'dep_{}'.format(substance)
             value = feat.attribute(field_name)
-            if isinstance(value, float): #empty records are returned as <class 'qgis.PyQt.QtCore.QVariant'> NULL values
+            if isinstance(value, float):  # empty records are returned as <class 'qgis.PyQt.QtCore.QVariant'> NULL values
                 result += self.create_result_value_xml(substance, value)
 
         # Add edgeEffect info for IMAER >= 5.0
@@ -165,7 +159,6 @@ class ExportImaerCalculatorResultTask(QgsTask):
         self.tt.log('void')
         return result
 
-
     def create_result_value_xml(self, substance, value):
         if self.imaer_version == '2.2':
             result_tag = 'Result'
@@ -178,7 +171,6 @@ class ExportImaerCalculatorResultTask(QgsTask):
                 </imaer:{ result_tag }>
             </imaer:result>'''
         return result
-
 
     def poslist_from_polygon(self, feat):
         geom = feat.geometry()

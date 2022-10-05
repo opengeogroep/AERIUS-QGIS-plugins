@@ -35,7 +35,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         # self.log(self.gml_fn)
         self.namespaces = {}
         self.settings = QgsSettings()
-        
+
     def run(self):
         self.log('Started task "{}"'.format(self.description()))
 

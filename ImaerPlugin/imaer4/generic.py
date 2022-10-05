@@ -15,7 +15,7 @@ for name, value in namespaces.items():
 
 def remove_ns(tag):
     loc = tag.find('}')
-    return tag[loc+1:]
+    return tag[loc + 1:]
 
 
 def find_xml_value(root, tag_name, object_type='text', default_value=None):
@@ -24,6 +24,6 @@ def find_xml_value(root, tag_name, object_type='text', default_value=None):
     if elem is None:
         print(f'cannot find tag: {tag_name} in xml')
         return default_value
-    #print(elem.attrib)
+    # print(elem.attrib)
     if object_type == 'text':
         return elem.text

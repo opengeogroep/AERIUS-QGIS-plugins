@@ -1,11 +1,9 @@
 import time
 
 
-
 class TaskTimer():
     def __init__(self):
         self.reset()
-
 
     def show(self):
         result = []
@@ -19,17 +17,13 @@ class TaskTimer():
             print('nothing')
         return result
 
-
     def reset(self):
         self.start_time = None
         self.prev_time = None
         self.prev_name = None
         self.tasks = {}
 
-
     def log(self, name):
-        #print(name)
-        #print(self.tasks)
         if self.prev_time is not None:
             time_delta = time.time() - self.prev_time
             if self.prev_name in self.tasks:
@@ -40,6 +34,7 @@ class TaskTimer():
             self.start_time = self.prev_time = time.time()
         self.prev_time = time.time()
         self.prev_name = name
+
 
 if __name__ == '__main__':
     tt = TaskTimer()

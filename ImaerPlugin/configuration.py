@@ -21,8 +21,6 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'configuration_dlg.ui'))
 
 
-
-
 class ConfigurationDialog(QDialog, FORM_CLASS):
 
     def __init__(self, plugin, parent=None):
@@ -39,7 +37,6 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         self.load_ui_from_settings()
         self.save_ui_to_settings()
 
-
     def init_gui(self):
         self.combo_country.addItems([''] + ui_settings['countries'])
         self.combo_crs.addItem('')
@@ -50,7 +47,6 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         self.file_dialog = QFileDialog()
         self.button_get_key.clicked.connect(self.get_api_key)
         self.button_browse_work_dir.clicked.connect(self.browse_work_dir)
-
 
     def init_default_values(self):
         work_dir_setting = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
@@ -65,14 +61,13 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
             default_version = self.plugin.aerius_connection.default_version
             self.plugin.settings.setValue('imaer_plugin/connect_version', default_version)
 
-
     def load_ui_from_settings(self):
         country_setting = self.plugin.settings.value('imaer_plugin/country', defaultValue='')
         self.combo_country.setCurrentText(country_setting)
 
         crs_setting = self.plugin.settings.value('imaer_plugin/crs', defaultValue='')
         crs_index = self.combo_crs.findData(crs_setting)
-        if crs_index == -1: # not found
+        if crs_index == -1:  # not found
             crs_idex = 0
         self.combo_crs.setCurrentIndex(crs_index)
 
@@ -91,7 +86,6 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         key_setting = self.plugin.settings.value('imaer_plugin/connect_key', defaultValue='')
         self.edit_key.setText(key_setting)
 
-
     def save_ui_to_settings(self):
         self.plugin.settings.setValue('imaer_plugin/country', self.combo_country.currentText())
         self.plugin.settings.setValue('imaer_plugin/crs', self.combo_crs.currentData())
@@ -104,7 +98,6 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         self.plugin.aerius_connection.version = self.combo_connect_ver.currentText()
         self.plugin.aerius_connection.api_key = self.edit_key.text()
         self.plugin.aerius_connection.check_connection()
-
 
     def get_api_key(self):
         email = self.edit_email.text()
@@ -120,10 +113,8 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         else:
             self.plugin.log('Requesting new Connect API key failed', lvl='Critical', bar=True)
 
-
     def browse_work_dir(self):
         current_work_dir = self.edit_work_dir.text()
         self.file_dialog.setDirectory(current_work_dir)
-        new_dir = self.file_dialog.getExistingDirectory(caption="Select work directory", parent=self)
-        #self.log(new_dir)
+        new_dir = self.file_dialog.getExistingDirectory(caption='Select work directory', parent=self)
         self.edit_work_dir.setText(new_dir)

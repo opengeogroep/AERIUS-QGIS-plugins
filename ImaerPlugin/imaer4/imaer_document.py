@@ -3,8 +3,6 @@ from PyQt5.QtXml import QDomDocument
 
 from .metadata import AeriusCalculatorMetadata
 from .emission_source import EmissionSource
-#import
-
 
 
 class ImaerDocument():
@@ -17,14 +15,12 @@ class ImaerDocument():
 
         self.doc = QDomDocument()
 
-
     def __str__(self):
         result = 'ImaerDocument[{}, feature_members:{}]'.format(
             self.metadata,
             len(self.feature_members)
         )
         return result
-
 
     def to_xml_elem(self):
 
@@ -33,7 +29,7 @@ class ImaerDocument():
 
         fcc_elem = self.doc.createElement('imaer:FeatureCollectionCalculator')
         fcc_elem.setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')
-        #fcc_elem.setAttribute('xmlns:imaer', 'http://www.kadaster.nl/schemas/geovalidaties/manifestbestand/v20181101')
+        # fcc_elem.setAttribute('xmlns:imaer', 'http://www.kadaster.nl/schemas/geovalidaties/manifestbestand/v20181101')
         fcc_elem.setAttribute('xmlns:imaer', 'http://imaer.aerius.nl/4.0')
         fcc_elem.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
         fcc_elem.setAttribute('xmlns:gml', 'http://www.opengis.net/gml/3.2')
@@ -50,7 +46,6 @@ class ImaerDocument():
             feature_member_elem = self.doc.createElement('imaer:featureMember')
             fcc_elem.appendChild(feature_member_elem)
             feature_member_elem.appendChild(feature_member.to_xml_elem(self.doc))
-
 
     def to_xml_file(self, fn):
         self.to_xml_elem()

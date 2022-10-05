@@ -17,8 +17,6 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'connect_receptorsets_dlg.ui'))
 
 
-
-
 class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
     def __init__(self, plugin, parent=None):
@@ -29,7 +27,6 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         self.iface = plugin.iface
 
         self.init_gui()
-
 
     def init_gui(self):
         self.button_gml_input_browse.clicked.connect(self.browse_gml_file)
@@ -45,7 +42,6 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
         self.update_widgets()
 
-
     def __del__(self):
         self.button_gml_input_browse.clicked.disconnect(self.browse_gml_file)
 
@@ -55,7 +51,6 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
         self.edit_gml_input.textChanged.disconnect(self.update_widgets)
         self.table_receptorsets.itemSelectionChanged.disconnect(self.update_widgets)
-
 
     def browse_gml_file(self):
         if self.plugin.dev:
@@ -67,9 +62,8 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         self.plugin.log(gml_fn, filter)
         self.edit_gml_input.setText(gml_fn)
 
-
     def get_receptor_sets(self):
-        #self.plugin.log('get_receptor_sets()', user='dev')
+        # self.plugin.log('get_receptor_sets()', user='dev')
         self.table_receptorsets.clearContents()
         while self.table_receptorsets.rowCount() > 0:
             self.table_receptorsets.removeRow(0)
@@ -82,7 +76,7 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         result = self.plugin.aerius_connection.get_receptor_sets()
         QgsApplication.restoreOverrideCursor()
 
-        if result is None: # TODO check for valid response somehow and show feedback
+        if result is None:  # TODO check for valid response somehow and show feedback
             return
 
         receptor_sets_dict = result
@@ -95,7 +89,6 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
             if 'description' in receptor_set:
                 self.table_receptorsets.setItem(row_num, 1, QTableWidgetItem(receptor_set['description']))
 
-
     def post_receptor_set(self):
         gml_fn = self.edit_gml_input.text()
         name = self.edit_name.text()
@@ -107,7 +100,6 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
         if result is not None:
             self.get_receptor_sets()
-
 
     def delete_receptor_set(self):
         '''Sends a delete request to the server for the selected receptor set'''
@@ -129,7 +121,6 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
 
         if result is not None:
             self.get_receptor_sets()
-
 
     def update_widgets(self):
         """logic for widget behaviour"""

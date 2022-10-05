@@ -1,11 +1,7 @@
-
-
-
 class WidgetRegistry(dict):
 
     def __init__(self, parent):
         self.parent = parent
-
 
     def __str__(self):
         widget_cnt = 0
@@ -17,9 +13,8 @@ class WidgetRegistry(dict):
         )
         return result
 
-
     def add_widgets(self, name, widgets={}):
-        if not name in self:
+        if name not in self:
             self[name] = {}
         for widget_key, widget in widgets.items():
             if widget_key in self[name]:
@@ -27,9 +22,8 @@ class WidgetRegistry(dict):
             else:
                 self[name][widget_key] = widget
 
-
     def remove_group(self, name):
-        if not name in self:
+        if name not in self:
             print('name not in widget_registry')
             return
         widget_keys = list(self[name].keys())
@@ -37,12 +31,10 @@ class WidgetRegistry(dict):
             self[name].pop(widget_key)
         self.pop(name)
 
-
     def remove_all_groups(self):
         names = list(self.keys())
         for name in names:
             self.remove_group(name)
-
 
     def show(self):
         print(self)

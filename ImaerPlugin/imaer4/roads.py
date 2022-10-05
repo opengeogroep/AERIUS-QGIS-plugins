@@ -3,20 +3,17 @@ from PyQt5.QtXml import QDomDocument
 from .emission_source import EmissionSourceType
 
 
-
-
 class RoadEmissionSource(EmissionSourceType):
     def __init__(self, *, traffic_direction=None, vehicles=[], **kwargs):
         super().__init__(**kwargs)
         self.vehicles = vehicles
         self.traffic_direction = traffic_direction
 
-
     def to_xml_elem(self, doc=QDomDocument()):
         result = super().to_xml_elem(doc)
 
         for veh in self.vehicles:
-            veh_elem = doc.createElement('imaer:vehicles') # Somehow every vehicle should be in it's own vehicles element.
+            veh_elem = doc.createElement('imaer:vehicles')  # Somehow every vehicle should be in it's own vehicles element.
             elem = veh.to_xml_elem(doc)
             veh_elem.appendChild(elem)
             result.appendChild(veh_elem)
@@ -27,8 +24,6 @@ class RoadEmissionSource(EmissionSourceType):
             result.appendChild(elem)
 
         return result
-
-
 
 
 class SRM2Road(RoadEmissionSource):
@@ -42,12 +37,11 @@ class SRM2Road(RoadEmissionSource):
         self.barrier_left = None
         self.barrier_right = None
 
-
     def to_xml_elem(self, doc=QDomDocument()):
         result = super().to_xml_elem(doc)
 
         if self.is_freeway is not None:
-            if self.is_freeway: # Handle bools in a pythonic way
+            if self.is_freeway:  # Handle bools in a pythonic way
                 value = 'true'
             else:
                 value = 'false'
@@ -85,15 +79,12 @@ class SRM2Road(RoadEmissionSource):
         return result
 
 
-
-
 class RoadSideBarrier(object):
 
     def __init__(self, type, height, distance):
         self.type = type
         self.height = height
         self.distance = distance
-
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement('imaer:RoadSideBarrier')
@@ -113,14 +104,11 @@ class RoadSideBarrier(object):
         return result
 
 
-
-
 class Vehicle(object):
 
     def __init__(self, *, vehicles_per_time_unit=None, time_unit=None, **kwargs):
         self.vehicles_per_time_unit = vehicles_per_time_unit
         self.time_unit = time_unit
-
 
     def to_xml_elem(self, doc=QDomDocument()):
 
@@ -138,8 +126,6 @@ class Vehicle(object):
         return result
 
 
-
-
 class StandardVehicle(Vehicle):
 
     def __init__(self, *, stagnation_factor=None, vehicle_type=None, maximum_speed=None, strict_enforcement=None, **kwargs):
@@ -148,7 +134,6 @@ class StandardVehicle(Vehicle):
         self.vehicle_type = vehicle_type
         self.maximum_speed = maximum_speed
         self.strict_enforcement = strict_enforcement
-
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = super().to_xml_elem(doc)

@@ -12,18 +12,14 @@ from qgis.PyQt.QtCore import (
 )
 
 
-
-
 class AeriusOpenData():
 
     def __init__(self):
         self.base_url = 'https://connect.aerius.nl/opendata/base_geometries/wfs/'
         self.mime_types_dict = {'CSV': 'text/csv', 'SHAPE-ZIP': 'application/zip', 'geopackage': 'application/x-sqlite3'}
 
-
     def __str__(self):
         return 'AeriusOpenData[]'
-
 
     def run_request(self, api_function, method, data=None, headers=None):
         if headers is None:
@@ -53,7 +49,6 @@ class AeriusOpenData():
         reply = qgis_request.reply()
         return reply.content()
 
-
     def get_dataset(self, namespace, layer, output_format='SHAPE-ZIP'):
         headers = {'Accept': self.mime_types_dict[output_format]}
 
@@ -67,9 +62,9 @@ class AeriusOpenData():
         }
         print(data)
 
-        #data['cql_filter'] = 'receptor_id<293081' # TODO remove! Just for testing a small data set.
+        # data['cql_filter'] = 'receptor_id<293081' # TODO remove! Just for testing a small data set.
         data['cql_filter'] = 'zoom_level=1'
 
         content = self.run_request(api_function, 'GET', data, headers)
-        #print(content)
+        # print(content)
         return content

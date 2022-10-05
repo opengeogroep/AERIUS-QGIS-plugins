@@ -23,8 +23,6 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'relate_calc_results_dlg.ui'))
 
 
-
-
 class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
     def __init__(self, plugin, parent=None):
@@ -39,7 +37,6 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
         self.init_gui()
 
-
     def init_gui(self):
         self.layer_widgets = {
             1: self.combo_layer1,
@@ -49,7 +46,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
             5: self.combo_layer5
         }
         for key, widget in self.layer_widgets.items():
-            #print(widget)
+            # print(widget)
             widget.setFilters(QgsMapLayerProxyModel.PolygonLayer)
             widget.setAllowEmptyLayer(True)
             widget.setCurrentIndex(0)
@@ -60,12 +57,10 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         self.gui_update_calc_type()
         self.gui_update_layer_combo()
 
-
     def __del__(self):
         self.combo_calc_type.currentIndexChanged.disconnect(self.gui_update_calc_type)
         for key, widget in self.layer_widgets.items():
             widget.currentIndexChanged.connect(self.gui_update_layer_combo)
-
 
     def gui_update_calc_type(self):
         calc_type = self.combo_calc_type.currentText()
@@ -76,7 +71,6 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
             if key > 2:
                 widget.setEnabled(calc_type != 'difference')
 
-
     def is_dep_layer(self, layer):
         '''Checks if layer contains all mandatory fields'''
         mandatory_fields = ['fid', 'dep_NH3', 'dep_NOX']
@@ -84,10 +78,9 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         layer_field_names = [fld.name() for fld in layer.fields()]
 
         for mandatory_field in mandatory_fields:
-            if not mandatory_field in layer_field_names:
+            if mandatory_field not in layer_field_names:
                 return False
         return True
-
 
     def get_layer_list(self):
         '''Returns a list of selected deposition layers in the enabled comboBoxes'''
@@ -103,17 +96,14 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
                         widget.setStyleSheet("QgsMapLayerComboBox { color : red; }")
         return result
 
-
     def gui_update_layer_combo(self):
         calc_type = self.combo_calc_type.currentText()
         layers = self.get_layer_list()
         enable_ok_button = len(layers) >= 2
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable_ok_button)
 
-
     def show_error(self, msg):
         self.iface.messageBar().pushMessage('Error', msg, level=Qgis.Critical, duration=10)
-
 
     def create_result_layer(self, layer_name, qml_file_name=None):
         crs = self.plugin.iface.mapCanvas().mapSettings().destinationCrs().authid()
@@ -139,7 +129,6 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
             layer.loadNamedStyle(qml_file_name)
 
         return (layer, provider)
-
 
     def create_result_feature(self, receptor_id, dep_dict, max_decimals=None):
         feat = QgsFeature()
@@ -167,14 +156,12 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         feat.setAttributes(attributes)
         return feat
 
-
     def create_result_features(self, calc_result_dict, qml_file_name):
         layer_name = self.edit_layer_name.text()
         result_layer, result_provider = self.create_result_layer(layer_name, qml_file_name)
         for receptor_id in calc_result_dict:
             feat = self.create_result_feature(receptor_id, calc_result_dict[receptor_id], 8)
             result_provider.addFeatures([feat])
-
 
     def create_receptor_dictionary(self, layer):
         '''
@@ -203,9 +190,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
             result[receptor_id] = dep_dict
             if receptor_id not in self.geometry_cache:
                 self.geometry_cache[receptor_id] = feat.geometry()
-        #print(result)
         return result
-
 
     def __get_receptor_value(self, receptor_dict, receptor_id, field_name, no_data=None):
         '''Returns the value for the field_name if present, or otherwise the no_data value.'''
@@ -215,9 +200,8 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
             return no_data
         v = receptor_dict[receptor_id][field_name]
         if v is not None:
-                return v
+            return v
         return no_data
-
 
     def __calc_dict_difference(self, dep_dict_layer_1, dep_dict_layer_2):
         result = {}
@@ -229,7 +213,6 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
                 dep_dict[dep_field_name] = v1 - v2
             result[receptor_id] = dep_dict
         return result
-
 
     def calculate_difference(self, layers):
         self.geometry_cache = {}
@@ -258,7 +241,6 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
         self.geometry_cache = {}
 
-
     def __calc_dict_sum(self, in_dep_dicts):
         result = {}
         for receptor_id in self.geometry_cache:
@@ -272,7 +254,6 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
                         out_dep_dict[dep_field_name] = v
             result[receptor_id] = out_dep_dict
         return result
-
 
     def calculate_sum(self, layers):
         self.geometry_cache = {}
@@ -292,7 +273,6 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
         self.geometry_cache = {}
 
-
     def __calc_dict_maximum(self, in_dep_dicts):
         result = {}
         for receptor_id in self.geometry_cache:
@@ -307,9 +287,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
                     else:
                         out_dep_dict[dep_field_name] = v
             result[receptor_id] = out_dep_dict
-        #print(result)
         return result
-
 
     def calculate_maximum(self, layers):
         self.geometry_cache = {}

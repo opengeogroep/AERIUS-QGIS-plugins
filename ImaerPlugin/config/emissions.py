@@ -24,6 +24,6 @@ ui_settings = {
     'countries': ['NL', 'UK'],
     'crs': [
         {'name': 'Amersfoort / RD New - Netherlands', 'srid': 28992},
-        {'name': 'OSGB 1936 / British National Grid', 'srid': 27700},
-        ],
+        {'name': 'OSGB 1936 / British National Grid', 'srid': 27700}
+    ],
 }

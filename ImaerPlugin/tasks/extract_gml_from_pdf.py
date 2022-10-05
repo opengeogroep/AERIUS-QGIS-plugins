@@ -2,11 +2,9 @@ from qgis.core import (
     Qgis,
     QgsTask,
     QgsMessageLog
-    )
+)
 
 tab = 'Imaer'
-
-
 
 
 class ExtractGmlFromPdfTask(QgsTask):
@@ -19,13 +17,11 @@ class ExtractGmlFromPdfTask(QgsTask):
         self.callback = callback
         self.exception = None
         self.do_log = True
-        #self.log(self.pdf_fn)
-
+        # self.log(self.pdf_fn)
 
     def log(self, message, tab='Imaer'):
         if self.do_log:
             QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
-
 
     def run(self):
         self.log('Started task "{}"'.format(self.description()))
@@ -53,7 +49,7 @@ class ExtractGmlFromPdfTask(QgsTask):
             gml_lines = gml_str.split('\\n')
             self.setProgress(60)
             with open(gml_fn, 'w') as gml_file:
-                #self.log(f'Writing GML file: {gml_fn}')
+                # self.log(f'Writing GML file: {gml_fn}')
                 for gml_line in gml_lines:
                     gml_file.write(gml_line + '\n')
                     if self.isCanceled():
@@ -63,7 +59,6 @@ class ExtractGmlFromPdfTask(QgsTask):
         self.setProgress(100)
         return True
 
-
     def finished(self, result):
         self.log('finished task')
         if result:
@@ -71,14 +66,12 @@ class ExtractGmlFromPdfTask(QgsTask):
         else:
             self.callback([])
 
-
     def cancel(self):
         self.log(
             'Task "{name}" was canceled'.format(
                 name=self.description()))
-                # TODO delete gml file if exists
+        # TODO delete gml file if exists
         super().cancel()
-
 
     def get_gml_strings(self, pdf_line):
         result = []
@@ -96,7 +89,7 @@ class ExtractGmlFromPdfTask(QgsTask):
             last_char = pdf_line.find(end_string, first_char)
             if last_char < 0:
                 break
-            last_char += len(end_string) # add the length of the search string to jump to the end
+            last_char += len(end_string)  # add the length of the search string to jump to the end
             result.append(pdf_line[first_char:last_char])
             start_char = last_char
 

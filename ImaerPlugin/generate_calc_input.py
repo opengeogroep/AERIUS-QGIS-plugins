@@ -48,8 +48,6 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'generate_calc_input_dlg.ui'))
 
 
-
-
 class GenerateCalcInputDialog(QDialog, FORM_CLASS):
     def __init__(self, plugin, parent=None):
         """Constructor."""
@@ -65,14 +63,13 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         self.init_gui()
 
-
     def init_gui(self):
         # Add message bar
 
         self.combo_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
         self.combo_sector.currentIndexChanged.connect(self.set_emission_tab)
-        ##self.combo_subsector.currentIndexChanged.connect(self.set_elements)
+        # self.combo_subsector.currentIndexChanged.connect(self.set_elements)
         self.edit_outfile.textChanged.connect(self.update_ok_button)
 
         self.combo_layer.layerChanged.connect(self.update_field_combos)
@@ -89,7 +86,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.update_ok_button()
         self.set_emission_tab()
 
-
     def __del__(self):
         self.edit_outfile.textChanged.disconnect(self.update_ok_button)
         self.combo_sector.currentIndexChanged.disconnect(self.set_emission_tab)
@@ -98,7 +94,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         self.btn_save_settings.clicked.disconnect(self.save_settings)
         self.btn_load_settings.clicked.disconnect(self.load_settings)
-
 
     def browse_generate_calc_input_file(self):
         if self.plugin.dev:
@@ -111,7 +106,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         gml_outfn, filter = self.plugin.calc_input_file_dialog.getSaveFileName(caption="Save as Calculator input gml file", filter='*.gml', directory=out_fn, parent=self.iface.mainWindow())
         self.edit_outfile.setText(gml_outfn)
 
-
     def set_fixed_options(self):
         # crs
         for crs in ui_settings['crs']:
@@ -120,7 +114,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         # sectors
         self.combo_sector.addItem('<Select sector>', 0)
         for sector_name in emission_sectors:
-            ##print(sector_name)
+            # print(sector_name)
             self.combo_sector.addItem(sector_name)
 
         # project
@@ -133,7 +127,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         for item in ui_settings['situation_types']:
             self.combo_situation_type.addItem(item, item)
 
-
     def set_emission_tab(self):
         # Remove all tabs but 'Metadata'
         while self.tabWidget.count() > 1:
@@ -144,21 +137,20 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             self.tabWidget.insertTab(1, self.emission_tabs[sector], sector)
             self.tabWidget.setCurrentIndex(1)
 
-
     def update_field_combos(self):
         for fcb in self.findChildren(QgsFieldComboBox):
             fcb.setLayer(self.combo_layer.currentLayer())
-
 
     def update_ok_button(self):
         if self.edit_outfile.text() == '':
             self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
             return
-        ##if self.get_current_sector_id() == 0:
-        ##    self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
-        ##    return
+        '''
+        if self.get_current_sector_id() == 0:
+            self.buttonBox.button(QDialogButtonBox.Save).setEnabled(False)
+            return
+        '''
         self.buttonBox.button(QDialogButtonBox.Save).setEnabled(True)
-
 
     def get_imaer_doc_from_gui(self):
         '''Maps items from GUI widgets to IMAER object'''
@@ -169,15 +161,15 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         description = self.edit_project_description.toPlainText()
 
         if self.group_situation.isChecked():
-             situation_name = self.edit_situation_name.text()
-             situation_type = self.combo_situation_type.currentText()
-             situation = {'name': situation_name, 'type': situation_type}
+            situation_name = self.edit_situation_name.text()
+            situation_type = self.combo_situation_type.currentText()
+            situation = {'name': situation_name, 'type': situation_type}
         else:
             situation = None
 
         metadata = AeriusCalculatorMetadata(
-            project = {'year': year, 'description': description},
-            situation = situation,
+            project={'year': year, 'description': description},
+            situation=situation,
         )
 
         imaer_doc.metadata = metadata
@@ -208,7 +200,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 geom.transform(crs_transform)
 
             sector_name = self.combo_sector.currentText()
-            #print(sector_name)
+            # print(sector_name)
             if sector_name == 'OTHER':
                 es = self.get_emission_source_from_gui(feat, geom, local_id)
             elif sector_name == 'ROAD_TRANSPORTATION':
@@ -217,10 +209,9 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 raise Exception('Invalid sector')
 
             imaer_doc.feature_members.append(es)
-            #self.plugin.tempes = es # For debugging
+            # self.plugin.tempes = es # For debugging
 
         return imaer_doc
-
 
     # Emission Source
     def get_emission_source_from_gui(self, feat, geom, local_id):
@@ -249,7 +240,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             )
 
         # emissions
-        es.emissions = [] # TODO: Figure out why and fix this! (Without setting this clean list, emissions from former features are present.)
+        es.emissions = []  # TODO: Figure out why and fix this! (Without setting this clean list, emissions from former features are present.)
         em = self.get_feature_value(self.fcb_em_nox, feat)
         if em is not None:
             es.emissions.append(Emission('NOX', em))
@@ -258,7 +249,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             es.emissions.append(Emission('NH3', em))
 
         return es
-
 
     # SRM2Road
     def get_srm2_road_from_gui(self, feat, geom, local_id):
@@ -323,14 +313,13 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         return es
 
-
     def get_feature_value(self, widget, feat, cast_to=None):
         if not isinstance(widget, QgsFieldComboBox):
             return None
         field_name = widget.currentField()
         if field_name == '':
             return None
-            #return widget_set['fixed'].text() TODO: return fixed value after data type check (or something..)
+            # return widget_set['fixed'].text() TODO: return fixed value after data type check (or something..)
         else:
             value = feat[field_name]
 
@@ -338,8 +327,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             return None
 
         if cast_to is not None:
-            #if cast_to == 'double':
-            #    return result.toDouble()
             if cast_to == 'float':
                 if isinstance(result, float):
                     return
@@ -351,7 +338,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 return result.toString()
         return value
 
-
     def save_settings(self):
         work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
         if work_dir is None:
@@ -360,12 +346,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         # TODO: choose file name
         base_name = 'generate_gml_config.json'
         out_fn = os.path.join(work_dir, base_name)
-        #print(out_fn)
+        # print(out_fn)
         field_dict = self.collect_field_settings()
         txt = json.dumps(field_dict, indent=4)
         with open(out_fn, 'w') as out_file:
             out_file.write(txt)
-
 
     def load_settings(self):
         work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
@@ -375,20 +360,19 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         # TODO: choose file name
         base_name = 'generate_gml_config.json'
         out_fn = os.path.join(work_dir, base_name)
-        #print(out_fn)
+        # print(out_fn)
 
         with open(out_fn, 'r') as out_file:
             txt = out_file.read()
 
         field_dict = json.loads(txt)
 
-        if not 'imaer_plugin_version' in field_dict:
+        if 'imaer_plugin_version' not in field_dict:
             self.plugin.log('This is not a valid field configuration file', lvl='Warning', bar=True)
             return
 
         self.set_field_settings(field_dict['fields'])
         self.plugin.log('Configuration file loaded', bar=True)
-
 
     def collect_field_settings(self):
         '''Collects a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
@@ -401,13 +385,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             result['fields'][k] = v
         return result
 
-
     def set_field_settings(self, field_cfg):
         '''Sets texts from a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
         layer_fields = self.combo_layer.currentLayer().fields().names()
         for fcb in self.findChildren(QgsFieldComboBox):
             widget_name = fcb.objectName()
-            if not widget_name in field_cfg:
+            if widget_name not in field_cfg:
                 continue
             new_field = field_cfg[widget_name]
             if new_field == '':
@@ -418,8 +401,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             else:
                 # Set empty
                 fcb.setCurrentIndex(0)
-                #print(f'Current input layer does not contain a field \'{new_field}\'')
-
+                # print(f'Current input layer does not contain a field \'{new_field}\'')
 
     def make_single_part(self, geom):
         '''Returns single part geometry or None if input has more than 1 part'''
