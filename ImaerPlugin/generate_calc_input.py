@@ -109,7 +109,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
     def set_fixed_options(self):
         # crs
         for crs in ui_settings['crs']:
-            self.combo_crs.addItem(crs['name'], crs['srid'])
+            crs_name = f"{crs['name']} ({crs['srid']})"
+            self.combo_crs.addItem(crs_name, crs['srid'])
 
         # sectors
         self.combo_sector.addItem('<Select sector>', 0)
