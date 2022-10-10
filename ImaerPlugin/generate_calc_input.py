@@ -107,6 +107,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.edit_outfile.setText(gml_outfn)
 
     def set_fixed_options(self):
+        # IMAER versions
+        self.combo_imaer_v.addItems(ui_settings['imaer_versions'])
+        # Select last item (= most recent version) by default
+        self.combo_imaer_v.setCurrentIndex(self.combo_imaer_v.count() - 1)
+
         # crs
         for crs in ui_settings['crs']:
             crs_name = f"{crs['name']} ({crs['srid']})"
