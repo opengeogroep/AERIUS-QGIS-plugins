@@ -116,6 +116,9 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         for crs in ui_settings['crs']:
             crs_name = f"{crs['name']} ({crs['srid']})"
             self.combo_crs.addItem(crs_name, crs['srid'])
+        crs_setting = self.plugin.settings.value('imaer_plugin/crs', defaultValue='')
+        crs_index = self.combo_crs.findData(crs_setting)
+        self.combo_crs.setCurrentIndex(crs_index)
 
         # sectors
         self.combo_sector.addItem('<Select sector>', 0)
