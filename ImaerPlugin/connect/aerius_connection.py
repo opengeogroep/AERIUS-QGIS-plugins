@@ -28,7 +28,7 @@ from qgis import processing
 
 class AeriusConnection():
 
-    def __init__(self, plugin, base_url=None, version=None, api_key=None, do_check_connection=True):
+    def __init__(self, plugin, base_url=None, version=None, api_key=None, do_check_connection=True, user='user'):
         self.plugin = plugin
         self.available_versions = ['7']
         self.default_base_url = 'https://connect.aerius.nl/api'
@@ -37,6 +37,7 @@ class AeriusConnection():
         self.base_url = base_url
         self.version = version
         self.api_key = api_key
+        self.user = user
 
         self.connection_info = 'Not yet checked'
         self.config_is_ok = False
@@ -47,7 +48,7 @@ class AeriusConnection():
             self.check_connection()
 
     def __str__(self):
-        return 'AeriusConnection[{}, {}, {}, {} {}, {}, {}]'.format(
+        return 'AeriusConnection[{}, {}, {}, {} {}, {}, {}, {}]'.format(
             self.base_url,
             self.version,
             self.api_key,
@@ -55,7 +56,15 @@ class AeriusConnection():
             self.server_is_ok,
             self.api_key_is_ok,
             self.connection_info,
+            self.dev
         )
+
+    def _log(self, msg):
+        if self.plugin is None:
+            if self.user == 'dev':
+                print(f'AeriusConnection: {msg}')
+        else:
+            self.plugin.log(msg, user=self.user)
 
     def check_connection(self, test_api_key=True):
         '''
@@ -91,9 +100,9 @@ class AeriusConnection():
         return
 
     def run_request(self, api_function, method, data=None, text_parts=[], file_parts=[], with_api_key=True, blocking=True, with_version=True):
-        self.plugin.log(f'run_request: {method} {api_function}', user='dev')
+        self._log(f'run_request: {method} {api_function}')
 
-        manager = QgsNetworkAccessManager.instance()
+        manager = QgsNetworkAccessManager().instance()
 
         if with_version:
             url = f'{self.base_url}/v{self.version}/{api_function}'
@@ -200,6 +209,7 @@ class AeriusConnection():
                 return reply.content()
 
     def server_is_up(self):
+        self._log('server_is_up()')
         end_points = {
             '7': 'actuator/health'
         }
@@ -208,7 +218,7 @@ class AeriusConnection():
         return response is not None
 
     def generate_api_key(self, email):
-        self.plugin.log('generate_api_key()', user='dev')
+        self._log('generate_api_key()')
         if self.base_url is None:
             return
         end_points = {
@@ -223,7 +233,7 @@ class AeriusConnection():
         return
 
     def get_jobs(self):
-        self.plugin.log('get_jobs()', user='dev')
+        self._log('get_jobs()')
         end_points = {
             '7': 'jobs'
         }
@@ -238,10 +248,10 @@ class AeriusConnection():
             result = json.loads(bytes(response))
             return result
         except:
-            self.plugin.log('Response is not json', lvl='Warning')
+            self._log('Response is not json')
 
     def cancel_job(self, job_key):
-        self.plugin.log('cancel_job()', user='dev')
+        self._log('cancel_job()')
         end_points = {
             '7': f'jobs/{job_key}/cancel'
         }
@@ -251,7 +261,7 @@ class AeriusConnection():
         return response
 
     def delete_job(self, job_key):
-        self.plugin.log('delete_job()', user='dev')
+        self._log('delete_job()')
         end_points = {
             '7': f'jobs/{job_key}'
         }
@@ -265,7 +275,7 @@ class AeriusConnection():
         Downloads a zipfile and extracts all containing gml files in the
         same directory. Returns a list of absolute gml file names.
         '''
-        self.plugin.log('download_result_zip()', user='dev')
+        self._log('download_result_zip()')
         params = {}
         params['URL'] = url
         zip_fn = os.path.join(work_dir, base_name)
@@ -322,7 +332,7 @@ class AeriusConnection():
 
     def post_calculate(self, gml_files, user_options={}):
         '''Start a new calculation'''
-        self.plugin.log('post_calculate()', user='dev')
+        self._log('post_calculate()')
 
         # For now this only works on 1 GML input file
         if not len(gml_files) == 1:
@@ -363,7 +373,7 @@ class AeriusConnection():
 
     def get_receptor_sets(self):
         'Returns a dictionary of receptor sets, or None in case of network errors'
-        self.plugin.log('get_receptor_sets()', user='dev')
+        self._log('get_receptor_sets()')
         end_points = {
             '7': 'receptorSets'
         }
@@ -381,7 +391,7 @@ class AeriusConnection():
 
     def post_receptor_set(self, gml_fn, name, description=''):
         '''Posts a new receptor set'''
-        self.plugin.log('post_receptor_set()', user='dev')
+        self._log('post_receptor_set()')
         end_points = {
             '7': 'receptorSets'
         }
@@ -403,7 +413,7 @@ class AeriusConnection():
         return response
 
     def delete_receptor_set(self, name):
-        self.plugin.log('delete_receptor_set()', user='dev')
+        self._log('delete_receptor_set()')
         api_function = f'receptorSets/{name}'
 
         response = self.run_request(api_function, 'DELETE')
@@ -411,7 +421,7 @@ class AeriusConnection():
         return response
 
     def post_validate(self, gml_fn):
-        self.plugin.log('post_validate()', user='dev')
+        self._log('post_validate()')
         end_points = {
             '7': 'utility/validate'
         }
