@@ -6,7 +6,10 @@ from qgis.PyQt import uic
 from qgis.PyQt.QtWidgets import (
     QDialog,
     QTableWidgetItem,
-    QMessageBox
+    QMessageBox,
+    QComboBox,
+    QPushButton,
+    QLineEdit
 )
 from qgis.PyQt.QtCore import Qt
 
@@ -27,18 +30,23 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.plugin = plugin
         self.iface = plugin.iface
 
+        self.data_widget_matrix = self.get_data_widget_matrix()
         self.init_gui()
 
     def init_gui(self):
-        self.button_gml_input_browse.clicked.connect(self.browse_gml_file)
-        self.button_validate.clicked.connect(self.validate)
+        for widget in self.get_data_widgets_by_base_name('button_gml_input_browse'):
+            widget.clicked.connect(self.browse_gml_file)
+        for widget in self.get_data_widgets_by_base_name('button_validate'):
+            widget.clicked.connect(self.validate)
         self.button_calculate.clicked.connect(self.calculate)
+
         self.button_get_jobs.clicked.connect(self.get_jobs)
         self.button_cancel.clicked.connect(self.cancel_jobs)
         self.button_delete.clicked.connect(self.delete_jobs)
         self.button_download.clicked.connect(self.download_jobs)
 
-        self.edit_gml_input.textChanged.connect(self.update_widgets)
+        for widget in self.get_data_widgets_by_base_name('edit_gml_input'):
+            widget.textChanged.connect(self.update_widgets)
         self.combo_calc_type.currentTextChanged.connect(self.update_widgets)
         self.table_jobs.itemSelectionChanged.connect(self.update_widgets)
 
@@ -47,15 +55,19 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.get_jobs()
 
     def __del__(self):
-        self.button_gml_input_browse.clicked.disconnect(self.browse_gml_file)
-        self.button_validate.clicked.disconnect(self.validate)
+        for widget in self.get_data_widgets_by_base_name('button_gml_input_browse'):
+            widget.clicked.disconnect(self.browse_gml_file)
+        for widget in self.get_data_widgets_by_base_name('button_validate'):
+            widget.clicked.disconnect(self.validate)
         self.button_calculate.clicked.disconnect(self.calculate)
+
         self.button_get_jobs.clicked.disconnect(self.get_jobs)
         self.button_cancel.clicked.disconnect(self.cancel_jobs)
         self.button_delete.clicked.disconnect(self.delete_jobs)
         self.button_download.clicked.disconnect(self.download_jobs)
 
-        self.edit_gml_input.textChanged.disconnect(self.update_widgets)
+        for widget in self.get_data_widgets_by_base_name('edit_gml_input'):
+            widget.textChanged.disconnect(self.update_widgets)
         self.combo_calc_type.currentTextChanged.disconnect(self.update_widgets)
         self.table_jobs.itemSelectionChanged.disconnect(self.update_widgets)
 
@@ -73,7 +85,8 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             # self.text_feedback.setText(txt)
 
     def validate(self):
-        gml_fn = self.edit_gml_input.text()
+        related_widgets = self.get_related_data_widgets(self.sender())
+        gml_fn = related_widgets['edit_gml_input'].text()
 
         QgsApplication.setOverrideCursor(Qt.WaitCursor)
         result = self.plugin.aerius_connection.post_validate(gml_fn)
@@ -229,21 +242,53 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
                         self.plugin.run_import_calc_result(gml_fn=gml_fn)
         QgsApplication.restoreOverrideCursor()
 
-    def set_fixed_options(self):
-        # data
-        for item in ui_settings['project_years']:
-            self.combo_year.addItem(item, item)
-        self.combo_year.setCurrentText(ui_settings['project_default_year'])
+    def get_data_widget_matrix(self):
+        '''Creates a matrix with all data widgets, for quickly finding related widgets.'''
+        widget_types = [
+            {'base_name': 'combo_situation', 'type': QComboBox},
+            {'base_name': 'combo_year', 'type': QComboBox},
+            {'base_name': 'edit_gml_input', 'type': QLineEdit},
+            {'base_name': 'button_gml_input_browse', 'type': QPushButton},
+            {'base_name': 'button_validate', 'type': QPushButton},
+        ]
+        result = {}
+        for i in range(1, 7): #  There are 6 rows of emission data widgets
+            result[i] = {}
+            for widget_type in widget_types:
+                widget_name = '{}_{}'.format(widget_type['base_name'], i)
+                widget = self.findChild(widget_type['type'], widget_name)
+                result[i][widget_type['base_name']] = widget
+        return result
 
-        # calcuation
-        # self.edit_name.setText(ui_settings['situation_name'])
-        for item in ui_settings['situation_types']:
-            self.combo_situation.addItem(item, item)
+    def get_related_data_widgets(self, source_widget):
+        '''Returns all data widgets in the same row.'''
+        widget_number = source_widget.objectName()[-1:]
+        return self.data_widget_matrix[int(widget_number)]
+
+    def get_data_widgets_by_base_name(self, base_name):
+        '''Returns all data widgets of the same type.'''
+        result = []
+        for k, v in self.data_widget_matrix.items():
+            result.append(v[base_name])
+        return result
+
+    def set_fixed_options(self):
+        # emission data
+        for widget in self.get_data_widgets_by_base_name('combo_year'):
+            for item in ui_settings['project_years']:
+                widget.addItem(item, item)
+            widget.setCurrentText(ui_settings['project_default_year'])
+
+        for widget in self.get_data_widgets_by_base_name('combo_situation'):
+            for item in ui_settings['situation_types']:
+                widget.addItem(item, item)
 
     def update_widgets(self):
-        """logic for widget behaviour"""
-        if not self.edit_gml_input.text():
-            self.button_validate.setEnabled(False)
+        """Logic for widget behaviour"""
+        print('update_widgets()')
+        return #  For now, while WIP on the dialog.
+        if not self.edit_gml_input_1.text():
+            self.button_validate_1.setEnabled(False)
             self.button_calculate.setEnabled(False)
         else:
             self.button_validate.setEnabled(True)
@@ -297,4 +342,5 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
     def browse_gml_file(self):
         gml_fn, filter = self.plugin.calc_input_file_dialog.getOpenFileName(caption="Input GML file", filter='*.gml', parent=self)
         self.plugin.log(gml_fn, filter)
-        self.edit_gml_input.setText(gml_fn)
+        related_widgets = self.get_related_data_widgets(self.sender())
+        related_widgets['edit_gml_input'].setText(gml_fn)
