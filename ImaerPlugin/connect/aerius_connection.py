@@ -56,7 +56,7 @@ class AeriusConnection():
             self.server_is_ok,
             self.api_key_is_ok,
             self.connection_info,
-            self.dev
+            self.user
         )
 
     def _log(self, msg):
