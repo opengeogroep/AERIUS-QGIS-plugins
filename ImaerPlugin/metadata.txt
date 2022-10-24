@@ -43,6 +43,9 @@ tags=imaer,aerius,calculator,connect,gml,stikstof
 category=Plugins
 icon=img/icon_import_calc_result.svg
 
+# processing provider flag
+hasProcessingProvider=yes
+
 # experimental flag
 experimental=False
 

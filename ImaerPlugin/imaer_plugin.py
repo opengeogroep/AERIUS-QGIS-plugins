@@ -37,6 +37,9 @@ from ImaerPlugin.tasks import (
     ImportImaerCalculatorResultTask,
     ExportImaerCalculatorResultTask,
     ExtractGmlFromPdfTask)
+
+from ImaerPlugin.algs.provider import ImaerProvider
+
 from ImaerPlugin.generate_calc_input import GenerateCalcInputDialog
 from ImaerPlugin.configuration import ConfigurationDialog
 from ImaerPlugin.connect_receptorsets import ConnectReceptorSetsDialog
@@ -62,6 +65,7 @@ class ImaerPlugin:
         self.plugin_dir = os.path.dirname(__file__)
         self.download_dir = QStandardPaths.writableLocation(QStandardPaths.DownloadLocation)
         self.task_manager = QgsApplication.taskManager()
+        self.provider = None
         self.imaer_calc_layers = {}
         self.settings = QgsSettings()
 
@@ -166,11 +170,20 @@ class ImaerPlugin:
         # Widget update logic
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
         self.update_all_widgets()
+        self.initProcessing()
+
+    def initProcessing(self):
+        self.log('initProcessing()')
+        self.provider = ImaerProvider()
+        QgsApplication.processingRegistry().addProvider(self.provider)
 
     def unload(self):
         '''Removes all plugin widgets and connections'''
         # Clean up connections
         self.iface.mapCanvas().currentLayerChanged.disconnect(self.update_export_calc_widgets)
+
+        # Remove processing provider
+        QgsApplication.processingRegistry().removeProvider(self.provider)
 
         # Clean up actions and toolbar
         for action_config in self.action_configuration:
