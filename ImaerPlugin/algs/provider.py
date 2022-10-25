@@ -3,17 +3,15 @@ import os
 from qgis.PyQt.QtGui import QIcon
 from qgis.core import QgsProcessingProvider
 
-from .example_processing_algorithm import ExampleProcessingAlgorithm
 from .relate_difference import RelateDifferenceAlgorithm
+from .relate_sum import RelateSumAlgorithm
 
 
 class ImaerProvider(QgsProcessingProvider):
 
     def loadAlgorithms(self, *args, **kwargs):
-        self.addAlgorithm(ExampleProcessingAlgorithm())
         self.addAlgorithm(RelateDifferenceAlgorithm())
-        # add additional algorithms here
-        # self.addAlgorithm(MyOtherAlgorithm())
+        self.addAlgorithm(RelateSumAlgorithm())
 
     def id(self, *args, **kwargs):
         """The ID of your plugin, used for identifying the provider.
