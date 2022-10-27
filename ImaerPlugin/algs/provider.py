@@ -31,6 +31,7 @@ class ImaerProvider(QgsProcessingProvider):
         """Should return a QIcon which is used for your provider inside
         the Processing toolbox.
         """
-        icon_fn = os.path.join('home', 'raymond', 'git', 'AERIUS-QGIS-plugins', 'ImaerPlugin', 'img', 'icon_import_calc_result.svg')
+        plugin_dir = os.path.dirname(os.path.dirname(__file__))
+        icon_fn = os.path.join(plugin_dir, 'img', 'icon_import_calc_result.svg')
         icon = QIcon(icon_fn)
         return icon
