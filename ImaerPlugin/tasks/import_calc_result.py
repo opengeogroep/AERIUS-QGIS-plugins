@@ -1,7 +1,7 @@
 import os
 import xml.etree.ElementTree as ET
 
-from qgis.PyQt.QtCore import QVariant
+from qgis.PyQt.QtCore import QVariant, QFile
 from qgis.core import (
     Qgis,
     QgsTask,
@@ -21,6 +21,16 @@ from qgis.core import (
 _IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX']
 _SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1', '4.0', '5.0', '5.1']
 _EDGE_EFFECT_VALUES = {'false': 0, 'true': 1}
+
+
+class GpkgFileExists(Exception):
+
+    def __init__(self, message):
+        self.message = message
+        super().__init__(message)
+
+    def __str__(self):
+        return self.message
 
 
 class ImportImaerCalculatorResultTask(QgsTask):
@@ -71,12 +81,14 @@ class ImportImaerCalculatorResultTask(QgsTask):
                         feature_member_tag = '{{{0}}}featureMember'.format(elem[1])
                         receptor_point_tag = '{{{0}}}ReceptorPoint'.format(elem[1])
                         calculation_point_tag = '{{{0}}}CalculationPoint'.format(elem[1])
-                        epsg = self.settings.value('imaer_plugin/crs', defaultValue=None)
-                        if epsg is None:
+                        epsg_id = self.settings.value('imaer_plugin/crs', defaultValue=None)
+                        if epsg_id is None:
                             self.log("No crs has been selected by the user")
                             self.exception = Exception(f'No crs has been selected by the user in the Configure options')
                             return False
-                        self.create_gpkg(epsg)
+                        if isinstance(epsg_id, str):
+                            epsg_id = int(epsg_id)
+                        self.create_gpkg(epsg_id)
                         receptors_layer = QgsVectorLayer(self.gpkg_fn, 'receptors', 'ogr')
                         receptors_layer.startEditing()
 
@@ -117,12 +129,14 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
     def finished(self, result):
         self.log('finished task')
+        self.log(result)
         # self.conn.close()
         if result:
             self.log(
                 'ImaerResultToGpkgTask "{name}" completed'.format(name=self.description()))
             self.load_layer_callback(self.gpkg_fn, feat_cnt=self.feat_cnt, rp_without_geom_cnt=self.rp_without_geom_cnt)
         else:
+            self.log(self.exception)
             if self.exception is None:
                 self.log(
                     'Task "{name}" not successful but without '
@@ -138,14 +152,13 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
     def cancel(self):
         self.log(
-            'Task "{name}" was canceled'.format(
-                name=self.description()))
+            'Task "{name}" was canceled'.format(name=self.description()))
         # TODO delete gpkg file
         super().cancel()
 
     def log(self, message, tab='Imaer'):
         if self.do_log:
-            QgsMessageLog.logMessage(str(message), tab, level=Qgis.Info)
+            QgsMessageLog.logMessage(repr(message), tab, level=Qgis.Info)
 
     def get_imaer_version(self, ns_url):
         url_parts = ns_url.split('/')
@@ -154,8 +167,21 @@ class ImportImaerCalculatorResultTask(QgsTask):
         return version_str
 
     def create_gpkg(self, epsg_id):
+        self.log(epsg_id)
+        gpkg_file = QFile(self.gpkg_fn)
+        if gpkg_file.exists():
+            self.exception = GpkgFileExists(f'Gpkg file already exists: {self.gpkg_fn}')
+            self.cancel()
+            return
+
         md = QgsProviderRegistry.instance().providerMetadata('ogr')
+        if Qgis.QGIS_VERSION_INT >= 32800:
+            cdb_result = md.createDatabase(self.gpkg_fn)
+            self.log(cdb_result)
+            if not cdb_result[0]: # Is false if db could not be created
+                self.log(cdb_result[1])
         self.conn = md.createConnection(self.gpkg_fn, {})
+        #self.log(self.conn)
 
         fields = QgsFields()
         fields.append(QgsField('key', QVariant.String))
