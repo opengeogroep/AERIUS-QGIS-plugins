@@ -59,7 +59,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             #self.combo_situation_1.setCurrentText('REFERENCE')
             #self.combo_situation_2.setCurrentText('REFERENCE')
             self.combo_year_1.setCurrentText('2022')
-            self.combo_year_1.setCurrentText('2023')
+            self.combo_year_2.setCurrentText('2023')
 
         self.update_widgets()
         self.get_jobs()

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1204</width>
-    <height>645</height>
+    <height>654</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QGroupBox" name="group_calculation">
      <property name="title">
-      <string>Calculation</string>
+      <string>Calculation Options</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
@@ -64,10 +64,10 @@
       <item row="4" column="0">
        <widget class="QCheckBox" name="checkBox_send_email">
         <property name="toolTip">
-         <string>Send email when calculation is ready</string>
+         <string>Send e-mail when calculation has finished</string>
         </property>
         <property name="text">
-         <string>Send email when finished</string>
+         <string>Send e-mail when calculation has finished</string>
         </property>
        </widget>
       </item>
@@ -77,7 +77,7 @@
    <item>
     <widget class="QGroupBox" name="group_emission">
      <property name="title">
-      <string>Emission Data</string>
+      <string>Files</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="3" column="0">
@@ -243,7 +243,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_situation">
         <property name="text">
-         <string>Situation type</string>
+         <string>Scenario</string>
         </property>
        </widget>
       </item>
