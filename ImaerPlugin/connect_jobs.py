@@ -143,15 +143,12 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         msg_box.exec()
 
     def calculate(self):
-        gml_files = []
-        gml_file = {}
-        gml_file['gml_fn'] = self.edit_gml_input.text()
-        gml_file['situation'] = self.combo_situation.currentText()
-        gml_files.append(gml_file)
+        gml_files = self.get_calculation_files()
+        # print(gml_files)
 
         user_options = {}
         user_options['name'] = self.edit_name.text()
-        user_options['calculationYear'] = int(self.combo_year.currentText())
+        user_options['calculationYear'] = int(self.combo_year_1.currentText())
         user_options['outputType'] = 'GML'  # GML or PDF
         user_options['calculationPointsType'] = self.combo_calc_type.currentText()
         if user_options['calculationPointsType'] == 'CUSTOM_POINTS':
@@ -354,3 +351,26 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.plugin.log(gml_fn, filter)
         related_widgets = self.get_related_data_widgets(self.sender())
         related_widgets['edit_gml_input'].setText(gml_fn)
+
+    def gml_file_exists(self, fn):
+        if os.path.exists(fn):
+            return True
+        else:
+            return False
+
+    def get_calculation_files(self):
+        result = []
+        for widget in self.get_data_widgets_by_base_name('edit_gml_input'):
+            #print(widget)
+            #print(widget.text())
+            #print(self.gml_file_exists(widget.text()))
+            if self.gml_file_exists(widget.text()):
+                calc_file = {}
+                calc_file['gml_fn'] = widget.text()
+                related_widgets = self.get_related_data_widgets(widget)
+                #print(related_widgets)
+                calc_file['situation'] = related_widgets['combo_situation'].currentData()
+                calc_file['year'] = related_widgets['combo_year'].currentData()
+                #print(calc_file)
+                result.append(calc_file)
+        return result

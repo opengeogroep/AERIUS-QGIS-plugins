@@ -334,9 +334,9 @@ class AeriusConnection():
         '''Start a new calculation'''
         self._log('post_calculate()')
 
-        # For now this only works on 1 GML input file
-        if not len(gml_files) == 1:
-            return
+        if len(gml_files) == 1:
+            pass
+            #return
 
         end_points = {
             '7': 'wnb/calculate'
@@ -349,24 +349,27 @@ class AeriusConnection():
         # update default options with user options
         options.update(user_options)
 
+        files = []
+        file_parts = []
         # print(options)
+        for gml_file in gml_files[:1]:
+            gml_fn = gml_file['gml_fn']
+            situation = gml_file['situation']
+            year = gml_file['year']
 
-        gml_fn = gml_files[0]['gml_fn']
-        situation = gml_files[0]['situation']
-
-        base_name = QFileInfo(gml_fn).fileName()
-        # print(base_name)
+            base_name = QFileInfo(gml_fn).fileName()
+            # print(base_name)
+            files.append({'fileName': base_name, 'situation': situation, 'calculationYear': year})
+            file_parts.append({'name': 'fileParts', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
+            # file_parts.append({'name': 'fileParts', 'file_name': gml_fn, 'file_type': 'application/zip'})
 
         text_parts = [
             {'header': 'options', 'body': options},
-            {'header': 'files', 'body': [{'fileName': base_name, 'situation': situation}]}
+            {'header': 'files', 'body': files}
         ]
 
-        file_parts = []
-        file_parts.append({'name': 'fileParts', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
-        # file_parts.append({'name': 'fileParts', 'file_name': gml_fn, 'file_type': 'application/zip'})
-
-        # print(file_parts)
+        print(files)
+        print(file_parts)
 
         response = self.run_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
         return response
