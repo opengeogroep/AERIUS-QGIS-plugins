@@ -51,6 +51,16 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.table_jobs.itemSelectionChanged.connect(self.update_widgets)
 
         self.set_fixed_options()
+
+        if self.plugin.dev:
+            gml_file = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input/calcinput_20210930_130723.gml'
+            self.edit_gml_input_1.setText(gml_file)
+            self.edit_gml_input_2.setText(gml_file)
+            #self.combo_situation_1.setCurrentText('REFERENCE')
+            #self.combo_situation_2.setCurrentText('REFERENCE')
+            self.combo_year_1.setCurrentText('2022')
+            self.combo_year_1.setCurrentText('2023')
+
         self.update_widgets()
         self.get_jobs()
 
