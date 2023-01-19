@@ -134,7 +134,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         # situation
         self.edit_situation_name.setText(ui_settings['situation_name'])
-        for item in ui_settings['situation_types']:
+        for item in ui_settings['situation_types_gml']:
             self.combo_situation_type.addItem(item, item)
 
     def set_emission_tab(self):

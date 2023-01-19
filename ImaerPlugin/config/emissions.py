@@ -21,7 +21,8 @@ ui_settings = {
         2040],
     'project_default_year': 2023,
     'situation_name': 'Situation 1',
-    'situation_types': ['REFERENCE', 'PROPOSED', 'TEMPORARY'], #'NETTING'],
+    'situation_types_connect': ['REFERENCE', 'PROPOSED', 'TEMPORARY'],
+    'situation_types_gml': ['REFERENCE', 'PROPOSED', 'TEMPORARY', 'NETTING'],
     'countries': ['NL', 'UK'],
     'imaer_versions': ['4.0', '5.0'],
     'crs': [

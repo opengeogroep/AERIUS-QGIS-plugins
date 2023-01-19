@@ -282,7 +282,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
     def set_fixed_options(self):
         # File situations
         for widget in self.get_data_widgets_by_base_name('combo_situation'):
-            for item in ui_settings['situation_types']:
+            for item in ui_settings['situation_types_connect']:
                 widget.addItem(item, item)
 
         # File years
