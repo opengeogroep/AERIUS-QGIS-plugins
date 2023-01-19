@@ -56,8 +56,8 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             gml_file = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input/calcinput_20210930_130723.gml'
             self.edit_gml_input_1.setText(gml_file)
             self.edit_gml_input_2.setText(gml_file)
-            #self.combo_situation_1.setCurrentText('REFERENCE')
-            #self.combo_situation_2.setCurrentText('REFERENCE')
+            # self.combo_situation_1.setCurrentText('REFERENCE')
+            # self.combo_situation_2.setCurrentText('REFERENCE')
             self.combo_year_1.setCurrentText('2022')
             self.combo_year_2.setCurrentText('2023')
 
@@ -259,7 +259,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             {'base_name': 'button_validate', 'type': QPushButton},
         ]
         result = {}
-        for i in range(1, 7): #  There are 6 rows of emission data widgets
+        for i in range(1, 7):  # There are 6 rows of emission data widgets
             result[i] = {}
             for widget_type in widget_types:
                 widget_name = '{}_{}'.format(widget_type['base_name'], i)
@@ -280,21 +280,21 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         return result
 
     def set_fixed_options(self):
-        # emission data
-        for widget in self.get_data_widgets_by_base_name('combo_year'):
-            for item in ui_settings['project_years']:
-                widget.addItem(str(item), item)
-                year_index = widget.findData(ui_settings['project_default_year'])
-                widget.setCurrentIndex(year_index)
-
+        # File situations
         for widget in self.get_data_widgets_by_base_name('combo_situation'):
             for item in ui_settings['situation_types']:
                 widget.addItem(item, item)
 
+        # File years
+        for widget in self.get_data_widgets_by_base_name('combo_year'):
+            widget.addItem('', None)
+            for item in ui_settings['project_years']:
+                widget.addItem(str(item), item)
+
     def update_widgets(self):
         """Logic for widget behaviour"""
         print('update_widgets()')
-        return #  For now, while WIP on the dialog.
+        return  # For now, while WIP on the dialog.
         if not self.edit_gml_input_1.text():
             self.button_validate_1.setEnabled(False)
             self.button_calculate.setEnabled(False)
@@ -362,16 +362,11 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
     def get_calculation_files(self):
         result = []
         for widget in self.get_data_widgets_by_base_name('edit_gml_input'):
-            #print(widget)
-            #print(widget.text())
-            #print(self.gml_file_exists(widget.text()))
             if self.gml_file_exists(widget.text()):
                 calc_file = {}
                 calc_file['gml_fn'] = widget.text()
                 related_widgets = self.get_related_data_widgets(widget)
-                #print(related_widgets)
                 calc_file['situation'] = related_widgets['combo_situation'].currentData()
                 calc_file['year'] = related_widgets['combo_year'].currentData()
-                #print(calc_file)
                 result.append(calc_file)
         return result

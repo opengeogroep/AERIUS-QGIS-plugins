@@ -354,12 +354,15 @@ class AeriusConnection():
         # print(options)
         for gml_file in gml_files:
             gml_fn = gml_file['gml_fn']
-            situation = gml_file['situation']
-            year = gml_file['year']
-
             base_name = QFileInfo(gml_fn).fileName()
-            # print(base_name)
-            files.append({'fileName': base_name, 'situation': situation, 'calculationYear': year})
+
+            file_dict = {'fileName': base_name}
+            if gml_file['situation'] is not None:
+                file_dict['situation'] = gml_file['situation']
+            if gml_file['year'] is not None:
+                file_dict['calculationYear'] = gml_file['year']
+
+            files.append(file_dict)
             file_parts.append({'name': 'fileParts', 'file_name': gml_fn, 'file_type': 'application/gml+xml'})
             # file_parts.append({'name': 'fileParts', 'file_name': gml_fn, 'file_type': 'application/zip'})
 
