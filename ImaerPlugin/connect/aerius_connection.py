@@ -316,7 +316,6 @@ class AeriusConnection():
         manager.finished.connect(self.download_zip_handler)
         manager.get(request)
 
-
     def download_zip_handler(self, reply):
         print(reply)
 
@@ -333,10 +332,6 @@ class AeriusConnection():
     def post_calculate(self, gml_files, user_options={}):
         '''Start a new calculation'''
         self._log('post_calculate()')
-
-        if len(gml_files) == 1:
-            pass
-            #return
 
         end_points = {
             '7': 'wnb/calculate'

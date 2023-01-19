@@ -178,10 +178,10 @@ class ImportImaerCalculatorResultTask(QgsTask):
         if Qgis.QGIS_VERSION_INT >= 32800:
             cdb_result = md.createDatabase(self.gpkg_fn)
             self.log(cdb_result)
-            if not cdb_result[0]: # Is false if db could not be created
+            if not cdb_result[0]:  # Is false if db could not be created
                 self.log(cdb_result[1])
         self.conn = md.createConnection(self.gpkg_fn, {})
-        #self.log(self.conn)
+        # self.log(self.conn)
 
         fields = QgsFields()
         fields.append(QgsField('key', QVariant.String))

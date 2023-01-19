@@ -204,7 +204,7 @@ class ImaerPlugin:
             self.log(gml_fn)
 
         if os.path.exists(os.path.dirname(gml_fn)):
-            gpkg_fn = gml_fn.replace('.gml', '.gpkg') # TODO change extension in a proper way
+            gpkg_fn = gml_fn.replace('.gml', '.gpkg')  # TODO change extension in a proper way
 
             if os.path.exists(gpkg_fn):
                 self.log(f'Gpkg file already exists: {gpkg_fn}', lvl='Warning', bar=True, duration=5)
