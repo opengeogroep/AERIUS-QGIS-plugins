@@ -352,7 +352,7 @@ class AeriusConnection():
         files = []
         file_parts = []
         # print(options)
-        for gml_file in gml_files[:1]:
+        for gml_file in gml_files:
             gml_fn = gml_file['gml_fn']
             situation = gml_file['situation']
             year = gml_file['year']

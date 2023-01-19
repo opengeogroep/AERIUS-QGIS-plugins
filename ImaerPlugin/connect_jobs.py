@@ -283,8 +283,9 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         # emission data
         for widget in self.get_data_widgets_by_base_name('combo_year'):
             for item in ui_settings['project_years']:
-                widget.addItem(item, item)
-            widget.setCurrentText(ui_settings['project_default_year'])
+                widget.addItem(str(item), item)
+                year_index = widget.findData(ui_settings['project_default_year'])
+                widget.setCurrentIndex(year_index)
 
         for widget in self.get_data_widgets_by_base_name('combo_situation'):
             for item in ui_settings['situation_types']:

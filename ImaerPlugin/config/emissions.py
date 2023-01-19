@@ -14,12 +14,12 @@ emission_sectors = {
 
 ui_settings = {
     'project_years': [
-        '2020', '2021', '2022', '2023', '2024',
-        '2025', '2026', '2027', '2028', '2029',
-        '2030', '2031', '2032', '2033', '2034',
-        '2035', '2036', '2037', '2038', '2039',
-        '2040'],
-    'project_default_year': '2023',
+        2020, 2021, 2022, 2023, 2024,
+        2025, 2026, 2027, 2028, 2029,
+        2030, 2031, 2032, 2033, 2034,
+        2035, 2036, 2037, 2038, 2039,
+        2040],
+    'project_default_year': 2023,
     'situation_name': 'Situation 1',
     'situation_types': ['REFERENCE', 'PROPOSED', 'TEMPORARY'], #'NETTING'],
     'countries': ['NL', 'UK'],
