@@ -6,7 +6,7 @@ from .gml import get_gml_element
 
 class EmissionSourceType(object):
 
-    def __init__(self, *, local_id, sector_id, geom, label=None, description=None):
+    def __init__(self, *, local_id, sector_id, geom, epsg_id, label=None, description=None):
         self.label = label
         self.description = description
         self.emission_source_characteristics = None
@@ -14,6 +14,7 @@ class EmissionSourceType(object):
         self.building = None
         self.emissions = []
         self.geometry = geom
+        self.epsg_id = epsg_id
         self.local_id = local_id
 
     def to_xml_elem(self, doc=QDomDocument()):
@@ -66,7 +67,7 @@ class EmissionSourceType(object):
         gml_type = gml_types[self.geometry.type()]
 
         gm_elem = doc.createElement(f'imaer:{gm_tag}')
-        gml_elem = get_gml_element(self.geometry, f'{self.local_id}.{gml_type}')
+        gml_elem = get_gml_element(self.geometry, f'{self.local_id}.{gml_type}', self.epsg_id)
 
         gm_elem.appendChild(gml_elem)
         es_geom_elem.appendChild(gm_elem)

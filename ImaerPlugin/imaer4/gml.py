@@ -3,7 +3,7 @@ from PyQt5.QtXml import QDomDocument
 from qgis.core import QgsOgcUtils
 
 
-def get_gml_element(geom, gml_id_base, epsg_id=28992):
+def get_gml_element(geom, gml_id_base, epsg_id):
     doc = QDomDocument()
     ogc_utils = QgsOgcUtils()
     version = QgsOgcUtils.GML_3_2_1

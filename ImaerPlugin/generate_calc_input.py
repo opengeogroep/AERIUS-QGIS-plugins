@@ -187,6 +187,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         input_layer = self.combo_layer.currentLayer()
         crs_source = input_layer.crs()
         crs_dest_srid = self.combo_crs.currentData()
+        print(crs_dest_srid)
         crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
         if crs_source == crs_dest:
             crs_transform = None
@@ -206,15 +207,16 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 return
             geom = geom2
 
+            # TODO: Check for invalid geometries
+
             if crs_transform is not None:
                 geom.transform(crs_transform)
 
             sector_name = self.combo_sector.currentText()
-            # print(sector_name)
             if sector_name == 'OTHER':
-                es = self.get_emission_source_from_gui(feat, geom, local_id)
+                es = self.get_emission_source_from_gui(feat, geom, crs_dest_srid, local_id)
             elif sector_name == 'ROAD_TRANSPORTATION':
-                es = self.get_srm2_road_from_gui(feat, geom, local_id)
+                es = self.get_srm2_road_from_gui(feat, geom, crs_dest_srid, local_id)
             else:
                 raise Exception('Invalid sector')
 
@@ -224,12 +226,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         return imaer_doc
 
     # Emission Source
-    def get_emission_source_from_gui(self, feat, geom, local_id):
+    def get_emission_source_from_gui(self, feat, geom, epsg_id, local_id):
         sector_id = self.get_feature_value(self.fcb_es_sector_id, feat)
         label = self.get_feature_value(self.fcb_es_label, feat)
         description = self.get_feature_value(self.fcb_es_description, feat)
 
-        es = EmissionSource(local_id=local_id, sector_id=sector_id, label=label, geom=geom)
+        es = EmissionSource(local_id=local_id, sector_id=sector_id, label=label, geom=geom, epsg_id=epsg_id)
         es.description = description
 
         # emission source characteristics
@@ -261,11 +263,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         return es
 
     # SRM2Road
-    def get_srm2_road_from_gui(self, feat, geom, local_id):
+    def get_srm2_road_from_gui(self, feat, geom, epsg_id, local_id):
         sector_id = self.get_feature_value(self.fcb_rd_sector_id, feat)
         label = self.get_feature_value(self.fcb_rd_label, feat)
 
-        es = SRM2Road(local_id=local_id, sector_id=sector_id, label=label, geom=geom, is_freeway=True)
+        es = SRM2Road(local_id=local_id, sector_id=sector_id, label=label, geom=geom, epsg_id=epsg_id, is_freeway=True)
         es.description = self.get_feature_value(self.fcb_rd_description, feat)
 
         es.tunnel_factor = self.get_feature_value(self.fcb_rd_tunnel_factor, feat)
