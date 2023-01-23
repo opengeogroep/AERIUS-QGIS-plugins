@@ -64,10 +64,13 @@
       <item row="4" column="0">
        <widget class="QCheckBox" name="checkBox_send_email">
         <property name="toolTip">
-         <string>Send e-mail when calculation has finished</string>
+         <string>Send e-mail when calculation is completed</string>
         </property>
         <property name="text">
-         <string>Send e-mail when calculation has finished</string>
+         <string>Send e-mail when calculation is completed</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
