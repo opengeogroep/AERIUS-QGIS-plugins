@@ -366,8 +366,11 @@ class AeriusConnection():
             {'header': 'files', 'body': files}
         ]
 
-        print(files)
-        print(file_parts)
+        for f in files:
+            print(f)
+        for fp in file_parts:
+            pass
+            # print(fp)
 
         response = self.run_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
         return response

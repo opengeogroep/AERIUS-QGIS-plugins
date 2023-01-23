@@ -31,6 +31,12 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.iface = plugin.iface
 
         self.data_widget_matrix = self.get_data_widget_matrix()
+
+        # Get default edit bg color to mark and unmark widgets
+        line_edit_color = self.edit_gml_input_1.palette().base().color()
+        self.line_edit_style_normal = 'QLineEdit {{background-color: {0};}}'.format(line_edit_color.name())
+        self.line_edit_style_correct = 'QLineEdit {background-color: rgba(235, 255, 230, 255);}'
+
         self.init_gui()
 
     def init_gui(self):
@@ -57,7 +63,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             self.edit_gml_input_1.setText(gml_file)
             self.edit_gml_input_2.setText(gml_file)
             # self.combo_situation_1.setCurrentText('REFERENCE')
-            # self.combo_situation_2.setCurrentText('REFERENCE')
+            # self.combo_situation_2.setCurrentText('PROPOSED')
             self.combo_year_1.setCurrentText('2022')
             self.combo_year_2.setCurrentText('2023')
 
@@ -148,7 +154,6 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
         user_options = {}
         user_options['name'] = self.edit_name.text()
-        user_options['calculationYear'] = int(self.combo_year_1.currentText())
         user_options['outputType'] = 'GML'  # GML or PDF
         user_options['calculationPointsType'] = self.combo_calc_type.currentText()
         if user_options['calculationPointsType'] == 'CUSTOM_POINTS':
@@ -292,18 +297,14 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
                 widget.addItem(str(item), item)
 
     def update_widgets(self):
-        """Logic for widget behaviour"""
+        '''Logic for widget behaviour'''
         print('update_widgets()')
-        return  # For now, while WIP on the dialog.
-        if not self.edit_gml_input_1.text():
-            self.button_validate_1.setEnabled(False)
-            self.button_calculate.setEnabled(False)
-        else:
-            self.button_validate.setEnabled(True)
+
+        receptors_ok = False
         if self.combo_calc_type.currentText() == 'WNB_RECEPTORS':
             self.plugin.log('wnb_receptors', user='dev')
             self.combo_receptor_set.clear()
-            self.button_calculate.setEnabled(True)
+            receptors_ok = True
             self.label_receptor_set.setEnabled(False)
             self.combo_receptor_set.setEnabled(False)
         elif self.combo_calc_type.currentText() == 'CUSTOM_POINTS':
@@ -312,9 +313,14 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             self.label_receptor_set.setEnabled(True)
             self.combo_receptor_set.setEnabled(True)
             if self.combo_receptor_set.currentText():
-                self.button_calculate.setEnabled(True)
+                receptors_ok = True
             else:
-                self.button_calculate.setEnabled(False)
+                receptors_ok = False
+
+        if len(self.get_calculation_files()) > 0 and receptors_ok:
+            self.button_calculate.setEnabled(True)
+        else:
+            self.button_calculate.setEnabled(False)
 
         items = self.table_jobs.selectedItems()
 
@@ -354,19 +360,26 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         related_widgets['edit_gml_input'].setText(gml_fn)
 
     def gml_file_exists(self, fn):
-        if os.path.exists(fn):
+        # Checks if a filename points to an existing real file. TODO: Check gml extension and file content?
+        if os.path.exists(fn) and os.path.isfile(fn):
             return True
         else:
             return False
 
-    def get_calculation_files(self):
+    def get_calculation_files(self, update_widgets=True):
         result = []
         for widget in self.get_data_widgets_by_base_name('edit_gml_input'):
+            widget.setStyleSheet(self.line_edit_style_normal)  # Always set to normal first
+            related_widgets = self.get_related_data_widgets(widget)
             if self.gml_file_exists(widget.text()):
                 calc_file = {}
                 calc_file['gml_fn'] = widget.text()
-                related_widgets = self.get_related_data_widgets(widget)
                 calc_file['situation'] = related_widgets['combo_situation'].currentData()
                 calc_file['year'] = related_widgets['combo_year'].currentData()
                 result.append(calc_file)
+                if update_widgets:
+                    widget.setStyleSheet(self.line_edit_style_correct)  # Mark green
+                    related_widgets['button_validate'].setEnabled(True)
+            else:
+                related_widgets['button_validate'].setEnabled(False)
         return result
