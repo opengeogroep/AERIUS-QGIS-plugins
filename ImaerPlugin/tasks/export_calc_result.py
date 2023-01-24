@@ -12,7 +12,7 @@ from .. task_timer import TaskTimer
 
 
 _IMAER_DEPOSITION_SUBSTANCES = ['NH3', 'NOX']
-_SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1', '4.0', '5.0']
+_SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1', '4.0', '5.0', '5.1']
 _EDGE_EFFECT_VALUES = {0: 'false', 1: 'true'}
 
 tab = 'Imaer'
@@ -147,7 +147,7 @@ class ExportImaerCalculatorResultTask(QgsTask):
                 result += self.create_result_value_xml(substance, value)
 
         # Add edgeEffect info for IMAER >= 5.0
-        if self.imaer_version in ['5.0']:
+        if self.imaer_version in ['5.0', '5.1']:
             value = feat.attribute('edge_effect')
             if value in _EDGE_EFFECT_VALUES:
                 result += f'''
@@ -162,7 +162,7 @@ class ExportImaerCalculatorResultTask(QgsTask):
     def create_result_value_xml(self, substance, value):
         if self.imaer_version == '2.2':
             result_tag = 'Result'
-        elif self.imaer_version in ['3.1', '4.0', '5.0']:
+        elif self.imaer_version in ['3.1', '4.0', '5.0', '5.1']:
             result_tag = 'CalculationResult'
         result = f'''
             <imaer:result>
