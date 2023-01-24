@@ -31,7 +31,7 @@ from ImaerPlugin.config import (
     ui_settings
 )
 
-from ImaerPlugin.imaer4 import (
+from ImaerPlugin.imaer5 import (
     ImaerDocument,
     AeriusCalculatorMetadata,
     EmissionSourceType,

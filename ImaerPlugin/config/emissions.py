@@ -24,7 +24,7 @@ ui_settings = {
     'situation_types_connect': ['DEFINED_BY_FILE', 'REFERENCE', 'PROPOSED', 'TEMPORARY'],
     'situation_types_gml': ['REFERENCE', 'PROPOSED', 'TEMPORARY', 'NETTING'],
     'countries': ['NL', 'UK'],
-    'imaer_versions': ['4.0', '5.0'],
+    'imaer_versions': ['5.1'],
     'crs': [
         {'name': 'Amersfoort / RD New - Netherlands', 'srid': 28992},
         {'name': 'OSGB 1936 / British National Grid', 'srid': 27700}
