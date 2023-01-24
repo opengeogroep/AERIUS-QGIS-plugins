@@ -98,6 +98,9 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         result = self.plugin.aerius_connection.post_receptor_set(gml_fn, name, description)
         QgsApplication.restoreOverrideCursor()
 
+        # Doesn't work cause response is different from Calculate and Validate
+        # self.plugin.connect_jobs_dlg.handle_response_errors(result, 'receptor_set')
+
         if result is not None:
             self.get_receptor_sets()
 

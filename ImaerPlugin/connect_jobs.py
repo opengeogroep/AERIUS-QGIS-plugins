@@ -59,9 +59,10 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.set_fixed_options()
 
         if self.plugin.dev:
-            gml_file = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input/calcinput_20210930_130723.gml'
-            self.edit_gml_input_1.setText(gml_file)
-            self.edit_gml_input_2.setText(gml_file)
+            gml_file_valid = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input/calcinput_20210930_130723.gml'
+            gml_file_27700 = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input/calcinput_20230123_175328.gml'
+            self.edit_gml_input_1.setText(gml_file_valid)
+            self.edit_gml_input_2.setText(gml_file_27700)
             # self.combo_situation_1.setCurrentText('REFERENCE')
             # self.combo_situation_2.setCurrentText('PROPOSED')
             self.combo_year_1.setCurrentText('2022')
@@ -108,45 +109,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         result = self.plugin.aerius_connection.post_validate(gml_fn)
         QgsApplication.restoreOverrideCursor()
 
-        # self.plugin.resp = result # for debugging
-        # print(result)
-        bstr = result.readAll()
-        # print(bstr)
-
-        msg_box = QMessageBox(windowTitle='Validation result', parent=self)
-        msg_box.setSizeGripEnabled(True)
-
-        try:
-            result_dict = json.loads(bytes(bstr))
-            # print(result_dict)
-        except:
-            self.plugin.log('Server error, no validation response.', lvl='Critical', bar=True)
-            msg_box.setText('Server error, no validation response.')
-            msg_box.exec()
-            return
-
-        if 'successful' in result_dict and result_dict['successful']:
-            self.plugin.log('GML is valid', lvl='Info', bar=True)
-            msg_box.setText('GML is valid')
-        else:
-            self.plugin.log('GML is NOT valid.', lvl='Warning', bar=True)
-
-            msg_box.setText('GML is NOT valid. (Errors can not be parsed)')
-            error_txt = None
-            if 'message' in result_dict:
-                error_txt = result_dict['message']
-            elif 'errors' in result_dict:
-                errors = result_dict['errors']
-                if len(errors) > 0:
-                    error1 = errors[0]
-                    if 'message' in error1:
-                        error_txt = error1['message']
-            if error_txt is not None:
-                error_txt = error_txt.replace(' cvc-', '\ncvc-')  # Ugly bug fix for ugly response
-                msg_box.setText(error_txt)
-                for error_line in error_txt.split('\n'):
-                    self.plugin.log(error_line, lvl='Warning')
-        msg_box.exec()
+        self.handle_response_errors(result, 'validate')
 
     def calculate(self):
         gml_files = self.get_calculation_files()
@@ -164,8 +127,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         result = self.plugin.aerius_connection.post_calculate(gml_files, user_options)
         QgsApplication.restoreOverrideCursor()
 
-        # print(result)
-        # self.show_feedback(result)
+        self.handle_response_errors(result, 'calculate')
 
         self.get_jobs()
 
@@ -383,3 +345,63 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
             else:
                 related_widgets['button_validate'].setEnabled(False)
         return result
+
+    def handle_response_errors(self, response, end_point):
+        if end_point == 'validate':
+            window_title = 'Validate request result'
+            success_msg = 'GML is valid'
+            error_msg = 'GML is not valid'
+        elif end_point == 'calculate':
+            window_title = 'Calculate request result'
+            success_msg = 'Calculation has started'
+            error_msg = 'Calculation can not start'
+        else:
+            self.plugin.log('No valid end_point for response error handling.')
+            return
+
+        msg_box = QMessageBox(windowTitle=window_title, parent=self)
+        msg_box.setSizeGripEnabled(True)
+
+        max_errors = 3
+
+        bstr = response.readAll()
+        try:
+            result_dict = json.loads(bytes(bstr))
+            # print(result_dict)
+        except:
+            self.plugin.log('Server error, no response.', lvl='Critical', bar=True)
+            msg_box.setText('Server error, no response.')
+            msg_box.exec()
+            return
+
+        message_lines = []
+        if 'successful' in result_dict:
+            if result_dict['successful']:
+                self.plugin.log(success_msg, lvl='Info', bar=True)
+                message_lines.append(success_msg)
+            else:
+                self.plugin.log(error_msg, lvl='Warning', bar=True)
+                message_lines.append(error_msg)
+            message_lines.append('')  # White line
+
+            if 'errors' in result_dict and len(result_dict['errors']) > 0:
+                errors = result_dict['errors']
+                message_lines.append('{0} Error(s):'.format(len(errors)))
+                for error in errors[:max_errors]:
+                    message_lines.append('* {0}'.format(error['message']))
+                if len(errors) > max_errors:
+                    message_lines.append('* ...')
+                message_lines.append('')  # White line
+            if 'warnings' in result_dict and len(result_dict['warnings']) > 0:
+                warnings = result_dict['warnings']
+                message_lines.append('{0} Warning(s):'.format(len(warnings)))
+                for warning in warnings[:max_errors]:
+                    message_lines.append('* {0}'.format(warning['message']))
+                if len(warnings) > max_errors:
+                    message_lines.append('* ...')
+
+            msg_box.setText('\n'.join(message_lines))
+        else:
+            message_lines.append('Invalid server response')
+
+        msg_box.exec()
