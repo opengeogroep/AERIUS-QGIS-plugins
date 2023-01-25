@@ -194,7 +194,7 @@
             <x>0</x>
             <y>0</y>
             <width>513</width>
-            <height>419</height>
+            <height>451</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
@@ -346,37 +346,11 @@
             <x>0</x>
             <y>0</y>
             <width>499</width>
-            <height>1406</height>
+            <height>1468</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout">
-           <item row="1" column="1">
-            <widget class="QgsFieldComboBox" name="fcb_rd_label"/>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_rd_elevation_height">
-             <property name="text">
-              <string>elevation height</string>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="0">
-            <spacer name="verticalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="5" column="1">
-            <widget class="QgsFieldComboBox" name="fcb_rd_elevation_height"/>
-           </item>
-           <item row="8" column="0" colspan="2">
+           <item row="10" column="0" colspan="2">
             <widget class="QGroupBox" name="groupBox_rd_vehicles">
              <property name="title">
               <string>Vehicles</string>
@@ -630,6 +604,27 @@
              </layout>
             </widget>
            </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_rd_type">
+             <property name="text">
+              <string>type</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_rd_elevation_height">
+             <property name="text">
+              <string>elevation height</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_rd_label">
+             <property name="text">
+              <string>label</string>
+             </property>
+            </widget>
+           </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_rd_description">
              <property name="text">
@@ -637,7 +632,10 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
+           <item row="5" column="1">
+            <widget class="QgsFieldComboBox" name="fcb_rd_tunnel_factor"/>
+           </item>
+           <item row="6" column="0">
             <widget class="QLabel" name="label_rd_elevation">
              <property name="text">
               <string>elevation</string>
@@ -647,7 +645,36 @@
            <item row="0" column="1">
             <widget class="QgsFieldComboBox" name="fcb_rd_sector_id"/>
            </item>
-           <item row="7" column="0" colspan="2">
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_rd_tunnel_factor">
+             <property name="text">
+              <string>tunnel factor</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="1">
+            <widget class="QgsFieldComboBox" name="fcb_rd_description"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QgsFieldComboBox" name="fcb_rd_label"/>
+           </item>
+           <item row="7" column="1">
+            <widget class="QgsFieldComboBox" name="fcb_rd_elevation_height"/>
+           </item>
+           <item row="9" column="0" colspan="2">
             <widget class="QGroupBox" name="groupBox_rd_barriers">
              <property name="title">
               <string>Road side barriers</string>
@@ -734,9 +761,6 @@
              </layout>
             </widget>
            </item>
-           <item row="2" column="1">
-            <widget class="QgsFieldComboBox" name="fcb_rd_description"/>
-           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_rd_sector_id">
              <property name="text">
@@ -744,25 +768,21 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_rd_label">
-             <property name="text">
-              <string>label</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
+           <item row="6" column="1">
             <widget class="QgsFieldComboBox" name="fcb_rd_elevation"/>
            </item>
+           <item row="4" column="1">
+            <widget class="QgsFieldComboBox" name="fcb_rd_type"/>
+           </item>
            <item row="3" column="0">
-            <widget class="QLabel" name="label_rd_tunnel_factor">
+            <widget class="QLabel" name="label_rd_area_type">
              <property name="text">
-              <string>tunnel factor</string>
+              <string>area type</string>
              </property>
             </widget>
            </item>
            <item row="3" column="1">
-            <widget class="QgsFieldComboBox" name="fcb_rd_tunnel_factor"/>
+            <widget class="QgsFieldComboBox" name="fcb_rd_area_type"/>
            </item>
           </layout>
          </widget>

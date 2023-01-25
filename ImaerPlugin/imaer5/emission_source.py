@@ -25,6 +25,10 @@ class EmissionSourceType(object):
         result.setAttribute('sectorId', self.sector_id)
         result.setAttribute('gml:id', self.local_id)
 
+        if class_name in ['RoadEmissionSource', 'SRM2Road']:  # Check by name instead of class to prevent circular import
+            result.setAttribute('roadAreaType', self.road_area_type)
+            result.setAttribute('roadType', self.road_type)
+
         # identifier
         ident_elem = doc.createElement('imaer:identifier')
         nen_elem = doc.createElement('imaer:NEN3610ID')
