@@ -20,7 +20,7 @@ Some plugin configurations can be set in the Configuration dialog. Most of them 
 ## General
 
 ### Country:
-The country where you are using AERIUS. Different countries use different versions 
+The country where you are using AERIUS. Different countries use different versions
 and sub sets of IMAER.
 
 ### CRS:
@@ -32,8 +32,8 @@ and save files to. Make sure you have write access to this directory.
 
 ## Connect
 
-These settings are only needed if you want to use the plugin for AERIUS Connect 
-functionality. When the settings are right, the 
+These settings are only needed if you want to use the plugin for AERIUS Connect
+functionality. When the settings are right, the
 
 ### Server base URL:
 Location of the Connect API URL. Should by default point to the current production
@@ -61,8 +61,7 @@ to the configuration screen.
 When saving the settings, the plugin will attempt to make a connection by firing
 a few rquests. They will also update the content of the connect plugin dialogs.
 
-### Tip
+### Hint
 
 In case you are running into connection problems, open the Debug/Developer panel in QGIS
 (F12) to inspect the internet traffic between QGIS and Connect.
-
