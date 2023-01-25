@@ -42,14 +42,12 @@ to the clipboard.
 
 For starting a calculaion you will need to set some input parameters:
 
-* Situation: REFERENCE, PROPOSED, TEMPORARY or NETTING
+* Situation: DEFINED_BY_FILE, REFERENCE, PROPOSED, TEMPORARY
 * Name: Any name for your own reference. This will be displayed in the table
-* Year:
 * Type:
   * WNB_RECEPTORS: Normal calculation on all default Nature Area receptors.
   * CUSTOM_POINTS: Pick one of your self uploaded receptor sets
-* Send Email: Check if you wish to receive an email notification when the calculation
-  has finished
+* Send e-mail when calculation is completed: Check if you wish to receive an email notification when the calculation has finished
 
 Click the `Calculate` button for sending your data to Connect and start the calculation.
 

@@ -34,4 +34,4 @@ You can use all standard QGIS functionality for viewing, analysing and editing t
 * This functionality can only import calculation results on **receptor points** that
 contain hexagon information. Results on **calculation points** are skipped during the
 import.
-* Should work on IMAER versions 2.2, 3.1 and 4.0 data.
+* Should work on IMAER versions 2, 3, 4 and 5 data.
