@@ -363,6 +363,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         msg_box.setSizeGripEnabled(True)
 
         max_errors = 3
+        max_error_chars = 5000
 
         bstr = response.readAll()
         try:
@@ -388,7 +389,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
                 errors = result_dict['errors']
                 message_lines.append('{0} Error(s):'.format(len(errors)))
                 for error in errors[:max_errors]:
-                    message_lines.append('* {0}'.format(error['message']))
+                    message_lines.append('* {0}'.format(error['message'][:max_error_chars]))
                 if len(errors) > max_errors:
                     message_lines.append('* ...')
                 message_lines.append('')  # White line
@@ -396,7 +397,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
                 warnings = result_dict['warnings']
                 message_lines.append('{0} Warning(s):'.format(len(warnings)))
                 for warning in warnings[:max_errors]:
-                    message_lines.append('* {0}'.format(warning['message']))
+                    message_lines.append('* {0}'.format(warning['message'][:max_error_chars]))
                 if len(warnings) > max_errors:
                     message_lines.append('* ...')
 
