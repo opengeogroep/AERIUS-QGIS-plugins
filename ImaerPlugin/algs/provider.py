@@ -5,6 +5,7 @@ from qgis.core import QgsProcessingProvider
 
 from .relate_difference import RelateDifferenceAlgorithm
 from .relate_sum import RelateSumAlgorithm
+from .relate_maximum import RelateMaximumAlgorithm
 
 
 class ImaerProvider(QgsProcessingProvider):
@@ -12,6 +13,7 @@ class ImaerProvider(QgsProcessingProvider):
     def loadAlgorithms(self, *args, **kwargs):
         self.addAlgorithm(RelateDifferenceAlgorithm())
         self.addAlgorithm(RelateSumAlgorithm())
+        self.addAlgorithm(RelateMaximumAlgorithm())
 
     def id(self, *args, **kwargs):
         """The ID of your plugin, used for identifying the provider.
