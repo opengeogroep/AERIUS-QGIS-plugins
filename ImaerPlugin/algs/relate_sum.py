@@ -99,7 +99,6 @@ class RelateSumAlgorithm(RelateAlgorithm):
         if sink is None:
             raise QgsProcessingException(self.invalidSinkError(parameters, self.OUTPUT))
 
-        #qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
         calc_result_dict = self._calc_dict_sum(dep_dict_layers)
 
         if len(calc_result_dict) == 0:
