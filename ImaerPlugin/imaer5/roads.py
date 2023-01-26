@@ -4,8 +4,10 @@ from .emission_source import EmissionSourceType
 
 
 class RoadEmissionSource(EmissionSourceType):
-    def __init__(self, *, traffic_direction=None, vehicles=[], **kwargs):
+    def __init__(self, *, road_area_type, road_type, vehicles=[], traffic_direction=None, **kwargs):
         super().__init__(**kwargs)
+        self.road_area_type = road_area_type
+        self.road_type = road_type
         self.vehicles = vehicles
         self.traffic_direction = traffic_direction
 
