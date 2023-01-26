@@ -433,10 +433,10 @@ class ImaerPlugin:
             self.relate_calc_results_dlg.calculate_difference(layers, layer_name, add_totals)
 
         if calc_type == 'sum':
-            self.relate_calc_results_dlg.calculate_sum(layers)
+            self.relate_calc_results_dlg.calculate_sum(layers, layer_name, add_totals)
 
         if calc_type == 'maximum':
-            self.relate_calc_results_dlg.calculate_maximum(layers)
+            self.relate_calc_results_dlg.calculate_maximum(layers, layer_name, add_totals)
 
     def open_add_open_data(self):
         layer_ns = 'base_geometries'

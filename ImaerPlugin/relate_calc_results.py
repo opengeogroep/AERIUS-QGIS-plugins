@@ -100,10 +100,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         enable_ok_button = len(layers) >= 2
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable_ok_button)
 
-    def show_error(self, msg):
-        self.iface.messageBar().pushMessage('Error', msg, level=Qgis.Critical, duration=10)
-
-    def _add_result_layer(self, layer, layer_name, qml_file_name=None):
+    def add_result_layer(self, layer, layer_name, qml_file_name=None):
         layer.setName(layer_name)
         QgsProject.instance().addMapLayer(layer)
 
@@ -111,9 +108,6 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
             layer.loadNamedStyle(qml_file_name)
 
     def calculate_difference(self, layers, layer_name, add_totals=True):
-        if not len(layers) == 2:
-            return
-
         layer_1 = layers[0]
         layer_2 = layers[1]
 
@@ -125,43 +119,30 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         }
         result = processing.run("imaer:relate_difference", params)
         layer = result['OUTPUT']
-        print(repr(layer))
 
         qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
-        self._add_result_layer(layer, layer_name, qml_file_name)
+        self.add_result_layer(layer, layer_name, qml_file_name)
 
-    def calculate_sum(self, layers):
-        self.geometry_cache = {}
-
-        dep_dicts = []
-        for layer in layers:
-            dep_dict_layer = self.create_receptor_dictionary(layer)
-            if dep_dict_layer is None:
-                layer_name = layer.name()
-                self.show_error(f'"{layer_name}" is not a valid deposition layer.')
-                return
-            dep_dicts.append(dep_dict_layer)
+    def calculate_sum(self, layers, layer_name, add_totals=True):
+        params = {
+            'INPUT_LAYERS': layers,
+            'ADD_TOTALS': add_totals,
+            'OUTPUT': 'memory:'
+        }
+        result = processing.run("imaer:relate_sum", params)
+        layer = result['OUTPUT']
 
         qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
-        calc_result_dict = self.__calc_dict_sum(dep_dicts)
-        self.create_result_features(calc_result_dict, qml_file_name)
+        self.add_result_layer(layer, layer_name, qml_file_name)
 
-        self.geometry_cache = {}
-
-    def calculate_maximum(self, layers):
-        self.geometry_cache = {}
-
-        dep_dicts = []
-        for layer in layers:
-            dep_dict_layer = self.create_receptor_dictionary(layer)
-            if dep_dict_layer is None:
-                layer_name = layer.name()
-                self.show_error(f'"{layer_name}" is not a valid deposition layer.')
-                return
-            dep_dicts.append(dep_dict_layer)
+    def calculate_maximum(self, layers, layer_name, add_totals=True):
+        params = {
+            'INPUT_LAYERS': layers,
+            'ADD_TOTALS': add_totals,
+            'OUTPUT': 'memory:'
+        }
+        result = processing.run("imaer:relate_maximum", params)
+        layer = result['OUTPUT']
 
         qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
-        calc_result_dict = self.__calc_dict_maximum(dep_dicts)
-        self.create_result_features(calc_result_dict, qml_file_name)
-
-        self.geometry_cache = {}
+        self.add_result_layer(layer, layer_name, qml_file_name)
