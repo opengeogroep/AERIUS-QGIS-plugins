@@ -412,11 +412,12 @@ class ImaerPlugin:
             return
 
         layers = self.relate_calc_results_dlg.get_layer_list()
-
+        layer_name = self.relate_calc_results_dlg.edit_layer_name.text()
+        add_totals = self.relate_calc_results_dlg.checkBox_add_totals.isChecked()
         calc_type = self.relate_calc_results_dlg.combo_calc_type.currentText()
 
         if calc_type == 'difference':
-            self.relate_calc_results_dlg.calculate_difference(layers)
+            self.relate_calc_results_dlg.calculate_difference(layers, layer_name, add_totals)
 
         if calc_type == 'sum':
             self.relate_calc_results_dlg.calculate_sum(layers)
