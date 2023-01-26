@@ -132,14 +132,3 @@ class RelateSumAlgorithm(RelateAlgorithm):
                         out_dep_dict[dep_field_name] = v
             result[receptor_id] = out_dep_dict
         return result
-
-    def _get_receptor_value(self, receptor_dict, receptor_id, field_name, no_data=None):
-        '''Returns the value for the field_name if present, or otherwise the no_data value.'''
-        if receptor_id not in receptor_dict:
-            return no_data
-        if field_name not in receptor_dict[receptor_id]:
-            return no_data
-        v = receptor_dict[receptor_id][field_name]
-        if v is not None:
-            return v
-        return no_data
