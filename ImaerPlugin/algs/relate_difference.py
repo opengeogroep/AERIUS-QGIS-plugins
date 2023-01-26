@@ -97,7 +97,7 @@ class RelateDifferenceAlgorithm(RelateAlgorithm):
             dep_dict_layers.append(dep_dict_layer)
 
             feedback.setProgress(int(current * step))
-            current +=1
+            current += 1
 
         add_totals = self.parameterAsBoolean(parameters, self.ADD_TOTALS, context)
         output_fields = self._get_output_fields(with_totals=add_totals)

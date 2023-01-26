@@ -21,9 +21,7 @@ from qgis.core import (QgsProcessing,
 from qgis.core import (
     QgsField,
     QgsFields,
-    #QgsProject,
-    QgsFeature,
-    #Qgis
+    QgsFeature
 )
 from qgis import processing
 
