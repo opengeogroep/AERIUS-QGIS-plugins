@@ -264,10 +264,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     # SRM2Road
     def get_srm2_road_from_gui(self, feat, geom, epsg_id, local_id):
-        sector_id = self.get_feature_value(self.fcb_rd_sector_id, feat)
+        sector_id = 3100  # This is the only option in NL
+        # sector_id = self.get_feature_value(self.fcb_rd_sector_id, feat)
         label = self.get_feature_value(self.fcb_rd_label, feat)
 
-        road_area_type = self.get_feature_value(self.fcb_rd_area_type, feat)
+        road_area_type = 'NL'  # This is the only option in NL
+        # road_area_type = self.get_feature_value(self.fcb_rd_area_type, feat)
         road_type = self.get_feature_value(self.fcb_rd_type, feat)
 
         es = SRM2Road(
