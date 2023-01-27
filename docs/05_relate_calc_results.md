@@ -38,6 +38,14 @@ The generated memory layer will have a predefined, 2 color style showing positiv
 
 Output layers will have the same deposition fields as the IMAER layers so they can be used with this relate function as well. For example for summarizing more than 2 layers.
 
+## Processing
+
+The relate functions are also available as algorithms in the processing toolbox. These can be used
+in a more generic way, for example combined with other algorithms in a model. And it's possible to
+call them from a Python script.
+
+![dialog](img/relate_calc_results_processing.png)
+
 ## Remarks
 
 * The `difference` operation works on 2 layers, but the `sum` and `maximum` can work
