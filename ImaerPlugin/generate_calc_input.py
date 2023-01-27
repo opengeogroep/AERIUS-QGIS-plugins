@@ -279,8 +279,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             geom=geom,
             epsg_id=epsg_id,
             road_area_type=road_area_type,
-            road_type=road_type,
-            is_freeway=True)
+            road_type=road_type)
 
         es.description = self.get_feature_value(self.fcb_rd_description, feat)
 
