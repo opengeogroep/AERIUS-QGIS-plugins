@@ -83,8 +83,8 @@ class ImportImaerCalculatorResultTask(QgsTask):
                         calculation_point_tag = '{{{0}}}CalculationPoint'.format(elem[1])
                         epsg_id = self.settings.value('imaer_plugin/crs', defaultValue=None)
                         if epsg_id is None:
-                            self.log("No crs has been selected by the user")
-                            self.exception = Exception(f'No crs has been selected by the user in the Configure options')
+                            self.log("No CRS has been selected by the user")
+                            self.exception = Exception(f'No CRS has been selected by the user in the Configuration options')
                             return False
                         if isinstance(epsg_id, str):
                             epsg_id = int(epsg_id)

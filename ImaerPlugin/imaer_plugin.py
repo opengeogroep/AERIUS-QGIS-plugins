@@ -375,8 +375,16 @@ class ImaerPlugin:
         # self.log('Could not export GML file to {0}'.format(fn), lvl='Critical', bar=True, duration=10)
 
     def update_all_widgets(self):
+        self.update_import_calc_widgets()
         self.update_export_calc_widgets()
         self.update_connect_widgets()
+
+    def update_import_calc_widgets(self):
+        epsg_id = self.settings.value('imaer_plugin/crs', defaultValue=None)
+        if epsg_id is None:
+            self.actions['import_calc_result'].setEnabled(False)
+        else:
+            self.actions['import_calc_result'].setEnabled(True)
 
     def update_export_calc_widgets(self):
         if self.iface.activeLayer() is not None:
@@ -409,6 +417,7 @@ class ImaerPlugin:
             self.configuration_dlg.save_ui_to_settings()
             self.aerius_connection.check_connection()
             self.update_connect_widgets()
+            self.update_import_calc_widgets()
 
     def open_connect_receptorsets(self):
         self.log('open_connect_receptorsets()', user='dev')
