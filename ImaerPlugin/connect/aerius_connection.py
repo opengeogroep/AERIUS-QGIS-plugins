@@ -354,6 +354,8 @@ class AeriusConnection():
             file_dict = {'fileName': base_name}
             if gml_file['situation'] is not None:
                 file_dict['situation'] = gml_file['situation']
+            else:
+                file_dict['situation'] = 'DEFINED_BY_FILE'
             if gml_file['year'] is not None:
                 file_dict['calculationYear'] = gml_file['year']
 
