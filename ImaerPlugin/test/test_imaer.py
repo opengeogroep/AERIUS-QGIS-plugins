@@ -96,20 +96,33 @@ class TestImaer(unittest.TestCase):
 
     def test_ffc_emission_simple(self):
         fcc = ImaerDocument()
-        es = EmissionSource(local_id='ES.123', sector_id=9000, label='Bron 123', geom=_GEOM0)
+        es = EmissionSource(local_id='ES.123', sector_id=9000, label='Bron 123', geom=_GEOM0, epsg_id=28992)
         es.emissions.append(Emission('NH3', 1))
         fcc.feature_members.append(es)
         self.run_validation_test(fcc, 'em_simple')
 
     def test_ffc_emission_characteristics01(self):
         hc = SpecifiedHeatContent(value=12.5)
-        es = EmissionSource(local_id='ES.123', sector_id=9999, label='Bron 123', geom=_GEOM1)
+        es = EmissionSource(local_id='ES.123', sector_id=9999, label='Bron 123', geom=_GEOM1, epsg_id=28992)
         es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation='CONTINUOUS')
         es.emissions.append(Emission('NH3', 1))
         es.emissions.append(Emission('NOX', 3.3))
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
         #self.run_ffc_test(fcc, 'characteristics01')
+
+    def test_create_srm2road(self):
+        es = SRM2Road(
+            local_id='ES.33',
+            sector_id='3100',
+            label='testlabel',
+            geom=_GEOM1,
+            epsg_id=28992,
+            road_area_type='NL',
+            road_type='FREEWAY')
+        fcc = ImaerDocument()
+        fcc.feature_members.append(es)
+        self.run_validation_test(fcc, 'srm2road')
 
 
 if __name__ == '__main__':
