@@ -3,7 +3,7 @@ from PyQt5.QtXml import QDomDocument
 from .roads import RoadEmissionSource
 
 
-class AdmsRoad(RoadEmissionSource):
+class ADMSRoad(RoadEmissionSource):
 
     def __init__(self, *, tunnel_factor=None, elevation=None,
                  elevation_height=None, gradient=None, width=None,
