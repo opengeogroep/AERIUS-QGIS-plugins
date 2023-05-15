@@ -21,9 +21,9 @@ class ADMSRoad(RoadEmissionSource):
     def to_xml_elem(self, doc=QDomDocument()):
         result = super().to_xml_elem(doc)
 
-        if self.tunnel_factor is not None:
-            elem = doc.createElement('imaer:tunnelFactor')
-            elem.appendChild(doc.createTextNode(str(self.tunnel_factor)))
+        if self.width is not None:
+            elem = doc.createElement('imaer:width')
+            elem.appendChild(doc.createTextNode(str(self.width)))
             result.appendChild(elem)
 
         if self.elevation is not None:
@@ -31,24 +31,24 @@ class ADMSRoad(RoadEmissionSource):
             elem.appendChild(doc.createTextNode(str(self.elevation)))
             result.appendChild(elem)
 
-        if self.elevation_height is not None:
-            elem = doc.createElement('imaer:elevationHeight')
-            elem.appendChild(doc.createTextNode(str(self.elevation_height)))
-            result.appendChild(elem)
-
         if self.gradient is not None:
             elem = doc.createElement('imaer:gradient')
             elem.appendChild(doc.createTextNode(str(self.gradient)))
             result.appendChild(elem)
 
-        if self.width is not None:
-            elem = doc.createElement('imaer:width')
-            elem.appendChild(doc.createTextNode(str(self.width)))
-            result.appendChild(elem)
-
         if self.coverage is not None:
             elem = doc.createElement('imaer:coverage')
             elem.appendChild(doc.createTextNode(str(self.coverage)))
+            result.appendChild(elem)
+
+        if self.tunnel_factor is not None:
+            elem = doc.createElement('imaer:tunnelFactor')
+            elem.appendChild(doc.createTextNode(str(self.tunnel_factor)))
+            result.appendChild(elem)
+
+        if self.elevation_height is not None:
+            elem = doc.createElement('imaer:elevationHeight')
+            elem.appendChild(doc.createTextNode(str(self.elevation_height)))
             result.appendChild(elem)
 
         if self.barrier_left is not None:

@@ -28,6 +28,7 @@ from connect import *
 _GEOM0 = QgsGeometry.fromWkt('POINT(148458.0 411641.0)')
 _GEOM1 = QgsGeometry.fromWkt('LINESTRING((1 0, 2 1, 3 0))')
 _GEOM2 = QgsGeometry.fromWkt('MULTIPOLYGON(((1 0, 2 1, 3 0, 2 -1, 1 0)))')
+_GEOM3 = QgsGeometry.fromWkt('LINESTRING((311279.0 723504.3, 311262.5 723349.6))')
 
 class TestImaer(unittest.TestCase):
 
@@ -130,13 +131,13 @@ class TestImaer(unittest.TestCase):
             local_id='ES.33',
             sector_id='3100',
             label='testlabel',
-            geom=_GEOM1,
+            geom=_GEOM3,
             epsg_id=27700,
             road_area_type='Sco',
             road_type='Urb',
             tunnel_factor=None,
-            elevation=None,
-            elevation_height=2,
+            elevation=2,
+            elevation_height=None,
             gradient=0.5,
             width=8,
             coverage=0)
@@ -148,11 +149,14 @@ class TestImaer(unittest.TestCase):
                              maximum_speed=50,
                              strict_enforcement='false',
                              stagnation_factor=0.0)
+        # add the vehicle created above to the emission source
+        es.vehicles.append(v1)
+
         # then create left and right barrier - TO DO
 
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
-        fcc.feature_members.append(v1)
+        
         self.run_validation_test(fcc, 'admsroad')
 
 
