@@ -48,7 +48,8 @@ from ImaerPlugin.relate_calc_results import RelateCalcResultsDialog
 
 from ImaerPlugin.connect import (
     AeriusConnection,
-    AeriusOpenData
+    AeriusOpenData,
+    AeriusConnectManager
 )
 
 
@@ -208,6 +209,12 @@ class ImaerPlugin:
             QgsMessageLog.logMessage(str(message), tab, level=level)
         if bar:
             self.iface.messageBar().pushMessage(lvl, str(message), level, duration=duration)
+
+    def get_connect_manager(self):
+        # Create new connect manager
+        result = AeriusConnectManager(self)
+        self.log(result, user='user')
+        return result
 
     def run_import_calc_result(self, checked=False, gml_fn=None):
         self.log('run_import_calc_result()', user='dev')
