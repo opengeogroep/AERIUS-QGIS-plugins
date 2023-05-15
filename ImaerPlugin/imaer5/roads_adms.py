@@ -12,9 +12,9 @@ class AdmsRoad(RoadEmissionSource):
         self.tunnel_factor = tunnel_factor
         self.elevation = elevation
         self.elevation_height = elevation_height
-        self.gradient = None
-        self.width = None
-        self.coverage = None
+        self.gradient = gradient
+        self.width = width
+        self.coverage = coverage
         self.barrier_left = None
         self.barrier_right = None
 

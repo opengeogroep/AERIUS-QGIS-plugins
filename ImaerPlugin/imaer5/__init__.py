@@ -9,8 +9,8 @@ from .emission_source import (
 )
 from .roads_adms import (
     AdmsRoad,
-    # RoadSideBarrier,
-    # StandardVehicle
+    AdmsRoadSideBarrier,
+    StandardVehicle
 )
 from .roads_srm2 import (
     SRM2Road,
