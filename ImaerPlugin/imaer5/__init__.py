@@ -8,7 +8,7 @@ from .emission_source import (
     Emission
 )
 from .roads_adms import (
-    AdmsRoad,
+    ADMSRoad,
     AdmsRoadSideBarrier,
     StandardVehicle
 )

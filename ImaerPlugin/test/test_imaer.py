@@ -125,14 +125,25 @@ class TestImaer(unittest.TestCase):
         self.run_validation_test(fcc, 'srm2road')
 
     def test_create_adms_road(self):
-        es = AdmsRoad(
+        # this is creating the Emissions Source Type
+        es = ADMSRoad(
             local_id='ES.33',
             sector_id='3100',
             label='testlabel',
             geom=_GEOM1,
             epsg_id=27700,
             road_area_type='Sco',
-            road_type='Urb')
+            road_type='Urb',
+            tunnel_factor=None,
+            elevation=None,
+            elevation_height=2,
+            gradient=0.5,
+            width=8,
+            coverage=0)
+        # want to create ADMS road vehicle info
+
+        # then create left and right barrier
+
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
         self.run_validation_test(fcc, 'admsroad')
