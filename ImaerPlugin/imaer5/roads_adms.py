@@ -142,9 +142,14 @@ class StandardVehicle(Vehicle):
         result = super().to_xml_elem(doc)
         result.setAttribute('vehicleType', self.vehicle_type)
 
-        elem = doc.createElement('imaer:stagnationFactor')
-        elem.appendChild(doc.createTextNode(str(self.stagnation_factor)))
-        result.appendChild(elem)
+        if self.stagnation_factor is not None:
+            elem = doc.createElement('imaer:stagnationFactor')
+            elem.appendChild(doc.createTextNode(str(self.stagnation_factor)))
+            result.appendChild(elem)
+        else:
+            elem = doc.createElement('imaer:stagnationFactor')
+            elem.appendChild(doc.createTextNode('0.0'))
+            result.appendChild(elem)
 
         if self.maximum_speed is not None:
             elem = doc.createElement('imaer:maximumSpeed')
@@ -154,6 +159,10 @@ class StandardVehicle(Vehicle):
         if self.strict_enforcement is not None:
             elem = doc.createElement('imaer:strictEnforcement')
             elem.appendChild(doc.createTextNode(str(self.strict_enforcement)))
+            result.appendChild(elem)
+        else:
+            elem = doc.createElement('imaer:strictEnforcement')
+            elem.appendChild(doc.createTextNode(str('false')))
             result.appendChild(elem)
 
         return result
