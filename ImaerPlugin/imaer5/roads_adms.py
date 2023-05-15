@@ -5,11 +5,16 @@ from .roads import RoadEmissionSource
 
 class AdmsRoad(RoadEmissionSource):
 
-    def __init__(self, *, tunnel_factor=None, elevation=None, elevation_height=None, **kwargs):
+    def __init__(self, *, tunnel_factor=None, elevation=None,
+                 elevation_height=None, gradient=None, width=None,
+                 coverage=None, **kwargs):
         super().__init__(**kwargs)
         self.tunnel_factor = tunnel_factor
         self.elevation = elevation
         self.elevation_height = elevation_height
+        self.gradient = None
+        self.width = None
+        self.coverage = None
         self.barrier_left = None
         self.barrier_right = None
 
@@ -31,6 +36,21 @@ class AdmsRoad(RoadEmissionSource):
             elem.appendChild(doc.createTextNode(str(self.elevation_height)))
             result.appendChild(elem)
 
+        if self.gradient is not None:
+            elem = doc.createElement('imaer:gradient')
+            elem.appendChild(doc.createTextNode(str(self.gradient)))
+            result.appendChild(elem)
+
+        if self.width is not None:
+            elem = doc.createElement('imaer:width')
+            elem.appendChild(doc.createTextNode(str(self.width)))
+            result.appendChild(elem)
+
+        if self.coverage is not None:
+            elem = doc.createElement('imaer:coverage')
+            elem.appendChild(doc.createTextNode(str(self.coverage)))
+            result.appendChild(elem)
+
         if self.barrier_left is not None:
             b_elem = doc.createElement('imaer:barrierLeft')
             elem = self.barrier_left.to_xml_elem(doc)
@@ -46,26 +66,42 @@ class AdmsRoad(RoadEmissionSource):
         return result
 
 
-class RoadSideBarrier(object):
+class AdmsRoadSideBarrier(object):
 
-    def __init__(self, type, height, distance):
+    def __init__(self, type, height, distance, Avheight, Maxheight, Minheight, porosity):
         self.type = type
         self.height = height
         self.distance = distance
+        self.Avheight = Avheight
+        self.Maxheight = Maxheight
+        self.Minheight = Minheight
+        self.porosity = porosity
 
     def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:RoadSideBarrier')
+        result = doc.createElement('imaer:ADMSRoadSideBarrier')
 
         elem = doc.createElement('imaer:barrierType')
         elem.appendChild(doc.createTextNode(str(self.type)))
         result.appendChild(elem)
 
-        elem = doc.createElement('imaer:height')
-        elem.appendChild(doc.createTextNode(str(self.height)))
-        result.appendChild(elem)
-
         elem = doc.createElement('imaer:distance')
         elem.appendChild(doc.createTextNode(str(self.distance)))
+        result.appendChild(elem)
+
+        elem = doc.createElement('imaer:averageHeight')
+        elem.appendChild(doc.createTextNode(str(self.Avheight)))
+        result.appendChild(elem)
+
+        elem = doc.createElement('imaer:maximumHeight')
+        elem.appendChild(doc.createTextNode(str(self.Maxheight)))
+        result.appendChild(elem)
+
+        elem = doc.createElement('imaer:minimumHeight')
+        elem.appendChild(doc.createTextNode(str(self.Minheight)))
+        result.appendChild(elem)
+
+        elem = doc.createElement('imaer:porosity')
+        elem.appendChild(doc.createTextNode(str(self.porosity)))
         result.appendChild(elem)
 
         return result
