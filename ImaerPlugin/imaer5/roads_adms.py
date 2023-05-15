@@ -68,9 +68,8 @@ class AdmsRoad(RoadEmissionSource):
 
 class AdmsRoadSideBarrier(object):
 
-    def __init__(self, type, height, distance, Avheight, Maxheight, Minheight, porosity):
+    def __init__(self, type, distance, Avheight, Maxheight, Minheight, porosity):
         self.type = type
-        self.height = height
         self.distance = distance
         self.Avheight = Avheight
         self.Maxheight = Maxheight
