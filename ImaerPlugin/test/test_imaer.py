@@ -140,12 +140,19 @@ class TestImaer(unittest.TestCase):
             gradient=0.5,
             width=8,
             coverage=0)
-        # want to create ADMS road vehicle info
 
-        # then create left and right barrier
+        # want to create ADMS road vehicle info (standard vehicle)
+        v1 = StandardVehicle(vehicles_per_time_unit=1000,
+                             time_unit='DAY',
+                             vehicle_type='Bus',
+                             maximum_speed=50,
+                             strict_enforcement='false',
+                             stagnation_factor=0.0)
+        # then create left and right barrier - TO DO
 
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
+        fcc.feature_members.append(v1)
         self.run_validation_test(fcc, 'admsroad')
 
 
