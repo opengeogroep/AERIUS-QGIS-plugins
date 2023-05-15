@@ -16,3 +16,8 @@ The user documentation can be found here:
 * Rename zip file with version info
 * Move the zip file to the ```releases``` directory
 * Upload to plugins.qgis.org
+
+## Running tests
+
+* To run test in Linux: dev.yml must be created (use dev_example.yml as a template). Then run the test_imaer.sh from the plugin directory
+* To run the test in Windows: dev.yml must be created (use dev_example.yml as a template). Then open the command line from the Imaer plugin folder and run python -m unittest test.test_imaer 
