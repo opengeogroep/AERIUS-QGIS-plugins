@@ -1,7 +1,7 @@
 import os.path
 
-from imaer_document import ImaerDocument
-from metadata import AeriusCalculatorMetadata
+import imaer_document.ImaerDocument
+from .metadata import AeriusCalculatorMetadata
 
 idoc = ImaerDocument()
 # print(idoc)
