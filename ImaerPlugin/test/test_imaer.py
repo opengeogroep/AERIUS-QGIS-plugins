@@ -126,7 +126,15 @@ class TestImaer(unittest.TestCase):
         self.run_validation_test(fcc, 'srm2road')
 
     def test_create_adms_road(self):
-        # this is creating the Emissions Source Type
+        # setup the barrier (left)
+        b1 = AdmsRoadSideBarrier(type='BRICK_WALL',
+                                 distance=5,
+                                 Avheight=7,
+                                 Maxheight=10,
+                                 Minheight=3,
+                                 porosity=5)
+
+        # this is creating the Emissions Source Type (including left barrier)
         es = ADMSRoad(
             local_id='ES.33',
             sector_id='3100',
@@ -140,7 +148,8 @@ class TestImaer(unittest.TestCase):
             elevation_height=None,
             gradient=0.5,
             width=8,
-            coverage=0)
+            coverage=0,
+            barrier_left=b1)
 
         # want to create ADMS road vehicle info (standard vehicle)
         v1 = StandardVehicle(vehicles_per_time_unit=1000,
@@ -152,11 +161,9 @@ class TestImaer(unittest.TestCase):
         # add the vehicle created above to the emission source
         es.vehicles.append(v1)
 
-        # then create left and right barrier - TO DO
-
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
-        
+
         self.run_validation_test(fcc, 'admsroad')
 
 

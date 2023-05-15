@@ -7,7 +7,7 @@ class ADMSRoad(RoadEmissionSource):
 
     def __init__(self, *, tunnel_factor=None, elevation=None,
                  elevation_height=None, gradient=None, width=None,
-                 coverage=None, **kwargs):
+                 coverage=None, barrier_left=None, barrier_right=None, **kwargs):
         super().__init__(**kwargs)
         self.tunnel_factor = tunnel_factor
         self.elevation = elevation
@@ -15,8 +15,8 @@ class ADMSRoad(RoadEmissionSource):
         self.gradient = gradient
         self.width = width
         self.coverage = coverage
-        self.barrier_left = None
-        self.barrier_right = None
+        self.barrier_left = barrier_left
+        self.barrier_right = barrier_right
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = super().to_xml_elem(doc)
