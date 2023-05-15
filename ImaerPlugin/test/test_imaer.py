@@ -124,6 +124,19 @@ class TestImaer(unittest.TestCase):
         fcc.feature_members.append(es)
         self.run_validation_test(fcc, 'srm2road')
 
+    def test_create_adms_road(self):
+        es = AdmsRoad(
+            local_id='ES.33',
+            sector_id='3100',
+            label='testlabel',
+            geom=_GEOM1,
+            epsg_id=27700,
+            road_area_type='Sco',
+            road_type='Urb')
+        fcc = ImaerDocument()
+        fcc.feature_members.append(es)
+        self.run_validation_test(fcc, 'admsroad')
+
 
 if __name__ == '__main__':
     QgsApplication.setPrefixPath("/home/raymond/programs/qgis/qgis-3.22/share/qgis/python/", True)
