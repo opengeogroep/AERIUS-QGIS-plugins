@@ -4,6 +4,7 @@ import unittest
 import json
 from pkg_resources import IMetadataProvider
 import yaml
+import time
 
 import faulthandler
 faulthandler.enable()
@@ -24,6 +25,7 @@ from qgis.core import *
 
 from imaer5 import *
 from connect import *
+from tasks.import_calc_result import ImportImaerCalculatorResultTask
 
 _GEOM0 = QgsGeometry.fromWkt('POINT(148458.0 411641.0)')
 _GEOM1 = QgsGeometry.fromWkt('LINESTRING((1 0, 2 1, 3 0))')
@@ -165,7 +167,6 @@ class TestImaer(unittest.TestCase):
         fcc.feature_members.append(es)
 
         self.run_validation_test(fcc, 'admsroad')
-
 
 if __name__ == '__main__':
     QgsApplication.setPrefixPath("/home/raymond/programs/qgis/qgis-3.22/share/qgis/python/", True)
