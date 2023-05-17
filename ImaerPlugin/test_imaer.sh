@@ -2,7 +2,7 @@
 
 #lp=$(grep -A3 'test:' dev.yml | tail -n1); db=${db//*database: /}; echo "$db"
 
-lp='C:/Program Files/QGIS 3.16.13/lib'
+lp='/home/raymond/programs/qgis/qgis-3.22/lib/'
 # echo ${PATH}
 #PATH=${PATH}\:${lp}
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${lp}

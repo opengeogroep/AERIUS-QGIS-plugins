@@ -40,8 +40,10 @@ from ImaerPlugin.imaer5 import (
     EmissionSource,
     SpecifiedHeatContent,
     Emission,
-    SRM2Road,
-    RoadSideBarrier,
+    Srm2Road,
+    Srm2RoadSideBarrier,
+    AdmsRoad,
+    AdmsRoadSideBarrier,
     StandardVehicle
 )
 
@@ -201,7 +203,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     def get_imaer_doc_from_gui(self):
         '''Maps items from GUI widgets to IMAER object'''
-
         imaer_doc = ImaerDocument()
 
         year = self.combo_project_year.currentData()
@@ -222,6 +223,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         imaer_doc.metadata = metadata
 
         input_layer = self.combo_layer.currentLayer()
+        country = self.combo_country.currentData()
         crs_source = input_layer.crs()
         crs_dest_srid = self.combo_crs.currentData()
         print(crs_dest_srid)
@@ -254,7 +256,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             if sector == 'other':
                 es = self.get_emission_source_from_gui(feat, geom, crs_dest_srid, local_id)
             elif sector == 'roads':
-                es = self.get_srm2_road_from_gui(feat, geom, crs_dest_srid, local_id)
+                if country == 'NL':
+                    es = self.get_srm2_road_from_gui(feat, geom, crs_dest_srid, local_id)
+                elif country == 'UK':
+                    es = self.get_adms_road_from_gui(feat, geom, crs_dest_srid, local_id)
+                else:
+                    print('This should never happen. (No country selected.)')
             else:
                 raise Exception('Invalid sector')
 
@@ -300,7 +307,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         return es
 
-    # SRM2Road
+    # Srm2Road
     def get_srm2_road_from_gui(self, feat, geom, epsg_id, local_id):
         sector_id = 3100  # This is the only option in NL
         # sector_id = self.get_feature_value(self.fcb_rd_sector_id, feat)
@@ -310,7 +317,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         # road_area_type = self.get_feature_value(self.fcb_rd_area_type, feat)
         road_type = self.get_feature_value(self.fcb_rd_type, feat)
 
-        es = SRM2Road(
+        es = Srm2Road(
             local_id=local_id,
             sector_id=sector_id,
             label=label,
@@ -326,6 +333,84 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         es.elevation_height = self.get_feature_value(self.fcb_rd_elevation_height, feat)
 
         # barriers
+        for side in ['left', 'right']:
+            fcb = getattr(self, f'fcb_rd_b_{side}_type')
+            b_type = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_b_{side}_height')
+            b_height = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_b_{side}_distance')
+            b_distance = self.get_feature_value(fcb, feat)
+
+            if not (b_type is None and b_height is None and b_distance is None):
+                rsb = Srm2RoadSideBarrier(b_type, b_height, b_distance)
+                if side == 'left':
+                    es.barrier_left = rsb
+                else:
+                    es.barrier_right = rsb
+
+        # vehicles
+        vehicles = []
+        vehicle_types = {
+            'lt1': 'LIGHT_TRAFFIC',
+            'lt2': 'LIGHT_TRAFFIC',
+            'nf': 'NORMAL_FREIGHT',
+            'hf': 'HEAVY_FREIGHT',
+            'ab': 'AUTO_BUS'
+        }
+        for veh_type_key, veh_type_name in vehicle_types.items():
+
+            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_vehicles_per_time')
+            veh_number = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_stagnation')
+            veh_stagnation = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_maxspeed')
+            veh_speed = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_strict')
+            veh_strict = self.get_feature_value(fcb, feat)
+
+            if not (veh_number is None and veh_stagnation is None):
+                vehicle = StandardVehicle(
+                    vehicles_per_time_unit=veh_number,
+                    time_unit='DAY',
+                    stagnation_factor=veh_stagnation,
+                    vehicle_type=veh_type_name,
+                    maximum_speed=veh_speed,
+                    strict_enforcement=veh_strict
+                )
+                vehicles.append(vehicle)
+
+            es.vehicles = vehicles
+
+        return es
+
+    # AdmsRoad
+    def get_adms_road_from_gui(self, feat, geom, epsg_id, local_id):
+        sector_id = 3100  # This is the only option in NL
+        # sector_id = self.get_feature_value(self.fcb_rd_sector_id, feat)
+        label = self.get_feature_value(self.fcb_rd_label, feat)
+
+        road_area_type = self.get_feature_value(self.fcb_rd_area_type, feat)
+        road_type = self.get_feature_value(self.fcb_rd_type, feat)
+
+        es = AdmsRoad(
+            local_id=local_id,
+            sector_id=sector_id,
+            label=label,
+            geom=geom,
+            epsg_id=epsg_id,
+            road_area_type=road_area_type,
+            road_type=road_type)
+
+        es.description = self.get_feature_value(self.fcb_rd_description, feat)
+
+        es.width = self.get_feature_value(self.fcb_rd_width, feat)
+        es.elevation = self.get_feature_value(self.fcb_rd_elevation, feat)
+        es.gradient = self.get_feature_value(self.fcb_rd_gradient, feat)
+        es.coverage = self.get_feature_value(self.fcb_rd_coverage, feat)
+        es.tunnel_factor = self.get_feature_value(self.fcb_rd_tunnel_factor, feat)
+        es.elevation_height = self.get_feature_value(self.fcb_rd_elevation_height, feat)
+
+        '''# barriers
         for side in ['left', 'right']:
             fcb = getattr(self, f'fcb_rd_b_{side}_type')
             b_type = self.get_feature_value(fcb, feat)
@@ -372,9 +457,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 )
                 vehicles.append(vehicle)
 
-            es.vehicles = vehicles
+            es.vehicles = vehicles'''
 
         return es
+
 
     def get_feature_value(self, widget, feat, cast_to=None):
         if not isinstance(widget, QgsFieldComboBox):

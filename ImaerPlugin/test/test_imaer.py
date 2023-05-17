@@ -115,7 +115,7 @@ class TestImaer(unittest.TestCase):
         #self.run_ffc_test(fcc, 'characteristics01')
 
     def test_create_srm2road(self):
-        es = SRM2Road(
+        es = Srm2Road(
             local_id='ES.33',
             sector_id='3100',
             label='testlabel',
@@ -137,7 +137,7 @@ class TestImaer(unittest.TestCase):
                                  porosity=5)
 
         # this is creating the Emissions Source Type (including left barrier)
-        es = ADMSRoad(
+        es = AdmsRoad(
             local_id='ES.33',
             sector_id='3100',
             label='testlabel',

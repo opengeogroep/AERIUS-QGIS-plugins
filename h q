@@ -1,0 +1,2415 @@
+[33mcommit 10dc0ef37151222410ba5e1663bcee8fa42311e7[m[33m ([m[1;36mHEAD -> [m[1;32muk_roads[m[33m)[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed May 17 12:04:58 2023 +0100
+
+    UK Roads UI (WiP)
+
+[33mcommit 837bd3b7084c2f4c19cabd98d9dc6d5d85c12f87[m[33m ([m[1;31morigin/uk_roads[m[33m)[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Tue May 16 16:46:32 2023 +0100
+
+    make zip folder of aerius release with only necessary folders and exexcluding test/output and pycache folders
+
+[33mcommit f564b481b2c94850a70aca00271e3612d5d7bac1[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Tue May 16 15:37:36 2023 +0100
+
+    moved StandardVehicle and Vehicle from roads_srm2 and roads_adms into roads.py
+
+[33mcommit b83ff157bc7b04b4b0b98b8936e9cef6a9860b1c[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon May 15 16:31:26 2023 +0100
+
+    test now includes barriers
+
+[33mcommit 098796e2d0e791c03b1add9a315f9b90c37be018[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon May 15 16:23:53 2023 +0100
+
+    test for ADMSRoads updated to make gml file readable by aerius - simple emissions only
+
+[33mcommit 654bbb047778e53606187e30fe9a577ff1fc9118[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon May 15 16:00:52 2023 +0100
+
+    updates to adms test - wip
+
+[33mcommit c9cd6a5c7dcc73726ea9ffe3cbc1e4ce99a6a477[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon May 15 15:43:36 2023 +0100
+
+    updated class name to match gml requirements from aerius web download
+
+[33mcommit 29a440ecb75b293722d36cf3fe681d93d88c0f2c[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon May 15 15:30:48 2023 +0100
+
+    updated ReadMe to include discussion of running tests
+
+[33mcommit c8d723198d23189b8a79dd85f776cfeffa3ffa76[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon May 15 15:08:40 2023 +0100
+
+    admsroad test
+
+[33mcommit bf3cea42c2c1b9416b76c9fc79e84da1630352c5[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon May 15 14:26:33 2023 +0100
+
+    added AdmsRoad to emission source class list
+
+[33mcommit abb43a792664b077d9c7056da5bf2d3f6f165cf0[m
+Merge: 8799b24 3a7df96
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon May 15 14:13:32 2023 +0100
+
+    Merge branch 'uk_roads' of https://github.com/opengeogroep/AERIUS-QGIS-plugins into uk_roads
+
+[33mcommit 3a7df9688b29219f287c5ad255b5eba92cc7bea9[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon May 15 14:11:32 2023 +0100
+
+    Fix emission source tests and add one for srm2road
+
+[33mcommit 8799b24f70a4ace9af8471fa146a4a4e185c8637[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon May 15 14:10:41 2023 +0100
+
+    removed height from adms barrier
+
+[33mcommit b1d17aae42ce70faf3ee0892326c046bbe6658a2[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon May 15 14:07:51 2023 +0100
+
+    set stagnation factor to 0 and strictEnforcement to false if these not provided as in UK case
+
+[33mcommit 843e115ca6b1e17cacabbfcfe9e0433789bf941c[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon May 15 13:47:38 2023 +0100
+
+    removed old srm2 functions from roads.py
+
+[33mcommit 7ab2abb35569be00177ec589d054d90c98b0bf67[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon May 15 13:43:56 2023 +0100
+
+    added to ADMS roads functions
+
+[33mcommit 4abc3d366bd5139b0f6a3907129316d8c1fe59f6[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon May 15 13:39:13 2023 +0100
+
+    AdmsRoad functions added WIP
+
+[33mcommit f1f5ab2841f48bd6743b29061fc8ea598235bb85[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon May 15 12:22:43 2023 +0100
+
+    AdmsRoad class (WiP)
+
+[33mcommit d56979783c14ca296fbcd678f8a57193aa0ff1dd[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Feb 7 09:58:26 2023 +0100
+
+    Cleanup old test releases
+
+[33mcommit 25bc56fd5de95575991202ce94ca63b691b429c5[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Feb 7 09:57:17 2023 +0100
+
+    New release v3.3.1
+
+[33mcommit d452d9d89a8ce260e6be6d0d8afefc8c99dce1aa[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Feb 7 09:50:24 2023 +0100
+
+    Fix for enabled import calc results button while CRS is not configured
+
+[33mcommit 0b1dd8cbe14234fef7f38ae1093ad87459ff25b2[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jan 30 17:32:26 2023 +0100
+
+    New release 3.3.0
+
+[33mcommit e4dd0fecd704f41437005108055fdd4a669871cd[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jan 30 16:45:13 2023 +0100
+
+    shell script for deleting all __pycache__ directories
+
+[33mcommit 69f7fff9cd7e8edfdbdb0cb5d5d7b3f678c70446[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jan 30 11:06:50 2023 +0100
+
+    Only upload receptorSets having a name
+
+[33mcommit 7273d0a7b9d70c1cbaa1696a3382ea7112b86ffc[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jan 27 11:43:19 2023 +0100
+
+    New test release
+
+[33mcommit 10269deb60c35c77185598ac50c9595a47f90f65[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jan 27 11:10:47 2023 +0100
+
+    Remove isFreeway tag from IMAER 5
+
+[33mcommit b6466eaef8cec7f54037c505e4c60222e6b8e62b[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jan 27 08:51:29 2023 +0100
+
+    Update docs for Relate calculation results
+
+[33mcommit 4f15ad0f899f5821404f895d7848a7bdfdaa1b70[m
+Merge: b334b5d 4a9e37b
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 26 18:16:57 2023 +0100
+
+    Merge branch 'roadtype'
+
+[33mcommit 4a9e37b3881e4a460e789278fe6314d61501f504[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 26 18:15:48 2023 +0100
+
+    sectorId and roadAreaType set to fixed values for NL
+
+[33mcommit b334b5d3f9dec752686e49d1d791be8fbb9dd05f[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 26 17:51:06 2023 +0100
+
+    Relate calculations Sum and Maximum call processing functions
+
+[33mcommit 75d192d545344f2f75e248c491e8ef4f0c0d270c[m
+Merge: 0b8e39d 26d7be4
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 26 17:29:25 2023 +0100
+
+    Merged processing algorithms
+
+[33mcommit 0b8e39d3a8e5dba90007c6bb471d2bea1cdbaa37[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 26 17:24:53 2023 +0100
+
+    Relate difference calling processinf (WIP)
+
+[33mcommit 26d7be40fac8658c20bbab4c5d475fa8ab866945[m[33m ([m[1;31morigin/processing[m[33m)[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 26 14:52:55 2023 +0100
+
+    All new algorithm code pep8
+
+[33mcommit 1ae4fec396f60e72d0c8253ca4d33e8a8af2df58[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 26 14:49:15 2023 +0100
+
+    Move function _get_receptor_value() to parent algorithm class
+
+[33mcommit 0c781710f1b3018389ae086ce2dafef47d678927[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 26 14:07:03 2023 +0100
+
+    Processing algorithm for relate maximum
+
+[33mcommit 8d4f1cbb25cb07f23d776bcb6f61983bb97c0e96[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 26 13:50:12 2023 +0100
+
+    Processing algorithm for relate difference
+
+[33mcommit 33f4774c0a27870f625dae8d250122808d997825[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 26 12:43:49 2023 +0100
+
+    Processing algorithm for relate sum
+
+[33mcommit 0a114f8cce0ac6cbe11ea9a7efc1fb530aba61d7[m[33m ([m[1;31morigin/roadtype[m[33m)[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jan 25 22:23:50 2023 +0100
+
+    Chop validate and calculate error lines at 5000 chars
+
+[33mcommit fdcaa7f85e9bc326cb2a3191215e0331fb28275e[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jan 25 22:18:31 2023 +0100
+
+    roadAreaType and roadType in GML generation
+
+[33mcommit 6930c865a03753efac96a417b1d451c1067bc0f9[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jan 25 11:16:12 2023 +0100
+
+    Multi GMLs in PDF (docs)
+
+[33mcommit 3e2dc45822f3bed552a22b7363df6dc9ea1592f9[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jan 25 09:42:12 2023 +0100
+
+    Tip to Hint (docs)
+
+[33mcommit 1bd48ff6cbfde18b9c41b3134beea5ac2631f5a9[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jan 25 09:29:54 2023 +0100
+
+    Updated docs
+
+[33mcommit ccfe46cec4feed933242c7895ebd28cf8a4cab57[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jan 24 14:49:24 2023 +0100
+
+    Support for IMAER 5.1 in export calc results
+
+[33mcommit e891d4527ff135b7154b00adc5181d16b82d7d17[m[33m ([m[1;31morigin/imaer5[m[33m)[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jan 24 14:31:01 2023 +0100
+
+    Remove support for IMAER 4
+
+[33mcommit 1c01f94770648565b078d8bda0110e68ad881021[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jan 24 14:09:27 2023 +0100
+
+    Improved error messages for Connect Validate and Calculate requests
+
+[33mcommit d589898436f4427996ad13fa73da00cdd70556a8[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jan 23 18:15:04 2023 +0100
+
+    Fix for writing coordinates to GML other than epsg:28992
+
+[33mcommit 579b3db5be187f204b5972f894382496947c98c9[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jan 23 11:16:37 2023 +0100
+
+    DEFINED_BY_FILE option in Connect Jobs dialog
+
+[33mcommit 46c05ccfee3ded0543295c3efd7f512627be31d7[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jan 23 10:33:33 2023 +0100
+
+    Send email box checked by default
+
+[33mcommit 3b2501b38d24f9af6ec2c6b6fd213284ba62193a[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jan 23 09:55:12 2023 +0100
+
+    Widget logic in Jobs dialog and marking existing files green
+
+[33mcommit 43ca70896240016489416e8e08b90ee6c5d6346d[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 19 15:36:34 2023 +0100
+
+    Fix in style for diff layer
+
+[33mcommit ca049fb6a54270e4c1e5212f1914cf7de9d1cde5[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 19 15:06:53 2023 +0100
+
+    Everything pep8 again :)
+
+[33mcommit 064aeb89c070026d6d967a44b5e95429ab13bb8f[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 19 15:03:34 2023 +0100
+
+    Different situation type lists for GML generation and Connect
+
+[33mcommit 2c9c42ddcf25d1509de87aec2106b650396da323[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 19 14:57:20 2023 +0100
+
+    Optional file situation and year for Connect
+
+[33mcommit 6d2b858c9ea2579c66d52aa68833ea28889bab12[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jan 19 09:45:02 2023 +0100
+
+    Dates as integers instead of strings
+
+[33mcommit 1e03a723f5dfd33826b267a3e4e7c81a2781c21e[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jan 18 15:52:01 2023 +0100
+
+    Connect calculate works again on multi input GUI, but for 1 file only
+
+[33mcommit 6830a34fe003691bd6ebf4e71246bf92333ded39[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jan 18 09:52:47 2023 +0100
+
+    Prevent translation of "Name" in GUI
+
+[33mcommit 6b5b7b575f4f24f733a6ae7494489e7f3159ddfa[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jan 18 09:22:32 2023 +0100
+
+    GUI improvements according to jira item AER-974
+
+[33mcommit fc00073126eaf254ef2dfb2dcb48799fb70919fc[m
+Merge: 5a5fb9f f0d08d0
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jan 18 09:00:34 2023 +0100
+
+    Merge branch 'master' into imaer5
+
+[33mcommit 5a5fb9fa891bb88921043d1b66fde0e40e96e186[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jan 18 08:59:15 2023 +0100
+
+    Set calculation options in dev mode
+
+[33mcommit f0d08d0c4ce622ff126c8209f249f3343cea0388[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Dec 13 15:52:07 2022 +0100
+
+    New release 3.2.1
+
+[33mcommit c96caff251f8ee2c2c5a6fe32af3d7e2b9a51f4e[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Dec 13 12:05:23 2022 +0100
+
+    Fix for createGpkg() change in QGIS 3.28
+
+[33mcommit 7ca0c5a35e7f534337ec1b8618c96c742c359537[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Thu Oct 27 10:21:35 2022 +0200
+
+    Icon for processing provider
+
+[33mcommit d328293764449b98c263f27569d9e46313686e62[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Oct 25 09:12:40 2022 +0200
+
+    Test release 9.9.0 for Marco
+
+[33mcommit ee39248857eaeb4b21db5a2411c592513eb47acd[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Oct 25 09:04:12 2022 +0200
+
+    Relate Sum processing algorithm (WIP) for 2 layers
+
+[33mcommit 5b83af78914a37a1c955c52542d1153d968fca80[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 24 21:03:42 2022 +0200
+
+    Processing algorithnm for relate difference (WIP)
+
+[33mcommit 85dc00d65f5c8e370e1bc209ef1c25008df7fd17[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 19 11:06:02 2022 +0200
+
+    Redesigning jobs dialog for multiple input GML files (WIP)
+
+[33mcommit 373d44f6f10b2ed07128b4287784bc35c9e4c1b5[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 19 08:18:35 2022 +0200
+
+    fix for bug in aerius_connection user/dev var
+
+[33mcommit e8d285460e7c6869c8bdaf3dc39e2573cbe1e454[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Oct 18 20:46:14 2022 +0200
+
+    validate_gml script for online validation
+
+[33mcommit 371dd2a43fa3a04901d770c7b7924bb4a8e1589c[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon Oct 17 12:14:57 2022 +0100
+
+    updates to testing function - segmentation error. Unable to import qgis
+
+[33mcommit 374779b4117b72d009c8bba322c4ab37925afec2[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Mon Oct 10 16:20:58 2022 +0100
+
+    intial commit of updated python tests to imaer4. Still to add verification of created gml files using aerius connect
+
+[33mcommit c284bcb02e4d7ae61043fef21cce1b7ed5c7fb75[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 10 14:22:23 2022 +0200
+
+    Select CRS setting if available
+
+[33mcommit b6ac8871048313678cdd4542739c80f5ebacd0ac[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 10 14:09:57 2022 +0200
+
+    Select IMAER version number for calculator input gml
+
+[33mcommit 45fbd1fbfcd3d97ccc3c772b83fd04462ef4c533[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 10 12:04:48 2022 +0200
+
+    Show SRID in CRS selector in generate calc input dialog
+
+[33mcommit 68a21b186c4b8d632ed426da42751971b5b3e5ae[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 5 09:28:52 2022 +0200
+
+    All python code made pep8
+
+[33mcommit 0dedbb3fc893b28b295659c11a97b17a4c9239e8[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Oct 4 18:45:59 2022 +0200
+
+    New release 3.2.0
+
+[33mcommit ce45f6c96d44e08f90168b65fcdea0d1033e00b3[m
+Merge: 4e485b5 a0d0e44
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Oct 4 18:35:56 2022 +0200
+
+    Merge pull request #29 from opengeogroep/UK_import_calc_result
+    
+    Uk import calc result
+
+[33mcommit a0d0e4402758818bfdc9a408ce2eb7b614a8dbcd[m
+Merge: ad285a7 6dc04f2
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Tue Oct 4 16:49:40 2022 +0100
+
+    Merge branch 'UK_import_calc_result' of https://github.com/opengeogroep/AERIUS-QGIS-plugins into UK_import_calc_result
+
+[33mcommit ad285a7b4f232e6c543d3565b7f8e2b36e5b2bbc[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Tue Oct 4 16:35:56 2022 +0100
+
+    Updates to pep8 style, and adding exeption if epsg is None
+
+[33mcommit 6dc04f2bb418a3e388eaec6f756bf9252bb70e7f[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Oct 4 17:13:59 2022 +0200
+
+    pep8 checker (WIP)
+
+[33mcommit f2f845d3c98ca6bf6bb2f07025cb7a4c01b12136[m
+Author: Nicola Masey <nicola.masey@ricardo.com>
+Date:   Tue Oct 4 12:23:37 2022 +0100
+
+    Included imaer version 5.1 in import_calc_result.py; and read the crs code from the configuration button. The crs code from configuration is used when mapping the import_calc_result (not the crs within the gml file)
+
+[33mcommit 4e485b5ce967ca986c9c93176fdab437ccd68152[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Tue Oct 4 12:15:14 2022 +0200
+
+    Show srid in configuration CRS-picker
+
+[33mcommit de02536157ea4536f5d513d4d63c6d9ed50aee09[m
+Author: raymondnijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 3 18:04:10 2022 +0200
+
+    Settings for country and CRS
+
+[33mcommit 45c8b2285385ade02ef6ea5d913be8019e080fdc[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed May 25 12:09:08 2022 +0200
+
+    New release 3.1.3
+
+[33mcommit 59bae28a7ce4c71efdce1db8aef5e487edf90ac4[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed May 25 12:04:06 2022 +0200
+
+    Release directions in Readme file
+
+[33mcommit 4f935a026301bbcdc0e8a8fc3d7bf74615887442[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed May 25 11:50:33 2022 +0200
+
+    Number of decimals in deposition labels reduced from 9 to 6
+
+[33mcommit cadaa518869049f4d10b8f720f4d8c2f431bdf8f[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed May 25 11:44:02 2022 +0200
+
+    Edge effect support for IMAER >= 5.0
+
+[33mcommit bdd8483f235b88f45195393ccef28f7004f1358d[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jan 31 14:51:21 2022 +0100
+
+    release 3.1.2
+
+[33mcommit 89954633f4f6ed88c6da731f70dbfdd0c66a48b6[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jan 31 14:47:48 2022 +0100
+
+    set default year to 2022
+
+[33mcommit 510065f5efdd20de53abf7d215e97c8e5b2cb3e1[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jan 31 14:40:10 2022 +0100
+
+    Fix for new PDF extraction and support multi GML extraction. Fixes #21
+
+[33mcommit 9e81284f5b01d309db1d3261cd13b1a097d1f9a3[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jan 31 14:38:20 2022 +0100
+
+    release 3.1.1
+
+[33mcommit 8a94e7e8c2c6efa9834c86cc99544025347bb0ed[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jan 25 16:15:55 2022 +0100
+
+    bugfix in metadata point release number
+
+[33mcommit b9cadd24380bb7ef33f1ea07cabfd38c353ed24e[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jan 25 16:07:04 2022 +0100
+
+    bugfix in metadata point release number
+
+[33mcommit 165175c77d8a57e88e3e241c95f731fb74f54fef[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jan 25 11:37:35 2022 +0100
+
+    release 3.1.0
+
+[33mcommit cab837e3650e0e4d58b994e3472c1eb1a5c8011d[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jan 25 10:26:36 2022 +0100
+
+    Quick fix to prevent using the connect 2021 prerelease
+
+[33mcommit e21b9c78bcf7236b04d4193641c6e876aca6497f[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Sat Jan 22 10:01:32 2022 +0100
+
+    release 3.1 preparations (WIP)
+
+[33mcommit 15a6bed4c00dc26cf8dae726f1f940a1189ec2fb[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Nov 10 10:21:23 2021 +0100
+
+    test release voor Zeeland
+
+[33mcommit b5e24be1908a53cfc269c91cc14f7be1585678d7[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 25 18:00:31 2021 +0200
+
+    show WaitCursur while doing web requests
+
+[33mcommit f22051d23006dce116b2eb481b83789a9af2a303[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 25 14:19:34 2021 +0200
+
+    docs for Connect - Jobs
+
+[33mcommit 1b6c0dafc5abd08c259b88c74b95ee172387ef87[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Oct 7 07:22:42 2021 +0200
+
+    test release zip
+
+[33mcommit ea0bcf6f84e8e8ef2a619e07f5f58341573b4fc4[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 22:37:38 2021 +0200
+
+    More (ugly) workaround code for handling connect validation response
+
+[33mcommit 7edafaba4f75b43e4ac8559b6d346493687d0b2f[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 18:00:37 2021 +0200
+
+    more docs
+
+[33mcommit 9e9792b7c632a121055f456fc70c6b5d70af83d3[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 17:22:33 2021 +0200
+
+    more docs
+
+[33mcommit 5b1cdbe50cfe60fc50ccb193bcf575d2362d6dee[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 16:35:25 2021 +0200
+
+    Remove ... from save and load settings buttons
+
+[33mcommit 23bcd68f498f4d8f61999ee61c47789fc22ca7d2[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 15:46:00 2021 +0200
+
+    more docs
+
+[33mcommit d77dd1ff1f8ee93efaf4fcb60f9dd7a1856a7109[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 15:19:50 2021 +0200
+
+    more docs
+
+[33mcommit d9aa9e5a0bfc9a2f92421c078b6aec3556cbbea2[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 15:01:13 2021 +0200
+
+    more docs
+
+[33mcommit 6e82f5f0b37044d7169e72cc74b6e070c6a65b0c[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 14:15:03 2021 +0200
+
+    more docs
+
+[33mcommit 5823ce03dd28241ab5270adc6106a21ceabd2dbf[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 14:07:12 2021 +0200
+
+    more docs
+
+[33mcommit 726d4df830cecae71717918579632c7e0090faa8[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 12:26:22 2021 +0200
+
+    more docs
+
+[33mcommit 2aa3f965c2b6184395e6a105bdbd706ba9dd2d04[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 12:20:23 2021 +0200
+
+    more docs
+
+[33mcommit c0fcb0aeb80ec673738b90749b76844f9b62b079[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 12:15:57 2021 +0200
+
+    more docs
+
+[33mcommit 1dac44fec4a736fb81ac3886811df25404f2b872[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 12:12:50 2021 +0200
+
+    more docs
+
+[33mcommit 89320e46f1c498a894afee8bb22e32d70f392d64[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 12:11:01 2021 +0200
+
+    more docs
+
+[33mcommit 3bc316d20b61b42456be5fd370db280e9e0173a9[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 12:08:15 2021 +0200
+
+    more docs
+
+[33mcommit 18b15adae2fa5b55c70680ea7573b453f28b604e[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 12:07:45 2021 +0200
+
+    more docs
+
+[33mcommit 26987044deb29841ce1875139442c9a013808b7f[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 12:05:12 2021 +0200
+
+    more docs
+
+[33mcommit e874505b9fd372cc12df2b1484279b825b2768bb[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 12:02:26 2021 +0200
+
+    more docs
+
+[33mcommit 67a71c060fbeb845ba5bf3d4c551aaab834e4851[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 11:50:40 2021 +0200
+
+    more docs
+
+[33mcommit ac65274efd53c0498982d772ff8d21e06ea6c01e[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 11:47:39 2021 +0200
+
+    more docs
+
+[33mcommit 85728da100d6ce7264ca7d2bacbda57bd561541c[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 11:46:17 2021 +0200
+
+    more docs
+
+[33mcommit 177e95d1f9c8e6bc3963de784b5a194bc7c9f58e[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 11:36:43 2021 +0200
+
+    docs anonimise images
+
+[33mcommit a79b36c078633cd4c3b8c7eab3796d1724c88bf6[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 11:22:09 2021 +0200
+
+    docs for configuration 2
+
+[33mcommit 69dfa295c3345153fda703981450735ff71079eb[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 10:09:17 2021 +0200
+
+    docs for configuration
+
+[33mcommit d0158bbde65174b5d6ff8c11bebc2d27a86d122d[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Oct 6 08:51:33 2021 +0200
+
+    screenshots for docs
+
+[33mcommit d65ed8441afc2a736fd81e8c0798c226d0deaf14[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Oct 5 15:29:44 2021 +0200
+
+    Empty calculation result layer handling
+
+[33mcommit 68e87ec704915789a5f686713fb0600758c38914[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Oct 5 12:58:25 2021 +0200
+
+    improved Validation user feedback
+
+[33mcommit 1440c6abe6d32534d9f253670c8648d39dbb9382[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Oct 5 08:04:00 2021 +0200
+
+    test release
+
+[33mcommit b34851160696e0d6873cf8e719d8de726799226d[m
+Merge: dcd94f9 4595c1e
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 4 15:26:10 2021 +0200
+
+    Merge branch 'master' of github.com:opengeogroep/AERIUS-QGIS-plugins
+
+[33mcommit dcd94f9a060cb41a06f39e6fbdc9815d4fc24497[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 4 15:25:47 2021 +0200
+
+    point to new github pages docs
+
+[33mcommit 4595c1e0c1a9172242e8dd4081fed91b4f637409[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 4 15:12:42 2021 +0200
+
+    Set theme jekyll-theme-midnight
+
+[33mcommit dc14d2c482884c70d17fdc247d0596c9814c3b3e[m
+Merge: bd302fb 2a0c1fc
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 4 15:08:15 2021 +0200
+
+    Merge branch 'master' of github.com:opengeogroep/AERIUS-QGIS-plugins
+
+[33mcommit bd302fbf288d6c45289d6adf1bbad3df6c1f64c9[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 4 15:07:38 2021 +0200
+
+    github pages test (wip)
+
+[33mcommit 2a0c1fc24afaac03fa371e4b1e0d3bf5c8d72ebc[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 4 14:56:39 2021 +0200
+
+    Set theme jekyll-theme-cayman
+
+[33mcommit 3f0a32d1e9270f71d835943253365f354e17a1e0[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 4 14:50:25 2021 +0200
+
+    github pages test (wip)
+
+[33mcommit 69ae7f8322519044341c3bf1891bfabffbacc248[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 4 14:45:21 2021 +0200
+
+    github pages test (wip)
+
+[33mcommit 6c79e532dcfe5a8931157332ce481e212190cd04[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 4 14:41:38 2021 +0200
+
+    updated opendata url and removed boundless networkmanager
+
+[33mcommit b0b7ac1990af7f729f694bd3cb27eb1803cb8631[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 4 09:42:39 2021 +0200
+
+    updated opendata url and removed boundless networkmanager
+
+[33mcommit d89c85af4f3dba43aa06d9d4da9f476c40a85757[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Oct 1 11:11:48 2021 +0200
+
+    Convert multipart geometries to single part
+
+[33mcommit f3642b6c0c2835764b6eebb094316ab3b3b620cd[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Sep 30 16:58:36 2021 +0200
+
+    Set years and situation types from settings
+
+[33mcommit a0dbb4dece35484aedfc1e4ec68c82b6c92675dc[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Sep 30 13:24:45 2021 +0200
+
+    Removed reference from Situation calculation input
+
+[33mcommit a5b9ad05604ec2668ee46bfbf67a29e0159e89db[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Sep 30 12:51:20 2021 +0200
+
+    Huge print and log messaging cleanup
+
+[33mcommit 2a0dd0575d825bfd44173b90cf819214506506c6[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 29 15:37:11 2021 +0200
+
+    Only skip vehicles when both number and stagnation_factor are NULL
+
+[33mcommit 73e74bfafb7c033b373fbb1473418e4a2257fdcc[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 29 12:50:26 2021 +0200
+
+    generic log function with messageBar option
+
+[33mcommit 20456ab05234c8ef2cc76148765da104553ca544[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 29 10:44:52 2021 +0200
+
+    show validation results
+
+[33mcommit 56a085b63813cc3a4f37dba756706901d2def6b0[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 29 09:24:17 2021 +0200
+
+    server url configuration option
+
+[33mcommit fe124b3b48ece8d17a26f8394f437bcc42e584f7[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Sep 28 10:12:02 2021 +0200
+
+    config.py cleaned up
+
+[33mcommit c10ad631d5fd315af033c9be0150dacd12bc2412[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Sep 28 10:11:26 2021 +0200
+
+    removed old imaer versions (2 and 3)
+
+[33mcommit 4b92e716320172827d4257760ab87245ab5dd1a3[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Sep 28 09:51:17 2021 +0200
+
+    test release
+
+[33mcommit f0f633b4c5d562d9b485d1d316c5ecdeb6229119[m
+Merge: 9b0f094 dfd9937
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Sep 27 17:54:49 2021 +0200
+
+    Merge branch 'v3new'
+
+[33mcommit dfd9937acf7b3a408ada5f948880039a16bf05b7[m[33m ([m[1;31morigin/v3new[m[33m, [m[1;31morigin/road_gml[m[33m)[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Sep 27 17:36:29 2021 +0200
+
+    Fix for LIGHT_TRAFFIC with dynamic speed
+
+[33mcommit e16de7755974b8ee5f9ebe2731d622ea745bcda2[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Sep 27 16:41:04 2021 +0200
+
+    Removed old Buildings code
+
+[33mcommit 4969431e571048053e221c26790657a72e710e3b[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Sep 27 16:30:08 2021 +0200
+
+    Vehicles types HEAVY_TRAFFIC and AUTO_BUS added to GUI
+
+[33mcommit 738defc4dfa1e7ab39ab21b490fcca2f798f086e[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Sep 27 16:06:51 2021 +0200
+
+    Calc input SRM2Roads finished
+
+[33mcommit a4cf3e9ac3158e4e4a506a02c45cc9c1d0f5cb75[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Sep 27 11:54:49 2021 +0200
+
+    Calc input Roads (WIP)
+
+[33mcommit b8555b3dc7fb7a61e0afe15b690c2909ada12926[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Sep 24 09:29:47 2021 +0200
+
+    Generate valid GML for emission sources
+
+[33mcommit a27686a030eba836c02a0f1b932382b4fac54c50[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Sep 23 14:33:19 2021 +0200
+
+    calc input with heat content
+
+[33mcommit f013272c418b99fd4717a357c17315b6dec0ea2a[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Sep 23 13:29:36 2021 +0200
+
+    Add gml geometry type to identifier
+
+[33mcommit 1f584cf1efc4682a8c77cb2c8457541380742bc7[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Sep 23 10:31:54 2021 +0200
+
+    zip release _20210922
+
+[33mcommit affa7d7c0c2e3cd42898acd3641e2835f1737fdb[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Sun Sep 19 20:44:37 2021 +0200
+
+    Imaer 4.0 reference in gml, and validation turned on
+
+[33mcommit 4407d64d93f6b5bb545b4af3cfc6d8112c825494[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Sep 17 17:31:23 2021 +0200
+
+    EmissionSourceCharacteristics partly added (WIP)
+
+[33mcommit e9378d3457d5e5acd5f822ae3926bef47d3f2b8f[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Sep 17 15:04:47 2021 +0200
+
+    EmissionSourceType super class
+
+[33mcommit de5290805f074bafd243f9406fb0063d39bfcfcc[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Sep 17 10:58:20 2021 +0200
+
+    generating imaer gml with new qt lib (WIP)
+
+[33mcommit 80853db800fd38e10b64c8e0e68df5568ae88a9b[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Sep 16 16:46:16 2021 +0200
+
+    Typo in comment
+
+[33mcommit 9ca26743107101fb094322e6c399d0904e9415bb[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Sep 16 16:39:16 2021 +0200
+
+    Basic save and load field settings functionality
+
+[33mcommit 25fc9f1073a1f78a41c5783bf996a86ecc68f785[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Sep 16 10:00:44 2021 +0200
+
+    GUI input for ROAD_TRANSPORTATION (WIP)
+
+[33mcommit dc294cdaf771578d6c2cab06e91957707c70ced2[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 15 09:53:31 2021 +0200
+
+    Test release for Marike
+
+[33mcommit edc98c363e89dde467aefdc07f94f73d02642b3a[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Sep 9 16:56:50 2021 +0200
+
+    Add sectorId to GUI (WIP)
+
+[33mcommit 6cc26d9b61e1d4f703e9c466768f00a9186af299[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Aug 10 13:37:15 2021 +0200
+
+    removed init from imaer4 module
+
+[33mcommit 73b994b0f97fbf734a6336265dab5bfe25c60dc0[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Aug 5 10:35:20 2021 +0200
+
+    GuiNode class removed
+
+[33mcommit a07f39e6ff30d41d237ec71287f06721d10cece3[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Aug 4 18:19:15 2021 +0200
+
+    set and update field combo boxes
+
+[33mcommit ad66abc85e7efd439e2ce444de76244f9e38bce3[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Aug 4 14:28:44 2021 +0200
+
+    emission sources in tabs
+
+[33mcommit 3fc91b82071ccc4177ac44956b30c9196e2c6ff9[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Aug 2 16:19:31 2021 +0200
+
+    Add automatic widget registration for IMAER model. (dead end?) WIP
+
+[33mcommit 9b0f094d9028ca785dfe20c5194cc52a1e110c08[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jul 19 15:14:55 2021 +0200
+
+    Test release
+
+[33mcommit ef9918cf4fa78320a83844d1166dc32f8b2eabc1[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jul 19 15:12:49 2021 +0200
+
+    checkable metadata groups (WIP)
+
+[33mcommit 31094a6b0ab4305186db758c0346859aef26e40f[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jul 19 13:36:00 2021 +0200
+
+    Tabs in emission source generator (WIP)
+
+[33mcommit 4683ef80c2feeced66f30df71052982c1fb08f38[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 16 14:23:27 2021 +0200
+
+    ParameterDef replaced by GuiNode
+
+[33mcommit 26b0e41072fccd9e32909a0d6d1095900397240d[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 16 14:20:16 2021 +0200
+
+    ParameterDefs WIP
+
+[33mcommit aa4b7f3b3a4a5790629c195a621ef3e68228d331[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 16 09:00:30 2021 +0200
+
+    IMAER3 oo model WIP
+
+[33mcommit 9775e058da44c74d230f78eba8ee01210b94aa87[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 14 13:18:44 2021 +0200
+
+    New IMAER Plugin toolbar image for docs
+
+[33mcommit c50b2c9f0c1ba040f4392543df4d85d0dd02e4ca[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 14 13:04:15 2021 +0200
+
+    More documentation pages
+
+[33mcommit 3b6001a2781d6a2a7056fd3044b55d6f9c8585bd[m
+Merge: 7cbaab8 ca957d8
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 14 09:35:41 2021 +0200
+
+    Merged master into connect branch
+
+[33mcommit 7cbaab8dbea423337db5850fc9b2572fd17789f4[m[33m ([m[1;31morigin/connect[m[33m)[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 14 08:19:46 2021 +0200
+
+    Set connect server address to prerelease and accept IMAER 4.0
+
+[33mcommit 02e5293209bd5a04038eefbb9cb2717f6badfbf5[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jul 6 07:22:45 2021 +0200
+
+    Disable Open Data Layer button (until it properly works)
+
+[33mcommit a994c9e9d90eabc7a64ea143f35bb4b93888b066[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jul 5 22:30:31 2021 +0200
+
+    new depositions style
+
+[33mcommit 67a1a07e3e4ed64f9246ee9f5b696f42a9a8dd19[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jul 5 22:10:02 2021 +0200
+
+    Support for importing IMAER 4.0 results (not tested!)
+
+[33mcommit 0421ab5f4b7290543b694d84efd3645dbf011916[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jul 5 17:04:00 2021 +0200
+
+    Calculation Situation option in GUI
+
+[33mcommit 47870936a1309a2ece89636ffae5f773e8ef77cd[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jul 5 16:21:40 2021 +0200
+
+    GUI logic with connection check, fixed api_key post
+
+[33mcommit 59b0a112a7ed894217a83fb0ac3aebe29a7b08c5[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jul 5 10:52:10 2021 +0200
+
+    larger icons by Taco
+
+[33mcommit ebc51c5d0a0c07276b09f8a1e537a260c040bd8a[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jun 25 18:13:53 2021 +0200
+
+    Test Release for Connect
+
+[33mcommit 014c8479dffbb898652be46c88f2c0cb23f977b4[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jun 25 18:12:05 2021 +0200
+
+    Metadata minimum QGIS version set to 3.16
+
+[33mcommit fdefe248c5e04b9b22f873b1693516293c28f8d2[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jun 25 18:05:48 2021 +0200
+
+    Lots of GUI logic
+
+[33mcommit 9e19eaffc95b9b9aeb2ed4dd896c5e14a71ef797[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jun 25 16:07:28 2021 +0200
+
+    adjusted icon
+
+[33mcommit 3559ffc372b399ee378edaae5341dd89d6586ac1[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jun 25 15:57:44 2021 +0200
+
+    New button icons by Taco
+
+[33mcommit 89e9c1c6f1387f89e990f47d8a1760db9606de0d[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jun 25 15:53:28 2021 +0200
+
+    Relate Calculation Results on up to 5 layers
+
+[33mcommit 72b8e0b130888879c9fd74922200fe740aee0a88[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jun 25 15:47:24 2021 +0200
+
+    Typo fix in tooltip
+
+[33mcommit fd3d6ff187c7e0d7b83c52b6b7debdbe199988d7[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jun 25 08:32:07 2021 +0200
+
+    special release for Christa
+
+[33mcommit 59bcfd5b467058449886227c892dd253ccbc3063[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jun 24 11:34:44 2021 +0200
+
+    download result layer
+
+[33mcommit aa85d9ab1aaaa1cc1a57602e2ebf81c4f0430b87[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jun 23 22:06:17 2021 +0200
+
+    rounded values for calc result labels (style)
+
+[33mcommit 9272f05445782c1dfd07f8079e16946a37c029d1[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jun 23 12:49:13 2021 +0200
+
+    skip NO2 data
+
+[33mcommit 37e1698e0ac1c5861f3b7a173330bc00a5b6099a[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jun 23 12:02:05 2021 +0200
+
+    Cancel Jobs functionality
+
+[33mcommit 57c308d90e2975d091d834c2b126e46b4e1c3667[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jun 23 11:23:18 2021 +0200
+
+    Delete Job(s) functionality
+
+[33mcommit 700e38848f29f45783efdf8e1fb27f5c66ab0109[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jun 23 09:27:21 2021 +0200
+
+    support for starting CUSTOM_POINTS calculations
+
+[33mcommit bfc2d1c7811a4a79103b73552009039d90b087b0[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jun 23 08:50:21 2021 +0200
+
+    More calculation job options and remocval of depricated run_request function
+
+[33mcommit 2754ef09627e306b411031c0c5da0ca59c44a2da[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 22 18:25:53 2021 +0200
+
+    display job table in dialog
+
+[33mcommit 8acd37353f41e759d7ecefc7cf4f82df226cbdef[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 22 16:57:33 2021 +0200
+
+    labels with receptor_ids in base_geometries style (turned off by default)
+
+[33mcommit 6dd5b887003bd6668d46b68ec6e93bde96f08fbe[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 22 16:49:17 2021 +0200
+
+    multi part post for starting calculation
+
+[33mcommit 1b0707a352f7ae3445ebb03f278b838e7db104fb[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 22 12:23:16 2021 +0200
+
+    calculate maximum value layer
+
+[33mcommit 57a357f24e2077c2f1f38c4e927ce2fed0ebb7fa[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 22 08:30:08 2021 +0200
+
+    new icon for add_open_data_layer
+
+[33mcommit 6901503259aed900977badf2dca0ebefeeb32907[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 22 08:12:56 2021 +0200
+
+    images moved to img/ directory
+
+[33mcommit 4bd93aff25e0e3487abb0ba5db55331810d55bc6[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jun 21 17:49:33 2021 +0200
+
+    blocking multipart requests
+
+[33mcommit dd7518d5dc55e056668f575b0f635e488ce332ce[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jun 21 15:48:39 2021 +0200
+
+    connect Jobs and Calculate functionality
+
+[33mcommit a230fb50c4c69b599d7d61399d76577c6bbc1bdd[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jun 21 13:28:46 2021 +0200
+
+    fix connect toolbar update
+
+[33mcommit 815bdd346e97d260f13585bc92947af5131bcdc7[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jun 21 12:48:09 2021 +0200
+
+    new request types GET and DELETE for connect v7
+
+[33mcommit 4e2466e0e35fb136c044be62a0bcbe3f4e94b527[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jun 14 22:29:31 2021 +0200
+
+    expanding the new multipart request function to replace run_request() WiP
+
+[33mcommit 3e65313435b0519acff015be775ac2d3ebfbbcff[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jun 14 20:22:23 2021 +0200
+
+    filePart requests (WiP)
+
+[33mcommit e1e04324f3b4e928913d3db422f5914177722160[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jun 10 14:05:58 2021 +0200
+
+    fixing connect test urls
+
+[33mcommit fb34ff8945a96f7a30648ae95ce71c6e01ef5c28[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jun 10 12:34:44 2021 +0200
+
+    first steps to Connect v7 API connection
+
+[33mcommit 7dbfd45ed57c7eb7e2751e78d00beec9654817d6[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jun 9 14:12:06 2021 +0200
+
+    connect version number variable
+
+[33mcommit c12081bd7abab89a53a39aaa4c083f3ade402cdc[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jun 9 12:03:29 2021 +0200
+
+    configuration dialog with work_dir setting (instead of @-dialog)
+
+[33mcommit d59cbeb2895707936a1f5bce7589b953a29ffc6c[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jun 7 14:57:27 2021 +0200
+
+    extra release for John
+
+[33mcommit ca957d8c4cc23b555a9ef280fe9024e9f1740232[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Apr 20 11:39:45 2021 +0200
+
+    Update 03_extract_gml_from_pdf.md
+
+[33mcommit afa752abde73e43e0e978b51d6671742f160366d[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Apr 20 11:37:47 2021 +0200
+
+    Update 00_index.md
+
+[33mcommit 42b322bc7f4cead121da13ff90fb70e55276a225[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Apr 20 11:35:03 2021 +0200
+
+    Update 00_index.md
+
+[33mcommit 6756ba8670bf8efb1a82cbdb7a2d1278448fb5de[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Apr 20 11:20:13 2021 +0200
+
+    Update 00_index.md
+
+[33mcommit 1d3597d6da7bc72cd32685c732c7983ad5f489f9[m
+Merge: 0583e76 bf7c06f
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Apr 20 09:39:55 2021 +0200
+
+    Merge branch 'master' of github.com:opengeogroep/AERIUS-QGIS-plugins
+
+[33mcommit 0583e7645145faae275adab9419d6b3e5f957594[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Apr 20 09:39:43 2021 +0200
+
+    docs image imaear_toolbar
+
+[33mcommit bf7c06f4f3b89ac516439f662cb30ad4a9536d69[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Apr 20 08:39:25 2021 +0200
+
+    Update 05_relate_calc_results.md
+
+[33mcommit feb8691f02531a22a0eb96f2efc012d1b23326fb[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Apr 20 08:35:56 2021 +0200
+
+    fix for docs index
+
+[33mcommit a2c27e2669a02da15726da7a84c37935003a719e[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Apr 19 21:11:08 2021 +0200
+
+    extra docs pages for relate_layers and extract_pdf
+
+[33mcommit 9981ba4b9da5fe1e1b28a631c5bf094febe900a6[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Apr 19 14:05:38 2021 +0200
+
+    release 3.0.8
+
+[33mcommit 2e84e2c5584e295d2b9f9bfb2b0446ba32707ef5[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Apr 19 13:51:27 2021 +0200
+
+    merge to master branch (updated docs link)
+
+[33mcommit ecffd125dd31048a403224d6d081e4f8063d1cdb[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Apr 19 13:41:07 2021 +0200
+
+    disable Connect functionality (for experimental release)
+
+[33mcommit ef7d09eab94b2161a4eb03f4153e70e8547dad30[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Mar 9 15:41:04 2021 +0100
+
+    unofficial release for DLV
+
+[33mcommit 08f5cfa86ed58f1ae65e33757adaec968bdc9058[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Mar 9 15:29:46 2021 +0100
+
+    show error for invalid deposition layers
+
+[33mcommit 92fefd14ce1886139f01d78f7c0d3da8fd257f60[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Mar 9 14:54:58 2021 +0100
+
+    dynamic layer size in relate calculations GUI
+
+[33mcommit fb3a0706409b941185951908c2803292393fe4b5[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Mar 9 14:52:58 2021 +0100
+
+    removed 0-class from the diff legend
+
+[33mcommit 4a7caff39584050cfa5120865dce1b89952759cd[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Mar 9 14:24:09 2021 +0100
+
+    add dep_TOTAL column (optionally)
+
+[33mcommit 032dee56daa691aef0c6eccc1e186ee11633acb8[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Mar 9 13:35:54 2021 +0100
+
+    editable layer name
+
+[33mcommit 74a4b20ebe3d3f80e9f9baed40302654761351bb[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Mar 9 13:08:56 2021 +0100
+
+    sum deposition layers
+
+[33mcommit 380c639b9075e319ec73c44e447518c8915218a7[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Mar 8 19:02:35 2021 +0100
+
+    imaer layer calculations refactored
+
+[33mcommit b8ae389ba9e9b76784170845cb0840ed91b1e066[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Mar 8 12:26:06 2021 +0100
+
+    move DLV "release" to releases dir
+
+[33mcommit d7cf475eccc74fede7f51986bcd8840d7f8f9651[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Mar 8 12:22:20 2021 +0100
+
+    suggestions by Nyall (code review)
+
+[33mcommit 8fa3374d1191d37146ac7f17fa98061896039b34[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Nov 26 16:29:00 2020 +0100
+
+    import from qgis.PyQt instead of PyQt5
+
+[33mcommit 452bd61041dd3af22bbd2198176a7d3e06be9cf4[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Nov 26 10:58:31 2020 +0100
+
+    run calculation on CUSTOM_POINTS
+
+[33mcommit 878eb845216b40d51622acf3961ed47adb586003[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Nov 24 18:14:40 2020 +0100
+
+    bug fix for api key update
+
+[33mcommit 820ecdcfb533fa28b82cfa5af3ed9e325bfd1e9d[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Nov 24 17:47:35 2020 +0100
+
+    load opendata hexagons layer, skip download if already available
+
+[33mcommit 52c0529e92c365eb76586d9b252d9265a43efa63[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Nov 19 18:28:43 2020 +0100
+
+    hexagon style abs on nh3+nox values for classification  and labels
+
+[33mcommit 5addd91acff680352214ff880a5d4f41983293a3[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Nov 19 17:37:35 2020 +0100
+
+    first opendata download function
+
+[33mcommit 3f66b02063153992de909c50bc2b9fb550960589[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Nov 9 15:43:41 2020 +0100
+
+    file browse function to generate calc input dialog
+
+[33mcommit fc647f84ece37bba391f973e46adee392c95f1dc[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Nov 9 14:16:56 2020 +0100
+
+    action_configuration for initGui() and unload() function
+
+[33mcommit cb376d090cfbf9f078b06c2568bb10a92ddf8b76[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Nov 6 17:51:35 2020 +0100
+
+    receptor set dialog and api functions
+
+[33mcommit d67c3843ddf5300ae952a4e04794d424b789e060[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Nov 5 18:20:34 2020 +0100
+
+    initial receptorsets dialog
+
+[33mcommit 533825938452ba9d895e1bf559f70ea4f48f51d8[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Nov 5 12:40:30 2020 +0100
+
+    extract gml from imaer pdf
+
+[33mcommit a944e89bc7f3f4fe8797b9a3828b603a2d358554[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Nov 4 10:31:48 2020 +0100
+
+    extra (dummy!) options for relate calculations
+
+[33mcommit 04b81abfd31b75f37a38fc354b826a9282da95a4[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Oct 27 14:47:48 2020 +0100
+
+    relate calc results (diff) function
+
+[33mcommit 800084bc3e0f6ccab2da35d279e25314518b4c36[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 26 11:18:56 2020 +0100
+
+    show Connect response as feedback in GUI
+
+[33mcommit 40383fac4438b6c470b38937477ac9b6dd6454e4[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Oct 23 17:13:28 2020 +0200
+
+    support for exporting IMAER 2.2 and 3.1 results
+
+[33mcommit 8b5275570ddce24e1f85bc2a4401eca2c71bcae0[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Oct 23 16:34:00 2020 +0200
+
+    support for importing IMAER 2.2 and 3.1 results
+
+[33mcommit 7a5a735edd6f601c054a8580f16c4d25c3274536[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Oct 23 13:14:07 2020 +0200
+
+    improved connect dialog scaling
+
+[33mcommit d8f2b900be93824b29f62d72fe6512eadc5add2a[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 19 17:58:26 2020 +0200
+
+    fix for setting new api key to existing connection
+
+[33mcommit 9e5bfa3ab933f7b3dc0f2c726efb7e31652509e5[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 19 17:55:28 2020 +0200
+
+    connect status/jobs GET request
+
+[33mcommit c6333917416cd4cfeb9edb2d11c53efd33b2955a[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 19 17:03:21 2020 +0200
+
+    connect calculate working example
+
+[33mcommit b03415b172b56f233d3b77f4305a0ac1530608e9[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 12 17:25:34 2020 +0200
+
+    disable connect button when api is not set
+
+[33mcommit 1036f4a84eac3fd356590a0a242bf5904de6e51c[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 12 17:06:37 2020 +0200
+
+    new calc icon (not yet in use)
+
+[33mcommit 9e507b8dd5e708dd11bcc6276ef71cb24df979c4[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 12 17:04:52 2020 +0200
+
+    connect Validate function working (basic)
+
+[33mcommit 8a4d7b9516e2c3be55bafdb67f51eb70c5f7f699[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 12 15:41:00 2020 +0200
+
+    updated test_emissies gpkg
+
+[33mcommit 822baa610b1acc2465edc68321cd11050feca2f0[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 12 15:38:08 2020 +0200
+
+    Connect calculate dialog and toolbar button
+
+[33mcommit 5251448fffdfdea47346c3a19f8708f8ec002d32[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 12 13:38:32 2020 +0200
+
+    storing Connect email and key as qgis variables
+
+[33mcommit 2d7ac0a2a4aee5f2374c56f46c92ace088ade0e2[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Oct 12 09:51:27 2020 +0200
+
+    test data for building
+
+[33mcommit e16baa636a8308f305a957ab92e1a20a724e542c[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Oct 2 13:58:24 2020 +0200
+
+    configuration dialog and get_api_key request
+
+[33mcommit ef016f77cff8f4cd1ad9cbf5bc777a9ff2518b3f[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Oct 1 10:05:55 2020 +0200
+
+    release 3.0.7
+
+[33mcommit 235e914d505fb2c2e87a8e23f1ec78cba809e4de[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 30 17:45:40 2020 +0200
+
+    bugfix for outflowDiameter typo
+
+[33mcommit e728745c60271a568408616c7eafc02a9d6e93bb[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 30 17:39:14 2020 +0200
+
+    release 3.0.6
+
+[33mcommit ac502e8d4a9cdcc389d403ad47a4123798f2d14a[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 30 17:29:53 2020 +0200
+
+    file dialog with suggested file name for exporting gml files
+
+[33mcommit 18a9ba2f9498a5b23071472292ba227181680b06[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 30 12:01:48 2020 +0200
+
+    edit situation name in GUI
+
+[33mcommit ab689cde0bf77045fdb42a469aba3f06bc91d547[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 30 11:15:59 2020 +0200
+
+    fix for swapped building data (width/length)
+
+[33mcommit 48f2ff923f805b62fb382116a3baf53b5db76e73[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Sep 11 11:40:03 2020 +0200
+
+    Update 02_export_calc_results.md
+
+[33mcommit 49a573eb3366a9bf2ceaf5ff39d36e719069491b[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 9 15:29:59 2020 +0200
+
+    release 3.0.5
+
+[33mcommit 45e3885291fb86894b5884cae471f0058756e4a5[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 9 15:23:55 2020 +0200
+
+    Documentation button in toolbar
+
+[33mcommit d787ef872777c65b5a7ef631afb249fd219c8c14[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 9 14:19:48 2020 +0200
+
+    docs
+
+[33mcommit 5eb728de61d6ca792c2f9de19d9bea2c01979339[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 9 14:18:09 2020 +0200
+
+    docs
+
+[33mcommit 9eb5353e19d7b7eb3ef5c69bc6cead4f39bd2380[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 9 13:59:24 2020 +0200
+
+    docs
+
+[33mcommit 9ee49d631b67fc2c8b09d9796be2888900748b46[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 9 13:40:41 2020 +0200
+
+    Fix for null values when importing emissions
+
+[33mcommit 7dd511fc7f58f2f4117cbe08cae4f709ce6bfd67[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Sep 7 19:41:08 2020 +0200
+
+    docs
+
+[33mcommit 15584ede69803b268cf40aefc79fcfb7f6861307[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Sep 7 19:40:05 2020 +0200
+
+    docs
+
+[33mcommit 1bf40503823e1e2ceebb4e3f48d83332f404eb67[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Sep 7 19:03:08 2020 +0200
+
+    Update 01_import_calc_results.md
+    
+    docs
+
+[33mcommit e70f8159a89c964195357611a9ba0dfc94f04aff[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Sep 7 19:00:35 2020 +0200
+
+    first doc pages
+
+[33mcommit 6623f669d339ff1d22573e5b8693905ef388af63[m[33m ([m[1;31morigin/calcinput[m[33m)[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Sep 1 12:23:16 2020 +0200
+
+    release 3.0.4
+
+[33mcommit 8a618d296ce102e4598387dbabce8e31e7dac17c[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Sep 1 11:30:21 2020 +0200
+
+    fix gitignore
+
+[33mcommit d5fb6047fe3a7547c4d71481ebc23ce1c1fca03d[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Sep 1 11:29:26 2020 +0200
+
+    ignore test output files
+
+[33mcommit 38739a73c22c8deb1274e0972873832c4eaa9da4[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Sep 1 11:23:14 2020 +0200
+
+    unit tests for imaer model
+
+[33mcommit 491cd0d4e94b8efba70c09472906fc0767da9e4a[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Sep 1 11:19:03 2020 +0200
+
+    Support for Emission source Characteristics
+
+[33mcommit 02898920c446a7c6ae21e6e51bd3c1af08dc9d29[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Aug 28 16:17:10 2020 +0200
+
+    release 3.0.3
+
+[33mcommit db92274fd9a709ea2f5e33c47140c72db81fb31e[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Aug 28 15:58:31 2020 +0200
+
+    support for emission source characteristics
+
+[33mcommit f032f977af16f813952fa8a28de78b4e8d476cc5[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Aug 25 18:20:29 2020 +0200
+
+    only output existing emission values
+
+[33mcommit bf8f51ca5a2c4f08259e2e7f984461f9d870172a[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Aug 25 17:31:13 2020 +0200
+
+    move imaer generation functionality to calcinput dialog class
+
+[33mcommit 5e8886fbb69e7ce4695dedc5976efff15ef49203[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Aug 25 16:11:41 2020 +0200
+
+    specify output CRS and auto transform for calcinput
+
+[33mcommit 7377c8480a7c5cfed26e78e43e40cbeb6c8d9f9d[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Aug 25 12:49:25 2020 +0200
+
+    year variable for calcinput
+
+[33mcommit 7d94dc237c5909ebbb7f5102d45fec8bda011a04[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Aug 20 15:53:52 2020 +0200
+
+    calcinput support for lines and polygons
+
+[33mcommit 6a0dd38bbec56d65cb7cf438605d2edd5aba75f3[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Aug 20 12:35:29 2020 +0200
+
+    generate gml linestrings
+
+[33mcommit 0e4f02917dd1737d8932d5b09f3de3d00d8f7b83[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Aug 20 10:16:20 2020 +0200
+
+    release 3.0.2
+
+[33mcommit 78be76db8c795bec587749b5b4f201fcb0acc256[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Aug 19 16:40:37 2020 +0200
+
+    message after exporting calcinput
+
+[33mcommit 9d5efb9cf0b24b638ed021572a36242ca7ee6823[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Aug 19 12:36:33 2020 +0200
+
+    purple toolbar in dev mode
+
+[33mcommit e65a3e8c9262c6a6ae6d3c94509b00a48b95e2ec[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Aug 19 12:32:55 2020 +0200
+
+    emission value = 0.0 for empty cells
+
+[33mcommit 5d9fb7ba8e016ad178c4473f9ab6b332238bddfa[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Aug 19 11:13:52 2020 +0200
+
+    only set path to raymond-dir in dev mode
+
+[33mcommit bc924b88c9013839857057fb1008415b5a892614[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Aug 19 10:56:40 2020 +0200
+
+    dev mode set by global qgis variable terglobo_dev
+
+[33mcommit a7425734e1897a5a5ea4aa7d199c6578038902da[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Aug 18 20:23:31 2020 +0200
+
+    basic calculator input generation
+
+[33mcommit 9245d45e1307b29c1e9e7618e01449a817f5a6b7[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Aug 14 13:02:52 2020 +0200
+
+    write calcinput gml from gui
+
+[33mcommit b64ea67c517883d34e6ac497fc64206848222fa4[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Aug 14 10:35:47 2020 +0200
+
+    sector codes in config
+
+[33mcommit 0c520b081984231666d0147fdd2f160835f00bb0[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Aug 14 10:02:33 2020 +0200
+
+    write  gml to file function
+
+[33mcommit aa1532faa57fc45e668bd06287f91f391be00b6f[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Aug 14 09:38:03 2020 +0200
+
+    export imaer v2.2 -> v3.3 for calcinput
+
+[33mcommit 28bea553f3b6cb6763fec1b909a517dcfeec98ec[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Aug 14 09:22:25 2020 +0200
+
+    imaer write calcinput library
+
+[33mcommit 0f4be538d47545eae77e1ec34b77394ae1f995f1[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Aug 13 07:43:36 2020 +0200
+
+    version info in metadata (but still only supporting v2.2
+
+[33mcommit 8ad69530707570fb18166e093b1614d8d772b9aa[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jul 21 20:41:55 2020 +0200
+
+    metadata xml generator
+
+[33mcommit bd7ff7d10e0f76cd7ac45b189e35fd845ff2d265[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jul 21 18:56:18 2020 +0200
+
+    imaer xml generator
+
+[33mcommit 12f3f0b5db22bdc00d11481fe579a40b389a3663[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 17 11:47:13 2020 +0200
+
+    field combo filter
+
+[33mcommit 53e6057eb08d96910e990fa40a3103a5dc32ed60[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jul 16 20:03:23 2020 +0200
+
+    fix for empty deposition columns
+
+[33mcommit 701db4085fb76ebbeee77e6bd0ab4288480b86d5[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jul 9 14:44:01 2020 +0200
+
+    elements in grid layout
+
+[33mcommit f88fc2ee3a986d58812b60c110ac2fc6bd8b3583[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jul 9 10:28:24 2020 +0200
+
+    WidgetRegistry
+
+[33mcommit bb0325d693b5fe966fa8dad62b7ae5d48118f111[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jul 9 09:12:17 2020 +0200
+
+    gpkg for testing cal input generator
+
+[33mcommit 2b92bc325eb5c05a7de5976772100b3548fc98e8[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jul 9 09:11:10 2020 +0200
+
+    gitignore only AERIUS gpkg files
+
+[33mcommit fe7bb376b34545b8ae48b6233077d29b65fda971[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 8 19:02:05 2020 +0200
+
+    subsectors
+
+[33mcommit 97962072e9de1ba39409fb734f5e2b6fff3ecc98[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 8 17:26:04 2020 +0200
+
+    working QgsMapLayerComboBox
+
+[33mcommit 52ae7d9e0f7a79e17aad87c111c878514d7d0a0a[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 8 15:56:03 2020 +0200
+
+    framework for generate_calc_input functionality and some refactoring
+
+[33mcommit 1b954d7f1f7c425c053d9d2100594be8ff246534[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 8 14:10:41 2020 +0200
+
+    fix for field name order and xml output formatting
+
+[33mcommit 723c03936bc55dd2b1661569db0a60c39ba81114[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 8 10:58:14 2020 +0200
+
+    delete old files
+
+[33mcommit ed477975255d6abd5e09598b5d0123f76c0fd1f3[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 8 10:32:03 2020 +0200
+
+    delete old qgis2 plugins
+
+[33mcommit c1594e42eeae7590d6fc4170dfbe765aa29a1b98[m
+Merge: 25efdc5 0a4bdda
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 8 09:40:38 2020 +0200
+
+    merge gpkg branch into v3new
+
+[33mcommit 0a4bddac0caddf84cc494b11bb076733706b3944[m[33m ([m[1;31morigin/gpkg[m[33m)[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 3 12:41:28 2020 +0200
+
+    release 3.0.1
+
+[33mcommit 1b5735f93670a63cb506fb554d3b125a72fde538[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 3 10:09:59 2020 +0200
+
+    export working
+
+[33mcommit 05529cfa2fae9fd649d57154e742e784e1de1b93[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 3 08:37:55 2020 +0200
+
+    working calc export but without polygon coords parsing
+
+[33mcommit b809dbc1904a950db4cc6405418931693e5f75b8[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jul 2 17:51:27 2020 +0200
+
+    fix for imaer layer detection error at qgis startup
+
+[33mcommit b018cbd7a7081f0c93102f62e7fb4c20b53c435c[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jul 2 17:01:23 2020 +0200
+
+    export action based on layer metadata
+
+[33mcommit 03b343e1ecb7e440a2e6c0f78584c5ff1d7db0e0[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 1 23:08:28 2020 +0200
+
+    removed tasktimer from import task
+
+[33mcommit 35f41af079b860d65303228c8abcfea8c1e54bc1[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 1 23:04:33 2020 +0200
+
+    tasktimer and import speedup
+
+[33mcommit 0d1e1ac7258db6328e0be65f76fbb4d316aeefa6[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 1 18:23:41 2020 +0200
+
+    empty export task running
+
+[33mcommit 72400369d53108dc156fdda2446c56541a3f7d9a[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 1 17:22:22 2020 +0200
+
+    cleanup Import Imaer task
+
+[33mcommit 43d351065ff2d88771fb8d4e76f91d25c145a9d4[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 1 17:08:07 2020 +0200
+
+    action button for imaer calc export
+
+[33mcommit 2ba32248b0eef8101d56d3005aba5e517622cf58[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 1 16:00:37 2020 +0200
+
+    preparations for adding export worker
+
+[33mcommit 65883a2a972b99a57ca6f6abed1229ca1b259ac8[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 1 10:49:46 2020 +0200
+
+    remove xsd to gpkg convertor
+
+[33mcommit 43087f25390bd1b23dd927861baf48b8e07c2657[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 30 07:35:45 2020 +0200
+
+    working version with new qgstask and gpkg
+
+[33mcommit a16914fbd8b6f1f3a07e989a4f015c3e0e4c83ea[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jun 29 09:25:56 2020 +0200
+
+    delete old gpkg convertor
+
+[33mcommit ca94381bf68f209a1c1c8f1cc18011f3c5ffdb81[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jun 29 09:24:43 2020 +0200
+
+    old gpkg convertor because it might be handy some day
+
+[33mcommit 62bb0f0a86f658321b76762293dd147bb02ed113[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Sat Jun 27 15:24:22 2020 +0200
+
+    more efficient progress update based on file size
+
+[33mcommit fdaca0994ab095023bbc3add4660bebbd69e37a1[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Sat Jun 27 15:21:55 2020 +0200
+
+    gitignore demodata/*.gpkg*
+
+[33mcommit 9bed10305cd120d5ddfce20be27bfe12610072e0[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Sat Jun 27 15:20:51 2020 +0200
+
+    more demodata
+
+[33mcommit c2277c4bd07ba7374092421fdbad590c723c77e1[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jun 26 17:56:50 2020 +0200
+
+    xml to metadata table
+
+[33mcommit 70c53c1ebf8fd42f374bfe903cdc1600d68ab473[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jun 26 15:25:25 2020 +0200
+
+    receptors to gpkg
+
+[33mcommit c03f577339a0cd66a43f664d3ab243298b5080bf[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jun 25 16:09:39 2020 +0200
+
+    set parse process to file part
+
+[33mcommit 009a30c038db531151746e7cc83cca20d91509a2[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jun 25 15:12:07 2020 +0200
+
+    first task parser
+
+[33mcommit bcfa17d8ff66a90e4390a89878433fcf4ab73423[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 9 10:29:36 2020 +0200
+
+    generate proper error message
+
+[33mcommit a6a126a9e200199547ec6fe1403559ee940deac7[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 9 10:29:01 2020 +0200
+
+    zoom to layer
+
+[33mcommit 8c270788d48dceb70e6e71e6cf1c513b4ca7f90f[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 9 08:43:29 2020 +0200
+
+    rel 3.0.0
+
+[33mcommit 285d470b20ca15cbc70d392cae1f51163c1e199b[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 2 16:02:38 2020 +0200
+
+    metadata
+
+[33mcommit 9bd39c946eb61ac2f227c4f7c5a7ea8c04ac1f06[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri May 29 17:23:50 2020 +0200
+
+    fix for file dialog showing up undr reader dialog
+
+[33mcommit faae36e6a2461a6475967c446d665f6186ea0b38[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri May 29 17:09:01 2020 +0200
+
+    Set plugin to "experimental" for early release
+
+[33mcommit 4f75169dbda8785ddc262b584b4026fd0af513e2[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri May 29 17:03:18 2020 +0200
+
+    fix for worker exception
+
+[33mcommit 25efdc5cb1c4dac04d8c18bf9246313e89e9d6ce[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 9 10:29:36 2020 +0200
+
+    generate proper error message
+
+[33mcommit d732307ceeee55f3ebe317f8c086387f04662d35[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 9 10:29:01 2020 +0200
+
+    zoom to layer
+
+[33mcommit 16a3cccc7db6485ee440a5d2003007f2c25ff44c[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 9 08:43:29 2020 +0200
+
+    rel 3.0.0
+
+[33mcommit 3505473e5f290a4f36a408cc0164767f22afc304[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jun 8 08:42:12 2020 +0200
+
+    xsd reader, part 1
+
+[33mcommit a55e0e5e15a9772ec968d96307d7d310b1605801[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Jun 2 16:02:38 2020 +0200
+
+    metadata
+
+[33mcommit 8da3cfbee32ca118775a3b017666b511d71b298d[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Sun May 31 21:07:03 2020 +0200
+
+    first steps to gpkg conversion
+
+[33mcommit 34522c1338179286b4878d296f0a73056b3644c6[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri May 29 17:23:50 2020 +0200
+
+    fix for file dialog showing up undr reader dialog
+
+[33mcommit 1652aea3c44e87b69b3823e33642ac25c68f8f4a[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri May 29 17:09:01 2020 +0200
+
+    Set plugin to "experimental" for early release
+
+[33mcommit 2fdb073ea8d723d803ae5d41fdb961e5b9feefa7[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri May 29 17:03:18 2020 +0200
+
+    fix for worker exception
+
+[33mcommit fca8b8f5f85939dc622900be83d75260f956b6e6[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu May 21 14:50:32 2020 +0200
+
+    label placement fix and fancier colour
+
+[33mcommit 84e20b37ac60cccdf009be5640f597d788a51a34[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu May 21 13:33:33 2020 +0200
+
+    load hexagon style on new layer
+
+[33mcommit 68c7d8244b4892e4ab930aadf3c7517106df75e9[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu May 21 10:00:30 2020 +0200
+
+    ImaerRead ported to python3
+
+[33mcommit 03f496c6c176cc853ede9b9e378eeaecc989ebc3[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon May 18 20:17:40 2020 +0200
+
+    worker, parser and imaer layers
+
+[33mcommit 04ead83127fa0192911338022b80aece6d048289[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon May 18 18:16:16 2020 +0200
+
+    working reader file dialog
+
+[33mcommit 75705bfa2e8358e5037f87a31d0512e5a77a96bc[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon May 18 16:34:00 2020 +0200
+
+    working dialog without resource file
+
+[33mcommit b965fd73cfaa328c9146dc22b97b4a2d6522f708[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri May 15 18:40:37 2020 +0200
+
+    fix for improper plugin unload
+
+[33mcommit 3cc32ce57182f714fc58c1a2217cf3c6925d70d0[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri May 15 18:14:42 2020 +0200
+
+    toolbar and reader action
+
+[33mcommit dd0245b6a009a330f888d280655fb93626f1037b[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri May 15 17:45:35 2020 +0200
+
+    plugin icon
+
+[33mcommit 0ffc7e325162d2b82b43ce6efe9f08b8fb22b0d5[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri May 15 16:24:02 2020 +0200
+
+    cleaned up gitignore
+
+[33mcommit 7b1aca33df06324f5161b7c3b2c948a8362fcead[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri May 15 16:23:18 2020 +0200
+
+    initial ImaerPlugin for qgis 3.x
+
+[33mcommit c578c550824b2841984373b9f28d53de68d34286[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Sep 16 08:50:18 2015 +0200
+
+    fixes for name change to IMAERwriter
+
+[33mcommit cbabf2be846402cabc68517db8b036efa23e71d7[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Aug 25 19:08:03 2015 +0200
+
+    README.md extended
+
+[33mcommit b72f5e8621c61f6acdff15109501453cea143f71[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Aug 19 18:58:59 2015 +0200
+
+    add progress bar for reader
+
+[33mcommit 82bf57e42563426bca9387f97d8e4c2f714143ac[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Aug 7 18:09:15 2015 +0200
+
+    fix #13
+
+[33mcommit 95d32e7a7c0293929ed7ab19fc138afec4279f9e[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Aug 7 17:55:26 2015 +0200
+
+    fix #12
+
+[33mcommit 5e9ed9a40e8659d0492d89150315d88ecb3a7baa[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Aug 7 16:24:04 2015 +0200
+
+    fix #7 and fix #8 and created makefile
+
+[33mcommit 73dd7873a1699f29066d2773249ca47b46314d6c[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Tue Aug 4 09:04:26 2015 +0200
+
+    speeding up reading gml and make imaerread resizable
+
+[33mcommit 94ce0870cebf78bdf6804660bd5edbfa91d43cd7[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Mon Jul 27 14:32:56 2015 +0200
+
+    fixed ogg logo, metadata, makefile
+
+[33mcommit 4019ea643bb4f3db180f798d12e7181d47664ee1[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 24 22:29:13 2015 +0200
+
+    cleanup for deploying
+
+[33mcommit 2e993d94eac724e20a75e7fab5297b8aef1ffe59[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 24 21:37:40 2015 +0200
+
+    updated metadata
+
+[33mcommit c10ddbd889b6838ee319ab75232ff8493d3ae243[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 24 18:38:40 2015 +0200
+
+    demo data mentioned in documantation
+
+[33mcommit e49141c2509ff90056919e7902eacdf29465c0d1[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 24 18:34:37 2015 +0200
+
+    metadata imaer_reader
+
+[33mcommit 7d540e1839f4f5fa32627b29f190ae865b96160e[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 24 18:04:52 2015 +0200
+
+    fix #3
+
+[33mcommit 620e1626eccf18227491a70bb3d78cf35371df58[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 24 18:00:31 2015 +0200
+
+    remove log every feature in imaer_reader
+
+[33mcommit 6c6f2838e18ecea4086f0ef8a762862a12a682ec[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 24 17:35:22 2015 +0200
+
+    documentation
+
+[33mcommit f05c0103585414eebcd7d95bcbb7ade43c29f4a2[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 24 15:09:45 2015 +0200
+
+    inline comment added
+
+[33mcommit c66d95e9b74c5e3f51f51cbe73296f187139f249[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 24 14:41:50 2015 +0200
+
+    fix #5 only parse the needed geometry type
+
+[33mcommit 6b396d01ad33ba81520e3abfac95d32363f731b8[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Fri Jul 24 08:03:50 2015 +0200
+
+    add gitignore
+
+[33mcommit 82ac4c0563ea9b526f4ac6adc8661993f4d74686[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Thu Jul 23 18:11:22 2015 +0200
+
+    deleted pyc and backup (*~) files
+
+[33mcommit 755cafe22270f3c8035f57b4995eb58c0c1c03a4[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 22 22:42:04 2015 +0200
+
+    added imaer reader plugin
+
+[33mcommit f4cd91c912fc5468c411d96f6484bdc036a2a350[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 22 22:04:39 2015 +0200
+
+    added demo data
+
+[33mcommit d05ba7facb647cd3345ca340ece3ab0b0e514a8e[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 22 21:59:15 2015 +0200
+
+    first upload imaerwriter
+
+[33mcommit 88c2cfa6e93c150c6e346c23eb2fb0d05b75f434[m
+Author: Raymond Nijssen <r.nijssen@terglobo.nl>
+Date:   Wed Jul 22 10:20:50 2015 +0200
+
+    Initial commit

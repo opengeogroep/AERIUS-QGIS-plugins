@@ -11,6 +11,7 @@ emission_sectors = {
             },
             'NL': {
                 'disable_widgets': [
+                    'label_rd_area_type', 'fcb_rd_area_type',
                     'label_rd_width', 'fcb_rd_width',
                     'label_rd_gradient', 'fcb_rd_gradient',
                     'label_rd_coverage', 'fcb_rd_coverage',
@@ -28,6 +29,7 @@ emission_sectors = {
             'UK': {
                 'disable_widgets': [
                     'label_rd_b_left_height', 'fcb_rd_b_left_height',
+                    'label_rd_b_right_height', 'fcb_rd_b_right_height',
                 ],
                 'vehicle_page': 'page_veh_adms'
             }

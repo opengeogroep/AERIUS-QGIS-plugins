@@ -3,7 +3,7 @@ from PyQt5.QtXml import QDomDocument
 from .roads import RoadEmissionSource
 
 
-class SRM2Road(RoadEmissionSource):
+class Srm2Road(RoadEmissionSource):
 
     def __init__(self, *, tunnel_factor=None, elevation=None, elevation_height=None, **kwargs):
         super().__init__(**kwargs)
@@ -46,7 +46,7 @@ class SRM2Road(RoadEmissionSource):
         return result
 
 
-class RoadSideBarrier(object):
+class Srm2RoadSideBarrier(object):
 
     def __init__(self, type, height, distance):
         self.type = type
