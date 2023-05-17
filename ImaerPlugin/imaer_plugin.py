@@ -223,7 +223,7 @@ class ImaerPlugin:
                 self.log(f'Gpkg file already exists: {gpkg_fn}', lvl='Warning', bar=True, duration=5)
                 return
 
-            task = ImportImaerCalculatorResultTask(gml_fn, gpkg_fn, self.load_calc_layer)
+            task = ImportImaerCalculatorResultTask(self, gml_fn, gpkg_fn, self.load_calc_layer)
             task_result = self.task_manager.addTask(task)
             self.log(task_result)
 
@@ -309,8 +309,10 @@ class ImaerPlugin:
                 xml_lines.append(line)
 
         layer_imaer_version = metadata['imaer_version']
+        layer_country = metadata['country']
+        layer_crs = metadata['crs']
 
-        task = ExportImaerCalculatorResultTask(receptor_layer, gml_fn, xml_lines, layer_imaer_version)
+        task = ExportImaerCalculatorResultTask(receptor_layer, gml_fn, xml_lines, layer_imaer_version, layer_country, layer_crs)
         self.task_manager.addTask(task)
 
     def get_imaer_calc_metadata(self, layer):

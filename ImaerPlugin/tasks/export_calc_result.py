@@ -20,7 +20,7 @@ tab = 'Imaer'
 
 class ExportImaerCalculatorResultTask(QgsTask):
 
-    def __init__(self, receptor_layer, gml_fn, xml_lines, imaer_version):
+    def __init__(self, receptor_layer, gml_fn, xml_lines, imaer_version, country, crs):
         super().__init__('Export to IMAER Calculator Result', QgsTask.CanCancel)
         self.receptor_layer = receptor_layer
         self.gml_fn = gml_fn
@@ -28,6 +28,8 @@ class ExportImaerCalculatorResultTask(QgsTask):
         self.imaer_version = imaer_version
         self.exception = None
         self.do_log = True
+        self.country = country
+        self.crs = crs
         # self.log(self.gml_fn)
 
         self.tt = TaskTimer()
@@ -125,12 +127,12 @@ class ExportImaerCalculatorResultTask(QgsTask):
                 </imaer:NEN3610ID>
             </imaer:identifier>
             <imaer:GM_Point>
-                <gml:Point srsName="urn:ogc:def:crs:EPSG::28992" gml:id="CP.{ id }.POINT">
+                <gml:Point srsName="urn:ogc:def:crs:{self.crs}" gml:id="CP.{ id }.POINT">
                     <gml:pos>{ x } { y }</gml:pos>
                 </gml:Point>
             </imaer:GM_Point>
             <imaer:representation>
-                <gml:Polygon srsName="urn:ogc:def:crs:EPSG::28992" gml:id="NL.IMAER.REPR.{ id }">
+                <gml:Polygon srsName="urn:ogc:def:crs:{self.crs}" gml:id="NL.IMAER.REPR.{ id }">
                     <gml:exterior>
                         <gml:LinearRing>
                             <gml:posList>{ poslist }</gml:posList>
