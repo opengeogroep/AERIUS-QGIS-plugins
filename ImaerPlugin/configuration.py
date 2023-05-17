@@ -38,6 +38,13 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         self.save_ui_to_settings()
 
     def init_gui(self):
+        self.label_country.setToolTip('Select the country from the drop down menu')
+        self.label_crs.setToolTip('Select the crs from the drop down menu')
+        self.label_work_dir.setToolTip('Add path to working directory to save files')
+        self.label_connect_server.setToolTip('Add url to connect server e.g. https://connect.aerius.nl/api')
+        self.label_connect_ver.setToolTip('Select the version of Connect from the dropdown menu')
+        self.label_email.setToolTip('Enter the email address registered the Connect server')
+        self.label_key.setToolTip('Enter your api key for the Connect server')
         self.combo_country.addItems([''] + ui_settings['countries'])
         self.combo_crs.addItem('')
         for crs in ui_settings['crs']:
