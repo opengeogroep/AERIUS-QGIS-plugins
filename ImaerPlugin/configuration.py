@@ -98,6 +98,7 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         self.plugin.aerius_connection.version = self.combo_connect_ver.currentText()
         self.plugin.aerius_connection.api_key = self.edit_key.text()
         self.plugin.aerius_connection.check_connection()
+        self.plugin.generate_calc_input_dlg.update_emission_tab()
 
     def get_api_key(self):
         email = self.edit_email.text()

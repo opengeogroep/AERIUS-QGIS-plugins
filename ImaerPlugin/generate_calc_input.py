@@ -5,6 +5,7 @@ import json
 
 from qgis.PyQt.QtCore import QVariant
 from qgis.PyQt.QtWidgets import (
+    QWidget,
     QDialog,
     QDialogButtonBox,
     QLabel,
@@ -58,8 +59,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.plugin = plugin
 
         self.emission_tabs = {}
-        self.emission_tabs['ROAD_TRANSPORTATION'] = self.tab_road_transportation
-        self.emission_tabs['OTHER'] = self.tab_emission_sources
+        self.emission_tabs['roads'] = getattr(self, 'tab_roads')
+        self.emission_tabs['other'] = getattr(self, 'tab_emission_sources')
+
+        #fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_vehicles_per_time')
 
         self.init_gui()
 
@@ -68,7 +71,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         self.combo_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
-        self.combo_sector.currentIndexChanged.connect(self.set_emission_tab)
+        self.combo_sector.currentIndexChanged.connect(self.update_emission_tab)
         # self.combo_subsector.currentIndexChanged.connect(self.set_elements)
         self.edit_outfile.textChanged.connect(self.update_ok_button)
 
@@ -84,11 +87,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.set_fixed_options()
         self.update_field_combos()
         self.update_ok_button()
-        self.set_emission_tab()
+        self.update_emission_tab()
 
     def __del__(self):
         self.edit_outfile.textChanged.disconnect(self.update_ok_button)
-        self.combo_sector.currentIndexChanged.disconnect(self.set_emission_tab)
+        self.combo_sector.currentIndexChanged.disconnect(self.update_emission_tab)
         self.combo_layer.layerChanged.disconnect(self.update_field_combos)
         self.button_outfile.clicked.disconnect(self.browse_generate_calc_input_file)
 
@@ -107,24 +110,22 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.edit_outfile.setText(gml_outfn)
 
     def set_fixed_options(self):
-        # IMAER versions
-        self.combo_imaer_v.addItems(ui_settings['imaer_versions'])
-        # Select last item (= most recent version) by default
-        self.combo_imaer_v.setCurrentIndex(self.combo_imaer_v.count() - 1)
+        # country
+        self.combo_country.addItem('', '')
+        for country in ui_settings['countries']:
+            self.combo_country.addItem(country, country)
 
         # crs
+        self.combo_crs.addItem('', '')
         for crs in ui_settings['crs']:
             crs_name = f"{crs['name']} ({crs['srid']})"
             self.combo_crs.addItem(crs_name, crs['srid'])
-        crs_setting = self.plugin.settings.value('imaer_plugin/crs', defaultValue='')
-        crs_index = self.combo_crs.findData(crs_setting)
-        self.combo_crs.setCurrentIndex(crs_index)
 
         # sectors
         self.combo_sector.addItem('<Select sector>', 0)
-        for sector_name in emission_sectors:
-            # print(sector_name)
-            self.combo_sector.addItem(sector_name)
+        for sector in emission_sectors:
+            sector_name = emission_sectors[sector]['tab_name']
+            self.combo_sector.addItem(sector_name, sector)
 
         # year
         for item in ui_settings['project_years']:
@@ -137,15 +138,51 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         for item in ui_settings['situation_types_gml']:
             self.combo_situation_type.addItem(item, item)
 
-    def set_emission_tab(self):
+    def update_emission_tab(self):
+        country = self.plugin.settings.value('imaer_plugin/country', defaultValue='')
+        country_index = self.combo_country.findData(country)
+        self.combo_country.setCurrentIndex(country_index)
+
+        crs_setting = self.plugin.settings.value('imaer_plugin/crs', defaultValue='')
+        crs_index = self.combo_crs.findData(crs_setting)
+        self.combo_crs.setCurrentIndex(crs_index)
+
         # Remove all tabs but 'Metadata'
-        while self.tabWidget.count() > 1:
-            self.tabWidget.removeTab(1)
+        while self.tabs_mapping.count() > 1:
+            self.tabs_mapping.removeTab(1)
         # Add selected emission tab
-        sector = self.combo_sector.currentText()
+        sector = self.combo_sector.currentData()
         if sector in self.emission_tabs:
-            self.tabWidget.insertTab(1, self.emission_tabs[sector], sector)
-            self.tabWidget.setCurrentIndex(1)
+            sector_name = emission_sectors[sector]['tab_name']
+            self.tabs_mapping.insertTab(1, self.emission_tabs[sector], sector_name)
+            self.tabs_mapping.setCurrentIndex(1)
+        # Enable/disable widgets per country
+        print(sector)
+
+        if country == '' or crs_setting == '':
+            return
+            # TODO: Raise error
+
+        if sector in emission_sectors and 'ui_settings' in emission_sectors[sector]:
+            # Running this loop twice because looping all objects of the QWidget
+            # class resulted in a frozen dialog.
+            for widget in self.findChildren(QgsFieldComboBox):
+                if widget.objectName() in emission_sectors[sector]['ui_settings'][country]['disable_widgets']:
+                    widget.setVisible(False)
+                else:
+                    widget.setVisible(True)
+            for widget in self.findChildren(QLabel):
+                if widget.objectName() in emission_sectors[sector]['ui_settings'][country]['disable_widgets']:
+                    widget.setVisible(False)
+                else:
+                    widget.setVisible(True)
+            if 'emission_tab' in emission_sectors[sector]:
+                vehicle_page = emission_sectors[sector]['ui_settings'][country]['vehicle_page']
+                print(vehicle_page)
+                stack = getattr(self, 'stack_rd_veh')
+                page = getattr(self, vehicle_page)
+                stack.setCurrentWidget(page)
+
 
     def update_field_combos(self):
         for fcb in self.findChildren(QgsFieldComboBox):
@@ -212,10 +249,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             if crs_transform is not None:
                 geom.transform(crs_transform)
 
-            sector_name = self.combo_sector.currentText()
-            if sector_name == 'OTHER':
+            sector = self.combo_sector.currentData()
+            print(sector)
+            if sector == 'other':
                 es = self.get_emission_source_from_gui(feat, geom, crs_dest_srid, local_id)
-            elif sector_name == 'ROAD_TRANSPORTATION':
+            elif sector == 'roads':
                 es = self.get_srm2_road_from_gui(feat, geom, crs_dest_srid, local_id)
             else:
                 raise Exception('Invalid sector')
