@@ -9,12 +9,12 @@ class ADMSRoad(RoadEmissionSource):
                  elevation_height=None, gradient=None, width=None,
                  coverage=None, barrier_left=None, barrier_right=None, **kwargs):
         super().__init__(**kwargs)
-        self.tunnel_factor = tunnel_factor
-        self.elevation = elevation
-        self.elevation_height = elevation_height
-        self.gradient = gradient
         self.width = width
+        self.elevation = elevation
+        self.gradient = gradient
         self.coverage = coverage
+        self.tunnel_factor = tunnel_factor
+        self.elevation_height = elevation_height
         self.barrier_left = barrier_left
         self.barrier_right = barrier_right
 
