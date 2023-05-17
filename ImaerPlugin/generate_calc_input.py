@@ -83,6 +83,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.btn_save_settings.clicked.connect(self.save_settings)
         self.btn_load_settings.clicked.connect(self.load_settings)
 
+        self.radio_veh_page_custom.page = self.page_veh_custom
+        self.radio_veh_page_eft.page = self.page_veh_eft
+        self.radio_veh_page_custom.toggled.connect(self.update_adms_vehicle_page)
+        self.radio_veh_page_eft.toggled.connect(self.update_adms_vehicle_page)
+
         for fcb in self.findChildren(QgsFieldComboBox):
             fcb.setAllowEmptyFieldName(True)
 
@@ -200,6 +205,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             return
         '''
         self.buttonBox.button(QDialogButtonBox.Save).setEnabled(True)
+
+    def update_adms_vehicle_page(self):
+        print(self.sender())
+        print(self.sender().page)
+        self.stack_rd_veh_adms.setCurrentWidget(self.sender().page)
 
     def get_imaer_doc_from_gui(self):
         '''Maps items from GUI widgets to IMAER object'''
@@ -410,23 +420,31 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         es.tunnel_factor = self.get_feature_value(self.fcb_rd_tunnel_factor, feat)
         es.elevation_height = self.get_feature_value(self.fcb_rd_elevation_height, feat)
 
-        '''# barriers
+        # barriers
         for side in ['left', 'right']:
             fcb = getattr(self, f'fcb_rd_b_{side}_type')
             b_type = self.get_feature_value(fcb, feat)
-            fcb = getattr(self, f'fcb_rd_b_{side}_height')
-            b_height = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_b_{side}_height_av')
+            b_height_av = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_b_{side}_height_max')
+            b_height_max = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_b_{side}_height_min')
+            b_height_min = self.get_feature_value(fcb, feat)
             fcb = getattr(self, f'fcb_rd_b_{side}_distance')
             b_distance = self.get_feature_value(fcb, feat)
+            fcb = getattr(self, f'fcb_rd_b_{side}_porosity')
+            b_porosity = self.get_feature_value(fcb, feat)
 
             if not (b_type is None and b_height is None and b_distance is None):
-                rsb = RoadSideBarrier(b_type, b_height, b_distance)
+                rsb = AdmsRoadSideBarrier(b_type, b_distance, b_height_av,
+                    b_height_max, b_height_min, b_porosity
+                )
                 if side == 'left':
                     es.barrier_left = rsb
                 else:
                     es.barrier_right = rsb
 
-        # vehicles
+        '''# vehicles
         vehicles = []
         vehicle_types = {
             'lt1': 'LIGHT_TRAFFIC',

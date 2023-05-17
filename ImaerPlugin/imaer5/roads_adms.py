@@ -5,16 +5,14 @@ from .roads import RoadEmissionSource
 
 class AdmsRoad(RoadEmissionSource):
 
-    def __init__(self, *, tunnel_factor=None, elevation=None,
-                 elevation_height=None, gradient=None, width=None,
-                 coverage=None, barrier_left=None, barrier_right=None, **kwargs):
+    def __init__(self, *, width=None, elevation=None,
+                 gradient=None, coverage=None, barrier_left=None,
+                 barrier_right=None, **kwargs):
         super().__init__(**kwargs)
         self.width = width
         self.elevation = elevation
         self.gradient = gradient
         self.coverage = coverage
-        self.tunnel_factor = tunnel_factor
-        self.elevation_height = elevation_height
         self.barrier_left = barrier_left
         self.barrier_right = barrier_right
 
@@ -39,16 +37,6 @@ class AdmsRoad(RoadEmissionSource):
         if self.coverage is not None:
             elem = doc.createElement('imaer:coverage')
             elem.appendChild(doc.createTextNode(str(self.coverage)))
-            result.appendChild(elem)
-
-        if self.tunnel_factor is not None:
-            elem = doc.createElement('imaer:tunnelFactor')
-            elem.appendChild(doc.createTextNode(str(self.tunnel_factor)))
-            result.appendChild(elem)
-
-        if self.elevation_height is not None:
-            elem = doc.createElement('imaer:elevationHeight')
-            elem.appendChild(doc.createTextNode(str(self.elevation_height)))
             result.appendChild(elem)
 
         if self.barrier_left is not None:

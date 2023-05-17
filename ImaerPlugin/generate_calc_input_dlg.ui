@@ -201,8 +201,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>513</width>
-            <height>419</height>
+            <width>242</width>
+            <height>398</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
@@ -340,7 +340,7 @@
      </widget>
      <widget class="QWidget" name="tab_roads">
       <attribute name="title">
-       <string>SRM2 Roads</string>
+       <string>Roads</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
@@ -352,7 +352,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-819</y>
             <width>499</width>
             <height>1814</height>
            </rect>
@@ -586,7 +586,7 @@
               <item row="0" column="0">
                <widget class="QStackedWidget" name="stack_rd_veh">
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <widget class="QWidget" name="page_veh_srm2">
                  <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -840,10 +840,102 @@
                 <widget class="QWidget" name="page_veh_adms">
                  <layout class="QVBoxLayout" name="verticalLayout_7">
                   <item>
-                   <widget class="QLabel" name="label">
+                   <widget class="QRadioButton" name="radio_veh_page_custom">
                     <property name="text">
-                     <string>ADMS Vehicles here</string>
+                     <string>Custom specification</string>
                     </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QRadioButton" name="radio_veh_page_eft">
+                    <property name="text">
+                     <string>Emission factor toolkit</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QStackedWidget" name="stack_rd_veh_adms">
+                    <property name="currentIndex">
+                     <number>1</number>
+                    </property>
+                    <widget class="QWidget" name="page_veh_custom"/>
+                    <widget class="QWidget" name="page_veh_eft">
+                     <layout class="QFormLayout" name="formLayout_2">
+                      <item row="0" column="0">
+                       <widget class="QLabel" name="label_rd_v_eft_link_speed">
+                        <property name="text">
+                         <string>Link speed</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="1">
+                       <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_link_speed"/>
+                      </item>
+                      <item row="1" column="0">
+                       <widget class="QLabel" name="label_rd_v_eft_n_car">
+                        <property name="text">
+                         <string>Car</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="2" column="0">
+                       <widget class="QLabel" name="label_rd_v_eft_n_taxi">
+                        <property name="text">
+                         <string>Taxi (black cab)</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="3" column="0">
+                       <widget class="QLabel" name="label_rd_v_eft_n_motor">
+                        <property name="text">
+                         <string>Motorcycle</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="4" column="0">
+                       <widget class="QLabel" name="label_rd_v_eft_n_lgv">
+                        <property name="text">
+                         <string>LGV</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="5" column="0">
+                       <widget class="QLabel" name="label_rd_v_eft_n_hgv">
+                        <property name="text">
+                         <string>HGV</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="6" column="0">
+                       <widget class="QLabel" name="label_rd_v_eft_n_bus">
+                        <property name="text">
+                         <string>Bus and Coach</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="2" column="1">
+                       <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_n_taxi"/>
+                      </item>
+                      <item row="3" column="1">
+                       <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_n_motor"/>
+                      </item>
+                      <item row="4" column="1">
+                       <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_n_lgv"/>
+                      </item>
+                      <item row="5" column="1">
+                       <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_n_hgv"/>
+                      </item>
+                      <item row="6" column="1">
+                       <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_n_bus"/>
+                      </item>
+                      <item row="1" column="1">
+                       <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_n_car"/>
+                      </item>
+                     </layout>
+                    </widget>
                    </widget>
                   </item>
                   <item>
@@ -969,85 +1061,6 @@
           </layout>
          </widget>
         </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_adms_roads">
-      <attribute name="title">
-       <string>ADMS Roads</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QScrollArea" name="scrollArea_3">
-         <property name="widgetResizable">
-          <bool>true</bool>
-         </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents_3">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>513</width>
-            <height>206</height>
-           </rect>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_4">
-           <item row="1" column="1">
-            <widget class="QgsFieldComboBox" name="fcb_ard_description"/>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_ard_tunnel_factor">
-             <property name="text">
-              <string>tunnel factor</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_ard_type">
-             <property name="text">
-              <string>type</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_ard_description">
-             <property name="text">
-              <string>description</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_ard_label">
-             <property name="text">
-              <string>label</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QgsFieldComboBox" name="fcb_ard_tunnel_factor"/>
-           </item>
-           <item row="2" column="1">
-            <widget class="QgsFieldComboBox" name="fcb_ard_type"/>
-           </item>
-           <item row="0" column="1">
-            <widget class="QgsFieldComboBox" name="fcb_ard_label"/>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>

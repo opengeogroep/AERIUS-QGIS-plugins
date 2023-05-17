@@ -28,6 +28,8 @@ emission_sectors = {
             },
             'UK': {
                 'disable_widgets': [
+                    'label_rd_tunnel_factor', 'fcb_rd_tunnel_factor',
+                    'label_rd_elevation_height', 'fcb_rd_elevation_height',
                     'label_rd_b_left_height', 'fcb_rd_b_left_height',
                     'label_rd_b_right_height', 'fcb_rd_b_right_height',
                 ],
