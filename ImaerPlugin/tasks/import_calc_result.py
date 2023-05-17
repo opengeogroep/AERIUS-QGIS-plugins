@@ -35,7 +35,7 @@ class GpkgFileExists(Exception):
 
 class ImportImaerCalculatorResultTask(QgsTask):
 
-    def __init__(self, gml_fn, gpkg_fn, load_layer_callback):
+    def __init__(self, plugin, gml_fn, gpkg_fn, load_layer_callback):
         super().__init__('Import IMAER Calculator Result', QgsTask.CanCancel)
         self.gml_fn = gml_fn
         self.gpkg_fn = gpkg_fn
@@ -45,6 +45,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         # self.log(self.gml_fn)
         self.namespaces = {}
         self.settings = QgsSettings()
+        self.plugin = plugin
 
     def run(self):
         self.log('Started task "{}"'.format(self.description()))
@@ -124,6 +125,11 @@ class ImportImaerCalculatorResultTask(QgsTask):
         self.save_metadata('gml_fn', self.gml_fn)
         self.save_metadata('user', QgsExpressionContextUtils().globalScope().variable('user_full_name'))
         self.save_metadata('imaer_version', self.imaer_version)
+        # get crs and country from plugin settings
+        country = self.plugin.settings.value('imaer_plugin/country', defaultValue='')
+        crs_setting = self.plugin.settings.value('imaer_plugin/crs', defaultValue='')
+        self.save_metadata('country', country)
+        self.save_metadata('crs', crs_setting)
 
         return True
 
