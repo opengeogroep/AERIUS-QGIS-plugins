@@ -386,9 +386,11 @@ class ImaerPlugin:
         if epsg_id is None:
             self.actions['import_calc_result'].setEnabled(False)
             self.actions['generate_calc_input'].setEnabled(False)
+            self.actions['export_calc_result'].setEnabled(False)
         else:
             self.actions['import_calc_result'].setEnabled(True)
             self.actions['generate_calc_input'].setEnabled(True)
+            self.actions['export_calc_result'].setEnabled(True)
 
     def update_export_calc_widgets(self):
         if self.iface.activeLayer() is not None:
