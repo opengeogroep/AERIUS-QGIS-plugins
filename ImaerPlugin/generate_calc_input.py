@@ -44,7 +44,8 @@ from ImaerPlugin.imaer5 import (
     Srm2RoadSideBarrier,
     ADMSRoad,
     AdmsRoadSideBarrier,
-    StandardVehicle
+    StandardVehicle,
+    CustomVehicle
 )
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -90,6 +91,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         for fcb in self.findChildren(QgsFieldComboBox):
             fcb.setAllowEmptyFieldName(True)
+
+        # Make sure the corresponding vehicle page is displayed
+        self.radio_veh_page_custom.setChecked(True)
+        self.stack_rd_veh_adms.setCurrentWidget(self.radio_veh_page_custom.page)
 
         self.set_fixed_options()
         self.update_field_combos()
@@ -163,9 +168,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             sector_name = emission_sectors[sector]['tab_name']
             self.tabs_mapping.insertTab(1, self.emission_tabs[sector], sector_name)
             self.tabs_mapping.setCurrentIndex(1)
-        # Enable/disable widgets per country
-        print(sector)
 
+        # Enable/disable widgets per country
         if country == '' or crs_setting == '':
             return
             # TODO: Raise error
@@ -185,7 +189,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                     widget.setVisible(True)
             if 'emission_tab' in emission_sectors[sector]:
                 vehicle_page = emission_sectors[sector]['ui_settings'][country]['vehicle_page']
-                print(vehicle_page)
+                # print(vehicle_page)
                 stack = getattr(self, 'stack_rd_veh')
                 page = getattr(self, vehicle_page)
                 stack.setCurrentWidget(page)
@@ -207,8 +211,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.buttonBox.button(QDialogButtonBox.Save).setEnabled(True)
 
     def update_adms_vehicle_page(self):
-        print(self.sender())
-        print(self.sender().page)
         self.stack_rd_veh_adms.setCurrentWidget(self.sender().page)
 
     def get_imaer_doc_from_gui(self):
@@ -236,7 +238,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         country = self.combo_country.currentData()
         crs_source = input_layer.crs()
         crs_dest_srid = self.combo_crs.currentData()
-        print(crs_dest_srid)
+        # print(crs_dest_srid)
         crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
         if crs_source == crs_dest:
             crs_transform = None
@@ -262,7 +264,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 geom.transform(crs_transform)
 
             sector = self.combo_sector.currentData()
-            print(sector)
             if sector == 'other':
                 es = self.get_emission_source_from_gui(feat, geom, crs_dest_srid, local_id)
             elif sector == 'roads':
@@ -474,8 +475,27 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                         strict_enforcement='false'
                     )
                     vehicles.append(vehicle)
-        else:
-            print('CUSTOM vehicles are not yet supported')
+
+        # Custom vehicles
+        if self.radio_veh_page_custom.isChecked():
+            description = self.get_feature_value(self.fcb_rd_v_custom_description, feat)
+            movements = self.get_feature_value(self.fcb_rd_v_custom_movements, feat)
+            em_nox = self.get_feature_value(self.fcb_rd_v_custom_em_nox, feat)
+            em_nh3 = self.get_feature_value(self.fcb_rd_v_custom_em_nh3, feat)
+
+            emission = []
+            if em_nox is not None:
+                emission.append(Emission('NOX', em_nox))
+            if em_nh3 is not None:
+                emission.append(Emission('NH3', em_nh3))
+
+            veh = CustomVehicle(
+                vehicles_per_time_unit=movements,
+                time_unit='DAY',
+                description=description,
+                emission=emission
+            )
+            vehicles.append(veh)
 
         es.vehicles = vehicles
         return es

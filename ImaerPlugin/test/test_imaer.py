@@ -161,6 +161,17 @@ class TestImaer(unittest.TestCase):
         # add the vehicle created above to the emission source
         es.vehicles.append(v1)
 
+        em = Emission('NOX', 111)
+
+        # also create ADMS road vehicle info (custom vehicle)
+        v2 = CustomVehicle(
+            vehicles_per_time_unit=1000,
+            time_unit='DAY',
+            description='Test test ...',
+            emission=[em]
+        )
+        es.vehicles.append(v2)
+
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
 

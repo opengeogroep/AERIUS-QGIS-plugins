@@ -77,3 +77,24 @@ class StandardVehicle(Vehicle):
             result.appendChild(elem)
 
         return result
+
+
+class CustomVehicle(Vehicle):
+
+    def __init__(self, *, description='', emission=[], **kwargs):
+        super().__init__(**kwargs)
+        self.description=description
+        self.emission = emission
+
+    def to_xml_elem(self, doc=QDomDocument()):
+        result = super().to_xml_elem(doc)
+
+        elem = doc.createElement('imaer:description')
+        elem.appendChild(doc.createTextNode(str(self.description)))
+        result.appendChild(elem)
+
+        for em in self.emission:
+            elem = em.to_xml_elem(doc)
+            result.appendChild(elem)
+
+        return result
