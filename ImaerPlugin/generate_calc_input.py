@@ -40,9 +40,9 @@ from ImaerPlugin.imaer5 import (
     EmissionSource,
     SpecifiedHeatContent,
     Emission,
-    Srm2Road,
+    SRM2Road,
     Srm2RoadSideBarrier,
-    AdmsRoad,
+    ADMSRoad,
     AdmsRoadSideBarrier,
     StandardVehicle
 )
@@ -317,7 +317,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         return es
 
-    # Srm2Road
+    # SRM2Road
     def get_srm2_road_from_gui(self, feat, geom, epsg_id, local_id):
         sector_id = 3100  # This is the only option in NL
         # sector_id = self.get_feature_value(self.fcb_rd_sector_id, feat)
@@ -327,7 +327,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         # road_area_type = self.get_feature_value(self.fcb_rd_area_type, feat)
         road_type = self.get_feature_value(self.fcb_rd_type, feat)
 
-        es = Srm2Road(
+        es = SRM2Road(
             local_id=local_id,
             sector_id=sector_id,
             label=label,
@@ -393,7 +393,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         return es
 
-    # AdmsRoad
+    # ADMSRoad
     def get_adms_road_from_gui(self, feat, geom, epsg_id, local_id):
         sector_id = 3100  # This is the only option in NL
         # sector_id = self.get_feature_value(self.fcb_rd_sector_id, feat)
@@ -402,7 +402,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         road_area_type = self.get_feature_value(self.fcb_rd_area_type, feat)
         road_type = self.get_feature_value(self.fcb_rd_type, feat)
 
-        es = AdmsRoad(
+        es = ADMSRoad(
             local_id=local_id,
             sector_id=sector_id,
             label=label,
@@ -435,7 +435,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             fcb = getattr(self, f'fcb_rd_b_{side}_porosity')
             b_porosity = self.get_feature_value(fcb, feat)
 
-            if not (b_type is None and b_height is None and b_distance is None):
+            if not (b_type is None):
                 rsb = AdmsRoadSideBarrier(b_type, b_distance, b_height_av,
                     b_height_max, b_height_min, b_porosity
                 )
@@ -444,41 +444,41 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 else:
                     es.barrier_right = rsb
 
-        '''# vehicles
+        # vehicles
         vehicles = []
-        vehicle_types = {
-            'lt1': 'LIGHT_TRAFFIC',
-            'lt2': 'LIGHT_TRAFFIC',
-            'nf': 'NORMAL_FREIGHT',
-            'hf': 'HEAVY_FREIGHT',
-            'ab': 'AUTO_BUS'
-        }
-        for veh_type_key, veh_type_name in vehicle_types.items():
 
-            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_vehicles_per_time')
-            veh_number = self.get_feature_value(fcb, feat)
-            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_stagnation')
-            veh_stagnation = self.get_feature_value(fcb, feat)
-            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_maxspeed')
-            veh_speed = self.get_feature_value(fcb, feat)
-            fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_strict')
-            veh_strict = self.get_feature_value(fcb, feat)
+        if self.radio_veh_page_eft.isChecked():
+            fcb = getattr(self, f'fcb_rd_v_eft_link_speed')
+            link_speed = self.get_feature_value(fcb, feat)
+            link_speed = int(link_speed)
 
-            if not (veh_number is None and veh_stagnation is None):
-                vehicle = StandardVehicle(
-                    vehicles_per_time_unit=veh_number,
-                    time_unit='DAY',
-                    stagnation_factor=veh_stagnation,
-                    vehicle_type=veh_type_name,
-                    maximum_speed=veh_speed,
-                    strict_enforcement=veh_strict
-                )
-                vehicles.append(vehicle)
+            vehicle_types = {
+                'car': 'Car',
+                'taxi': 'Tax',
+                'motor': 'Mot',
+                'lgv': 'LGV',
+                'hgv': 'HGV',
+                'bus': 'Bus'
+            }
+            for veh_type_key, veh_type_name in vehicle_types.items():
+                fcb = getattr(self, f'fcb_rd_v_eft_n_{veh_type_key}')
+                veh_number = self.get_feature_value(fcb, feat)
 
-            es.vehicles = vehicles'''
+                if not (veh_number is None):
+                    vehicle = StandardVehicle(
+                        vehicles_per_time_unit=veh_number,
+                        time_unit='DAY',
+                        stagnation_factor=0.0,
+                        vehicle_type=veh_type_name,
+                        maximum_speed=link_speed,
+                        strict_enforcement='false'
+                    )
+                    vehicles.append(vehicle)
+        else:
+            print('CUSTOM vehicles are not yet supported')
 
+        es.vehicles = vehicles
         return es
-
 
     def get_feature_value(self, widget, feat, cast_to=None):
         if not isinstance(widget, QgsFieldComboBox):
