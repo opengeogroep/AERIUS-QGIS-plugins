@@ -3,7 +3,7 @@ from PyQt5.QtXml import QDomDocument
 from .roads import RoadEmissionSource
 
 
-class AdmsRoad(RoadEmissionSource):
+class ADMSRoad(RoadEmissionSource):
 
     def __init__(self, *, width=None, elevation=None,
                  gradient=None, coverage=None, barrier_left=None,
@@ -57,6 +57,7 @@ class AdmsRoad(RoadEmissionSource):
 class AdmsRoadSideBarrier(object):
 
     def __init__(self, type, distance, Avheight, Maxheight, Minheight, porosity):
+        self.tag = 'ADMSRoad'
         self.type = type
         self.distance = distance
         self.Avheight = Avheight
