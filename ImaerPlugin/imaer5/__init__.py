@@ -15,5 +15,8 @@ from .roads_srm2 import (
     SRM2Road,
     Srm2RoadSideBarrier
 )
-from .roads import (StandardVehicle)
+from .roads import (
+    StandardVehicle,
+    CustomVehicle
+)
 from .gml import get_gml_element
