@@ -65,8 +65,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.emission_tabs['roads'] = getattr(self, 'tab_roads')
         self.emission_tabs['other'] = getattr(self, 'tab_emission_sources')
 
-        #fcb = getattr(self, f'fcb_rd_v_{veh_type_key}_vehicles_per_time')
-
         self.init_gui()
 
     def init_gui(self):
@@ -193,7 +191,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 stack = getattr(self, 'stack_rd_veh')
                 page = getattr(self, vehicle_page)
                 stack.setCurrentWidget(page)
-
 
     def update_field_combos(self):
         for fcb in self.findChildren(QgsFieldComboBox):
@@ -437,7 +434,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             b_porosity = self.get_feature_value(fcb, feat)
 
             if not (b_type is None):
-                rsb = AdmsRoadSideBarrier(b_type, b_distance, b_height_av,
+                rsb = AdmsRoadSideBarrier(
+                    b_type, b_distance, b_height_av,
                     b_height_max, b_height_min, b_porosity
                 )
                 if side == 'left':
