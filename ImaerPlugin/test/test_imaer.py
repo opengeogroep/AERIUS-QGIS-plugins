@@ -31,6 +31,7 @@ _GEOM0 = QgsGeometry.fromWkt('POINT(148458.0 411641.0)')
 _GEOM1 = QgsGeometry.fromWkt('LINESTRING((1 0, 2 1, 3 0))')
 _GEOM2 = QgsGeometry.fromWkt('MULTIPOLYGON(((1 0, 2 1, 3 0, 2 -1, 1 0)))')
 _GEOM3 = QgsGeometry.fromWkt('LINESTRING((311279.0 723504.3, 311262.5 723349.6))')
+_GEOM4 = QgsGeometry.fromWkt('POLYGON((1 0, 2 1, 3 0, 2 -1, 1 0))')
 
 class TestImaer(unittest.TestCase):
 
@@ -176,6 +177,44 @@ class TestImaer(unittest.TestCase):
         fcc.feature_members.append(es)
 
         self.run_validation_test(fcc, 'admsroad')
+
+    def test_create_buildings(self):
+        b1 = Building(
+            local_id='Building.123',
+            height=12.3,
+            diameter=1.23,
+            label='building no. 123',
+            geom=_GEOM0,
+            epsg_id=28992)
+        b2 = Building(
+            local_id='Building.555',
+            height=55.5,
+            diameter=55,
+            label='building no. 555',
+            geom=_GEOM4,
+            epsg_id=28992)
+        fcc = ImaerDocument()
+        fcc.feature_members.append(b1)
+        fcc.feature_members.append(b2)
+        self.run_validation_test(fcc, 'buildings')
+
+    def test_create_emission_with_building(self):
+        building_id = 'Building.555'
+        es = EmissionSource(local_id='ES.444', sector_id=9000, label='Bron 444', geom=_GEOM0, epsg_id=28992)
+        hc = SpecifiedHeatContent(value=4)
+        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=5, building=building_id)
+        es.emissions.append(Emission('NOX', 10))
+        b = Building(
+            local_id=building_id,
+            height=55.5,
+            label='building no. 555',
+            geom=_GEOM4,
+            epsg_id=28992)
+        fcc = ImaerDocument()
+        fcc.feature_members.append(es)
+        fcc.feature_members.append(b)
+        self.run_validation_test(fcc, 'emission_with_building')
+
 
 if __name__ == '__main__':
     QgsApplication.setPrefixPath("/home/raymond/programs/qgis/qgis-3.22/share/qgis/python/", True)

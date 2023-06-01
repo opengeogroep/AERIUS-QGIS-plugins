@@ -19,4 +19,5 @@ from .roads import (
     StandardVehicle,
     CustomVehicle
 )
+from .buildings import Building
 from .gml import get_gml_element
