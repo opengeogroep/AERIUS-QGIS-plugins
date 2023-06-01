@@ -102,15 +102,21 @@ class EmissionSource(EmissionSourceType):
 
 class EmissionSourceCharacteristics(object):
 
-    def __init__(self, heat_content=None, emission_height=None, spread=None, diurnal_variation=None, building=None):
+    def __init__(self, building=None, heat_content=None, emission_height=None, spread=None, diurnal_variation=None):
+        self.building = building
         self.heat_content = heat_content
         self.emission_height = emission_height
         self.spread = spread
         self.diurnal_variation = diurnal_variation
-        self.building = building
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement('imaer:EmissionSourceCharacteristics')
+
+        # building
+        if self.building is not None:
+            elem = doc.createElement('imaer:building')
+            elem.setAttribute('xlink:href', f'#{self.building}')
+            result.appendChild(elem)
 
         # heat content
         if self.heat_content is not None:
