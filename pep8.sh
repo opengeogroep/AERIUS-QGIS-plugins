@@ -1,4 +1,5 @@
 pep8 --ignore E501,E722 \
+--exclude ImaerPlugin/config/validation_variables.py \
 ImaerPlugin/*.py \
 ImaerPlugin/algs/*.py \
 ImaerPlugin/config/*.py \

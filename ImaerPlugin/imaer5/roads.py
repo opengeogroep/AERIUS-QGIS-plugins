@@ -27,6 +27,7 @@ class RoadEmissionSource(EmissionSourceType):
 
         return result
 
+
 class Vehicle(object):
 
     def __init__(self, *, vehicles_per_time_unit=None, time_unit=None, **kwargs):
@@ -83,7 +84,7 @@ class CustomVehicle(Vehicle):
 
     def __init__(self, *, description='', emission=[], **kwargs):
         super().__init__(**kwargs)
-        self.description=description
+        self.description = description
         self.emission = emission
 
     def to_xml_elem(self, doc=QDomDocument()):
