@@ -75,14 +75,14 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_layer_es.setFilters(QgsMapLayerProxyModel.VectorLayer)
         self.combo_layer_rd.setFilters(QgsMapLayerProxyModel.VectorLayer)
         self.combo_layer_bld.setFilters(QgsMapLayerProxyModel.VectorLayer)
-        self.combo_layer_rec.setFilters(QgsMapLayerProxyModel.VectorLayer)
+        self.combo_layer_rec.setFilters(QgsMapLayerProxyModel.PointLayer)
 
         #self.combo_sector.currentIndexChanged.connect(self.update_emission_tab)
         self.checkBox_es.toggled.connect(self.update_emission_tab)
         self.checkBox_rd.toggled.connect(self.update_emission_tab)
         self.checkBox_bld.toggled.connect(self.update_emission_tab)
         self.checkBox_rec.toggled.connect(self.update_emission_tab)
-        
+
         # self.combo_subsector.currentIndexChanged.connect(self.set_elements)
         self.edit_outfile.textChanged.connect(self.update_ok_button)
 
@@ -295,7 +295,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         imaer_doc.metadata = metadata
 
-        input_layer = self.combo_layer_es.currentLayer()
+        input_layer_es = self.combo_layer_es.currentLayer()
         input_layer_rd = self.combo_layer_rd.currentLayer()
         input_layer_bld = self.combo_layer_bld.currentLayer()
         input_layer_rec = self.combo_layer_rec.currentLayer()
@@ -310,42 +310,51 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
 
         # Loop all features
-        for feat in input_layer.getFeatures():
-            local_id = 'ES.{}'.format(feat.id())
+        for input_layer in [input_layer_es, input_layer_rd, input_layer_bld, input_layer_rec]:
+            for feat in input_layer.getFeatures():
+                local_id = 'ES.{}'.format(feat.id())
 
-            # geometry
-            geom = feat.geometry()
+                # geometry
+                geom = feat.geometry()
 
-            geom2 = self.make_single_part(geom)
-            if geom2 is None:
-                self.plugin.log(f'Input data contains multipart geometry: {geom.asWkt(precision=3)}', bar=True, lvl='Critical')
-                return
-            geom = geom2
+                geom2 = self.make_single_part(geom)
+                if geom2 is None:
+                    self.plugin.log(f'Input data contains multipart geometry: {geom.asWkt(precision=3)}', bar=True, lvl='Critical')
+                    return
+                geom = geom2
 
-            # TODO: Check for invalid geometries
+                # TODO: Check for invalid geometries
 
-            if crs_transform is not None:
-                geom.transform(crs_transform)
+                if crs_transform is not None:
+                    geom.transform(crs_transform)
 
-            #sector = self.combo_sector.currentData()
-            #if sector == 'other':
-            if self.checkBox_es.isChecked():
-                es = self.get_emission_source_from_gui(feat, geom, crs_dest_srid, local_id)
-            #elif sector == 'roads':
-            elif self.checkBox_rd.isChecked():
-                if country == 'NL':
-                    es = self.get_srm2_road_from_gui(feat, geom, crs_dest_srid, local_id)
-                elif country == 'UK':
-                    es = self.get_adms_road_from_gui(feat, geom, crs_dest_srid, local_id)
+                # if it is the emissions source layer, process this
+                if input_layer == input_layer_es:
+                    es = self.get_emission_source_from_gui(feat, geom, crs_dest_srid, local_id)
+
+                # if it is the road layer process as such
+                if input_layer == input_layer_rd:
+                    if country == 'NL':
+                        es = self.get_srm2_road_from_gui(feat, geom, crs_dest_srid, local_id)
+                    elif country == 'UK':
+                        es = self.get_adms_road_from_gui(feat, geom, crs_dest_srid, local_id)
+                    else:
+                        print('This should never happen. (No country selected.)')
                 else:
-                    print('This should never happen. (No country selected.)')
-            else:
-                raise Exception('Invalid sector')
+                    raise Exception('Invalid sector')
 
-            imaer_doc.feature_members.append(es)
-            # self.plugin.tempes = es # For debugging
+                # if it is a building layer
+                if input_layer == input_layer_bld:
+                    raise Exception('Not implemented yet')
 
-        return imaer_doc
+                # if it is a receptor layer
+                if input_layer == input_layer_rec:
+                    raise Exception('Not implemented yet')
+
+                imaer_doc.feature_members.append(es)
+                # self.plugin.tempes = es # For debugging
+
+            return imaer_doc
 
     # Emission Source
     def get_emission_source_from_gui(self, feat, geom, epsg_id, local_id):
