@@ -90,6 +90,9 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         for fcb in self.findChildren(QgsFieldComboBox):
             fcb.setAllowEmptyFieldName(True)
 
+        self.fcb_rd_v_custom_movements_units.addItems([''] + ui_settings['units_veh_movements'])
+        self.fcb_rd_v_eft_units.addItems([''] + ui_settings['units_veh_movements'])
+
         # Make sure the corresponding vehicle page is displayed
         self.radio_veh_page_custom.setChecked(True)
         self.stack_rd_veh_adms.setCurrentWidget(self.radio_veh_page_custom.page)
