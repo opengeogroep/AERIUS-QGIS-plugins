@@ -83,7 +83,7 @@
    <item>
     <widget class="QTabWidget" name="tabs_mapping">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_metadata">
       <attribute name="title">
@@ -201,8 +201,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>513</width>
-            <height>451</height>
+            <width>182</width>
+            <height>325</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
@@ -352,9 +352,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-810</y>
-            <width>499</width>
-            <height>1814</height>
+            <y>-744</y>
+            <width>494</width>
+            <height>1495</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout">
@@ -859,10 +859,13 @@
                   <item>
                    <widget class="QStackedWidget" name="stack_rd_veh_adms">
                     <property name="currentIndex">
-                     <number>0</number>
+                     <number>1</number>
                     </property>
                     <widget class="QWidget" name="page_veh_custom">
                      <layout class="QFormLayout" name="formLayout_6">
+                      <property name="verticalSpacing">
+                       <number>6</number>
+                      </property>
                       <item row="0" column="0">
                        <widget class="QLabel" name="label_rd_v_custom_description">
                         <property name="text">
@@ -883,7 +886,7 @@
                       <item row="1" column="1">
                        <widget class="QgsFieldComboBox" name="fcb_rd_v_custom_movements"/>
                       </item>
-                      <item row="2" column="0" colspan="2">
+                      <item row="3" column="0" colspan="2">
                        <widget class="QGroupBox" name="groupBox">
                         <property name="title">
                          <string>Emission per vehicle (g/km)</string>
@@ -912,79 +915,99 @@
                         </layout>
                        </widget>
                       </item>
+                      <item row="2" column="0">
+                       <widget class="QLabel" name="label_fcb_rd_v_custom_movements_units">
+                        <property name="text">
+                         <string>units</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="2" column="1">
+                       <widget class="QComboBox" name="fcb_rd_v_custom_movements_units"/>
+                      </item>
                      </layout>
                     </widget>
                     <widget class="QWidget" name="page_veh_eft">
                      <layout class="QFormLayout" name="formLayout_2">
-                      <item row="0" column="0">
+                      <item row="1" column="0">
                        <widget class="QLabel" name="label_rd_v_eft_link_speed">
                         <property name="text">
                          <string>Link speed</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="0" column="1">
+                      <item row="1" column="1">
                        <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_link_speed"/>
                       </item>
-                      <item row="1" column="0">
+                      <item row="2" column="0">
                        <widget class="QLabel" name="label_rd_v_eft_n_car">
                         <property name="text">
                          <string>Car</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="1" column="1">
+                      <item row="2" column="1">
                        <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_n_car"/>
                       </item>
-                      <item row="2" column="0">
+                      <item row="3" column="0">
                        <widget class="QLabel" name="label_rd_v_eft_n_taxi">
                         <property name="text">
                          <string>Taxi (black cab)</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="2" column="1">
+                      <item row="3" column="1">
                        <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_n_taxi"/>
                       </item>
-                      <item row="3" column="0">
+                      <item row="4" column="0">
                        <widget class="QLabel" name="label_rd_v_eft_n_motor">
                         <property name="text">
                          <string>Motorcycle</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="3" column="1">
+                      <item row="4" column="1">
                        <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_n_motor"/>
                       </item>
-                      <item row="4" column="0">
+                      <item row="5" column="0">
                        <widget class="QLabel" name="label_rd_v_eft_n_lgv">
                         <property name="text">
                          <string>LGV</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="4" column="1">
+                      <item row="5" column="1">
                        <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_n_lgv"/>
                       </item>
-                      <item row="5" column="0">
+                      <item row="6" column="0">
                        <widget class="QLabel" name="label_rd_v_eft_n_hgv">
                         <property name="text">
                          <string>HGV</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="5" column="1">
+                      <item row="6" column="1">
                        <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_n_hgv"/>
                       </item>
-                      <item row="6" column="0">
+                      <item row="7" column="0">
                        <widget class="QLabel" name="label_rd_v_eft_n_bus">
                         <property name="text">
                          <string>Bus and Coach</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="6" column="1">
+                      <item row="7" column="1">
                        <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_n_bus"/>
+                      </item>
+                      <item row="0" column="0">
+                       <widget class="QLabel" name="label_fcb_rd_v_eft_units">
+                        <property name="text">
+                         <string>Movement units</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="1">
+                       <widget class="QComboBox" name="fcb_rd_v_eft_units"/>
                       </item>
                      </layout>
                     </widget>

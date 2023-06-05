@@ -61,4 +61,5 @@ ui_settings = {
         {'name': 'Amersfoort / RD New - Netherlands', 'srid': 28992},
         {'name': 'OSGB 1936 / British National Grid', 'srid': 27700}
     ],
+    'units_veh_movements': ['p/hour', 'p/24 hour', 'p/month', 'p/year']
 }
