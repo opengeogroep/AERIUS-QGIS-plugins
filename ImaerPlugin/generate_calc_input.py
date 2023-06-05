@@ -64,19 +64,33 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.emission_tabs = {}
         self.emission_tabs['roads'] = getattr(self, 'tab_roads')
         self.emission_tabs['other'] = getattr(self, 'tab_emission_sources')
+        self.emission_tabs['buildings'] = getattr(self, 'tab_buildings')
+        self.emission_tabs['receptors'] = getattr(self, 'tab_receptors')
 
         self.init_gui()
 
     def init_gui(self):
         # Add message bar
 
-        self.combo_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
+        self.combo_layer_es.setFilters(QgsMapLayerProxyModel.VectorLayer)
+        self.combo_layer_rd.setFilters(QgsMapLayerProxyModel.VectorLayer)
+        self.combo_layer_bld.setFilters(QgsMapLayerProxyModel.VectorLayer)
+        self.combo_layer_rec.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
-        self.combo_sector.currentIndexChanged.connect(self.update_emission_tab)
+        #self.combo_sector.currentIndexChanged.connect(self.update_emission_tab)
+        self.checkBox_es.toggled.connect(self.update_emission_tab)
+        self.checkBox_rd.toggled.connect(self.update_emission_tab)
+        self.checkBox_bld.toggled.connect(self.update_emission_tab)
+        self.checkBox_rec.toggled.connect(self.update_emission_tab)
+        
         # self.combo_subsector.currentIndexChanged.connect(self.set_elements)
         self.edit_outfile.textChanged.connect(self.update_ok_button)
 
-        self.combo_layer.layerChanged.connect(self.update_field_combos)
+        self.combo_layer_es.layerChanged.connect(self.update_field_combos)
+        self.combo_layer_rd.layerChanged.connect(self.update_field_combos)
+        self.combo_layer_bld.layerChanged.connect(self.update_field_combos)
+        self.combo_layer_rec.layerChanged.connect(self.update_field_combos)
+
         self.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
         self.btn_save_settings.clicked.connect(self.save_settings)
@@ -105,7 +119,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
     def __del__(self):
         self.edit_outfile.textChanged.disconnect(self.update_ok_button)
         self.combo_sector.currentIndexChanged.disconnect(self.update_emission_tab)
-        self.combo_layer.layerChanged.disconnect(self.update_field_combos)
+        self.combo_layer_es.layerChanged.disconnect(self.update_field_combos)
+        self.combo_layer_rd.layerChanged.disconnect(self.update_field_combos)
+        self.combo_layer_bld.layerChanged.disconnect(self.update_field_combos)
+        self.combo_layer_rec.layerChanged.disconnect(self.update_field_combos)
         self.button_outfile.clicked.disconnect(self.browse_generate_calc_input_file)
 
         self.btn_save_settings.clicked.disconnect(self.save_settings)
@@ -135,10 +152,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             self.combo_crs.addItem(crs_name, crs['srid'])
 
         # sectors
-        self.combo_sector.addItem('<Select sector>', 0)
-        for sector in emission_sectors:
-            sector_name = emission_sectors[sector]['tab_name']
-            self.combo_sector.addItem(sector_name, sector)
+        #self.combo_sector.addItem('<Select sector>', 0)
+        #for sector in emission_sectors:
+        #    sector_name = emission_sectors[sector]['tab_name']
+        #    self.combo_sector.addItem(sector_name, sector)
 
         # year
         for item in ui_settings['project_years']:
@@ -164,40 +181,84 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         while self.tabs_mapping.count() > 1:
             self.tabs_mapping.removeTab(1)
         # Add selected emission tab
+        '''
         sector = self.combo_sector.currentData()
         if sector in self.emission_tabs:
             sector_name = emission_sectors[sector]['tab_name']
             self.tabs_mapping.insertTab(1, self.emission_tabs[sector], sector_name)
             self.tabs_mapping.setCurrentIndex(1)
+        '''
+        n = 1
+        if self.checkBox_es.isChecked():
+            sector1 = 'other'
+            sector_name = emission_sectors[sector1]['tab_name']
+            self.tabs_mapping.insertTab(n, self.emission_tabs[sector1], sector_name)
+            self.tabs_mapping.setCurrentIndex(n)
+            n += 1
+        else:
+            sector1 = None
+
+        if self.checkBox_rd.isChecked():
+            sector2 = 'roads'
+            sector_name = emission_sectors[sector2]['tab_name']
+            self.tabs_mapping.insertTab(n, self.emission_tabs[sector2], sector_name)
+            self.tabs_mapping.setCurrentIndex(n)
+            n += 1
+        else:
+            sector2 = None
+
+        if self.checkBox_bld.isChecked():
+            sector3 = 'buildings'
+            sector_name = emission_sectors[sector3]['tab_name']
+            self.tabs_mapping.insertTab(n, self.emission_tabs[sector3], sector_name)
+            self.tabs_mapping.setCurrentIndex(n)
+            n += 1
+        else:
+            sector3 = None
+
+        if self.checkBox_rec.isChecked():
+            sector4 = 'receptors'
+            sector_name = emission_sectors[sector4]['tab_name']
+            self.tabs_mapping.insertTab(n, self.emission_tabs[sector4], sector_name)
+            self.tabs_mapping.setCurrentIndex(n)
+            n += 1
+        else:
+            sector4 = None
 
         # Enable/disable widgets per country
         if country == '' or crs_setting == '':
             return
             # TODO: Raise error
 
-        if sector in emission_sectors and 'ui_settings' in emission_sectors[sector]:
-            # Running this loop twice because looping all objects of the QWidget
-            # class resulted in a frozen dialog.
-            for widget in self.findChildren(QgsFieldComboBox):
-                if widget.objectName() in emission_sectors[sector]['ui_settings'][country]['disable_widgets']:
-                    widget.setVisible(False)
-                else:
-                    widget.setVisible(True)
-            for widget in self.findChildren(QLabel):
-                if widget.objectName() in emission_sectors[sector]['ui_settings'][country]['disable_widgets']:
-                    widget.setVisible(False)
-                else:
-                    widget.setVisible(True)
-            if 'emission_tab' in emission_sectors[sector]:
-                vehicle_page = emission_sectors[sector]['ui_settings'][country]['vehicle_page']
-                # print(vehicle_page)
-                stack = getattr(self, 'stack_rd_veh')
-                page = getattr(self, vehicle_page)
-                stack.setCurrentWidget(page)
+        for sector in [sector1, sector2, sector3, sector4]:
+            if sector is None:
+                pass
+            if sector in emission_sectors and 'ui_settings' in emission_sectors[sector]:
+                # Running this loop twice because looping all objects of the QWidget
+                # class resulted in a frozen dialog.
+                for widget in self.findChildren(QgsFieldComboBox):
+                    if widget.objectName() in emission_sectors[sector]['ui_settings'][country]['disable_widgets']:
+                        widget.setVisible(False)
+                    else:
+                        widget.setVisible(True)
+                for widget in self.findChildren(QLabel):
+                    if widget.objectName() in emission_sectors[sector]['ui_settings'][country]['disable_widgets']:
+                        widget.setVisible(False)
+                    else:
+                        widget.setVisible(True)
+                if 'emission_tab' in emission_sectors[sector]:
+                    vehicle_page = emission_sectors[sector]['ui_settings'][country]['vehicle_page']
+                    # print(vehicle_page)
+                    stack = getattr(self, 'stack_rd_veh')
+                    page = getattr(self, vehicle_page)
+                    stack.setCurrentWidget(page)
 
     def update_field_combos(self):
         for fcb in self.findChildren(QgsFieldComboBox):
-            fcb.setLayer(self.combo_layer.currentLayer())
+            fcb.setLayer(self.combo_layer_es.currentLayer())
+            fcb.setLayer(self.combo_layer_rd.currentLayer())
+            fcb.setLayer(self.combo_layer_bld.currentLayer())
+            fcb.setLayer(self.combo_layer_rec.currentLayer())
 
     def update_ok_button(self):
         if self.edit_outfile.text() == '':
@@ -234,7 +295,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         imaer_doc.metadata = metadata
 
-        input_layer = self.combo_layer.currentLayer()
+        input_layer = self.combo_layer_es.currentLayer()
+        input_layer_rd = self.combo_layer_rd.currentLayer()
+        input_layer_bld = self.combo_layer_bld.currentLayer()
+        input_layer_rec = self.combo_layer_rec.currentLayer()
         country = self.combo_country.currentData()
         crs_source = input_layer.crs()
         crs_dest_srid = self.combo_crs.currentData()
@@ -263,10 +327,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             if crs_transform is not None:
                 geom.transform(crs_transform)
 
-            sector = self.combo_sector.currentData()
-            if sector == 'other':
+            #sector = self.combo_sector.currentData()
+            #if sector == 'other':
+            if self.checkBox_es.isChecked():
                 es = self.get_emission_source_from_gui(feat, geom, crs_dest_srid, local_id)
-            elif sector == 'roads':
+            #elif sector == 'roads':
+            elif self.checkBox_rd.isChecked():
                 if country == 'NL':
                     es = self.get_srm2_road_from_gui(feat, geom, crs_dest_srid, local_id)
                 elif country == 'UK':
@@ -575,7 +641,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     def set_field_settings(self, field_cfg):
         '''Sets texts from a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
-        layer_fields = self.combo_layer.currentLayer().fields().names()
+        layer_fields_es = self.combo_layer_es.currentLayer().fields().names()
+        layer_fields_rd = self.combo_layer_rd.currentLayer().fields().names()
+        layer_fields_bld = self.combo_layer_bld.currentLayer().fields().names()
+        layer_fields_rec = self.combo_layer_rec.currentLayer().fields().names()
         for fcb in self.findChildren(QgsFieldComboBox):
             widget_name = fcb.objectName()
             if widget_name not in field_cfg:
@@ -584,7 +653,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             if new_field == '':
                 fcb.setCurrentIndex(0)
                 continue
-            if new_field in layer_fields:
+            if new_field in layer_fields_es:
                 fcb.setCurrentText(new_field)
             else:
                 # Set empty
