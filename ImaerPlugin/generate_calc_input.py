@@ -73,8 +73,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         # Add message bar
 
         self.combo_layer_es.setFilters(QgsMapLayerProxyModel.VectorLayer)
-        self.combo_layer_rd.setFilters(QgsMapLayerProxyModel.VectorLayer)
-        self.combo_layer_bld.setFilters(QgsMapLayerProxyModel.VectorLayer)
+        self.combo_layer_rd.setFilters(QgsMapLayerProxyModel.LineLayer)
+        self.combo_layer_bld.setFilters(QgsMapLayerProxyModel.PolygonLayer | QgsMapLayerProxyModel.PointLayer)
         self.combo_layer_rec.setFilters(QgsMapLayerProxyModel.PointLayer)
 
         #self.combo_sector.currentIndexChanged.connect(self.update_emission_tab)
@@ -255,10 +255,14 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     def update_field_combos(self):
         for fcb in self.findChildren(QgsFieldComboBox):
-            fcb.setLayer(self.combo_layer_es.currentLayer())
-            fcb.setLayer(self.combo_layer_rd.currentLayer())
-            fcb.setLayer(self.combo_layer_bld.currentLayer())
-            fcb.setLayer(self.combo_layer_rec.currentLayer())
+            if 'es' in fcb.objectName():
+                fcb.setLayer(self.combo_layer_es.currentLayer())
+            elif 'rd' in fcb.objectName():
+                fcb.setLayer(self.combo_layer_rd.currentLayer())
+            elif 'bld' in fcb.objectName():
+                fcb.setLayer(self.combo_layer_bld.currentLayer())
+            elif 'rec' in fcb.objectName():
+                fcb.setLayer(self.combo_layer_rec.currentLayer())
 
     def update_ok_button(self):
         if self.edit_outfile.text() == '':
@@ -537,6 +541,19 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 'hgv': 'HGV',
                 'bus': 'Bus'
             }
+
+            # get the time unit from the gui
+            time_unit_ui = self.fcb_rd_v_custom_movements_units.currentText()
+
+            if time_unit_ui == 'p/hour':
+                time_unit = 'HOUR'
+            elif time_unit_ui == 'p/24 hour':
+                time_unit = 'DAY'
+            elif time_unit_ui == 'p/month':
+                time_unit = 'MONTH'
+            elif time_unit_ui == 'p/year':
+                time_unit = 'YEAR'
+
             for veh_type_key, veh_type_name in vehicle_types.items():
                 fcb = getattr(self, f'fcb_rd_v_eft_n_{veh_type_key}')
                 veh_number = self.get_feature_value(fcb, feat)
@@ -544,7 +561,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 if not (veh_number is None):
                     vehicle = StandardVehicle(
                         vehicles_per_time_unit=veh_number,
-                        time_unit='DAY',
+                        time_unit=time_unit,
                         stagnation_factor=0.0,
                         vehicle_type=veh_type_name,
                         maximum_speed=link_speed,
@@ -559,6 +576,18 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             em_nox = self.get_feature_value(self.fcb_rd_v_custom_em_nox, feat)
             em_nh3 = self.get_feature_value(self.fcb_rd_v_custom_em_nh3, feat)
 
+            # get the time unit from the gui
+            time_unit_ui = self.fcb_rd_v_eft_units.currentText()
+
+            if time_unit_ui == 'p/hour':
+                time_unit = 'HOUR'
+            elif time_unit_ui == 'p/24 hour':
+                time_unit = 'DAY'
+            elif time_unit_ui == 'p/month':
+                time_unit = 'MONTH'
+            elif time_unit_ui == 'p/year':
+                time_unit = 'YEAR'
+
             emission = []
             if em_nox is not None:
                 emission.append(Emission('NOX', em_nox))
@@ -567,7 +596,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
             veh = CustomVehicle(
                 vehicles_per_time_unit=movements,
-                time_unit='DAY',
+                time_unit=time_unit,
                 description=description,
                 emission=emission
             )
