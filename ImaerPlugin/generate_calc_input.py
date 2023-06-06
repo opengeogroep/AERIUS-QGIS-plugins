@@ -45,7 +45,8 @@ from ImaerPlugin.imaer5 import (
     ADMSRoad,
     AdmsRoadSideBarrier,
     StandardVehicle,
-    CustomVehicle
+    CustomVehicle,
+    Building
 )
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -406,7 +407,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
                 # if it is a building layer
                 if self.checkBox_bld.isChecked() and input_layer == input_layer_bld:
-                    raise Exception('Not implemented yet')
+                    es = self.get_building_from_gui(feat, geom, crs_dest_srid)
 
                 # if it is a receptor layer
                 if self.checkBox_rec.isChecked() and input_layer == input_layer_rec:
@@ -669,6 +670,32 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         es.vehicles = vehicles
         return es
+
+    # Buildings
+    def get_building_from_gui(self, feat, geom, epsg_id):
+
+        bld_hgt = self.get_feature_value(self.fcb_bld_height, feat)
+        bld_diameter = self.get_feature_value(self.fcb_bld_diameter, feat)
+        bld_name = self.get_feature_value(self.fcb_bld_name, feat)
+
+        if bld_diameter is None:
+            b = Building(
+                local_id=bld_name,
+                height=bld_hgt,
+                label=bld_name,
+                geom=geom,
+                epsg_id=epsg_id)
+        else:           
+            b = Building(
+                local_id=bld_name,
+                height=bld_hgt,
+                label=bld_name,
+                geom=geom,
+                epsg_id=epsg_id,
+                diameter=bld_diameter)
+
+        return b
+
 
     def get_feature_value(self, widget, feat, cast_to=None):
         if not isinstance(widget, QgsFieldComboBox):
