@@ -263,6 +263,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 fcb.setLayer(self.combo_layer_bld.currentLayer())
             if '_rec' in fcb.objectName():
                 fcb.setLayer(self.combo_layer_rec.currentLayer())
+            if '_em_' in fcb.objectName():
+                fcb.setLayer(self.combo_layer_es.currentLayer())
         print(self.combo_layer_bld.currentLayer().geometryType())
         # if bld is a point layer then show the diameter field
         if self.combo_layer_bld.currentLayer().geometryType() != 0:
@@ -352,8 +354,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         crs_transform_list = list(set(crs_transform_list))
         # if length of the list is more than one raise error
         print(crs_transform_list)
-        if len(crs_transform_list) == 1:
-            crs_transform = crs_transform_list[0]
+        if len(crs_transform_list) == 0:
+            pass # no crs transformation needed
+        elif len(crs_transform_list) == 1:
+            crs_transform = crs_transform_list[0] # only single crs transformation needed
         else:
             raise Exception('Different crs provided for input layers selected')
 
@@ -399,8 +403,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                         es = self.get_adms_road_from_gui(feat, geom, crs_dest_srid, local_id)
                     else:
                         print('This should never happen. (No country selected.)')
-                else:
-                    raise Exception('Invalid sector')
 
                 # if it is a building layer
                 if self.checkBox_bld.isChecked() and input_layer == input_layer_bld:
@@ -428,18 +430,26 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         if self.groupBox_es_characteristics.isChecked():
             esc_height = self.get_feature_value(self.fcb_es_emission_height, feat)
             esc_spread = self.get_feature_value(self.fcb_es_spread, feat)
+            prim_bld = self.get_feature_value(self.fcb_es_prim_bld, feat)
 
             hc_value = self.get_feature_value(self.fcb_es_hc_value, feat)
             if hc_value is not None:
                 hc = SpecifiedHeatContent(value=hc_value)
             else:
                 hc = None
-
-            es.emission_source_characteristics = EmissionSourceCharacteristics(
-                emission_height=esc_height,
-                spread=esc_spread,
-                heat_content=hc,
-            )
+            if prim_bld is None:
+                es.emission_source_characteristics = EmissionSourceCharacteristics(
+                    emission_height=esc_height,
+                    spread=esc_spread,
+                    heat_content=hc,
+                )
+            else:
+               es.emission_source_characteristics = EmissionSourceCharacteristics(
+                    building = prim_bld,
+                    emission_height=esc_height,
+                    spread=esc_spread,
+                    heat_content=hc,
+                ) 
 
         # emissions
         es.emissions = []  # TODO: Figure out why and fix this! (Without setting this clean list, emissions from former features are present.)
