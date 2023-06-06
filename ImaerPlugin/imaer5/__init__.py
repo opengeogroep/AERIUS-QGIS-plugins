@@ -1,12 +1,16 @@
 from .imaer_document import ImaerDocument
 from .metadata import AeriusCalculatorMetadata
+from .diurnal_variation import (
+    StandardDiurnalVariation,
+    ReferenceDiurnalVariation,
+    CustomDiurnalVariation
+)
 from .emission_source import (
     EmissionSourceType,
     EmissionSource,
     EmissionSourceCharacteristics,
     SpecifiedHeatContent,
-    Emission,
-    StandardDiurnalVariation
+    Emission
 )
 from .roads_adms import (
     ADMSRoad,
