@@ -51,11 +51,11 @@ class ReferenceDiurnalVariation(DiurnalVariation):
 
 class CustomDiurnalVariation(DiurnalVariation):
 
-    def __init__(self, *, local_id, custom_type, values=[], **kwargs):
+    def __init__(self, *, local_id, custom_type, values=None, **kwargs):
         super().__init__(**kwargs)
         self.local_id = local_id
         self.custom_type = custom_type
-        self.values = values
+        self.values = values or []
 
     def to_xml_elem(self, doc=QDomDocument()):
         # Does not run super class method because this element will be add_open_data
