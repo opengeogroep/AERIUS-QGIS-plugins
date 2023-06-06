@@ -1,6 +1,5 @@
 from PyQt5.QtXml import QDomDocument
 
-# from .enumerations import OutflowDirectionType
 from .gml import get_gml_element
 
 
@@ -188,34 +187,5 @@ class Emission(object):
 
         em_elem.appendChild(v_elem)
         result.appendChild(em_elem)
-
-        return result
-
-
-class DiurnalVariation(object):
-
-    def __init__(self):
-        pass
-
-    def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:diurnalVariation')
-        return result
-
-
-class StandardDiurnalVariation(DiurnalVariation):
-
-    def __init__(self, *, standard_type, **kwargs):
-        super().__init__(**kwargs)
-        self.standard_type = standard_type
-
-    def to_xml_elem(self, doc=QDomDocument()):
-        result = super().to_xml_elem(doc)
-
-        dv = doc.createElement('imaer:StandardDiurnalVariation')
-        st = doc.createElement('imaer:standardType')
-        st.appendChild(doc.createTextNode(str(self.standard_type)))
-
-        dv.appendChild(st)
-        result.appendChild(dv)
 
         return result

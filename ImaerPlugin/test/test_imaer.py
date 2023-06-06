@@ -89,14 +89,27 @@ class TestImaer(unittest.TestCase):
 
     def test_ffc_emission_characteristics01(self):
         hc = SpecifiedHeatContent(value=12.5)
-        es = EmissionSource(local_id='ES.123', sector_id=9999, label='Bron 123', geom=_GEOM1, epsg_id=28992)
+        es = EmissionSource(local_id='ES.1234', sector_id=9999, label='Bron 1234', geom=_GEOM1, epsg_id=28992)
         dv = StandardDiurnalVariation(standard_type='LIGHT_DUTY_VEHICLES')
         es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation=dv)
-        es.emissions.append(Emission('NH3', 1))
-        es.emissions.append(Emission('NOX', 3.3))
+        es.emissions.append(Emission('NH3', 4.3))
+        es.emissions.append(Emission('NOX', 4.4))
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
         self.generate_gml_file(fcc, 'em_char_01')
+
+    def test_ffc_emission_characteristics02(self):
+        fcc = ImaerDocument()
+        hc = SpecifiedHeatContent(value=12.5)
+        es = EmissionSource(local_id='ES.125', sector_id=9999, label='Bron 125', geom=_GEOM1, epsg_id=28992)
+        rdv = ReferenceDiurnalVariation(local_id='DiurnalProfile.125')
+        cdv = CustomDiurnalVariation(local_id='DiurnalProfile.125', custom_type='DAY', values=[150, 50]*12)
+        fcc.definitions.append(cdv)
+        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation=rdv)
+        es.emissions.append(Emission('NH3', 5))
+        es.emissions.append(Emission('NOX', 5.22))
+        fcc.feature_members.append(es)
+        self.generate_gml_file(fcc, 'em_char_02')
 
     def test_create_srm2road(self):
         es = SRM2Road(

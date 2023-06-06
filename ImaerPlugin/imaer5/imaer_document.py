@@ -12,6 +12,7 @@ class ImaerDocument():
 
         self.metadata = None
         self.feature_members = []
+        self.definitions = []
 
         self.doc = QDomDocument()
 
@@ -46,6 +47,18 @@ class ImaerDocument():
             feature_member_elem = self.doc.createElement('imaer:featureMember')
             fcc_elem.appendChild(feature_member_elem)
             feature_member_elem.appendChild(feature_member.to_xml_elem(self.doc))
+
+        if len(self.definitions) > 0:
+            def_elem_1 = self.doc.createElement('imaer:definitions')
+            def_elem_2 = self.doc.createElement('imaer:Definitions')
+
+            for definition in self.definitions:
+                #def_elem = self.doc.createElement('imaer:featureMember')
+                #fcc_elem.appendChild(feature_member_elem)
+                def_elem_2.appendChild(definition.to_xml_elem(self.doc))
+
+            def_elem_1.appendChild(def_elem_2)
+            fcc_elem.appendChild(def_elem_1)
 
     def to_xml_file(self, fn):
         self.to_xml_elem()
