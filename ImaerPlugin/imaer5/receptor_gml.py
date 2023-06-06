@@ -6,7 +6,7 @@ from .gml import get_gml_element
 
 class ReceptorGMLType(object):
 
-    def __init__(self, *, local_id, geom, label=None, description=None):
+    def __init__(self, *, local_id, geom, label=None, description=None, epsg):
         self.label = label
         self.description = description
         self.emission_source_characteristics = None
@@ -15,6 +15,7 @@ class ReceptorGMLType(object):
         #self.emissions = []
         self.geometry = geom
         self.local_id = local_id
+        self.epsg = epsg
 
 
     def to_xml_elem(self, doc=QDomDocument()):
@@ -49,7 +50,7 @@ class ReceptorGMLType(object):
         gml_type = gml_types[self.geometry.type()]#
 
         gm_elem = doc.createElement(f'imaer:GM_Point')
-        gml_elem = get_gml_element(self.geometry, f'{self.local_id}.{gml_type}')
+        gml_elem = get_gml_element(self.geometry, f'{self.local_id}.{gml_type}', self.epsg)
 
         gm_elem.appendChild(gml_elem)
         result.appendChild(gm_elem)

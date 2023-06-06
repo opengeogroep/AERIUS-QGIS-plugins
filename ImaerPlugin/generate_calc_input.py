@@ -45,7 +45,10 @@ from ImaerPlugin.imaer5 import (
     ADMSRoad,
     AdmsRoadSideBarrier,
     StandardVehicle,
-    CustomVehicle
+    CustomVehicle,
+    Building,
+    Receptor,
+    ReceptorGMLType
 )
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -73,8 +76,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         # Add message bar
 
         self.combo_layer_es.setFilters(QgsMapLayerProxyModel.VectorLayer)
-        self.combo_layer_rd.setFilters(QgsMapLayerProxyModel.VectorLayer)
-        self.combo_layer_bld.setFilters(QgsMapLayerProxyModel.VectorLayer)
+        self.combo_layer_rd.setFilters(QgsMapLayerProxyModel.LineLayer)
+        self.combo_layer_bld.setFilters(QgsMapLayerProxyModel.PolygonLayer | QgsMapLayerProxyModel.PointLayer)
         self.combo_layer_rec.setFilters(QgsMapLayerProxyModel.PointLayer)
 
         #self.combo_sector.currentIndexChanged.connect(self.update_emission_tab)
@@ -255,10 +258,24 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     def update_field_combos(self):
         for fcb in self.findChildren(QgsFieldComboBox):
-            fcb.setLayer(self.combo_layer_es.currentLayer())
-            fcb.setLayer(self.combo_layer_rd.currentLayer())
-            fcb.setLayer(self.combo_layer_bld.currentLayer())
-            fcb.setLayer(self.combo_layer_rec.currentLayer())
+            if 'es' in fcb.objectName():
+                fcb.setLayer(self.combo_layer_es.currentLayer())
+            if '_rd' in fcb.objectName():
+                fcb.setLayer(self.combo_layer_rd.currentLayer())
+            if '_bld' in fcb.objectName():
+                fcb.setLayer(self.combo_layer_bld.currentLayer())
+            if '_rec' in fcb.objectName():
+                fcb.setLayer(self.combo_layer_rec.currentLayer())
+            if '_em_' in fcb.objectName():
+                fcb.setLayer(self.combo_layer_es.currentLayer())
+        print(self.combo_layer_bld.currentLayer().geometryType())
+        # if bld is a point layer then show the diameter field
+        if self.combo_layer_bld.currentLayer().geometryType() != 0:
+            self.fcb_bld_diameter.setVisible(False)
+            self.label_bld_diameter.setVisible(False)
+        else:
+            self.fcb_bld_diameter.setVisible(True)
+            self.label_bld_diameter.setVisible(True)
 
     def update_ok_button(self):
         if self.edit_outfile.text() == '':
@@ -295,22 +312,71 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         imaer_doc.metadata = metadata
 
-        input_layer_es = self.combo_layer_es.currentLayer()
-        input_layer_rd = self.combo_layer_rd.currentLayer()
-        input_layer_bld = self.combo_layer_bld.currentLayer()
-        input_layer_rec = self.combo_layer_rec.currentLayer()
         country = self.combo_country.currentData()
-        crs_source = input_layer.crs()
         crs_dest_srid = self.combo_crs.currentData()
         # print(crs_dest_srid)
         crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
-        if crs_source == crs_dest:
-            crs_transform = None
+
+        crs_transform_list = []
+        if self.checkBox_es.isChecked():
+            input_layer_es = self.combo_layer_es.currentLayer()
+            crs_source = input_layer_es.crs()
+            if crs_source == crs_dest:
+                crs_transform = None
+            else:
+                crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
+            crs_transform_list.append(crs_transform)
+        if self.checkBox_rd.isChecked():
+            input_layer_rd = self.combo_layer_rd.currentLayer()
+            crs_source = input_layer_rd.crs()
+            if crs_source == crs_dest:
+                crs_transform = None
+            else:
+                crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
+                crs_transform_list.append(crs_transform)
+        if self.checkBox_bld.isChecked():
+            input_layer_bld = self.combo_layer_bld.currentLayer()
+            crs_source = input_layer_bld.crs()
+            if crs_source == crs_dest:
+                crs_transform = None
+            else:
+                crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
+                crs_transform_list.append(crs_transform)
+        if self.checkBox_rec.isChecked():
+            input_layer_rec = self.combo_layer_rec.currentLayer()
+            crs_source = input_layer_rec.crs()
+            if crs_source == crs_dest:
+                crs_transform = None
+            else:
+                crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
+                crs_transform_list.append(crs_transform)
+
+        # remove any None values from the crs_transform_list
+        crs_transform_list = [x for x in crs_transform_list if x is not None]
+        # keep only unique values in the crs_transform_list
+        crs_transform_list = list(set(crs_transform_list))
+        # if length of the list is more than one raise error
+        print(crs_transform_list)
+        if len(crs_transform_list) == 0:
+            pass # no crs transformation needed
+        elif len(crs_transform_list) == 1:
+            crs_transform = crs_transform_list[0] # only single crs transformation needed
         else:
-            crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
+            raise Exception('Different crs provided for input layers selected')
 
         # Loop all features
-        for input_layer in [input_layer_es, input_layer_rd, input_layer_bld, input_layer_rec]:
+        list_input_layers_to_process = []
+        if self.checkBox_es.isChecked():
+            list_input_layers_to_process.append(input_layer_es)
+        if self.checkBox_rd.isChecked():
+            list_input_layers_to_process.append(input_layer_rd)
+        if self.checkBox_bld.isChecked():
+            list_input_layers_to_process.append(input_layer_bld)
+        if self.checkBox_rec.isChecked():
+            list_input_layers_to_process.append(input_layer_rec)
+
+        #for input_layer in [input_layer_es, input_layer_rd, input_layer_bld, input_layer_rec]:
+        for input_layer in list_input_layers_to_process:
             for feat in input_layer.getFeatures():
                 local_id = 'ES.{}'.format(feat.id())
 
@@ -329,27 +395,26 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                     geom.transform(crs_transform)
 
                 # if it is the emissions source layer, process this
-                if input_layer == input_layer_es:
+                if self.checkBox_es.isChecked() and input_layer == input_layer_es:
                     es = self.get_emission_source_from_gui(feat, geom, crs_dest_srid, local_id)
 
                 # if it is the road layer process as such
-                if input_layer == input_layer_rd:
+                if self.checkBox_rd.isChecked() and input_layer == input_layer_rd:
                     if country == 'NL':
                         es = self.get_srm2_road_from_gui(feat, geom, crs_dest_srid, local_id)
                     elif country == 'UK':
                         es = self.get_adms_road_from_gui(feat, geom, crs_dest_srid, local_id)
                     else:
                         print('This should never happen. (No country selected.)')
-                else:
-                    raise Exception('Invalid sector')
 
                 # if it is a building layer
-                if input_layer == input_layer_bld:
-                    raise Exception('Not implemented yet')
+                if self.checkBox_bld.isChecked() and input_layer == input_layer_bld:
+                    es = self.get_building_from_gui(feat, geom, crs_dest_srid)
 
                 # if it is a receptor layer
-                if input_layer == input_layer_rec:
-                    raise Exception('Not implemented yet')
+                if self.checkBox_rec.isChecked() and input_layer == input_layer_rec:
+                    es = self.get_receptor_from_gui(feat, geom, local_id, crs_dest_srid)
+
 
                 imaer_doc.feature_members.append(es)
                 # self.plugin.tempes = es # For debugging
@@ -369,18 +434,26 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         if self.groupBox_es_characteristics.isChecked():
             esc_height = self.get_feature_value(self.fcb_es_emission_height, feat)
             esc_spread = self.get_feature_value(self.fcb_es_spread, feat)
+            prim_bld = self.get_feature_value(self.fcb_es_prim_bld, feat)
 
             hc_value = self.get_feature_value(self.fcb_es_hc_value, feat)
             if hc_value is not None:
                 hc = SpecifiedHeatContent(value=hc_value)
             else:
                 hc = None
-
-            es.emission_source_characteristics = EmissionSourceCharacteristics(
-                emission_height=esc_height,
-                spread=esc_spread,
-                heat_content=hc,
-            )
+            if prim_bld is None:
+                es.emission_source_characteristics = EmissionSourceCharacteristics(
+                    emission_height=esc_height,
+                    spread=esc_spread,
+                    heat_content=hc,
+                )
+            else:
+               es.emission_source_characteristics = EmissionSourceCharacteristics(
+                    building = prim_bld,
+                    emission_height=esc_height,
+                    spread=esc_spread,
+                    heat_content=hc,
+                ) 
 
         # emissions
         es.emissions = []  # TODO: Figure out why and fix this! (Without setting this clean list, emissions from former features are present.)
@@ -537,6 +610,19 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 'hgv': 'HGV',
                 'bus': 'Bus'
             }
+
+            # get the time unit from the gui
+            time_unit_ui = self.fcb_rd_v_eft_units.currentText()
+
+            if time_unit_ui == 'p/hour':
+                time_unit = 'HOUR'
+            elif time_unit_ui == 'p/24 hour':
+                time_unit = 'DAY'
+            elif time_unit_ui == 'p/month':
+                time_unit = 'MONTH'
+            elif time_unit_ui == 'p/year':
+                time_unit = 'YEAR'
+
             for veh_type_key, veh_type_name in vehicle_types.items():
                 fcb = getattr(self, f'fcb_rd_v_eft_n_{veh_type_key}')
                 veh_number = self.get_feature_value(fcb, feat)
@@ -544,7 +630,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 if not (veh_number is None):
                     vehicle = StandardVehicle(
                         vehicles_per_time_unit=veh_number,
-                        time_unit='DAY',
+                        time_unit=time_unit,
                         stagnation_factor=0.0,
                         vehicle_type=veh_type_name,
                         maximum_speed=link_speed,
@@ -559,6 +645,18 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             em_nox = self.get_feature_value(self.fcb_rd_v_custom_em_nox, feat)
             em_nh3 = self.get_feature_value(self.fcb_rd_v_custom_em_nh3, feat)
 
+            # get the time unit from the gui
+            time_unit_ui = self.fcb_rd_v_custom_movements_units.currentText()
+
+            if time_unit_ui == 'p/hour':
+                time_unit = 'HOUR'
+            elif time_unit_ui == 'p/24 hour':
+                time_unit = 'DAY'
+            elif time_unit_ui == 'p/month':
+                time_unit = 'MONTH'
+            elif time_unit_ui == 'p/year':
+                time_unit = 'YEAR'
+
             emission = []
             if em_nox is not None:
                 emission.append(Emission('NOX', em_nox))
@@ -567,7 +665,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
             veh = CustomVehicle(
                 vehicles_per_time_unit=movements,
-                time_unit='DAY',
+                time_unit=time_unit,
                 description=description,
                 emission=emission
             )
@@ -575,6 +673,45 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         es.vehicles = vehicles
         return es
+
+    # Buildings
+    def get_building_from_gui(self, feat, geom, epsg_id):
+
+        bld_hgt = self.get_feature_value(self.fcb_bld_height, feat)
+        bld_diameter = self.get_feature_value(self.fcb_bld_diameter, feat)
+        bld_name = self.get_feature_value(self.fcb_bld_name, feat)
+
+        if bld_diameter is None:
+            b = Building(
+                local_id=bld_name,
+                height=bld_hgt,
+                label=bld_name,
+                geom=geom,
+                epsg_id=epsg_id)
+        else:           
+            b = Building(
+                local_id=bld_name,
+                height=bld_hgt,
+                label=bld_name,
+                geom=geom,
+                epsg_id=epsg_id,
+                diameter=bld_diameter)
+
+        return b
+
+    # Receptors
+    def get_receptor_from_gui(self, feat, geom, local_id, epsg_id):
+
+        rec_label = self.get_feature_value(self.fcb_rec_name, feat)
+        rec_description = rec_label
+
+        r = Receptor(local_id=local_id,
+                     geom=geom,
+                     label=rec_label,
+                     description=rec_description,
+                     epsg=epsg_id)
+
+        return r
 
     def get_feature_value(self, widget, feat, cast_to=None):
         if not isinstance(widget, QgsFieldComboBox):
@@ -603,6 +740,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     def save_settings(self):
         work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
+        print(work_dir)
         if work_dir is None:
             raise Exception('Work dir not set')
             return
@@ -662,7 +800,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             if new_field == '':
                 fcb.setCurrentIndex(0)
                 continue
-            if new_field in layer_fields_es:
+            if new_field in layer_fields_es or new_field in layer_fields_rd or new_field in layer_fields_bld or new_field in layer_fields_rec:
                 fcb.setCurrentText(new_field)
             else:
                 # Set empty

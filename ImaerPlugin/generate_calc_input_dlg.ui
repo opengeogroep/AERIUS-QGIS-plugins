@@ -85,16 +85,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_sector">
-        <property name="text">
-         <string>Sector</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="combo_sector"/>
-      </item>
      </layout>
     </widget>
    </item>
@@ -220,10 +210,10 @@
             <x>0</x>
             <y>0</y>
             <width>511</width>
-            <height>504</height>
+            <height>530</height>
            </rect>
           </property>
-          <layout class="QGridLayout" name="gridLayout_3">
+          <layout class="QGridLayout" name="gridLayout_6">
            <item row="0" column="0">
             <widget class="QLabel" name="label_es_layer">
              <property name="text">
@@ -231,7 +221,40 @@
              </property>
             </widget>
            </item>
-           <item row="7" column="0">
+           <item row="0" column="1">
+            <widget class="QgsMapLayerComboBox" name="combo_layer_es"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_es_sector_id">
+             <property name="text">
+              <string>sector id</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QgsFieldComboBox" name="fcb_es_sector_id"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_es_label">
+             <property name="text">
+              <string>label</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QgsFieldComboBox" name="fcb_es_label"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_es_description">
+             <property name="text">
+              <string>description</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QgsFieldComboBox" name="fcb_es_description"/>
+           </item>
+           <item row="6" column="0">
             <spacer name="verticalSpacer_2">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -244,14 +267,71 @@
              </property>
             </spacer>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_es_label">
-             <property name="text">
-              <string>label</string>
+           <item row="4" column="0" colspan="2">
+            <widget class="QGroupBox" name="groupBox_es_characteristics">
+             <property name="title">
+              <string>Characteristics</string>
              </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_3">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_es_emission_height">
+                <property name="text">
+                 <string>emission height</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_emission_height"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_es_emission_spread">
+                <property name="text">
+                 <string>spread</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_spread"/>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_es_prim_bld">
+                <property name="text">
+                 <string>primary building</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_prim_bld"/>
+              </item>
+              <item row="3" column="0" colspan="2">
+               <widget class="QGroupBox" name="groupBox_heatContent">
+                <property name="title">
+                 <string>Specified heat content</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_5">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_es_hc_value">
+                   <property name="text">
+                    <string>value</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_es_hc_value"/>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
-           <item row="6" column="0" colspan="2">
+           <item row="5" column="0" colspan="2">
             <widget class="QGroupBox" name="groupBox_emissions">
              <property name="title">
               <string>Emissions</string>
@@ -280,86 +360,6 @@
              </layout>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_es_sector_id">
-             <property name="text">
-              <string>sector id</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QgsFieldComboBox" name="fcb_es_label"/>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_es_description">
-             <property name="text">
-              <string>description</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QgsFieldComboBox" name="fcb_es_description"/>
-           </item>
-           <item row="1" column="1">
-            <widget class="QgsFieldComboBox" name="fcb_es_sector_id"/>
-           </item>
-           <item row="5" column="0" colspan="2">
-            <widget class="QGroupBox" name="groupBox_es_characteristics">
-             <property name="title">
-              <string>Characteristics</string>
-             </property>
-             <property name="checkable">
-              <bool>true</bool>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_6">
-              <item row="0" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_emission_height"/>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_es_emission_height">
-                <property name="text">
-                 <string>emission height</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0" colspan="2">
-               <widget class="QGroupBox" name="groupBox_heatContent">
-                <property name="title">
-                 <string>Specified heat content</string>
-                </property>
-                <layout class="QGridLayout" name="gridLayout_5">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_es_hc_value">
-                   <property name="text">
-                    <string>value</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_es_hc_value"/>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_spread"/>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_es_emission_spread">
-                <property name="text">
-                 <string>spread</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QgsMapLayerComboBox" name="combo_layer_es"/>
-           </item>
           </layout>
          </widget>
         </widget>
@@ -380,7 +380,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-181</y>
+            <y>0</y>
             <width>494</width>
             <height>1521</height>
            </rect>
@@ -1186,8 +1186,8 @@
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>513</width>
-         <height>504</height>
+         <width>511</width>
+         <height>256</height>
         </rect>
        </property>
        <property name="widgetResizable">
@@ -1198,13 +1198,13 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>511</width>
-          <height>502</height>
+          <width>509</width>
+          <height>254</height>
          </rect>
         </property>
-        <layout class="QGridLayout" name="gridLayout_26">
+        <layout class="QGridLayout" name="gridLayout_4">
          <item row="0" column="0">
-          <widget class="QLabel" name="label_rd_label_7">
+          <widget class="QLabel" name="label_bld_layer">
            <property name="text">
             <string>Layer</string>
            </property>
@@ -1213,8 +1213,38 @@
          <item row="0" column="1">
           <widget class="QgsMapLayerComboBox" name="combo_layer_bld"/>
          </item>
-         <item row="5" column="0">
-          <spacer name="verticalSpacer_18">
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_bld_name">
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QgsFieldComboBox" name="fcb_bld_name"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_bld_height">
+           <property name="text">
+            <string>Height</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QgsFieldComboBox" name="fcb_bld_height"/>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_bld_diameter">
+           <property name="text">
+            <string>Diameter</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QgsFieldComboBox" name="fcb_bld_diameter"/>
+         </item>
+         <item row="4" column="0">
+          <spacer name="verticalSpacer_19">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -1226,7 +1256,7 @@
            </property>
           </spacer>
          </item>
-         <item row="4" column="0">
+         <item row="5" column="0">
           <spacer name="verticalSpacer_14">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -1239,8 +1269,8 @@
            </property>
           </spacer>
          </item>
-         <item row="3" column="0">
-          <spacer name="verticalSpacer_19">
+         <item row="6" column="0">
+          <spacer name="verticalSpacer_18">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -1283,7 +1313,7 @@
         </property>
         <layout class="QGridLayout" name="gridLayout_25">
          <item row="1" column="1">
-          <widget class="QgsFieldComboBox" name="fcb_rd_label_3"/>
+          <widget class="QgsFieldComboBox" name="fcb_rec_name"/>
          </item>
          <item row="5" column="0">
           <spacer name="verticalSpacer_13">
