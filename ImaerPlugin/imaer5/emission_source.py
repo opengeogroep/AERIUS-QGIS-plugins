@@ -82,9 +82,9 @@ class EmissionSourceType(object):
 
 class EmissionSource(EmissionSourceType):
 
-    def __init__(self, *, emissions=[], **kwargs):
+    def __init__(self, *, emissions=None, **kwargs):
         super().__init__(**kwargs)
-        self.emissions = emissions
+        self.emissions = emissions or []
 
     def to_xml_elem(self, doc=QDomDocument()):
         if doc is None:

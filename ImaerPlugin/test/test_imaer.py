@@ -112,6 +112,12 @@ class TestImaer(unittest.TestCase):
         self.generate_gml_file(fcc, 'em_char_02')
 
     def test_create_srm2road(self):
+        v1 = StandardVehicle(vehicles_per_time_unit=333,
+                             time_unit='DAY',
+                             vehicle_type='Bus',
+                             maximum_speed=33,
+                             strict_enforcement='false',
+                             stagnation_factor=0.0)
         es = SRM2Road(
             local_id='ES.33',
             sector_id='3100',
@@ -119,7 +125,8 @@ class TestImaer(unittest.TestCase):
             geom=_GEOM1,
             epsg_id=28992,
             road_area_type='NL',
-            road_type='FREEWAY')
+            road_type='FREEWAY',
+            vehicles=[v1])
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
         self.generate_gml_file(fcc, 'srm2road')
