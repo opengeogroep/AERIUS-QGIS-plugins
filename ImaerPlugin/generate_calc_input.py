@@ -46,7 +46,9 @@ from ImaerPlugin.imaer5 import (
     AdmsRoadSideBarrier,
     StandardVehicle,
     CustomVehicle,
-    Building
+    Building,
+    Receptor,
+    ReceptorGMLType
 )
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -411,7 +413,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
                 # if it is a receptor layer
                 if self.checkBox_rec.isChecked() and input_layer == input_layer_rec:
-                    raise Exception('Not implemented yet')
+                    es = self.get_receptor_from_gui(feat, geom, local_id, crs_dest_srid)
+
 
                 imaer_doc.feature_members.append(es)
                 # self.plugin.tempes = es # For debugging
@@ -696,6 +699,19 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         return b
 
+    # Receptors
+    def get_receptor_from_gui(self, feat, geom, local_id, epsg_id):
+
+        rec_label = self.get_feature_value(self.fcb_rec_name, feat)
+        rec_description = rec_label
+
+        r = Receptor(local_id=local_id,
+                     geom=geom,
+                     label=rec_label,
+                     description=rec_description,
+                     epsg=epsg_id)
+
+        return r
 
     def get_feature_value(self, widget, feat, cast_to=None):
         if not isinstance(widget, QgsFieldComboBox):
