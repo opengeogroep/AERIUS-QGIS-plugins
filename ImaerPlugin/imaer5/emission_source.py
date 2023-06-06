@@ -137,8 +137,7 @@ class EmissionSourceCharacteristics(object):
 
         # diurnal variation
         if self.diurnal_variation is not None:
-            elem = doc.createElement('imaer:diurnalVariation')
-            elem.appendChild(doc.createTextNode(str(self.diurnal_variation)))
+            elem = self.diurnal_variation.to_xml_elem(doc)
             result.appendChild(elem)
 
         return result
@@ -189,5 +188,34 @@ class Emission(object):
 
         em_elem.appendChild(v_elem)
         result.appendChild(em_elem)
+
+        return result
+
+
+class DiurnalVariation(object):
+
+    def __init__(self):
+        pass
+
+    def to_xml_elem(self, doc=QDomDocument()):
+        result = doc.createElement('imaer:diurnalVariation')
+        return result
+
+
+class StandardDiurnalVariation(DiurnalVariation):
+
+    def __init__(self, *, standard_type, **kwargs):
+        super().__init__(**kwargs)
+        self.standard_type = standard_type
+
+    def to_xml_elem(self, doc=QDomDocument()):
+        result = super().to_xml_elem(doc)
+
+        dv = doc.createElement('imaer:StandardDiurnalVariation')
+        st = doc.createElement('imaer:standardType')
+        st.appendChild(doc.createTextNode(str(self.standard_type)))
+
+        dv.appendChild(st)
+        result.appendChild(dv)
 
         return result

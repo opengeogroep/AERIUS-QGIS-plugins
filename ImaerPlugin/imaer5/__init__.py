@@ -5,7 +5,8 @@ from .emission_source import (
     EmissionSource,
     EmissionSourceCharacteristics,
     SpecifiedHeatContent,
-    Emission
+    Emission,
+    StandardDiurnalVariation
 )
 from .roads_adms import (
     ADMSRoad,
