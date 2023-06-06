@@ -72,9 +72,9 @@ class AeriusCalculatorMetadata():
                     ele = doc.createElement('imaer:substance')
                     ele.appendChild(doc.createTextNode(str(substance)))
                     calc_ele.appendChild(ele)
-            if 'resultType' in self.calculation:
+            if 'result_type' in self.calculation:
                 ele = doc.createElement('imaer:resultType')
-                ele.appendChild(doc.createTextNode(str(self.calculation['resultType'])))
+                ele.appendChild(doc.createTextNode(str(self.calculation['result_type'])))
                 calc_ele.appendChild(ele)
             calc.appendChild(calc_ele)
             result.appendChild(calc)

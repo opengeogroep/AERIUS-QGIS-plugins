@@ -1,10 +1,10 @@
 import os.path
 import sys
 import unittest
-import json
-from pkg_resources import IMetadataProvider
 import yaml
 import time
+
+from lxml import etree
 
 import faulthandler
 faulthandler.enable()
@@ -19,13 +19,10 @@ with open('test/dev.yml') as file:
 
 sys.path.append(dev_config['path_qgis_python_folder'])
 
-from qgis.core import QgsGeometry, Qgis
-
 from qgis.core import *
 
 from imaer5 import *
-from connect import *
-from tasks.import_calc_result import ImportImaerCalculatorResultTask
+# from connect import *
 
 _GEOM0 = QgsGeometry.fromWkt('POINT(148458.0 411641.0)')
 _GEOM1 = QgsGeometry.fromWkt('LINESTRING((1 0, 2 1, 3 0))')
@@ -33,87 +30,73 @@ _GEOM2 = QgsGeometry.fromWkt('MULTIPOLYGON(((1 0, 2 1, 3 0, 2 -1, 1 0)))')
 _GEOM3 = QgsGeometry.fromWkt('LINESTRING((311279.0 723504.3, 311262.5 723349.6))')
 _GEOM4 = QgsGeometry.fromWkt('POLYGON((1 0, 2 1, 3 0, 2 -1, 1 0))')
 
+# Load IMAER xsd for validation check. (Needs internet connection and can take pretty long.)
+xsd_fn = os.path.join('test', 'xsd', 'IMAER.xsd')
+xmlschema_doc = etree.parse(xsd_fn)
+xmlschema = etree.XMLSchema(xmlschema_doc)
+
+
 class TestImaer(unittest.TestCase):
 
     def __init__(self, whatever):
+        # print('init')
         unittest.TestCase.__init__(self, whatever)
+
+    def validate_xml_online(self, xml_fn):
+        pass
         # connect_base_url = dev_config['connect_base_url']
         # connect_version = dev_config['connect_version']
         # connect_key = dev_config['connect_key']
         # self.aerius_connection = AeriusConnection(None, base_url=connect_base_url, version=connect_version, api_key=connect_key)
         # print(self.aerius_connection)
 
-    def compare_files(self, fn1, fn2):
-        with open(fn1, 'r') as f1:
-            content1 = f1.read()
-        with open(fn2, 'r') as f2:
-            content2 = f2.read()
-        return content1 == content2
+    def validate_xml_locally(self, xml_fn):
+        xml_doc = etree.parse(xml_fn)
+        result = xmlschema.validate(xml_doc)
+        # result = xsd.validate(xml_fn)
+        error = xmlschema.error_log.last_error
+        if error is not None:
+            print(error)
+        return result
 
-    # This test always fails because the Qt XML exporter puts data in random
-    # order and therefore the text files are (almost) never exactly the same.
-    def run_file_test(self, fcc, name):
-        output_fn = os.path.join('test', 'output', f'output_{name}.gml')
-        verify_fn = os.path.join('test', 'output', f'verify_{name}.gml')
-        fcc.to_xml_file(output_fn)
-        self.assertTrue(self.compare_files(output_fn, verify_fn))
-
-    # This function does NOT work yet!!
-    def run_validation_test(self, fcc, name):
+    def generate_gml_file(self, fcc, name):
         output_fn = os.path.join('test', 'output', f'output_{name}.gml')
         fcc.to_xml_file(output_fn)
 
-        #self.log(self.aerius_connection, user='user')
-        # the below is failing with a segment error which is likely why trying to write to non existing file
-        # breaks when put the api key in. if this none then works
-        # result = self.aerius_connection.post_validate(output_fn)
-        # # then still need to check if this result is valid
-        # bstr = result.readAll()
-        # result_dict = json.loads(bytes(bstr))
-        # if 'successful' in result_dict and result_dict['successful']:
-        #     print("Success")
-
-    def log(self, message, tab='Imaer', lvl='Info', bar=False, user='user', duration=3):
-        # lvl: Info, Warning, Critical
-        # user: user, dev
-        level = getattr(Qgis, lvl)
-        # if bar or (user == 'user') or (user == 'dev' and self.dev):
-        #    QgsMessageLog.logMessage(str(message), tab, level=level)
-        # if bar:
-        #   self.iface.messageBar().pushMessage(lvl, str(message), level, duration=duration)
-        print(message)
+        validation_result = self.validate_xml_locally(output_fn)
+        self.assertTrue(validation_result)
 
     def test_ffc_empty(self):
         fcc = ImaerDocument()
-        #self.run_file_test(fcc, 'empty')
-        self.run_validation_test(fcc, 'empty')
+        self.generate_gml_file(fcc, 'empty')
 
     def test_ffc_metadata(self):
         fcc = ImaerDocument()
         fcc.metadata = AeriusCalculatorMetadata(
             project={'year': 2020, 'description': 'Some description...'},
-            situation={'name': 'Situation 1', 'reference': 'ABCDE12345'},
-            calculation={},
+            situation={'name': 'Situation 1', 'reference': 'ABCDE12345', 'type': 'PROPOSED'},
+            calculation = {'type':'NATURE_AREA', 'substances':['NH3', 'NOX'], 'result_type':'DEPOSITION'},
             version={'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'}
         )
-        #self.run_ffc_test(fcc, 'metadata')
+        self.generate_gml_file(fcc, 'metadata')
 
     def test_ffc_emission_simple(self):
         fcc = ImaerDocument()
         es = EmissionSource(local_id='ES.123', sector_id=9000, label='Bron 123', geom=_GEOM0, epsg_id=28992)
         es.emissions.append(Emission('NH3', 1))
         fcc.feature_members.append(es)
-        self.run_validation_test(fcc, 'em_simple')
+        self.generate_gml_file(fcc, 'em_simple')
 
     def test_ffc_emission_characteristics01(self):
         hc = SpecifiedHeatContent(value=12.5)
         es = EmissionSource(local_id='ES.123', sector_id=9999, label='Bron 123', geom=_GEOM1, epsg_id=28992)
-        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation='CONTINUOUS')
+        dv = StandardDiurnalVariation(standard_type='LIGHT_DUTY_VEHICLES')
+        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation=dv)
         es.emissions.append(Emission('NH3', 1))
         es.emissions.append(Emission('NOX', 3.3))
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
-        #self.run_ffc_test(fcc, 'characteristics01')
+        self.generate_gml_file(fcc, 'em_char_01')
 
     def test_create_srm2road(self):
         es = SRM2Road(
@@ -126,7 +109,7 @@ class TestImaer(unittest.TestCase):
             road_type='FREEWAY')
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
-        self.run_validation_test(fcc, 'srm2road')
+        self.generate_gml_file(fcc, 'srm2road')
 
     def test_create_adms_road(self):
         # setup the barrier (left)
@@ -176,7 +159,7 @@ class TestImaer(unittest.TestCase):
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
 
-        self.run_validation_test(fcc, 'admsroad')
+        self.generate_gml_file(fcc, 'admsroad')
 
     def test_create_buildings(self):
         b1 = Building(
@@ -196,7 +179,7 @@ class TestImaer(unittest.TestCase):
         fcc = ImaerDocument()
         fcc.feature_members.append(b1)
         fcc.feature_members.append(b2)
-        self.run_validation_test(fcc, 'buildings')
+        self.generate_gml_file(fcc, 'buildings')
 
     def test_create_emission_with_building(self):
         building_id = 'Building.555'
@@ -213,14 +196,4 @@ class TestImaer(unittest.TestCase):
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
         fcc.feature_members.append(b)
-        self.run_validation_test(fcc, 'emission_with_building')
-
-
-if __name__ == '__main__':
-    QgsApplication.setPrefixPath("/home/raymond/programs/qgis/qgis-3.22/share/qgis/python/", True)
-    qgs = QgsApplication([], True)
-    qgs.initQgis()
-
-    unittest.main()
-
-    qgs.exitQgis()
+        self.generate_gml_file(fcc, 'emission_with_building')
