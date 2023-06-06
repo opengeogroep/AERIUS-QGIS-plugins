@@ -1,0 +1,3868 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:IMAER="http://imaer.aerius.nl/5.1" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gmlsf="http://www.opengis.net/gmlsf/2.0" elementFormDefault="qualified" targetNamespace="http://imaer.aerius.nl/5.1" version="5.1.1">
+  <annotation>
+    <documentation>Dit model beschrijft het InformatieModel AERius (IMAER). IMAER is het standaard gegevens uitwisselingsformaat van AERIUS en wordt gebruikt voor het importeren, exporteren en uitwisselen van gegevens met en tussen de verschillende AERIUS producten (o.a. Calculator, Monitor en Register).  
+
+In IMAER zijn de objecten opgenomen die nodig zijn voor het berekenen van emissie en depositie van verschillende stoffen. In het model zijn de beschrijvingen van de objecten, de relaties tussen de objecten en de attributen opgenomen.</documentation>
+  </annotation>
+  <import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+  <import namespace="http://www.opengis.net/gmlsf/2.0" schemaLocation="http://schemas.opengis.net/gmlsfProfile/2.0/gmlsfLevels.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <annotation>
+    <appinfo source="http://schemas.opengis.net/gmlsfProfile/2.0/gmlsfLevels.xsd">
+      <gmlsf:ComplianceLevel>2</gmlsf:ComplianceLevel>
+    </appinfo>
+  </annotation>
+  <element name="FeatureCollectionCalculator" type="IMAER:FeatureCollectionCalculatorType" substitutionGroup="gml:AbstractFeature"/>
+  <complexType name="FeatureCollectionCalculatorType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence minOccurs="0" maxOccurs="unbounded">
+          <element name="metadata" type="IMAER:AeriusCalculatorMetadataPropertyType" minOccurs="0"/>
+          <element name="featureMember" minOccurs="0" maxOccurs="unbounded">
+            <complexType>
+              <complexContent>
+                <extension base="gml:AbstractFeatureMemberType">
+                  <sequence>
+                    <element ref="IMAER:GeoObject"/>
+                  </sequence>
+                </extension>
+              </complexContent>
+            </complexType>
+          </element>
+          <element name="definitions" type="IMAER:DefinitionsPropertyType" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <simpleType name="ADMSBuoyancyTypeType">
+    <annotation>
+      <documentation>ADMS Buoyancy Types
+NOTE ADMS Buoyancy Type, to be used as characteristic property.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="AMBIENT">
+        <annotation>
+          <documentation>Buoyancy based on ambient temperature.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="DENSITY">
+        <annotation>
+          <documentation>Buoyancy based on density.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="TEMPERATURE">
+        <annotation>
+          <documentation>Buoyancy based on specified temperature.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="ADMSEffluxTypeType">
+    <annotation>
+      <documentation>ADMS Efflux Types
+NOTE ADMS Efflux Type, to be used as characteristic property.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="VELOCITY">
+        <annotation>
+          <documentation>Efflux based on velocity.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="VOLUME">
+        <annotation>
+          <documentation>Efflux based on volume.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="MASS">
+        <annotation>
+          <documentation>Efflux based on mass.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <element name="ADMSRoad" substitutionGroup="IMAER:RoadEmissionSource" type="IMAER:ADMSRoadType">
+    <annotation>
+      <documentation>ADMS EmissionSource representing a road.
+NOTE This class describes a road emissionsource including geometry. This definition is meant for calculations with ADMS.</documentation>
+    </annotation>
+  </element>
+  <complexType name="ADMSRoadType">
+    <complexContent>
+      <extension base="IMAER:RoadEmissionSourceType">
+        <sequence>
+          <element name="width" type="double">
+            <annotation>
+              <documentation>The width of this road (m).</documentation>
+            </annotation>
+          </element>
+          <element name="elevation" type="double">
+            <annotation>
+              <documentation>The elevation of this road above ground level (m).</documentation>
+            </annotation>
+          </element>
+          <element name="gradient" type="double">
+            <annotation>
+              <documentation>The gradient (percentage) of this road. This gradient is assumed to be from start of the geometry (A) to end of the geometry (B).</documentation>
+            </annotation>
+          </element>
+          <element name="coverage" type="double">
+            <annotation>
+              <documentation>The coverage (percentage) of this road. This describes how much of the road is covered by overhanging features.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="barrierLeft" type="IMAER:ADMSRoadSideBarrierPropertyType">
+            <annotation>
+              <documentation>The barrier on the left side of the road (compared to the geometry).</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="barrierRight" type="IMAER:ADMSRoadSideBarrierPropertyType">
+            <annotation>
+              <documentation>The barrier on the right side of the road (compared to the geometry).</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="diurnalVariation" type="IMAER:DiurnalVariationPropertyType">
+            <annotation>
+              <documentation>Diurnal variation profile of the road source.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="ADMSRoadPropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:ADMSRoad"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="ADMSRoadSideBarrier" substitutionGroup="gml:AbstractObject" type="IMAER:ADMSRoadSideBarrierType">
+    <annotation>
+      <documentation>Characteristics of a barrier on the side of a road for ADMS.
+NOTE A barrier on the side of the road is described by a few characteristics. Th</documentation>
+    </annotation>
+  </element>
+  <complexType name="ADMSRoadSideBarrierType">
+    <sequence>
+      <element name="barrierType" type="IMAER:ADMSRoadSideBarrierTypeType">
+        <annotation>
+          <documentation>The type of this barrier.</documentation>
+        </annotation>
+      </element>
+      <element name="distance" type="double">
+        <annotation>
+          <documentation>The distance from the road centreline to canyon wall (m).</documentation>
+        </annotation>
+      </element>
+      <element name="averageHeight" type="double">
+        <annotation>
+          <documentation>The average height of the barrier (m).</documentation>
+        </annotation>
+      </element>
+      <element name="maximumHeight" type="double">
+        <annotation>
+          <documentation>The maximum height of the barrier (m).</documentation>
+        </annotation>
+      </element>
+      <element name="minimumHeight" type="double">
+        <annotation>
+          <documentation>The minimum height of the barrier (m).</documentation>
+        </annotation>
+      </element>
+      <element name="porosity" type="double">
+        <annotation>
+          <documentation>The porosity percentage that describes how much of the road length is covered by the barrier. 0 is fully covered, while 100 is not covered at all.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="ADMSRoadSideBarrierPropertyType">
+    <sequence>
+      <element ref="IMAER:ADMSRoadSideBarrier"/>
+    </sequence>
+  </complexType>
+  <simpleType name="ADMSRoadSideBarrierTypeType">
+    <annotation>
+      <documentation>ADMS road side barrier types</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="NOISE_BARRIER"/>
+      <enumeration value="BRICK_WALL"/>
+      <enumeration value="STREET_CANYON_TERRACED_HOUSES"/>
+      <enumeration value="STREET_CANYON_SEMIDETACHED_HOUSES"/>
+      <enumeration value="STREET_CANYON_DETACHED_HOUSES"/>
+      <enumeration value="TREE_BARRIER_OPEN"/>
+      <enumeration value="TREE_BARRIER_DENSE"/>
+      <enumeration value="OTHER"/>
+    </restriction>
+  </simpleType>
+  <element name="ADMSSourceCharacteristics" substitutionGroup="IMAER:SourceCharacteristicsType" type="IMAER:ADMSSourceCharacteristicsType">
+    <annotation>
+      <documentation>Dit datatype beschrijft de (ADMS) karakteristieken van een emissiebron.
+NOTE Iedere emissiebron wordt beschreven aan de hand van een aantal karakteristieken, die in dit separate datatype zijn vastgelegd.</documentation>
+    </annotation>
+  </element>
+  <complexType name="ADMSSourceCharacteristicsType">
+    <complexContent>
+      <extension base="IMAER:SourceCharacteristicsTypeType">
+        <sequence>
+          <element name="height" type="double">
+            <annotation>
+              <documentation>Height (m): height of source above the ground. For a volume source, it is the mid-height of the volume above the ground.</documentation>
+            </annotation>
+          </element>
+          <element name="specificHeatCapacity" type="double">
+            <annotation>
+              <documentation>Cp (J/degree C/kg): specific heat capacity of the source material.</documentation>
+            </annotation>
+          </element>
+          <element name="sourceType" type="IMAER:ADMSSourceTypeType">
+            <annotation>
+              <documentation>ADMS source type.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="diameter" type="double">
+            <annotation>
+              <documentation>Diameter (m): internal diameter of a point/jet source.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="elevationAngle" type="double">
+            <annotation>
+              <documentation>Elevation angle of a jet source.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="horizontalAngle" type="double">
+            <annotation>
+              <documentation>Horizontal angle of a jet source.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="width" type="double">
+            <annotation>
+              <documentation>L1 (m): width of a line source.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="verticalDimension" type="double">
+            <annotation>
+              <documentation>L1 (m): vertical dimension of a volume source.</documentation>
+            </annotation>
+          </element>
+          <element name="buoyancyType" type="IMAER:ADMSBuoyancyTypeType">
+            <annotation>
+              <documentation>ADMS buoyancy type.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="density" type="double">
+            <annotation>
+              <documentation>Density (kg/m3): density of the whole release.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="temperature" type="double">
+            <annotation>
+              <documentation>Temperature (degree C): temperature of the release.</documentation>
+            </annotation>
+          </element>
+          <element name="effluxType" type="IMAER:ADMSEffluxTypeType">
+            <annotation>
+              <documentation>ADMS efflux type.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="verticalVelocity" type="double">
+            <annotation>
+              <documentation>Volume flux (m3/s): volume flow rate of the release</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="volumetricFlowRate" type="double">
+            <annotation>
+              <documentation>Mass flux (kg/s): mass flux of the emission.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="diurnalVariation" type="IMAER:DiurnalVariationPropertyType">
+            <annotation>
+              <documentation>Diurnal variation of the emission of the source.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="ADMSSourceCharacteristicsPropertyType">
+    <sequence>
+      <element ref="IMAER:ADMSSourceCharacteristics"/>
+    </sequence>
+  </complexType>
+  <simpleType name="ADMSSourceTypeType">
+    <annotation>
+      <documentation>ADMS Source Types
+NOTE ADMS Source Type, to be used as characteristic property.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="POINT">
+        <annotation>
+          <documentation>Normal point source.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="AREA">
+        <annotation>
+          <documentation>Normal (surface) area source.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="VOLUME">
+        <annotation>
+          <documentation>Area represents a volume source.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="LINE">
+        <annotation>
+          <documentation>Normal line source.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="ROAD">
+        <annotation>
+          <documentation>Line represents a road source.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="JET">
+        <annotation>
+          <documentation>Point represents a jet source.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <element abstract="true" name="AbstractFarmlandActivity" substitutionGroup="IMAER:EmissionValueType" type="IMAER:AbstractFarmlandActivityType">
+    <annotation>
+      <documentation>Karakteristieken van een emissietype voor activiteit op landbouwgrond.
+NOTE Er zijn verschillende soorten gebruik van landbouwgrond in het model aanwezig. Deze abstracte basisklasse is een generalisatie van de verschillende typen in het model.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="AbstractFarmlandActivityType">
+    <complexContent>
+      <extension base="IMAER:EmissionValueTypeType">
+        <sequence/>
+        <attribute name="activityType" type="string" use="required">
+          <annotation>
+            <documentation>Het type van gebruik of activiteit van de landbouwgrond.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractFarmlandActivityPropertyType">
+    <sequence>
+      <element ref="IMAER:AbstractFarmlandActivity"/>
+    </sequence>
+  </complexType>
+  <element name="AdditionalLodgingSystem" substitutionGroup="IMAER:LodgingSystem" type="IMAER:AdditionalLodgingSystemType">
+    <annotation>
+      <documentation>Extra staltechniek beschrijving.
+NOTE Deze klasse beschrijft een extra staltechniek die bij een bestaande stal gebruikt kan worden, gebruik makend van een voorgedefinieerde code. Dit kan voor een gedeelte van de aangegeven dieren gelden.</documentation>
+    </annotation>
+  </element>
+  <complexType name="AdditionalLodgingSystemType">
+    <complexContent>
+      <extension base="IMAER:LodgingSystemType">
+        <sequence>
+          <element name="numberOfAnimals" type="integer">
+            <annotation>
+              <documentation>Aantal dieren waarvoor deze extra techniek geldt. Zou niet meer moeten zijn dan het totaal aantal dieren van de FarmLodging waarbij deze techniek gebruikt wordt.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AdditionalLodgingSystemPropertyType">
+    <sequence>
+      <element ref="IMAER:AdditionalLodgingSystem"/>
+    </sequence>
+  </complexType>
+  <element name="Address" substitutionGroup="gml:AbstractObject" type="IMAER:AddressType">
+    <annotation>
+      <documentation>Een adres (bijvoorbeeld voor inrichtingslocatie).
+NOTE Dit data type bevat de standaard onderdelen van een adres.</documentation>
+    </annotation>
+  </element>
+  <complexType name="AddressType">
+    <sequence>
+      <element name="streetAddress" type="string">
+        <annotation>
+          <documentation>Straat en huisnummer.</documentation>
+        </annotation>
+      </element>
+      <element name="postcode" type="string">
+        <annotation>
+          <documentation>Postcode.</documentation>
+        </annotation>
+      </element>
+      <element name="city" type="string">
+        <annotation>
+          <documentation>Plaats.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="AddressPropertyType">
+    <sequence>
+      <element ref="IMAER:Address"/>
+    </sequence>
+  </complexType>
+  <element name="AeriusCalculatorMetadata" substitutionGroup="gml:AbstractObject" type="IMAER:AeriusCalculatorMetadataType">
+    <annotation>
+      <documentation>Metadata over de AERIUS calculator die de GML geproduceerd heeft en het vastgelegde project.
+NOTE Met behulp van deze metadata wordt vastgelegd met welke versies van software en onderliggende basisgegevens het GML bestand is gegenereerd. Tevens kan er projectinformatie over de emissiebronnen vastgelegd worden,</documentation>
+    </annotation>
+  </element>
+  <complexType name="AeriusCalculatorMetadataType">
+    <sequence>
+      <element name="project" type="IMAER:ProjectMetadataPropertyType">
+        <annotation>
+          <documentation>Metadata over het beschreven project.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="situation" type="IMAER:SituationMetadataPropertyType">
+        <annotation>
+          <documentation>Metadata over de beschreven situatie.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="calculation" type="IMAER:CalculationMetadataPropertyType">
+        <annotation>
+          <documentation>Metadata over de berekening.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="version" type="IMAER:VersionMetadataPropertyType">
+        <annotation>
+          <documentation>Metadata over de gebruikte versies.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="AeriusCalculatorMetadataPropertyType">
+    <sequence>
+      <element ref="IMAER:AeriusCalculatorMetadata"/>
+    </sequence>
+  </complexType>
+  <element name="Building" substitutionGroup="IMAER:GeoObject" type="IMAER:BuildingType">
+    <annotation>
+      <documentation>Dit featuretype beschrijft een gebouw.
+NOTE Deze klasse beschrijft een gebouw, zodat deze bij emissie-berekeningen meegenomen kan worden.</documentation>
+    </annotation>
+  </element>
+  <complexType name="BuildingType">
+    <complexContent>
+      <extension base="IMAER:GeoObjectType">
+        <sequence>
+          <element name="identifier" type="IMAER:NEN3610IDPropertyType">
+            <annotation>
+              <documentation>identificatie: Unieke identificatie van het object binnen het domein van NEN 3610.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="label" type="string">
+            <annotation>
+              <documentation>Een optioneel label voor het gebouw.</documentation>
+            </annotation>
+          </element>
+          <element name="height" type="double">
+            <annotation>
+              <documentation>(Gemiddelde) gebouwhoogte in meters.</documentation>
+            </annotation>
+          </element>
+          <element name="geometry" type="IMAER:BuildingGeometryPropertyType">
+            <annotation>
+              <documentation>De geometrie van het gebouw.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="diameter" type="double">
+            <annotation>
+              <documentation>De straal van een gebouw. Wordt alleen verwacht bij een punt geometrie, waarbij dit zorgt voor een cirkelvormig gebouw.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="BuildingPropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:Building"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="BuildingGeometry" substitutionGroup="gml:AbstractObject" type="IMAER:BuildingGeometryType">
+    <annotation>
+      <documentation>Mogelijke geometrie&amp;#235;n van een gebouw.
+NOTE Dit datatype maakt een keuze mogelijk uit verschillende soorten geometrie&amp;#235;n die een gebouw kan aannemen.</documentation>
+    </annotation>
+  </element>
+  <complexType name="BuildingGeometryType">
+    <choice>
+      <element name="GM_Point" type="gml:PointPropertyType">
+        <annotation>
+          <documentation>NEN 3610 punt.</documentation>
+        </annotation>
+      </element>
+      <element name="GM_Surface" type="gml:SurfacePropertyType">
+        <annotation>
+          <documentation>NEN 3610 vlak.</documentation>
+        </annotation>
+      </element>
+    </choice>
+  </complexType>
+  <complexType name="BuildingGeometryPropertyType">
+    <sequence>
+      <element ref="IMAER:BuildingGeometry"/>
+    </sequence>
+  </complexType>
+  <element name="CalculatedHeatContent" substitutionGroup="IMAER:HeatContent" type="IMAER:CalculatedHeatContentType">
+    <annotation>
+      <documentation>Dit datatype beschrijft de warmteinhoud wanneer deze door het berekend moet worden.
+NOTE Aan de hand van de opgegeven waardes kan de warmteinhoud door het model bepaald worden.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CalculatedHeatContentType">
+    <complexContent>
+      <extension base="IMAER:HeatContentType">
+        <sequence>
+          <element minOccurs="0" name="emissionTemperature" type="double">
+            <annotation>
+              <documentation>Emissie temperatuur in graden celsius. Dit moet hoger zijn dan de gemiddelde omgevingstemperatuur (rond de 12 graden).</documentation>
+            </annotation>
+          </element>
+          <element name="outflowDiameter" type="double">
+            <annotation>
+              <documentation>De diameter van de uitstroom, in meter.</documentation>
+            </annotation>
+          </element>
+          <element name="outflowVelocity" type="double">
+            <annotation>
+              <documentation>De uitstroom snelheid, in meter/seconde.</documentation>
+            </annotation>
+          </element>
+          <element name="outflowDirection" type="IMAER:OutflowDirectionTypeType">
+            <annotation>
+              <documentation>De uitstroom richting.</documentation>
+            </annotation>
+          </element>
+          <element name="outflowVelocityType" type="IMAER:OutflowVelocityTypeType">
+            <annotation>
+              <documentation>Manier waarop de uitstroom snelheid is bepaald.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CalculatedHeatContentPropertyType">
+    <sequence>
+      <element ref="IMAER:CalculatedHeatContent"/>
+    </sequence>
+  </complexType>
+  <element name="CalculationMetadata" substitutionGroup="gml:AbstractObject" type="IMAER:CalculationMetadataType">
+    <annotation>
+      <documentation>Metadata over de berekening / rekenresultaten.
+NOTE Met behulp van dit metadata object kan er informatie over de berekening vastgelegd worden.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CalculationMetadataType">
+    <sequence>
+      <element minOccurs="0" name="type" type="IMAER:CalculationTypeType">
+        <annotation>
+          <documentation>Gebruikte berekeningtype.
+Deprecated, gebruik vanaf versie 5.1.1 'method'.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="method" type="string">
+        <annotation>
+          <documentation>Gebruikte berekeningmethode.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="jobType" type="string">
+        <annotation>
+          <documentation>Gebruikte rekentaak type.</documentation>
+        </annotation>
+      </element>
+      <element maxOccurs="unbounded" name="substance" type="IMAER:SubstanceType">
+        <annotation>
+          <documentation>Berekende stoffen.</documentation>
+        </annotation>
+      </element>
+      <element maxOccurs="unbounded" name="resultType" type="IMAER:ResultTypeType">
+        <annotation>
+          <documentation>Berekende resultat types.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="maximumRange" type="double">
+        <annotation>
+          <documentation>Maximum straal in km waarbinnen berekend is.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="researchArea" type="boolean">
+        <annotation>
+          <documentation>Indicatie of het om een onderzoeksgebied berekening ging.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="monitorSrm2Year" type="integer">
+        <annotation>
+          <documentation>Indicatie of er voor de SRM2 wegen gebruik is gemaakt van het NSL monitor netwerk, en zo ja uit welk jaar.</documentation>
+        </annotation>
+      </element>
+      <element maxOccurs="unbounded" minOccurs="0" name="option" type="IMAER:CalculationOptionPropertyType">
+        <annotation>
+          <documentation>Opties die zijn gebruikt voor de rekenresultaten. Maakt gebruik van een generieke key-value structuur, waarbij de key aangeeft om welke optie het gaat, en de value de waarde voor de betreffende optie.</documentation>
+        </annotation>
+      </element>
+      <element maxOccurs="unbounded" minOccurs="0" name="otherSituation" type="IMAER:OtherSituationMetadataPropertyType">
+        <annotation>
+          <documentation>Andere situaties die meegenomen zijn tijdens de berekening.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="CalculationMetadataPropertyType">
+    <sequence>
+      <element ref="IMAER:CalculationMetadata"/>
+    </sequence>
+  </complexType>
+  <element name="CalculationOption" substitutionGroup="gml:AbstractObject" type="IMAER:CalculationOptionType">
+    <annotation>
+      <documentation>Generieke rekenoptie waarde.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CalculationOptionType">
+    <sequence>
+      <element name="key" type="string">
+        <annotation>
+          <documentation>Sleutelwaarde voor deze rekenoptie.</documentation>
+        </annotation>
+      </element>
+      <element name="value" type="string">
+        <annotation>
+          <documentation>Gebruikte waarde voor deze rekenoptie.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="CalculationOptionPropertyType">
+    <sequence>
+      <element ref="IMAER:CalculationOption"/>
+    </sequence>
+  </complexType>
+  <element name="CalculationPoint" substitutionGroup="IMAER:CalculationPointType" type="IMAER:CalculationPointType">
+    <annotation>
+      <documentation>Zelfgedefinieerd rekenpunt.
+NOTE Deze klasse beschrijft een zelfgedefinieerd rekenpunt.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CalculationPointType">
+    <complexContent>
+      <extension base="IMAER:CalculationPointTypeType">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CalculationPointPropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:CalculationPoint"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="CalculationPointCorrection" substitutionGroup="gml:AbstractObject" type="IMAER:CalculationPointCorrectionType">
+    <annotation>
+      <documentation>Correctie op resultaten van een rekenpunt (NSL).
+NOTE Het kan voorkomen dat er correcties gebruikt moeten worden op de resultaten die uit het model komen. Bijvoorbeeld omdat deze structureel afwijken van waargenomen waardes.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CalculationPointCorrectionType">
+    <sequence>
+      <element minOccurs="0" name="label" type="string">
+        <annotation>
+          <documentation>Een optioneel label voor de correctie.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="description" type="string">
+        <annotation>
+          <documentation>Een optioneel omschrijving voor de correctie.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="jurisdictionId" type="integer">
+        <annotation>
+          <documentation>Een optioneel ID voor de jurisdictie (voor actualisatie).</documentation>
+        </annotation>
+      </element>
+      <element name="value" type="double">
+        <annotation>
+          <documentation>Waarde van de correctie. Positief is toename ten opzichte van het resultaat uit het model, negatief is afname ten opzichte van het resultaat uit het model.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+    <attribute name="substance" type="IMAER:SubstanceType" use="required">
+      <annotation>
+        <documentation>Stof waarvoor deze correctie geldt.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="resultType" type="IMAER:ResultTypeType" use="required">
+      <annotation>
+        <documentation>Type resultaat waarvoor deze correctie geldt.</documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+  <complexType name="CalculationPointCorrectionPropertyType">
+    <sequence>
+      <element ref="IMAER:CalculationPointCorrection"/>
+    </sequence>
+  </complexType>
+  <element abstract="true" name="CalculationPointType" substitutionGroup="IMAER:GeoObject" type="IMAER:CalculationPointTypeType">
+    <annotation>
+      <documentation>Abstracte basisklasse voor de beschrijving van rekenpunten.
+NOTE Er zijn verschillende soorten rekenpunten in het model aanwezig. Deze abstracte basisklasse is een generalisatie van de verschillende typen in dit model.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="CalculationPointTypeType">
+    <complexContent>
+      <extension base="IMAER:GeoObjectType">
+        <sequence>
+          <element name="identifier" type="IMAER:NEN3610IDPropertyType">
+            <annotation>
+              <documentation>identificatie: Unieke identificatie van het object binnen het domein van NEN 3610.</documentation>
+            </annotation>
+          </element>
+          <element name="GM_Point" type="gml:PointPropertyType">
+            <annotation>
+              <documentation>Geometrie van het rekenpunt.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="representation" type="gml:SurfacePropertyType">
+            <annotation>
+              <documentation>Geometrische representatie van het rekenpunt.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="result" type="IMAER:CalculationResultPropertyType">
+            <annotation>
+              <documentation>Deposities van het rekenpunt.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="label" type="string">
+            <annotation>
+              <documentation>Een optioneel label voor het rekenpunt.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="description" type="string">
+            <annotation>
+              <documentation>(Uitvoerige) beschrijving van het rekenpunt.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="jurisdictionId" type="integer">
+            <annotation>
+              <documentation>Een optioneel ID voor de jurisdictie (voor actualisatie).</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="correction" type="IMAER:CalculationPointCorrectionPropertyType">
+            <annotation>
+              <documentation>Correcties op een rekenpunt (NSL).</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CalculationPointTypePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:CalculationPointType"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="CalculationResult" substitutionGroup="gml:AbstractObject" type="IMAER:CalculationResultType">
+    <annotation>
+      <documentation>Resultaat voor een rekenpunt.
+NOTE Deze klasse beschrijft het resultaat voor een bepaalde stof/resultaattype combinatie voor een rekenpunt.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CalculationResultType">
+    <sequence>
+      <element minOccurs="0" name="sourceCategory" type="string">
+        <annotation>
+          <documentation>Category van bronnen die zorgen voor dit resultaat. Indien niet opgegeven gaat het om totalen.</documentation>
+        </annotation>
+      </element>
+      <element name="value" type="double">
+        <annotation>
+          <documentation>Resultaatwaarde.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+    <attribute name="substance" type="IMAER:SubstanceType" use="required">
+      <annotation>
+        <documentation>Type van resultaat.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="resultType" type="IMAER:ResultTypeType" use="required">
+      <annotation>
+        <documentation>Resultaattype.</documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+  <complexType name="CalculationResultPropertyType">
+    <sequence>
+      <element ref="IMAER:CalculationResult"/>
+    </sequence>
+  </complexType>
+  <simpleType name="CalculationTypeType">
+    <annotation>
+      <documentation>Lijst met verschillende rekentypes.
+NOTE Het bepalen van receptoren/rekenpunten van een berekening kan op verschillende manieren gebeuren. Deze manieren liggen hierin vast.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="PERMIT">
+        <annotation>
+          <documentation>Berekening van receptoren volgens de Wet natuurbescherming.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="NATURE_AREA">
+        <annotation>
+          <documentation>Berekening gebruikt hexagonen die natuurgebieden bevatten binnen opgegeven straal.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="RADIUS">
+        <annotation>
+          <documentation>Berekening gebruikt hexagonen binnen opgegeven straal.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="CUSTOM_POINTS">
+        <annotation>
+          <documentation>Berekening gebruikt door de gebruiker gedefinieerde punten (CalculationPoint).</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <element name="ConsumptionOffRoadVehicleSpecification" substitutionGroup="IMAER:OffRoadVehicleSpecification" type="IMAER:ConsumptionOffRoadVehicleSpecificationType">
+    <annotation>
+      <documentation>Klasse voor een specificatie voor de emissie van een eigen gedefinieerde mobiele werktuig bron aan de hand van het verbruik.
+NOTE Voor het bepalen van de emissie van mobiel werktuig kan gekeken worden naar het gebruik van dat voertuig. De karakteristieken in dit type worden daarbij gebruikt.</documentation>
+    </annotation>
+  </element>
+  <complexType name="ConsumptionOffRoadVehicleSpecificationType">
+    <complexContent>
+      <extension base="IMAER:OffRoadVehicleSpecificationType">
+        <sequence>
+          <element maxOccurs="unbounded" name="emissionFactor" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>De emissiefactoren van het voertuig, in g/kWh per stof.</documentation>
+            </annotation>
+          </element>
+          <element name="energyEfficiency" type="integer">
+            <annotation>
+              <documentation>Rendement: brandstof in grammen brandstof per geleverde kilowattuur , in g/kWh.</documentation>
+            </annotation>
+          </element>
+          <element name="consumption" type="integer">
+            <annotation>
+              <documentation>Brandstofverbruik, in liters per jaar.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="ConsumptionOffRoadVehicleSpecificationPropertyType">
+    <sequence>
+      <element ref="IMAER:ConsumptionOffRoadVehicleSpecification"/>
+    </sequence>
+  </complexType>
+  <element name="CustomDiurnalVariation" substitutionGroup="gml:AbstractGML" type="IMAER:CustomDiurnalVariationType">
+    <annotation>
+      <documentation>Eigen gedefinieerde temporele variatie. Bestaat uit X waardes, waarbij alle waardes opgeteld tot X * 100 moeten komen.
+Als voorbeeld een definitie voor uren per dag: In dat geval zijn er 24 waardes, waarbij alles bij elkaar opgeteld 2400 zal moeten zijn. Voor een gelijke verdeling over de dag is elke waarde dan 100.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CustomDiurnalVariationType">
+    <complexContent>
+      <extension base="gml:AbstractGMLType">
+        <sequence>
+          <element minOccurs="0" name="label" type="string">
+            <annotation>
+              <documentation>Een optioneel label voor deze eigen definitie.</documentation>
+            </annotation>
+          </element>
+          <element name="customType" type="string">
+            <annotation>
+              <documentation>Het type van deze eigen definitie. Geeft impliciet aan hoeveel waardes worden verwacht: voor een dag definitie worden bijvoorbeeld 24 waardes verwacht.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="value" type="double">
+            <annotation>
+              <documentation>De waardes van deze eigen definitie. Afhankelijk van het customType wordt een aantal waarden verwacht. Bij gelijke verdeling over alle waardes heeft dit veld de waarde 100.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CustomDiurnalVariationPropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:CustomDiurnalVariation"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="CustomFarmLodging" substitutionGroup="IMAER:FarmLodging" type="IMAER:CustomFarmLodgingType">
+    <annotation>
+      <documentation>Zelfgedefinieerde stal.
+NOTE Deze klasse beschrijft een zelfgedefinieerde stal.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CustomFarmLodgingType">
+    <complexContent>
+      <extension base="IMAER:FarmLodgingType">
+        <sequence>
+          <element minOccurs="0" name="animalType" type="string">
+            <annotation>
+              <documentation>Code die aangeeft om wat voor dier het gaat.</documentation>
+            </annotation>
+          </element>
+          <element name="description" type="string">
+            <annotation>
+              <documentation>Beschrijving van de stal.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="emissionFactor" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>De emissiefactor(en) per dierplaats per jaar die gehanteerd moet worden.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="emissionFactorType" type="string">
+            <annotation>
+              <documentation>Het type van emissie factor. Indien niet opgegeven dan wordt uitgegaan van een emissiefactor in kg per dierplaats per jaar.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CustomFarmLodgingPropertyType">
+    <sequence>
+      <element ref="IMAER:CustomFarmLodging"/>
+    </sequence>
+  </complexType>
+  <element name="CustomInlandShipping" substitutionGroup="IMAER:InlandShipping" type="IMAER:CustomInlandShippingType">
+    <annotation>
+      <documentation>Zelfgedefinieerde  schepen op een vaarroute voor binnenvaart.
+NOTE Deze klasse beschrijft een schip op een vaarroute, gebruik makend van eigen specificatie.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CustomInlandShippingType">
+    <complexContent>
+      <extension base="IMAER:InlandShippingType">
+        <sequence>
+          <element name="emissionPropertiesAtoB" type="IMAER:CustomInlandShippingEmissionPropertiesPropertyType">
+            <annotation>
+              <documentation>Zelfgedefinieerde emissie eigenschappen van A naar B. Emissiefactoren zijn hier in kg/m.</documentation>
+            </annotation>
+          </element>
+          <element name="emissionPropertiesBtoA" type="IMAER:CustomInlandShippingEmissionPropertiesPropertyType">
+            <annotation>
+              <documentation>Zelfgedefinieerde emissie eigenschappen van B naar A. Emissiefactoren zijn hier in kg/m.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CustomInlandShippingPropertyType">
+    <sequence>
+      <element ref="IMAER:CustomInlandShipping"/>
+    </sequence>
+  </complexType>
+  <element name="CustomInlandShippingEmissionProperties" substitutionGroup="gml:AbstractObject" type="IMAER:CustomInlandShippingEmissionPropertiesType">
+    <annotation>
+      <documentation>Dit datatype beschrijft de eigen gedefinieerd scheepstype voor binnenvaart.
+NOTE Eigenschappen beschreven in dit object worden voor standaard bronnen direct.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CustomInlandShippingEmissionPropertiesType">
+    <sequence>
+      <element maxOccurs="unbounded" name="emissionFactorEmpty" type="IMAER:EmissionPropertyType">
+        <annotation>
+          <documentation>Gemiddelde emissie factor van scheepstype wanneer niet beladen. Eenheid is afhankelijk van emissietype waarbinnen dit datatype wordt gebruikt (verschil aangemeerd/varend).</documentation>
+        </annotation>
+      </element>
+      <element maxOccurs="unbounded" name="emissionFactorLaden" type="IMAER:EmissionPropertyType">
+        <annotation>
+          <documentation>Gemiddelde emissie factor van scheepstype wanneer wel beladen. Eenheid is afhankelijk van emissietype waarbinnen dit datatype wordt gebruikt (verschil aangemeerd/varend).</documentation>
+        </annotation>
+      </element>
+      <element name="heatContentEmpty" type="double">
+        <annotation>
+          <documentation>Gemiddelde warmteinhoud van scheepstype wanneer niet beladen in Megawatt.</documentation>
+        </annotation>
+      </element>
+      <element name="heatContentLaden" type="double">
+        <annotation>
+          <documentation>Gemiddelde warmteinhoud van scheepstype wanneer wel beladen in Megawatt.</documentation>
+        </annotation>
+      </element>
+      <element name="emissionHeightEmpty" type="double">
+        <annotation>
+          <documentation>Gemiddelde uitstoothoogte van scheepstype wanneer niet beladen in meters.</documentation>
+        </annotation>
+      </element>
+      <element name="emissionHeightLaden" type="double">
+        <annotation>
+          <documentation>Gemiddelde uitstoothoogte van scheepstype wanneer wel beladen in meters.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="CustomInlandShippingEmissionPropertiesPropertyType">
+    <sequence>
+      <element ref="IMAER:CustomInlandShippingEmissionProperties"/>
+    </sequence>
+  </complexType>
+  <element name="CustomManureStorage" substitutionGroup="IMAER:ManureStorage" type="IMAER:CustomManureStorageType">
+    <annotation>
+      <documentation>Zelfgedefinieerde mestopslag beschrijving.
+NOTE Deze klasse beschrijft een zelfgedefinieerde mestopslag techniek.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CustomManureStorageType">
+    <complexContent>
+      <extension base="IMAER:ManureStorageType">
+        <sequence>
+          <element name="description" type="string">
+            <annotation>
+              <documentation>Beschrijving van de mestopslag techniek.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="animalType" type="string">
+            <annotation>
+              <documentation>Code die aangeeft van welk dier de mest afkomstig is.</documentation>
+            </annotation>
+          </element>
+          <element name="emissionFactorType" type="string">
+            <annotation>
+              <documentation>Het type van emissie factor. Aan de hand van dit type wordt afgeleid welke optionele kenmerken verwacht worden.</documentation>
+            </annotation>
+          </element>
+          <element name="emissionFactor" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>De emissiefactor(en) die gehanteerd moet worden, eenheid afhankelijk van de gebruikte emissionFactorType.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CustomManureStoragePropertyType">
+    <sequence>
+      <element ref="IMAER:CustomManureStorage"/>
+    </sequence>
+  </complexType>
+  <element name="CustomMaritimeShipping" substitutionGroup="IMAER:MaritimeShipping" type="IMAER:CustomMaritimeShippingType">
+    <annotation>
+      <documentation>Zelfgedefinieerde  schepen op een vaarroute voor zeescheepvaart.
+NOTE Deze klasse beschrijft een schip op een vaarroute, gebruik makend van eigen specificatie.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CustomMaritimeShippingType">
+    <complexContent>
+      <extension base="IMAER:MaritimeShippingType">
+        <sequence>
+          <element name="emissionProperties" type="IMAER:CustomMaritimeShippingEmissionPropertiesPropertyType">
+            <annotation>
+              <documentation>Zelfgedefinieerde emissie eigenschappen. Emissiefactoren zijn hier in kg/m.</documentation>
+            </annotation>
+          </element>
+          <element name="grossTonnage" type="double">
+            <annotation>
+              <documentation>Het bruto-tonnage van de schepen.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CustomMaritimeShippingPropertyType">
+    <sequence>
+      <element ref="IMAER:CustomMaritimeShipping"/>
+    </sequence>
+  </complexType>
+  <element name="CustomMaritimeShippingEmissionProperties" substitutionGroup="gml:AbstractObject" type="IMAER:CustomMaritimeShippingEmissionPropertiesType">
+    <annotation>
+      <documentation>Dit datatype beschrijft de eigen gedefinieerd scheepstype voor (zee) scheepvaart.
+NOTE Eigenschappen beschreven in dit object worden voor standaard bronnen direct.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CustomMaritimeShippingEmissionPropertiesType">
+    <sequence>
+      <element maxOccurs="unbounded" name="emissionFactor" type="IMAER:EmissionPropertyType">
+        <annotation>
+          <documentation>Gemiddelde emissie factor van scheepstype. Eenheid is afhankelijk van emissietype waarbinnen dit datatype wordt gebruikt (verschil aangemeerd/varend).</documentation>
+        </annotation>
+      </element>
+      <element name="heatContent" type="double">
+        <annotation>
+          <documentation>Gemiddelde warmteinhoud van scheepstype in Megawatt.</documentation>
+        </annotation>
+      </element>
+      <element name="emissionHeight" type="double">
+        <annotation>
+          <documentation>Gemiddelde uitstoothoogte van scheepstype in meters.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="CustomMaritimeShippingEmissionPropertiesPropertyType">
+    <sequence>
+      <element ref="IMAER:CustomMaritimeShippingEmissionProperties"/>
+    </sequence>
+  </complexType>
+  <element name="CustomMooringInlandShipping" substitutionGroup="IMAER:MooringInlandShipping" type="IMAER:CustomMooringInlandShippingType">
+    <annotation>
+      <documentation>Zelfgedefinieerde  schepen bij een aanlegplaats voor binnenvaart.
+NOTE Deze klasse beschrijft een schip bij een aanlegplaats, gebruik makend van eigen specificatie.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CustomMooringInlandShippingType">
+    <complexContent>
+      <extension base="IMAER:MooringInlandShippingType">
+        <sequence>
+          <element name="emissionProperties" type="IMAER:CustomInlandShippingEmissionPropertiesPropertyType">
+            <annotation>
+              <documentation>Zelfgedefinieerde emissie eigenschappen voor aangemeerde schepen. Emissiefactoren zijn hier in kg/u.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CustomMooringInlandShippingPropertyType">
+    <sequence>
+      <element ref="IMAER:CustomMooringInlandShipping"/>
+    </sequence>
+  </complexType>
+  <element name="CustomMooringMaritimeShipping" substitutionGroup="IMAER:MooringMaritimeShipping" type="IMAER:CustomMooringMaritimeShippingType">
+    <annotation>
+      <documentation>Zelfgedefinieerde  schepen bij een aanlegplaats voor zeescheepvaart.
+NOTE Deze klasse beschrijft een schip bij een aanlegplaats, gebruik makend van eigen specificatie.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CustomMooringMaritimeShippingType">
+    <complexContent>
+      <extension base="IMAER:MooringMaritimeShippingType">
+        <sequence>
+          <element name="emissionProperties" type="IMAER:CustomMaritimeShippingEmissionPropertiesPropertyType">
+            <annotation>
+              <documentation>Zelfgedefinieerde emissie eigenschappen voor aangemeerde schepen. Emissiefactoren zijn hier in kg/u.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CustomMooringMaritimeShippingPropertyType">
+    <sequence>
+      <element ref="IMAER:CustomMooringMaritimeShipping"/>
+    </sequence>
+  </complexType>
+  <element name="CustomOffRoadMobileSource" substitutionGroup="IMAER:OffRoadMobileSource" type="IMAER:CustomOffRoadMobileSourceType">
+    <annotation>
+      <documentation>Eigen gedefinieerd mobiele werktuig bron.
+NOTE Deze klasse beschrijft een eigen gedefinieerde mobiel werktuig bron, met gesommeerd de emissie en de verdere eigenschappen die van belang zijn voor de verschillende berekeningen.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CustomOffRoadMobileSourceType">
+    <complexContent>
+      <extension base="IMAER:OffRoadMobileSourceType">
+        <sequence>
+          <element maxOccurs="unbounded" name="emission" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>Totale emissie van een mobiele werktuig bron in een jaar.</documentation>
+            </annotation>
+          </element>
+          <element name="emissionSourceCharacteristics" type="IMAER:SourceCharacteristicsTypePropertyType">
+            <annotation>
+              <documentation>Karakteristieken van een mobiele werktuig bron.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="offRoadVehicleSpecification" type="IMAER:OffRoadVehicleSpecificationPropertyType">
+            <annotation>
+              <documentation>Eigenschappen gebruikt om tot de emissie van deze bron te komen.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CustomOffRoadMobileSourcePropertyType">
+    <sequence>
+      <element ref="IMAER:CustomOffRoadMobileSource"/>
+    </sequence>
+  </complexType>
+  <element name="CustomVehicle" substitutionGroup="IMAER:Vehicle" type="IMAER:CustomVehicleType">
+    <annotation>
+      <documentation>Karakteristieken van een emissietype zelfgedefinieerd wegvervoer.
+NOTE Ieder wegvervoer emissietype wordt beschreven aan de hand van een aantal karakteristieken, die in dit separate datatype zijn vastgelegd.</documentation>
+    </annotation>
+  </element>
+  <complexType name="CustomVehicleType">
+    <complexContent>
+      <extension base="IMAER:VehicleType">
+        <sequence>
+          <element name="description" type="string">
+            <annotation>
+              <documentation>Karakteristieken van de eigen gespecficieerd voertuigen.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="emission" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>De emissie in g/km per voertuig.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CustomVehiclePropertyType">
+    <sequence>
+      <element ref="IMAER:CustomVehicle"/>
+    </sequence>
+  </complexType>
+  <element name="Definitions" substitutionGroup="gml:AbstractObject" type="IMAER:DefinitionsType">
+    <annotation>
+      <documentation>Container om definities bij te houden die door andere objecten gerefereerd kunnen worden.
+NOTE Sommige definities kunnen binnen meerdere bronnen gebruikt worden. Om te voorkomen dat elke bron zijn eigen definitie heeft kunnen deze definities gerefereerd worden middels een gml ID. Hiermee kan op 1 plek de definitie aangepast worden, mocht dat nodig zijn. Omdat deze objecten geen featureMember of GeoObject hoeven te zijn is deze container geintroduceerd.</documentation>
+    </annotation>
+  </element>
+  <complexType name="DefinitionsType">
+    <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" name="customDiurnalVariation">
+        <annotation>
+          <documentation>Mogelijke eigen temporele variatie definities.</documentation>
+        </annotation>
+        <complexType>
+          <complexContent>
+            <extension base="gml:AbstractMemberType">
+              <sequence minOccurs="0">
+                <element ref="IMAER:CustomDiurnalVariation"/>
+              </sequence>
+              <attributeGroup ref="gml:AssociationAttributeGroup"/>
+            </extension>
+          </complexContent>
+        </complexType>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="DefinitionsPropertyType">
+    <sequence>
+      <element ref="IMAER:Definitions"/>
+    </sequence>
+  </complexType>
+  <element abstract="true" name="DiurnalVariation" substitutionGroup="gml:AbstractObject" type="IMAER:DiurnalVariationType">
+    <annotation>
+      <documentation>Temporele variatie.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="DiurnalVariationType">
+    <sequence/>
+  </complexType>
+  <complexType name="DiurnalVariationPropertyType">
+    <sequence>
+      <element ref="IMAER:DiurnalVariation"/>
+    </sequence>
+  </complexType>
+  <element name="Emission" substitutionGroup="IMAER:EmissionValueType" type="IMAER:EmissionType">
+    <annotation>
+      <documentation>Karakteristieken van een depositie waarde.
+NOTE De depositieresulaten beschrijving van een rekenpunt.</documentation>
+    </annotation>
+  </element>
+  <complexType name="EmissionType">
+    <complexContent>
+      <extension base="IMAER:EmissionValueTypeType">
+        <sequence>
+          <element name="value" type="double">
+            <annotation>
+              <documentation>Emissiewaarde.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+        <attribute name="substance" type="IMAER:SubstanceType" use="required">
+          <annotation>
+            <documentation>Emissiestof.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="EmissionPropertyType">
+    <sequence>
+      <element ref="IMAER:Emission"/>
+    </sequence>
+  </complexType>
+  <element name="EmissionReduction" substitutionGroup="gml:AbstractObject" type="IMAER:EmissionReductionType">
+    <annotation>
+      <documentation>Klasse voor een specificatie voor emissie reductie (NSL).
+NOTE Het kan voorkomen dat emissie gereduceerd wordt met een bepaalde factor. In deze klasse kan vastgelegd worden wat deze reductie is, per stof.</documentation>
+    </annotation>
+  </element>
+  <complexType name="EmissionReductionType">
+    <sequence>
+      <element name="factor" type="double">
+        <annotation>
+          <documentation>Factor waarmee de emissies worden verlaagd.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+    <attribute name="substance" type="IMAER:SubstanceType" use="required">
+      <annotation>
+        <documentation>Emissiestof.</documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+  <complexType name="EmissionReductionPropertyType">
+    <sequence>
+      <element ref="IMAER:EmissionReduction"/>
+    </sequence>
+  </complexType>
+  <element name="EmissionSource" substitutionGroup="IMAER:EmissionSourceType" type="IMAER:EmissionSourceType">
+    <annotation>
+      <documentation>Generieke emissiebron.
+NOTE Deze klasse beschrijft een generieke emissiebron inclusief geometrie.</documentation>
+    </annotation>
+  </element>
+  <complexType name="EmissionSourceType">
+    <complexContent>
+      <extension base="IMAER:EmissionSourceTypeType">
+        <sequence>
+          <element maxOccurs="unbounded" name="emission" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>Emissietypen van de emissiebron.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="EmissionSourcePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:EmissionSource"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="EmissionSourceCharacteristics" substitutionGroup="IMAER:SourceCharacteristicsType" type="IMAER:EmissionSourceCharacteristicsType">
+    <annotation>
+      <documentation>Dit datatype beschrijft de (OPS) karakteristieken van een emissiebron.
+NOTE Iedere emissiebron wordt beschreven aan de hand van een aantal karakteristieken, die in dit separate datatype zijn vastgelegd.</documentation>
+    </annotation>
+  </element>
+  <complexType name="EmissionSourceCharacteristicsType">
+    <complexContent>
+      <extension base="IMAER:SourceCharacteristicsTypeType">
+        <sequence>
+          <element name="heatContent" type="IMAER:HeatContentPropertyType">
+            <annotation>
+              <documentation>Warmteinhoud van de emissiebron.</documentation>
+            </annotation>
+          </element>
+          <element name="emissionHeight" type="double">
+            <annotation>
+              <documentation>Gemiddelde uitstoothoogte van de emissiebron in meters.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="spread" type="double">
+            <annotation>
+              <documentation>Spreiding van de emissiebron in meters. Alleen te gebruiken bij puntbronnen met een hoogte.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="diurnalVariation" type="IMAER:DiurnalVariationPropertyType">
+            <annotation>
+              <documentation>Temporele variatie van de emissie van de bron.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="EmissionSourceCharacteristicsPropertyType">
+    <sequence>
+      <element ref="IMAER:EmissionSourceCharacteristics"/>
+    </sequence>
+  </complexType>
+  <element name="EmissionSourceGeometry" substitutionGroup="gml:AbstractObject" type="IMAER:EmissionSourceGeometryType">
+    <annotation>
+      <documentation>Mogelijke geometrieën van een emissiebron.
+NOTE Dit datatype maakt een keuze mogelijk uit verschillende soorten geometrieën die een emissiebron kan aannemen.</documentation>
+    </annotation>
+  </element>
+  <complexType name="EmissionSourceGeometryType">
+    <choice>
+      <element name="GM_Point" type="gml:PointPropertyType">
+        <annotation>
+          <documentation>NEN 3610 punt.</documentation>
+        </annotation>
+      </element>
+      <element name="GM_Curve" type="gml:CurvePropertyType">
+        <annotation>
+          <documentation>NEN 3610 lijn.</documentation>
+        </annotation>
+      </element>
+      <element name="GM_Surface" type="gml:SurfacePropertyType">
+        <annotation>
+          <documentation>NEN 3610 vlak.</documentation>
+        </annotation>
+      </element>
+    </choice>
+  </complexType>
+  <complexType name="EmissionSourceGeometryPropertyType">
+    <sequence>
+      <element ref="IMAER:EmissionSourceGeometry"/>
+    </sequence>
+  </complexType>
+  <element abstract="true" name="EmissionSourceType" substitutionGroup="IMAER:GeoObject" type="IMAER:EmissionSourceTypeType">
+    <annotation>
+      <documentation>Abstracte basisklasse voor de beschrijving van emissiebronnen.
+NOTE Er zijn verschillende soorten emissiebronnen in het model aanwezig. Deze abstracte basisklasse is een generalisatie van de verschillende soorten emissiebronnen in het model. De geometrie van deze bronnen is opgenomen bij de onderliggende soorten, omdat deze verschillen per type bron.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="EmissionSourceTypeType">
+    <complexContent>
+      <extension base="IMAER:GeoObjectType">
+        <sequence>
+          <element name="identifier" type="IMAER:NEN3610IDPropertyType">
+            <annotation>
+              <documentation>identificatie: Unieke identificatie van de emissiebron binnen het domein van NEN 3610.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="label" type="string">
+            <annotation>
+              <documentation>Een optioneel label voor de emissiebron.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="description" type="string">
+            <annotation>
+              <documentation>Een optionele beschrijving voor de emissiebron.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="emissionSourceCharacteristics" type="IMAER:SourceCharacteristicsTypePropertyType">
+            <annotation>
+              <documentation>Karakteristieken van een emissiebron.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="jurisdictionId" type="integer">
+            <annotation>
+              <documentation>Een optioneel ID voor de jurisdictie (voor actualisatie).</documentation>
+            </annotation>
+          </element>
+          <element name="geometry" type="IMAER:EmissionSourceGeometryPropertyType">
+            <annotation>
+              <documentation>De geometrie van de emissiebron.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+        <attribute name="sectorId" type="integer" use="required">
+          <annotation>
+            <documentation>Identificatienummer van de sector waartoe de emissiebron behoord.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="EmissionSourceTypePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:EmissionSourceType"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element abstract="true" name="EmissionValueType" substitutionGroup="gml:AbstractObject" type="IMAER:EmissionValueTypeType">
+    <annotation>
+      <documentation>De emissiewaarde van een emissiebron.
+NOTE De emissiewaarde van een emissiebron.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="EmissionValueTypeType">
+    <sequence/>
+  </complexType>
+  <complexType name="EmissionValueTypePropertyType">
+    <sequence>
+      <element ref="IMAER:EmissionValueType"/>
+    </sequence>
+  </complexType>
+  <element abstract="true" name="FarmLodging" substitutionGroup="IMAER:EmissionValueType" type="IMAER:FarmLodgingType">
+    <annotation>
+      <documentation>Abstracte basisklasse voor de beschrijving van stallen.
+NOTE Er zijn verschillende soorten stallen in het model aanwezig. Deze abstracte basisklasse is een generalisatie van de verschillende typen in het model.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="FarmLodgingType">
+    <complexContent>
+      <extension base="IMAER:EmissionValueTypeType">
+        <sequence>
+          <element name="numberOfAnimals" type="integer">
+            <annotation>
+              <documentation>Aantal dieren in deze stal.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="numberOfDays" type="integer">
+            <annotation>
+              <documentation>Aantal dagen dat de dieren in deze stal staan. Heeft alleen effect bij bepaalde combinaties.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FarmLodgingPropertyType">
+    <sequence>
+      <element ref="IMAER:FarmLodging"/>
+    </sequence>
+  </complexType>
+  <element name="FarmLodgingEmissionSource" substitutionGroup="IMAER:EmissionSourceType" type="IMAER:FarmLodgingEmissionSourceType">
+    <annotation>
+      <documentation>Emissiebron van een stal.
+NOTE Deze klasse beschrijft een stal inclusief geometrie.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FarmLodgingEmissionSourceType">
+    <complexContent>
+      <extension base="IMAER:EmissionSourceTypeType">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="emission" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>Emissietypen van de stal.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="farmLodging" type="IMAER:FarmLodgingPropertyType">
+            <annotation>
+              <documentation>Staltypen.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="established" type="date">
+            <annotation>
+              <documentation>Datum van oprichting (of vervanging of uitbreiding) van het dierenverblijf.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FarmLodgingEmissionSourcePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:FarmLodgingEmissionSource"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="FarmlandActivity" substitutionGroup="IMAER:AbstractFarmlandActivity" type="IMAER:FarmlandActivityType">
+    <annotation>
+      <documentation>Karakteristieken van een zelfgedefinieerde emissietype voor activiteit op landbouwgrond.
+NOTE Het gebruik van landbouw kan direct als emissie vastgelegd worden. Dat is in dit datatype vastgelegd.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FarmlandActivityType">
+    <complexContent>
+      <extension base="IMAER:AbstractFarmlandActivityType">
+        <sequence>
+          <element maxOccurs="unbounded" name="emission" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>Totale emissie van dit gebruik van de landbouwgrond in een jaar</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FarmlandActivityPropertyType">
+    <sequence>
+      <element ref="IMAER:FarmlandActivity"/>
+    </sequence>
+  </complexType>
+  <element name="FarmlandEmissionSource" substitutionGroup="IMAER:EmissionSourceType" type="IMAER:FarmlandEmissionSourceType">
+    <annotation>
+      <documentation>Emissiebron van landbouwground.
+NOTE Deze klasse beschrijft landbouwgrond, inclusief geometrie.</documentation>
+    </annotation>
+  </element>
+  <complexType name="FarmlandEmissionSourceType">
+    <complexContent>
+      <extension base="IMAER:EmissionSourceTypeType">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="emission" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>Emissietypen van de landbouwgrond.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="activity" type="IMAER:AbstractFarmlandActivityPropertyType">
+            <annotation>
+              <documentation>Manier waarop de landbouwgrond wordt gebruikt waarbij emissies vrij komen.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="FarmlandEmissionSourcePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:FarmlandEmissionSource"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element abstract="true" name="GeoObject" substitutionGroup="gml:AbstractFeature" type="IMAER:GeoObjectType">
+    <annotation>
+      <documentation>Geo-object: Abstractie van een fenomeen in de werkelijkheid, dat direct of indirect is geassocieerd met een locatie relatief ten opzichte van de aarde
+NOTE Van deze klasse worden geen instanties gemaakt. Indien een object een geo-object is, is het altijd een instantie van een subklasse van GeoObject.
+Alle subklassen van GeoObject hebben conform NEN-EN-ISO 19109:2005 het stereotype «featureType».</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="GeoObjectType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="GeoObjectPropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:GeoObject"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element abstract="true" name="HeatContent" substitutionGroup="gml:AbstractObject" type="IMAER:HeatContentType">
+    <annotation>
+      <documentation>Dit abstracte datatype kan gebruikt worden om de warmteinhoud te definieren.
+NOTE Een karakteristiek van een emissie bron is de warmteinhoud. Dit kan direct ingevuld worden, of deze kan bepaald worden aan de hand van andere karakteristieken. De keuze kan door middel van implementaties van deze klasse gemaakt worden.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="HeatContentType">
+    <sequence/>
+  </complexType>
+  <complexType name="HeatContentPropertyType">
+    <sequence>
+      <element ref="IMAER:HeatContent"/>
+    </sequence>
+  </complexType>
+  <simpleType name="InlandRouteDirectionTypeType">
+    <annotation>
+      <documentation>Keuzemogelijkheden voor de richting van aanmerende binnenvaart schepen.
+NOTE Per binnenvaart zijn er karateristieken voor zowel de aanmerende als de uitgaande schepen opgegeven.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="ARRIVE">
+        <annotation>
+          <documentation>Aanmerend.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="DEPART">
+        <annotation>
+          <documentation>Uitgaand.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <element abstract="true" name="InlandShipping" substitutionGroup="IMAER:EmissionValueType" type="IMAER:InlandShippingType">
+    <annotation>
+      <documentation>Abstracte basisklasse voor karakteristieken van een vaarroute voor binnenvaart.
+NOTE Ieder binnenvaart emissietype voor routes wordt beschreven aan de hand van een aantal karakteristieken. Deze abstracte basisklasse is een generalisatie van de verschillende typen in het model.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="InlandShippingType">
+    <complexContent>
+      <extension base="IMAER:EmissionValueTypeType">
+        <sequence>
+          <element name="description" type="string">
+            <annotation>
+              <documentation>Omschrijving van dit type schip.</documentation>
+            </annotation>
+          </element>
+          <element name="numberOfShipsAtoBperTimeUnit" type="integer">
+            <annotation>
+              <documentation>Aantal schepen van A naar B per tijdseenheid. Vaarroutes worden van A naar B ingetekend.</documentation>
+            </annotation>
+          </element>
+          <element name="numberOfShipsBtoAperTimeUnit" type="integer">
+            <annotation>
+              <documentation>Aantal schepen van B naar A per tijdseenheid. Vaarroutes worden van A naar B ingetekend.</documentation>
+            </annotation>
+          </element>
+          <element name="percentageLadenAtoB" type="integer">
+            <annotation>
+              <documentation>Het percentage van numberOfShipsAtoB wat beladen is.</documentation>
+            </annotation>
+          </element>
+          <element name="percentageLadenBtoA" type="integer">
+            <annotation>
+              <documentation>Het percentage van numberOfShipsBtoA wat beladen is.</documentation>
+            </annotation>
+          </element>
+          <element name="timeUnitShipsAtoB" type="IMAER:TimeUnitType">
+            <annotation>
+              <documentation>Tijdseenheid voor het aantal schepen van A naar B.</documentation>
+            </annotation>
+          </element>
+          <element name="timeUnitShipsBtoA" type="IMAER:TimeUnitType">
+            <annotation>
+              <documentation>Tijdseenheid voor het aantal schepen van B naar A.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="InlandShippingPropertyType">
+    <sequence>
+      <element ref="IMAER:InlandShipping"/>
+    </sequence>
+  </complexType>
+  <element name="InlandShippingEmissionSource" substitutionGroup="IMAER:EmissionSourceType" type="IMAER:InlandShippingEmissionSourceType">
+    <annotation>
+      <documentation>Emissiebron (vaarroute) van binnenvaart.
+NOTE Deze klasse beschrijft een vaarroute voor binnenvaart, inclusief geometrie. De klasse is een specialisatie van EmissionSourceType.</documentation>
+    </annotation>
+  </element>
+  <complexType name="InlandShippingEmissionSourceType">
+    <complexContent>
+      <extension base="IMAER:EmissionSourceTypeType">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="emission" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>Emissietypen van deze bron.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="inlandShipping" type="IMAER:InlandShippingPropertyType">
+            <annotation>
+              <documentation>Specificatie van schepen voor dit emissiebrontype.</documentation>
+            </annotation>
+          </element>
+          <element name="waterway" type="IMAER:InlandWaterwayPropertyType">
+            <annotation>
+              <documentation>Specificatie van het type waterweg dat gebruikt wordt.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="mooringA" type="gml:ReferenceType">
+            <annotation>
+              <documentation>Geeft aan of de vaarroute bij het begin van het lijnstuk bij een aanlegplaats hoort (aanmerende route).</documentation>
+              <appinfo>
+                <targetElement xmlns="http://www.opengis.net/gml/3.2">IMAER:MooringInlandShippingEmissionSource</targetElement>
+              </appinfo>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="mooringB" type="gml:ReferenceType">
+            <annotation>
+              <documentation>Geeft aan of de vaarroute bij het eind van het lijnstuk bij een aanlegplaats hoort (aanmerende route).</documentation>
+              <appinfo>
+                <targetElement xmlns="http://www.opengis.net/gml/3.2">IMAER:MooringInlandShippingEmissionSource</targetElement>
+              </appinfo>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="InlandShippingEmissionSourcePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:InlandShippingEmissionSource"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="InlandWaterway" substitutionGroup="gml:AbstractObject" type="IMAER:InlandWaterwayType">
+    <annotation>
+      <documentation>Karakteristieken van een vaarroute voor (aanmerende) binnenvaart.
+NOTE Ieder aanmerend binnenvaart emissietype voor routes wordt beschreven aan de hand van een aantal karakteristieken, die in dit datatype zijn vastgelegd.</documentation>
+    </annotation>
+  </element>
+  <complexType name="InlandWaterwayType">
+    <sequence>
+      <element name="type" type="string">
+        <annotation>
+          <documentation>Specificatie van het type waterweg dat gebruikt wordt.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="direction" type="IMAER:WaterwayDirectionTypeType">
+        <annotation>
+          <documentation>Specificatie van de stroom richting van de waterweg. De richting is ten opzichte van de tekenrichting.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="InlandWaterwayPropertyType">
+    <sequence>
+      <element ref="IMAER:InlandWaterway"/>
+    </sequence>
+  </complexType>
+  <element name="LodgingFodderMeasure" substitutionGroup="gml:AbstractObject" type="IMAER:LodgingFodderMeasureType">
+    <annotation>
+      <documentation>Extra voer maatregel voor stallen.
+NOTE Deze klasse beschrijft een voer maatregel die voor een bestaande stal gebruikt kan worden, gebruik makend van een voorgedefinieerde code. Gebruik van deze maatregel zorgt voor een reductie (percentage) voor alle dieren.</documentation>
+    </annotation>
+  </element>
+  <complexType name="LodgingFodderMeasureType">
+    <sequence>
+      <element name="fodderMeasureType" type="string">
+        <annotation>
+          <documentation>Vaststaande code die aangeeft om wat voor voer maatregel het gaat.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="LodgingFodderMeasurePropertyType">
+    <sequence>
+      <element ref="IMAER:LodgingFodderMeasure"/>
+    </sequence>
+  </complexType>
+  <element abstract="true" name="LodgingSystem" substitutionGroup="gml:AbstractObject" type="IMAER:LodgingSystemType">
+    <annotation>
+      <documentation>Abstracte basis klasse voor extra staltechnieken.
+NOTE Er zijn verschillende soorten extra staltechnieken in het model aanwezig. Deze abstracte basisklasse is een generalisatie van de verschillende typen in het model.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="LodgingSystemType">
+    <sequence>
+      <element name="lodgingSystemType" type="string">
+        <annotation>
+          <documentation>Vaststaande code die aangeeft om wat voor extra staltechniek het gaat.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="farmLodgingSystemDefinitionType" type="string">
+        <annotation>
+          <documentation>Vaststaande (BWL) code die aangeeft om wat voor staltechniek het gaat.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="LodgingSystemPropertyType">
+    <sequence>
+      <element ref="IMAER:LodgingSystem"/>
+    </sequence>
+  </complexType>
+  <element abstract="true" name="ManureStorage" substitutionGroup="IMAER:EmissionValueType" type="IMAER:ManureStorageType">
+    <annotation>
+      <documentation>Karakteristieken van een emissietype voor mestopslag.
+NOTE Er zijn verschillende soorten mestopslag in het model aanwezig. Deze abstracte basisklasse is een generalisatie van de verschillende typen in het model.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="ManureStorageType">
+    <complexContent>
+      <extension base="IMAER:EmissionValueTypeType">
+        <sequence>
+          <element minOccurs="0" name="tonnes" type="double">
+            <annotation>
+              <documentation>Gewicht in ton aan mest.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="metersSquared" type="double">
+            <annotation>
+              <documentation>Oppervlakte van de mest in vierkante meters.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="numberOfDays" type="integer">
+            <annotation>
+              <documentation>Aantal dagen  in het jaar dat van de mestopslag gebruik wordt gemaakt.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="ManureStoragePropertyType">
+    <sequence>
+      <element ref="IMAER:ManureStorage"/>
+    </sequence>
+  </complexType>
+  <element name="ManureStorageEmissionSource" substitutionGroup="IMAER:EmissionSourceType" type="IMAER:ManureStorageEmissionSourceType">
+    <annotation>
+      <documentation>Emissiebron van mestopslag.
+NOTE Deze klasse beschrijft mestopslag, inclusief geometrie.</documentation>
+    </annotation>
+  </element>
+  <complexType name="ManureStorageEmissionSourceType">
+    <complexContent>
+      <extension base="IMAER:EmissionSourceTypeType">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="emission" type="IMAER:EmissionPropertyType"/>
+          <element maxOccurs="unbounded" name="manureStorage" type="IMAER:ManureStoragePropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="ManureStorageEmissionSourcePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:ManureStorageEmissionSource"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element abstract="true" name="MaritimeShipping" substitutionGroup="IMAER:EmissionValueType" type="IMAER:MaritimeShippingType">
+    <annotation>
+      <documentation>Abstracte basisklasse voor karakteristieken van een vaarroute voor scheepvaart.
+NOTE Ieder scheepvaart emissietype voor routes wordt beschreven aan de hand van een aantal karakteristieken. Deze abstracte basisklasse is een generalisatie van de verschillende typen in het model.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="MaritimeShippingType">
+    <complexContent>
+      <extension base="IMAER:EmissionValueTypeType">
+        <sequence>
+          <element name="description" type="string">
+            <annotation>
+              <documentation>Omschrijving van dit type schip.</documentation>
+            </annotation>
+          </element>
+          <element name="shipsPerTimeUnit" type="integer">
+            <annotation>
+              <documentation>Aantal schepen op deze vaarroute per tijdseenheid.</documentation>
+            </annotation>
+          </element>
+          <element name="timeUnit" type="IMAER:TimeUnitType">
+            <annotation>
+              <documentation>Tijdseenheid voor het aantal schepen op deze vaarroute.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MaritimeShippingPropertyType">
+    <sequence>
+      <element ref="IMAER:MaritimeShipping"/>
+    </sequence>
+  </complexType>
+  <element name="MaritimeShippingEmissionSource" substitutionGroup="IMAER:EmissionSourceType" type="IMAER:MaritimeShippingEmissionSourceType">
+    <annotation>
+      <documentation>Emissiebron van zeescheepvaart.
+NOTE Deze klasse beschrijft een vaarroute voor zeescheepvaart, inclusief geometrie.</documentation>
+    </annotation>
+  </element>
+  <complexType name="MaritimeShippingEmissionSourceType">
+    <complexContent>
+      <extension base="IMAER:EmissionSourceTypeType">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="emission" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>Emissietypen van deze bron.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="maritimeShipping" type="IMAER:MaritimeShippingPropertyType">
+            <annotation>
+              <documentation>Specificatie van schepen voor dit emissietype.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="mooringA" type="gml:ReferenceType">
+            <annotation>
+              <documentation>Geeft aan of de vaarroute bij het begin van het lijnstuk bij een aanlegplaats hoort (aanmerende route).</documentation>
+              <appinfo>
+                <targetElement xmlns="http://www.opengis.net/gml/3.2">IMAER:MooringMaritimeShippingEmissionSource</targetElement>
+              </appinfo>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="mooringB" type="gml:ReferenceType">
+            <annotation>
+              <documentation>Geeft aan of de vaarroute bij het eind van het lijnstuk bij een aanlegplaats hoort (aanmerende route).</documentation>
+              <appinfo>
+                <targetElement xmlns="http://www.opengis.net/gml/3.2">IMAER:MooringMaritimeShippingEmissionSource</targetElement>
+              </appinfo>
+            </annotation>
+          </element>
+        </sequence>
+        <attribute name="movementType" type="IMAER:MaritimeShippingMovementTypeType" use="required">
+          <annotation>
+            <documentation>Type vaarbeweging.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MaritimeShippingEmissionSourcePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:MaritimeShippingEmissionSource"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <simpleType name="MaritimeShippingMovementTypeType">
+    <annotation>
+      <documentation>Lijst met verschillende beweging types voor scheepvaart.
+NOTE Voor vaarroutes zijn verschillende mogelijkheden voor het type beweging. De mogelijkheden zijn hier in een lijst vastgelegd.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="INLAND">
+        <annotation>
+          <documentation>Varend binnengaats.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="MARITIME">
+        <annotation>
+          <documentation>Varend op zee.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="MonitorSubstanceType">
+    <annotation>
+      <documentation>Keuzemogelijkheden voor stoffen die gelden voor monitoring van rekenpunten.
+NOTE Een rekenpunt kan voor specifieke monitor stoffen gelden. Welke mogelijkheden hiervoor zijn is vastgelegd binnen deze enum.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="NONE">
+        <annotation>
+          <documentation>Voor geen stoffen.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="PM10_ONLY">
+        <annotation>
+          <documentation>Alleen voor PM10.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="ALL">
+        <annotation>
+          <documentation>Voor alle stoffen.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <element abstract="true" name="MooringInlandShipping" substitutionGroup="IMAER:EmissionValueType" type="IMAER:MooringInlandShippingType">
+    <annotation>
+      <documentation>Abstracte basisklasse voor karakteristieken van een aanlegplaats voor binnenvaart.
+NOTE Iedere aanlegplaats emissietype voor binnenvaart wordt beschreven aan de hand van een aantal karakteristieken. Deze abstracte basisklasse is een generalisatie van de verschillende typen in het model.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="MooringInlandShippingType">
+    <complexContent>
+      <extension base="IMAER:EmissionValueTypeType">
+        <sequence>
+          <element name="description" type="string">
+            <annotation>
+              <documentation>Omschrijving van dit type schip.</documentation>
+            </annotation>
+          </element>
+          <element name="averageResidenceTime" type="integer">
+            <annotation>
+              <documentation>De gemiddelde verblijftijd van de schepen aan de kade.</documentation>
+            </annotation>
+          </element>
+          <element name="shorePowerFactor" type="double">
+            <annotation>
+              <documentation>Factor voor walstroom (decimale fractie 0-1). Deze factor wordt in mindering gebracht bij het bepalen van de emissie van aangemeerde schepen.</documentation>
+            </annotation>
+          </element>
+          <element name="shipsPerTimeUnit" type="integer">
+            <annotation>
+              <documentation>Aantal schepen dat aangemeerd is per tijdseenheid.</documentation>
+            </annotation>
+          </element>
+          <element name="timeUnit" type="IMAER:TimeUnitType">
+            <annotation>
+              <documentation>Tijdseenheid voor het aantal schepen.</documentation>
+            </annotation>
+          </element>
+          <element name="percentageLaden" type="integer">
+            <annotation>
+              <documentation>Het percentage van ships wat beladen is.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MooringInlandShippingPropertyType">
+    <sequence>
+      <element ref="IMAER:MooringInlandShipping"/>
+    </sequence>
+  </complexType>
+  <element name="MooringInlandShippingEmissionSource" substitutionGroup="IMAER:EmissionSourceType" type="IMAER:MooringInlandShippingEmissionSourceType">
+    <annotation>
+      <documentation>Emissiebron van binnenvaart (aanlegplaats).
+NOTE Deze klasse beschrijft een aanlegplaats inclusief geometrie en vaarroute voor binnenvaart.</documentation>
+    </annotation>
+  </element>
+  <complexType name="MooringInlandShippingEmissionSourceType">
+    <complexContent>
+      <extension base="IMAER:EmissionSourceTypeType">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="emission" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>Emissietypen van deze bron.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="mooringInlandShipping" type="IMAER:MooringInlandShippingPropertyType">
+            <annotation>
+              <documentation>Specificatie van schepen voor dit emissietype.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MooringInlandShippingEmissionSourcePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:MooringInlandShippingEmissionSource"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element abstract="true" name="MooringMaritimeShipping" substitutionGroup="IMAER:EmissionValueType" type="IMAER:MooringMaritimeShippingType">
+    <annotation>
+      <documentation>Abstracte basisklasse voor karakteristieken van een emissietype voor zeescheepvaart.
+NOTE Ieder scheepvaart emissietype voor aanlegplaatsen wordt beschreven aan de hand van een aantal karakteristieken. Deze abstracte basisklasse is een generalisatie van de verschillende typen in het model.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="MooringMaritimeShippingType">
+    <complexContent>
+      <extension base="IMAER:EmissionValueTypeType">
+        <sequence>
+          <element name="description" type="string">
+            <annotation>
+              <documentation>Omschrijving van dit type schip.</documentation>
+            </annotation>
+          </element>
+          <element name="averageResidenceTime" type="integer">
+            <annotation>
+              <documentation>De gemiddelde verblijftijd van de schepen aan de kade.</documentation>
+            </annotation>
+          </element>
+          <element name="shorePowerFactor" type="double">
+            <annotation>
+              <documentation>Factor voor walstroom (decimale fractie 0-1). Deze factor wordt in mindering gebracht bij het bepalen van de emissie van aangemeerde schepen.</documentation>
+            </annotation>
+          </element>
+          <element name="shipsPerTimeUnit" type="integer">
+            <annotation>
+              <documentation>Aantal schepen dat aangemeerd is per tijdseenheid.</documentation>
+            </annotation>
+          </element>
+          <element name="timeUnit" type="IMAER:TimeUnitType">
+            <annotation>
+              <documentation>Tijdseenheid voor het aantal schepen.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MooringMaritimeShippingPropertyType">
+    <sequence>
+      <element ref="IMAER:MooringMaritimeShipping"/>
+    </sequence>
+  </complexType>
+  <element name="MooringMaritimeShippingEmissionSource" substitutionGroup="IMAER:EmissionSourceType" type="IMAER:MooringMaritimeShippingEmissionSourceType">
+    <annotation>
+      <documentation>Emissiebron van zeescheepvaart.
+NOTE Deze klasse beschrijft een kade voor zeescheepvaart inclusief geometrie.</documentation>
+    </annotation>
+  </element>
+  <complexType name="MooringMaritimeShippingEmissionSourceType">
+    <complexContent>
+      <extension base="IMAER:EmissionSourceTypeType">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="emission" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>Emissietypen van deze bron.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="mooringMaritimeShipping" type="IMAER:MooringMaritimeShippingPropertyType">
+            <annotation>
+              <documentation>Specificatie van schepen voor dit emissietype.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MooringMaritimeShippingEmissionSourcePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:MooringMaritimeShippingEmissionSource"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="NEN3610ID" substitutionGroup="gml:AbstractObject" type="IMAER:NEN3610IDType">
+    <annotation>
+      <documentation>Identificatiegegevens voor de universeel unieke identificatie van een object
+NOTE De combinatie van 'namespace' van een registratie, lokale identificatie en versie informatie maken een object uniek identificeerbaar. Met de informatie van deze klasse kan daardoor met zekerheid worden verwezen naar het geïdentificeerde object.</documentation>
+    </annotation>
+  </element>
+  <complexType name="NEN3610IDType">
+    <sequence>
+      <element name="namespace" type="string">
+        <annotation>
+          <documentation>Unieke verwijzing naar een registratie van objecten
+NOTE Het attribuut 'namespace' is een unieke verwijzing naar de registratie die de identificatie uitdeelt. Deze lijst van registraties wordt beheerd binnen de context van NEN 3610. Binnen Nederland zal deze namespace vrijwel altijd met 'NL.' beginnen.
+De volgende karakters mogen in een namespace aanduiding voorkomen: {"A"..."Z", "a"..."z", "0"..."9", "_", "-", ",", "."}</documentation>
+        </annotation>
+      </element>
+      <element name="localId" type="string">
+        <annotation>
+          <documentation>Unieke identificatiecode binnen een registratie
+NOTE 'LocalId' is de identificatiecode die een object heeft binnen een (lokale) registratie.
+De volgende karakters mogen in een localId voorkomen: {"A"..."Z", "a"..."z", "0"..."9", "_", "-", ",", "."}.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="versionId" type="string">
+        <annotation>
+          <documentation>Versie-aanduiding van een object
+NOTE Het attribuut 'versionId' maakt geen deel uit van de identificatie van het object maar kan worden gebruikt om verschillende versies van hetzelfde object te identificeren.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="NEN3610IDPropertyType">
+    <sequence>
+      <element ref="IMAER:NEN3610ID"/>
+    </sequence>
+  </complexType>
+  <element name="NSLCalculationPoint" substitutionGroup="IMAER:CalculationPointType" type="IMAER:NSLCalculationPointType"/>
+  <complexType name="NSLCalculationPointType">
+    <complexContent>
+      <extension base="IMAER:CalculationPointTypeType">
+        <sequence>
+          <element minOccurs="0" name="rejectionGrounds" type="IMAER:RejectionGroundsType">
+            <annotation>
+              <documentation>Reden waarom een rekenpunt is afgekeurd (bij actualisatie).</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="monitorSubstance" type="IMAER:MonitorSubstanceType">
+            <annotation>
+              <documentation>Stoffen waarvoor dit rekenpunt geldt bij monitoring.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="NSLCalculationPointPropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:NSLCalculationPoint"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="NcaCustomCalculationPoint" substitutionGroup="IMAER:CalculationPointType" type="IMAER:NcaCustomCalculationPointType">
+    <annotation>
+      <documentation>Zelfgedefinieerd rekenpunt in kader van NCA.
+NOTE Deze klasse beschrijft een zelfgedefinieerd rekenpunt in het kader van NCA (Nature Conservation Act).</documentation>
+    </annotation>
+  </element>
+  <complexType name="NcaCustomCalculationPointType">
+    <complexContent>
+      <extension base="IMAER:CalculationPointTypeType">
+        <sequence>
+          <element minOccurs="0" name="roadLocalFractionNO2" type="double">
+            <annotation>
+              <documentation>Een optionele waarde voor de lokale fractie NO2 die gehanteerd moet worden bij bepalen van de concentratie NO2 op basis van NOx als gevolg van wegverkeer. Wordt alleen gebruikt bij specifieke rekeninstellingen.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="NcaCustomCalculationPointPropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:NcaCustomCalculationPoint"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element abstract="true" name="OffRoadMobileSource" substitutionGroup="IMAER:EmissionValueType" type="IMAER:OffRoadMobileSourceType">
+    <annotation>
+      <documentation>Abstracte basisklasse voor de beschrijving van mobiele werktuig bronnen.
+NOTE Er zijn verschillende soorten mobiele werktuig beschrijvingen in het model aanwezig. Deze abstracte basisklasse is een generalisatie van de verschillende typen in het model.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="OffRoadMobileSourceType">
+    <complexContent>
+      <extension base="IMAER:EmissionValueTypeType">
+        <sequence>
+          <element name="description" type="string">
+            <annotation>
+              <documentation>Beschrijving van het voertuig type.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="OffRoadMobileSourcePropertyType">
+    <sequence>
+      <element ref="IMAER:OffRoadMobileSource"/>
+    </sequence>
+  </complexType>
+  <element name="OffRoadMobileSourceEmissionSource" substitutionGroup="IMAER:EmissionSourceType" type="IMAER:OffRoadMobileSourceEmissionSourceType">
+    <annotation>
+      <documentation>Emissiebron van mobiele werktuigen.
+NOTE Deze klasse beschrijft een verzameling mobiele werktuigen inclusief geometrie.</documentation>
+    </annotation>
+  </element>
+  <complexType name="OffRoadMobileSourceEmissionSourceType">
+    <complexContent>
+      <extension base="IMAER:EmissionSourceTypeType">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="emission" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>Emissietypen van deze bron.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="offRoadMobileSource" type="IMAER:OffRoadMobileSourcePropertyType">
+            <annotation>
+              <documentation>Specificatie van mobiele werktuigen voor dit emissietype.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="OffRoadMobileSourceEmissionSourcePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:OffRoadMobileSourceEmissionSource"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element abstract="true" name="OffRoadVehicleSpecification" substitutionGroup="gml:AbstractObject" type="IMAER:OffRoadVehicleSpecificationType">
+    <annotation>
+      <documentation>Abstracte basisklasse van een specificatie voor de emissie van een eigen gedefinieerde mobiele werktuig bron.
+NOTE Voor het bepalen van de emissie van mobiel werktuig kunnen verschillende rekenmethodes gebruikt worden. Deze methodes liggen vast in de onderliggende types.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="OffRoadVehicleSpecificationType">
+    <sequence>
+      <element name="fuelType" type="string">
+        <annotation>
+          <documentation>Vaststaande code die aangeeft wat voor brandstof gebruikt wordt door het voertuig.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="OffRoadVehicleSpecificationPropertyType">
+    <sequence>
+      <element ref="IMAER:OffRoadVehicleSpecification"/>
+    </sequence>
+  </complexType>
+  <element name="OperatingHoursOffRoadVehicleSpecification" substitutionGroup="IMAER:OffRoadVehicleSpecification" type="IMAER:OperatingHoursOffRoadVehicleSpecificationType">
+    <annotation>
+      <documentation>Klasse voor een specificatie voor de emissie van een eigen gedefinieerde mobiele werktuig bron aan de hand van de operationele uren.
+NOTE Voor het bepalen van de emissie van mobiel werktuig kan gekeken worden naar de operationele uren van dat voertuig. De karakteristieken in dit type worden daarbij gebruikt.</documentation>
+    </annotation>
+  </element>
+  <complexType name="OperatingHoursOffRoadVehicleSpecificationType">
+    <complexContent>
+      <extension base="IMAER:OffRoadVehicleSpecificationType">
+        <sequence>
+          <element maxOccurs="unbounded" name="emissionFactor" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>De emissiefactoren van het voertuig, in g/kWh per stof.</documentation>
+            </annotation>
+          </element>
+          <element name="load" type="integer">
+            <annotation>
+              <documentation>Het gedeelte van het volle vermogen van dit mobiele werktuig dat daadwerkelijk wordt gebruikt, in percentages.</documentation>
+            </annotation>
+          </element>
+          <element name="power" type="integer">
+            <annotation>
+              <documentation>Het gemiddelde volle vermogen van dit mobiele werktuig, in kW.</documentation>
+            </annotation>
+          </element>
+          <element name="operatingHours" type="integer">
+            <annotation>
+              <documentation>Het aantal uren dat dit mobiele werktuig gemiddeld wordt gebruikt, in uren.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="OperatingHoursOffRoadVehicleSpecificationPropertyType">
+    <sequence>
+      <element ref="IMAER:OperatingHoursOffRoadVehicleSpecification"/>
+    </sequence>
+  </complexType>
+  <element name="OtherSituationMetadata" substitutionGroup="gml:AbstractObject" type="IMAER:OtherSituationMetadataType">
+    <annotation>
+      <documentation>Metadata over andere situaties die in de berekening zijn meegenomen.
+NOTE Met behulp van dit metadata object kan er informatie over andere situaties die tegelijkertijd zijn doorgerekend in dezelfde berekening vastgelegd worden.</documentation>
+    </annotation>
+  </element>
+  <complexType name="OtherSituationMetadataType">
+    <sequence>
+      <element name="situationType" type="IMAER:SituationTypeType">
+        <annotation>
+          <documentation>Type van de andere situatie.</documentation>
+        </annotation>
+      </element>
+      <element name="name" type="string">
+        <annotation>
+          <documentation>Naam van de andere situatie.</documentation>
+        </annotation>
+      </element>
+      <element name="reference" type="string">
+        <annotation>
+          <documentation>Referentie van de andere situatie.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="OtherSituationMetadataPropertyType">
+    <sequence>
+      <element ref="IMAER:OtherSituationMetadata"/>
+    </sequence>
+  </complexType>
+  <simpleType name="OutflowDirectionTypeType">
+    <annotation>
+      <documentation>Keuzemogelijkheden voor de uitstroom richting van emissies.
+NOTE In het geval van een emissiebron met een warmteinhoud is het van belang om mee te nemen welke richting de emissie op gedwongen wordt, bijvoorbeeld door een schoorsteen.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="VERTICAL">
+        <annotation>
+          <documentation>Uitstroom richting wordt verticaal geforceerd.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="HORIZONTAL">
+        <annotation>
+          <documentation>Uitstroom richting wordt horizontaal geforceerd.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="OutflowVelocityTypeType">
+    <annotation>
+      <documentation>Lijst met verschillende manieren waarop de waarde voor uitstroom snelheid bepaald kan worden.
+NOTE Bij geforceerde uitstoot kan voor de uitstroom snelheid een type worden opgegeven die iets zegt over de manier hoe men tot de waarde is gekomen. De mogelijkheden zijn in deze lijst opgenommen.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="ACTUAL_FLOW">
+        <annotation>
+          <documentation>De uittreedsnelheid is gemeten (Feitelijk). Dit meten dient gebeurd te zijn wanneer de inrichting in productie is genomen.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="NORMALISED_FLOW">
+        <annotation>
+          <documentation>De uittreedsnelheid is opgegeven door de fabrikant (Fabrieksopgave). Deze waarde kan gebruikt worden voor nieuwe inrichtingen of wanneer er niet gemeten wordt.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <element name="Plan" substitutionGroup="IMAER:EmissionValueType" type="IMAER:PlanType">
+    <annotation>
+      <documentation>Karakteristieken van ruimtelijke plan ontwikkelingen.
+NOTE Iedere ruimtelijk plan ontwikkel bronsoort wordt beschreven aan de hand van een aantal karakteristieken. Deze zijn in dit datatype zijn vastgelegd.</documentation>
+    </annotation>
+  </element>
+  <complexType name="PlanType">
+    <complexContent>
+      <extension base="IMAER:EmissionValueTypeType">
+        <sequence>
+          <element name="description" type="string">
+            <annotation>
+              <documentation>De omschrijving van dit plan.</documentation>
+            </annotation>
+          </element>
+          <element name="amount" type="integer">
+            <annotation>
+              <documentation>Elk planType heeft een eenheid. De amount is het aantal van deze eenheid.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+        <attribute name="planType" type="string" use="required">
+          <annotation>
+            <documentation>Het type van dit plan.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="PlanPropertyType">
+    <sequence>
+      <element ref="IMAER:Plan"/>
+    </sequence>
+  </complexType>
+  <element name="PlanEmissionSource" substitutionGroup="IMAER:EmissionSourceType" type="IMAER:PlanEmissionSourceType">
+    <annotation>
+      <documentation>Emissiebron definitie van ruimtelijke plan ontwikkelingen.
+NOTE Deze klasse beschrijft een verzameling ruimtelijke plan ontwikkelings bronnen inclusief geometrie.</documentation>
+    </annotation>
+  </element>
+  <complexType name="PlanEmissionSourceType">
+    <complexContent>
+      <extension base="IMAER:EmissionSourceTypeType">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="emission" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>Emissietypen van deze bron.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="plan" type="IMAER:PlanPropertyType">
+            <annotation>
+              <documentation>Specificatie van de plannen voor dit emissietype.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="PlanEmissionSourcePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:PlanEmissionSource"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="ProjectMetadata" substitutionGroup="gml:AbstractObject" type="IMAER:ProjectMetadataType">
+    <annotation>
+      <documentation>Metadata over het vastgelegde project.
+NOTE Met behulp van dit metadata object kan er projectinformatie over de emissiebronnen vastgelegd worden,</documentation>
+    </annotation>
+  </element>
+  <complexType name="ProjectMetadataType">
+    <sequence>
+      <element name="year" type="integer">
+        <annotation>
+          <documentation>De AERIUS rekenkern maakt gebruik van GDN basisgegevens die jaarlijks worden aangepast. Dit attribuut geeft aan van welk jaar de basisgegevens gebruikt zijn bij de berekeningen.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="temporaryPeriod" type="integer">
+        <annotation>
+          <documentation>Duur van het project in jaren. (alleen in geval van tijdelijke projecten).</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="permitCalculationRadiusType" type="string">
+        <annotation>
+          <documentation>Afstandsgrenswaarde-type voor de Wet natuurbescherming</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="name" type="string">
+        <annotation>
+          <documentation>Naam van het beschreven project.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="corporation" type="string">
+        <annotation>
+          <documentation>Naam van de rechtspersoon die hoort bij het beschreven project.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="facilityLocation" type="IMAER:AddressPropertyType">
+        <annotation>
+          <documentation>De inrichtingslocatie van het project.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="description" type="string">
+        <annotation>
+          <documentation>Beschrijving van of toelichting bij het beschreven project.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="ProjectMetadataPropertyType">
+    <sequence>
+      <element ref="IMAER:ProjectMetadata"/>
+    </sequence>
+  </complexType>
+  <element name="ReceptorPoint" substitutionGroup="IMAER:CalculationPointType" type="IMAER:ReceptorPointType">
+    <annotation>
+      <documentation>Receptorpunt.
+NOTE Deze klasse beschrijft een rekenpunt op het AERIUS-grid.</documentation>
+    </annotation>
+  </element>
+  <complexType name="ReceptorPointType">
+    <complexContent>
+      <extension base="IMAER:CalculationPointTypeType">
+        <sequence>
+          <element minOccurs="0" name="edgeEffect" type="boolean">
+            <annotation>
+              <documentation>In het geval van een berekening met een maximum rekenafstand kan er sprake zijn van een randeffect doordat niet voor alle bronnen rekenresultaten berekend worden op een receptor. Heeft een receptorpunt resultaten van alle bronnen, dan is de edgeEffect waarde false en is er geen sprake van randeffect. Heeft een receptorpunt niet resultaten van alle bronnen, dan is de edgeEffect waarde true en is er wel sprake van een randeffect.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+        <attribute name="receptorPointId" type="integer" use="required">
+          <annotation>
+            <documentation>Identificatienummer van het receptorpunt.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="ReceptorPointPropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:ReceptorPoint"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="ReductiveLodgingSystem" substitutionGroup="IMAER:LodgingSystem" type="IMAER:ReductiveLodgingSystemType">
+    <annotation>
+      <documentation>Extra reducerende staltechniek beschrijving.
+NOTE Deze klasse beschrijft een extra staltechniek die bij een bestaande stal gebruikt kan worden, gebruik makend van een voorgedefinieerde code. Gebruik van dit systeem zorgt voor een reductie (percentage) voor alle dieren.</documentation>
+    </annotation>
+  </element>
+  <complexType name="ReductiveLodgingSystemType">
+    <complexContent>
+      <extension base="IMAER:LodgingSystemType">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="ReductiveLodgingSystemPropertyType">
+    <sequence>
+      <element ref="IMAER:ReductiveLodgingSystem"/>
+    </sequence>
+  </complexType>
+  <element name="ReferenceDiurnalVariation" substitutionGroup="IMAER:DiurnalVariation" type="IMAER:ReferenceDiurnalVariationType">
+    <annotation>
+      <documentation>Referentie naar een (herbruikbare) eigen gespecificeerde temporele variatie definitie.</documentation>
+    </annotation>
+  </element>
+  <complexType name="ReferenceDiurnalVariationType">
+    <complexContent>
+      <extension base="IMAER:DiurnalVariationType">
+        <sequence>
+          <element name="customDiurnalVariation" type="gml:ReferenceType">
+            <annotation>
+              <appinfo>
+                <targetElement xmlns="http://www.opengis.net/gml/3.2">IMAER:CustomDiurnalVariation</targetElement>
+              </appinfo>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="ReferenceDiurnalVariationPropertyType">
+    <sequence>
+      <element ref="IMAER:ReferenceDiurnalVariation"/>
+    </sequence>
+  </complexType>
+  <simpleType name="RejectionGroundsType">
+    <annotation>
+      <documentation>Keuzemogelijkheden voor afwijzing, bijvoorbeeld bij actualisatie van rekenpunten.
+NOTE Bij actualisatie kan een rekenpunt afgekeurd worden. Reden hiervoor is vastgelegd binnen deze keuzemogelijkheiden.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="NONE">
+        <annotation>
+          <documentation>Geen.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="COMPLIANCE_CRITERION">
+        <annotation>
+          <documentation>Toepassingsbereikcriterium.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="EXPOSURE_CRITERION">
+        <annotation>
+          <documentation>Blootstellingscriterium.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="OTHER">
+        <annotation>
+          <documentation>Overig.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="ResultTypeType">
+    <annotation>
+      <documentation>Lijst met verschillende types resultaten.
+NOTE De AERIUS rekenkern kan verschillende resultaat types van emissies bepalen. Denk hierbij aan concentraties en deposities. Deze types zijn hier in een lijst vastgelegd.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="DEPOSITION">
+        <annotation>
+          <documentation>Depositie (mol/ha/j)</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="CONCENTRATION">
+        <annotation>
+          <documentation>Concentratie (µg/m³)</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="EXCEEDANCE_DAYS">
+        <annotation>
+          <documentation>Overschrijdingsdagen</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="EXCEEDANCE_HOURS">
+        <annotation>
+          <documentation>Overschrijdingsuren</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="RoadElevationType">
+    <annotation>
+      <documentation>Lijst met verschillende types verhogingen van een weg.
+NOTE Bij berekenen van emissies voor wegverkeer in buitenstedelijk gebied kan rekening gehouden worden met de verhoging van de weg. (SRM2)</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="NORMAL">
+        <annotation>
+          <documentation>dijk of wal met zeer vlakke zijkanten (hoek kleiner dan 20 graden).</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="NORMAL_DYKE">
+        <annotation>
+          <documentation>dijk of wal met vlakke zijkanten (hoek groter of gelijk aan 20  graden maar kleiner dan 45 graden).</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="STEEP_DYKE">
+        <annotation>
+          <documentation>dijk of wal met scherpe zijkanten (hoek groter dan of gelijk aan 45 graden).</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="VIADUCT">
+        <annotation>
+          <documentation>weg ligt op een viaduct.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="TUNNEL">
+        <annotation>
+          <documentation>weg ligt in een tunnelbak.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <element abstract="true" name="RoadEmissionSource" substitutionGroup="IMAER:EmissionSourceType" type="IMAER:RoadEmissionSourceType">
+    <annotation>
+      <documentation>Emissiebron van een weg.
+NOTE Deze klasse beschrijft een weg emissiebron inclusief geometrie.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="RoadEmissionSourceType">
+    <complexContent>
+      <extension base="IMAER:EmissionSourceTypeType">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="emission" type="IMAER:EmissionPropertyType">
+            <annotation>
+              <documentation>Emissietypen van deze bron.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="vehicles" type="IMAER:VehiclePropertyType">
+            <annotation>
+              <documentation>Specificatie van wegvervoer voor dit emissietype.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="roadManager" type="IMAER:RoadManagerType">
+            <annotation>
+              <documentation>Beheerder van de weg.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="trafficDirection" type="IMAER:TrafficDirectionType">
+            <annotation>
+              <documentation>Rijrichting van het verkeer op deze weg. Deze rijrichting is ten opzichte van de getekende richting van de weg oftewel de geometrie.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+        <attribute name="roadAreaType" type="string" use="required">
+          <annotation>
+            <documentation>Het emissiegebied waarbij deze weg hoort.</documentation>
+          </annotation>
+        </attribute>
+        <attribute name="roadType" type="string" use="required">
+          <annotation>
+            <documentation>Het type weg.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RoadEmissionSourcePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:RoadEmissionSource"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <simpleType name="RoadManagerType">
+    <annotation>
+      <documentation>Lijst met verschillende types wegbeheerder van een weg
+NOTE Voor een weg kan aangegeven wat voor partij de wegbeheerder is.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="MUNICIPALITY">
+        <annotation>
+          <documentation>Gemeente</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="PROVINCE">
+        <annotation>
+          <documentation>Provincie</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="STATE">
+        <annotation>
+          <documentation>Rijksoverheid</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="WATER_AUTHORITY">
+        <annotation>
+          <documentation>Waterschap</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="PRIVATE">
+        <annotation>
+          <documentation>Private partij</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="RoadProfileType">
+    <annotation>
+      <documentation>Lijst met verschillende types wegprofiel van een weg
+NOTE Bij berekenen van emissies voor wegverkeer in buitenstedelijk gebied kan rekening gehouden worden met het wegprofiel van de weg (SRM1).</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="WIDE_STREET_CANYON">
+        <annotation>
+          <documentation>Aan beide zijden van de weg min of meer aaneengesloten bebouwing op een afstand van maximaal 60 meter van de wegas, waarbij de afstand tussen wegas en gevel kleiner is dan drie maal de hoogte van de bebouwing, maar groter is dan 1,5 x de hoogte van de bebouwing (brede streetcanyon).</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="NARROW_STREET_CANYON">
+        <annotation>
+          <documentation>Aan beide zijden van de weg min of meer aaneengesloten bebouwing op een afstand van maximaal 60 meter van de weg, waarbij de afstand tussen wegas en gevel kleiner is dan 1,5 x de hoogte van de bebouwing.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="ONE_SIDE_BUILDINGS">
+        <annotation>
+          <documentation>Aan een zijde min of meer aaneengesloten bebouwing op een afstand van maximaal 60 meter van de wegas, waarbij de afstand tussen wegas en gevel kleiner is dan 3 x de hoogte van de bebouwing.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="OTHER">
+        <annotation>
+          <documentation>Overig.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <element name="RoadSideBarrier" substitutionGroup="gml:AbstractObject" type="IMAER:RoadSideBarrierType">
+    <annotation>
+      <documentation>Karakteristieken van een scheiding(wal of scherm) aan de kant van de weg.
+NOTE Een scherm/wal aan de kant van een weg is voorzien van een aantal karakteristieken, die in dit separate datatype zijn vastgelegd.</documentation>
+    </annotation>
+  </element>
+  <complexType name="RoadSideBarrierType">
+    <sequence>
+      <element name="barrierType" type="IMAER:RoadSideBarrierTypeType">
+        <annotation>
+          <documentation>Type van deze scheiding.</documentation>
+        </annotation>
+      </element>
+      <element name="height" type="double">
+        <annotation>
+          <documentation>Hoogte van deze scheiding.</documentation>
+        </annotation>
+      </element>
+      <element name="distance" type="double">
+        <annotation>
+          <documentation>Afstand tot de weg van deze scheiding.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="RoadSideBarrierPropertyType">
+    <sequence>
+      <element ref="IMAER:RoadSideBarrier"/>
+    </sequence>
+  </complexType>
+  <simpleType name="RoadSideBarrierTypeType">
+    <annotation>
+      <documentation>Lijst met verschillende types scheidingen langs de weg.
+NOTE Bij berekenen van emissies voor wegverkeer in buitenstedelijk gebied kan rekening gehouden worden met schermen en wallen langs de weg. (SRM2)</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="SCREEN">
+        <annotation>
+          <documentation>Een scherm (denk aan geluidsscherm).</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="WALL">
+        <annotation>
+          <documentation>Een wal (denk aan geluidswal).</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <element name="SRM1LinearReference" substitutionGroup="IMAER:SimpleLinearReference" type="IMAER:SRM1LinearReferenceType">
+    <annotation>
+      <documentation>Gedeeltelijke wijziging in SRM1 attributen.
+NOTE Deze klasse kan gebruikt worden om voor een gedeelte van de weg een of meerdere attributen een andere waarde te geven. Te gebruiken voor SRM1Road.</documentation>
+    </annotation>
+  </element>
+  <complexType name="SRM1LinearReferenceType">
+    <complexContent>
+      <extension base="IMAER:SimpleLinearReferenceType">
+        <sequence>
+          <element minOccurs="0" name="tunnelFactor" type="double">
+            <annotation>
+              <documentation>Zie SRM1Road</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SRM1LinearReferencePropertyType">
+    <sequence>
+      <element ref="IMAER:SRM1LinearReference"/>
+    </sequence>
+  </complexType>
+  <element name="SRM1Road" substitutionGroup="IMAER:RoadEmissionSource" type="IMAER:SRM1RoadType">
+    <annotation>
+      <documentation>Emissiebron van een SRM1 weg.
+NOTE Deze klasse beschrijft een weg emissiebron inclusief geometrie. Deze weg is bedoeld om volgens SRM1 door te rekenen. Onder SRM1 vallen wegen die niet onder SRM2 vallen, binnenstedelijke wegen en niet provinciale buitenwegen.</documentation>
+    </annotation>
+  </element>
+  <complexType name="SRM1RoadType">
+    <complexContent>
+      <extension base="IMAER:RoadEmissionSourceType">
+        <sequence>
+          <element minOccurs="0" name="tunnelFactor" type="double">
+            <annotation>
+              <documentation>Voor een wegdeel dat direct aansluit op de uitrit van een tunnelbuis, die tenminste 100 meter lang is en waarbinnen sprake is van twee rijrichtingen, worden de emissies tot op een afstand van 20 meter van de uitrit van een tunnelbuis verrekend met een factor. Voor een wegdeel dat direct aansluit op de uitrit van een tunnelbuis, die tenminste 100 meter lang is en waarbinnen sprake is van &amp;#233;&amp;#233;n rijrichting, worden de emissies tot op een afstand van 50 meter van de uitrit van een tunnelbuis verrekend met een factor. Dit is die factor. Indien geen sprake is van een tunnel, kan 1.0 gebruikt worden of deze waarde weggelaten worden.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="partialChange" type="IMAER:SRM1LinearReferencePropertyType">
+            <annotation>
+              <documentation>Specificatie wijzigingen op een gedeelte van de weg. Mits opgegeven, dan wordt op dat gedeelte van de weg de standaard waarde overschreven door hetgeen hier is opgegeven. Dit kan meerdere keren voorkomen.
+Dit is een stukje Dynamic Segmentation of Linear Referencing.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SRM1RoadPropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:SRM1Road"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="SRM1RoadDispersionLine" substitutionGroup="IMAER:GeoObject" type="IMAER:SRM1RoadDispersionLineType">
+    <annotation>
+      <documentation>Overdrachtslijn tussen een SRM1 weg en een rekenpunt.
+NOTE Deze klasse beschrijft de overdrachtslijn tussen de weg en een rekenpunt. Deze lijn is bedoeld om volgens SRM1 door te rekenen.</documentation>
+    </annotation>
+  </element>
+  <complexType name="SRM1RoadDispersionLineType">
+    <complexContent>
+      <extension base="IMAER:GeoObjectType">
+        <sequence>
+          <element name="identifier" type="IMAER:NEN3610IDPropertyType">
+            <annotation>
+              <documentation>Unieke identificatie van het object binnen het domein van NEN 3610.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="label" type="string">
+            <annotation>
+              <documentation>Een optioneel label voor de overdrachtslijn.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="description" type="string">
+            <annotation>
+              <documentation>Een optionele beschrijving voor de overdrachtslijn.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="jurisdictionId" type="integer">
+            <annotation>
+              <documentation>Een optioneel ID voor de jurisdictie (voor actualisatie).</documentation>
+            </annotation>
+          </element>
+          <element name="roadProfile" type="IMAER:RoadProfileType">
+            <annotation>
+              <documentation>Wegprofiel van de overdrachtslijn.</documentation>
+            </annotation>
+          </element>
+          <element name="treeProfile" type="IMAER:TreeProfileType">
+            <annotation>
+              <documentation>Bomenprofiel van de overdrachtslijn.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="geometry" type="gml:CurvePropertyType">
+            <annotation>
+              <documentation>Een optionele geometrie tussen de SRM1Road en het calculationPoint. Dit is eigenlijk afgeleide data, maar kan voor visualisatie gebruikt worden.</documentation>
+            </annotation>
+          </element>
+          <element name="calculationPoint" type="gml:ReferenceType">
+            <annotation>
+              <appinfo>
+                <targetElement xmlns="http://www.opengis.net/gml/3.2">IMAER:CalculationPointType</targetElement>
+              </appinfo>
+            </annotation>
+          </element>
+          <element name="road" type="gml:ReferenceType">
+            <annotation>
+              <appinfo>
+                <targetElement xmlns="http://www.opengis.net/gml/3.2">IMAER:SRM1Road</targetElement>
+              </appinfo>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SRM1RoadDispersionLinePropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:SRM1RoadDispersionLine"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="SRM1RoadMeasure" substitutionGroup="gml:AbstractObject" type="IMAER:SRM1RoadMeasureType">
+    <annotation>
+      <documentation>Klasse voor een specificatie voor maatregelen per voertuigtype en snelheidstype (NSL).
+NOTE Het kan voorkomen dat er een maatregel geldt voor een specifiek voertuigtype en een specifieke snelheidsprofiel, waardoor emissies gereduceerd worden. In deze klasse kan vastgelegd worden wat deze reductie is, per voertuigtype en snelheidsprofiel.</documentation>
+    </annotation>
+  </element>
+  <complexType name="SRM1RoadMeasureType">
+    <sequence>
+      <element name="vehicleType" type="string">
+        <annotation>
+          <documentation>Type standaard voertuiggroep waarvoor de maatregelen gelden.</documentation>
+        </annotation>
+      </element>
+      <element name="roadType" type="string">
+        <annotation>
+          <documentation>Type weg waarvoor de maatregelen gelden.</documentation>
+        </annotation>
+      </element>
+      <element maxOccurs="unbounded" name="reduction" type="IMAER:EmissionReductionPropertyType">
+        <annotation>
+          <documentation>De reducties die ontstaan door deze maatregelen.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="SRM1RoadMeasurePropertyType">
+    <sequence>
+      <element ref="IMAER:SRM1RoadMeasure"/>
+    </sequence>
+  </complexType>
+  <element name="SRM1RoadMeasureArea" substitutionGroup="IMAER:GeoObject" type="IMAER:SRM1RoadMeasureAreaType">
+    <annotation>
+      <documentation>Klasse voor een specificatie voor maatregelen die gelden voor SRM1 wegen binnen een gebied (NSL).
+NOTE Het kan voorkomen dat door een maatregel de emissie gereduceerd wordt voor een bepaald gebied voor SRM1 wegen. In deze klasse kan vastgelegd worden wat deze reductie is voor een gebied.</documentation>
+    </annotation>
+  </element>
+  <complexType name="SRM1RoadMeasureAreaType">
+    <complexContent>
+      <extension base="IMAER:GeoObjectType">
+        <sequence>
+          <element name="identifier" type="IMAER:NEN3610IDPropertyType">
+            <annotation>
+              <documentation>Unieke identificatie van het object binnen het domein van NEN 3610.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="label" type="string">
+            <annotation>
+              <documentation>Een optioneel label voor het maatregelgebied.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="description" type="string">
+            <annotation>
+              <documentation>Een optioneel (uitvoerige) beschrijving voor het maatregelgebied.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="jurisdictionId" type="integer">
+            <annotation>
+              <documentation>Een optioneel ID voor de jurisdictie (voor actualisatie).</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="measure" type="IMAER:SRM1RoadMeasurePropertyType">
+            <annotation>
+              <documentation>De maatregelen die gelden binnen het gebied.</documentation>
+            </annotation>
+          </element>
+          <element name="geometry" type="gml:SurfacePropertyType">
+            <annotation>
+              <documentation>De geometrie van het gebied.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SRM1RoadMeasureAreaPropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:SRM1RoadMeasureArea"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="SRM2LinearReference" substitutionGroup="IMAER:SimpleLinearReference" type="IMAER:SRM2LinearReferenceType">
+    <annotation>
+      <documentation>Gedeeltelijke wijziging in SRM2 attributen.
+NOTE Deze klasse kan gebruikt worden om voor een gedeelte van de weg een of meerdere attributen een andere waarde te geven. Te gebruiken voor SRM2Road.</documentation>
+    </annotation>
+  </element>
+  <complexType name="SRM2LinearReferenceType">
+    <complexContent>
+      <extension base="IMAER:SimpleLinearReferenceType">
+        <sequence>
+          <element minOccurs="0" name="tunnelFactor" type="double">
+            <annotation>
+              <documentation>Zie SRM2Road</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="elevation" type="IMAER:RoadElevationType">
+            <annotation>
+              <documentation>Zie SRM2Road</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="elevationHeight" type="integer">
+            <annotation>
+              <documentation>Zie SRM2Road</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="barrierLeft" type="IMAER:RoadSideBarrierPropertyType">
+            <annotation>
+              <documentation>Zie SRM2Road</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="barrierRight" type="IMAER:RoadSideBarrierPropertyType">
+            <annotation>
+              <documentation>Zie SRM2Road</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SRM2LinearReferencePropertyType">
+    <sequence>
+      <element ref="IMAER:SRM2LinearReference"/>
+    </sequence>
+  </complexType>
+  <element name="SRM2Road" substitutionGroup="IMAER:RoadEmissionSource" type="IMAER:SRM2RoadType">
+    <annotation>
+      <documentation>Emissiebron van een SRM2 weg.
+NOTE Deze klasse beschrijft een weg emissiebron inclusief geometrie. Deze weg is bedoeld om volgens SRM2 door te rekenen. Onder SRM2 vallen wegen die niet onder SRM1 vallen, buitenstedelijke wegen en snelwegen.</documentation>
+    </annotation>
+  </element>
+  <complexType name="SRM2RoadType">
+    <complexContent>
+      <extension base="IMAER:RoadEmissionSourceType">
+        <sequence>
+          <element minOccurs="0" name="tunnelFactor" type="double">
+            <annotation>
+              <documentation>Voor een wegdeel dat direct aansluit op de uitrit van een tunnelbuis, die tenminste 100 meter lang is en waarbinnen sprake is van &amp;#233;&amp;#233;n rijrichting, worden de emissies tot op een afstand van 100 meter van de uitrit van een tunnelbuis verrekend met een factor. Dit is die factor. Indien geen sprake is van een tunnel, kan 1.0 gebruikt worden of deze waarde weggelaten worden.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="elevation" type="IMAER:RoadElevationType">
+            <annotation>
+              <documentation>Verhogingstype van de weg.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="elevationHeight" type="integer">
+            <annotation>
+              <documentation>Verhoging van de weg (in meters).</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="barrierLeft" type="IMAER:RoadSideBarrierPropertyType">
+            <annotation>
+              <documentation>De afscheiding aan de linkerkant van de weg.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="barrierRight" type="IMAER:RoadSideBarrierPropertyType">
+            <annotation>
+              <documentation>De afscheiding aan de rechterkant van de weg.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="partialChange" type="IMAER:SRM2LinearReferencePropertyType">
+            <annotation>
+              <documentation>Specificatie wijzigingen op een gedeelte van de weg. Mits opgegeven, dan wordt op dat gedeelte van de weg de standaard waarde overschreven door hetgeen hier is opgegeven. Dit kan meerdere keren voorkomen.
+Dit is een stukje Dynamic Segmentation of Linear Referencing.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SRM2RoadPropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:SRM2Road"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element abstract="true" name="SimpleLinearReference" substitutionGroup="gml:AbstractObject" type="IMAER:SimpleLinearReferenceType">
+    <annotation>
+      <documentation>Gedeeltelijke wijziging in attributen voor een object.
+NOTE Deze klasse kan gebruikt worden om voor een gedeelte van de weg een of meerdere attributen een andere waarde te geven. Alleen te gebruiken voor objecten gedefineerd door een LineString.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="SimpleLinearReferenceType">
+    <sequence>
+      <element name="fromPosition" type="double">
+        <annotation>
+          <documentation>Positie op het lijnstuk (decimale fractie 0-1) vanaf waar de waardes gaan gelden.</documentation>
+        </annotation>
+      </element>
+      <element name="toPosition" type="double">
+        <annotation>
+          <documentation>Positie op het lijnstuk (decimale fractie 0-1) tot aan waar de waardes gelden.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="SimpleLinearReferencePropertyType">
+    <sequence>
+      <element ref="IMAER:SimpleLinearReference"/>
+    </sequence>
+  </complexType>
+  <element name="SituationMetadata" substitutionGroup="gml:AbstractObject" type="IMAER:SituationMetadataType">
+    <annotation>
+      <documentation>Metadata over de vastgelegde situatie.
+NOTE Met behulp van dit metadata object kan er informatie over de situatie vastgelegd worden,</documentation>
+    </annotation>
+  </element>
+  <complexType name="SituationMetadataType">
+    <sequence>
+      <element minOccurs="0" name="name" type="string">
+        <annotation>
+          <documentation>Naam van de lijst van bronnen van de beschreven situatie.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="reference" type="string">
+        <annotation>
+          <documentation>Referentie van de beschreven situatie.</documentation>
+        </annotation>
+      </element>
+      <element name="situationType" type="IMAER:SituationTypeType">
+        <annotation>
+          <documentation>Type van de beschreven situatie.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="nettingFactor" type="double">
+        <annotation>
+          <documentation>Afroomfactor voor salderen (decimale fractie 0-1). De fractie van de depositie in de salderingssituatie dat NIET mag worden uitgegeven (ten behoeve van natuur).
+Heeft alleen effect bij situationType NETTING, en zal dan effect hebben op de rekenresultaten bij vergunningverlening.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="SituationMetadataPropertyType">
+    <sequence>
+      <element ref="IMAER:SituationMetadata"/>
+    </sequence>
+  </complexType>
+  <simpleType name="SituationTypeType">
+    <annotation>
+      <documentation>Lijst met verschillende types voor situaties.
+NOTE Bij een situatie kan aangegeven worden om wat voor soort/type situatie het gaat. Dit heeft effect op hoe de situatie meegenomen wordt in verschilberekeningen en vergunningverlening.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="REFERENCE">
+        <annotation>
+          <documentation>Referentie of uitgangs-situatie.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="PROPOSED">
+        <annotation>
+          <documentation>Beoogde situatie.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="TEMPORARY">
+        <annotation>
+          <documentation>Tijdelijke situatie, bedoeld voor situatie(s) die leiden van de referentie situatie naar de beoogde situatie, bijvoorbeeld de aanlegfase.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="NETTING">
+        <annotation>
+          <documentation>Salderingssituatie, bedoeld als aanvullende situatie voor extern salderen. Bij dit situatie type is de mogelijkheid om een fractie/percentage op te geven, waarbij dit gedeelte van de depositie in de salderingssituatie NIET mag worden uitgegeven (ten behoeve van de natuur).</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="COMBINATION_REFERENCE">
+        <annotation>
+          <documentation>Cumulatie referentie situatie. Bedoeld voor berekeningen waarbij nabije projecten ook worden meegenomen.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="COMBINATION_PROPOSED">
+        <annotation>
+          <documentation>Cumulatie beoogde situatie. Bedoeld voor berekeningen waarbij nabije projecten ook worden meegenomen.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <element abstract="true" name="SourceCharacteristicsType" substitutionGroup="gml:AbstractObject" type="IMAER:SourceCharacteristicsTypeType">
+    <annotation>
+      <documentation>Dit datatype beschrijft de karakteristieken van een emissiebron.
+NOTE Iedere emissiebron wordt beschreven aan de hand van een aantal karakteristieken, die in dit separate datatype zijn vastgelegd.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="SourceCharacteristicsTypeType">
+    <sequence>
+      <element minOccurs="0" name="building" type="gml:ReferenceType">
+        <annotation>
+          <documentation>Geeft aan, indien er sprake is van gebouw effecten, welk gebouw hoort bij de bron.</documentation>
+          <appinfo>
+            <targetElement xmlns="http://www.opengis.net/gml/3.2">IMAER:Building</targetElement>
+          </appinfo>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="SourceCharacteristicsTypePropertyType">
+    <sequence>
+      <element ref="IMAER:SourceCharacteristicsType"/>
+    </sequence>
+  </complexType>
+  <element name="SpecificVehicle" substitutionGroup="IMAER:Vehicle" type="IMAER:SpecificVehicleType">
+    <annotation>
+      <documentation>Karakteristieken van een specifieke type voertuigen met een klasse.
+NOTE Ieder wegvervoer emissietype wordt beschreven aan de hand van een aantal karakteristieken, die in dit separate datatype zijn vastgelegd.</documentation>
+    </annotation>
+  </element>
+  <complexType name="SpecificVehicleType">
+    <complexContent>
+      <extension base="IMAER:VehicleType">
+        <sequence/>
+        <attribute name="vehicleType" type="string" use="required">
+          <annotation>
+            <documentation>De klasse van deze mobiel voertuigen.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SpecificVehiclePropertyType">
+    <sequence>
+      <element ref="IMAER:SpecificVehicle"/>
+    </sequence>
+  </complexType>
+  <element name="SpecifiedHeatContent" substitutionGroup="IMAER:HeatContent" type="IMAER:SpecifiedHeatContentType">
+    <annotation>
+      <documentation>Dit datatype beschrijft de warmteinhoud wanneer deze door het bekend is.
+NOTE Deze klasse kan gebruikt worden als de warmteinhoud van een emissiebron bekend is.</documentation>
+    </annotation>
+  </element>
+  <complexType name="SpecifiedHeatContentType">
+    <complexContent>
+      <extension base="IMAER:HeatContentType">
+        <sequence>
+          <element name="value" type="double">
+            <annotation>
+              <documentation>Warmteinhoud van de emissiebron in Megawatt.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SpecifiedHeatContentPropertyType">
+    <sequence>
+      <element ref="IMAER:SpecifiedHeatContent"/>
+    </sequence>
+  </complexType>
+  <element name="StandardDiurnalVariation" substitutionGroup="IMAER:DiurnalVariation" type="IMAER:StandardDiurnalVariationType">
+    <annotation>
+      <documentation>Temporele variatie volgens een van de standaard waarden die binnen AERIUS bekend is (gebaseerd op OPS).</documentation>
+    </annotation>
+  </element>
+  <complexType name="StandardDiurnalVariationType">
+    <complexContent>
+      <extension base="IMAER:DiurnalVariationType">
+        <sequence>
+          <element name="standardType" type="string">
+            <annotation>
+              <documentation>Het standaard type die gebruikt moet worden. Vanwege uitbreidbaarheid is niet vastgelegd welke waardes mogelijk zijn, maar er is een beperkte mogelijkheid.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="StandardDiurnalVariationPropertyType">
+    <sequence>
+      <element ref="IMAER:StandardDiurnalVariation"/>
+    </sequence>
+  </complexType>
+  <element name="StandardFarmLodging" substitutionGroup="IMAER:FarmLodging" type="IMAER:StandardFarmLodgingType">
+    <annotation>
+      <documentation>Algemene stal beschrijving.
+NOTE Deze klasse beschrijft een algemene stal, gebruik makend van een voorgedefinieerde stalcode.</documentation>
+    </annotation>
+  </element>
+  <complexType name="StandardFarmLodgingType">
+    <complexContent>
+      <extension base="IMAER:FarmLodgingType">
+        <sequence>
+          <element minOccurs="0" name="farmLodgingSystemDefinitionType" type="string">
+            <annotation>
+              <documentation>Vaststaande (BWL) code die aangeeft om wat voor staltechniek het gaat.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="fodderMeasure" type="IMAER:LodgingFodderMeasurePropertyType">
+            <annotation>
+              <documentation>Specificatie van de extra voer maatregelen die gebruikt zijn voor deze stal.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="lodgingSystem" type="IMAER:LodgingSystemPropertyType">
+            <annotation>
+              <documentation>Specificatie van de extra (additionele of reducerende) staltechnieken die gebruikt zijn voor deze stal.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+        <attribute name="farmLodgingType" type="string" use="required">
+          <annotation>
+            <documentation>Vaststaande (RAV) code die aangeeft om wat voor stalsoort het gaat.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="StandardFarmLodgingPropertyType">
+    <sequence>
+      <element ref="IMAER:StandardFarmLodging"/>
+    </sequence>
+  </complexType>
+  <element name="StandardFarmlandActivity" substitutionGroup="IMAER:AbstractFarmlandActivity" type="IMAER:StandardFarmlandActivityType">
+    <annotation>
+      <documentation>Karakteristieken van een standaard emissietype voor activiteit op landbouwgrond.
+NOTE Ieder gebruik of activiteit emissietype voor landbouwgrond wordt beschreven aan de hand van een aantal karakteristieken. Deze zijn in dit datatype zijn vastgelegd.</documentation>
+    </annotation>
+  </element>
+  <complexType name="StandardFarmlandActivityType">
+    <complexContent>
+      <extension base="IMAER:AbstractFarmlandActivityType">
+        <sequence>
+          <element minOccurs="0" name="numberOfAnimals" type="integer">
+            <annotation>
+              <documentation>Aantal dieren waarvoor deze activiteit is gedefinieerd. Afhankelijk van het standaard activiteit type is dit wel of niet van belang/verwacht.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="numberOfDays" type="integer">
+            <annotation>
+              <documentation>Aantal dagen waarvoor deze activiteit is gedefinieerd. Afhankelijk van het standaard activiteit type is dit wel of niet van belang/verwacht.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="tonnes" type="double">
+            <annotation>
+              <documentation>Gewicht in ton waarvoor deze activiteit is gedefinieerd. Afhankelijk van het standaard activiteit type is dit wel of niet van belang/verwacht.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="metersCubed" type="double">
+            <annotation>
+              <documentation>Kubieke meter volume waarvoor deze activiteit is gedefinieerd. Afhankelijk van het standaard activiteit type is dit wel of niet van belang/verwacht.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="numberOfApplications" type="integer">
+            <annotation>
+              <documentation>Aantal keer aanwending waarvoor deze activiteit is gedefinieerd. Afhankelijk van het standaard activiteit type is dit wel of niet van belang/verwacht.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+        <attribute name="standardActivityType" type="string" use="required">
+          <annotation>
+            <documentation>Het specifiekere type van gebruik of activiteit van de landbouwgrond.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="StandardFarmlandActivityPropertyType">
+    <sequence>
+      <element ref="IMAER:StandardFarmlandActivity"/>
+    </sequence>
+  </complexType>
+  <element name="StandardInlandShipping" substitutionGroup="IMAER:InlandShipping" type="IMAER:StandardInlandShippingType">
+    <annotation>
+      <documentation>Algemene beschrijving van schepen op een vaarroute voor binnenvaart.
+NOTE Deze klasse beschrijft een schip op een vaarroute, gebruik makend van een voorgedefinieerde scheepstype.</documentation>
+    </annotation>
+  </element>
+  <complexType name="StandardInlandShippingType">
+    <complexContent>
+      <extension base="IMAER:InlandShippingType">
+        <sequence/>
+        <attribute name="shipType" type="string" use="required">
+          <annotation>
+            <documentation>Type schip.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="StandardInlandShippingPropertyType">
+    <sequence>
+      <element ref="IMAER:StandardInlandShipping"/>
+    </sequence>
+  </complexType>
+  <element name="StandardManureStorage" substitutionGroup="IMAER:ManureStorage" type="IMAER:StandardManureStorageType">
+    <annotation>
+      <documentation>Standaard mestopslag beschrijving.
+NOTE Deze klasse beschrijft een standaard mestopslag, gebruik makend van een voorgedefinieerde mestopslag techniek code.</documentation>
+    </annotation>
+  </element>
+  <complexType name="StandardManureStorageType">
+    <complexContent>
+      <extension base="IMAER:ManureStorageType">
+        <sequence/>
+        <attribute name="manureStorageType" type="string" use="required">
+          <annotation>
+            <documentation>Vaststaande code die aangeeft om wat voor mestopslag techniek het gaat. Aan de hand van deze code wordt afgeleid welke optionele kenmerken verwacht worden.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="StandardManureStoragePropertyType">
+    <sequence>
+      <element ref="IMAER:StandardManureStorage"/>
+    </sequence>
+  </complexType>
+  <element name="StandardMaritimeShipping" substitutionGroup="IMAER:MaritimeShipping" type="IMAER:StandardMaritimeShippingType">
+    <annotation>
+      <documentation>Algemene beschrijving van schepen op een vaarroute voor zeescheepvaart.
+NOTE Deze klasse beschrijft een schip op een vaarroute, gebruik makend van een voorgedefinieerde scheepstype.</documentation>
+    </annotation>
+  </element>
+  <complexType name="StandardMaritimeShippingType">
+    <complexContent>
+      <extension base="IMAER:MaritimeShippingType">
+        <sequence/>
+        <attribute name="shipType" type="string" use="required">
+          <annotation>
+            <documentation>Type schip.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="StandardMaritimeShippingPropertyType">
+    <sequence>
+      <element ref="IMAER:StandardMaritimeShipping"/>
+    </sequence>
+  </complexType>
+  <element name="StandardMooringInlandShipping" substitutionGroup="IMAER:MooringInlandShipping" type="IMAER:StandardMooringInlandShippingType">
+    <annotation>
+      <documentation>Algemene beschrijving van schepen bij een aanlegplaats voor binnenvaart.
+NOTE Deze klasse beschrijft een schip bij een aanlegplaats, gebruik makend van een voorgedefinieerde scheepstype.</documentation>
+    </annotation>
+  </element>
+  <complexType name="StandardMooringInlandShippingType">
+    <complexContent>
+      <extension base="IMAER:MooringInlandShippingType">
+        <sequence/>
+        <attribute name="shipType" type="string" use="required">
+          <annotation>
+            <documentation>Type schip.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="StandardMooringInlandShippingPropertyType">
+    <sequence>
+      <element ref="IMAER:StandardMooringInlandShipping"/>
+    </sequence>
+  </complexType>
+  <element name="StandardMooringMaritimeShipping" substitutionGroup="IMAER:MooringMaritimeShipping" type="IMAER:StandardMooringMaritimeShippingType">
+    <annotation>
+      <documentation>Algemene beschrijving van schepen bij een aanlegplaats voor zeescheepvaart.
+NOTE Deze klasse beschrijft een schip bij een aanlegplaats, gebruik makend van een voorgedefinieerde scheepstype.</documentation>
+    </annotation>
+  </element>
+  <complexType name="StandardMooringMaritimeShippingType">
+    <complexContent>
+      <extension base="IMAER:MooringMaritimeShippingType">
+        <sequence/>
+        <attribute name="shipType" type="string" use="required">
+          <annotation>
+            <documentation>Type schip.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="StandardMooringMaritimeShippingPropertyType">
+    <sequence>
+      <element ref="IMAER:StandardMooringMaritimeShipping"/>
+    </sequence>
+  </complexType>
+  <element name="StandardOffRoadMobileSource" substitutionGroup="IMAER:OffRoadMobileSource" type="IMAER:StandardOffRoadMobileSourceType">
+    <annotation>
+      <documentation>Karakteristieken van een emissietype voor mobiele werktuigen.
+NOTE Mobiele werktuig worden beschreven aan de hand van een aantal karakteristieken. Deze zijn in dit datatype zijn vastgelegd.</documentation>
+    </annotation>
+  </element>
+  <complexType name="StandardOffRoadMobileSourceType">
+    <complexContent>
+      <extension base="IMAER:OffRoadMobileSourceType">
+        <sequence>
+          <element minOccurs="0" name="literFuelPerYear" type="integer">
+            <annotation>
+              <documentation>Liter brandstof (gesommeerd) dat dit type voertuig per jaar verbruikt.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="operatingHoursPerYear" type="integer">
+            <annotation>
+              <documentation>Tijd in uren per jaar dat het voertuig draait.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="literAdBluePerYear" type="integer">
+            <annotation>
+              <documentation>Liter AdBlue(gesommeerd) dat dit type voertuig per jaar verbruikt.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+        <attribute name="offRoadMobileSourceType" type="string" use="required">
+          <annotation>
+            <documentation>De klasse van dit mobiele werktuig.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="StandardOffRoadMobileSourcePropertyType">
+    <sequence>
+      <element ref="IMAER:StandardOffRoadMobileSource"/>
+    </sequence>
+  </complexType>
+  <element name="StandardVehicle" substitutionGroup="IMAER:Vehicle" type="IMAER:StandardVehicleType">
+    <annotation>
+      <documentation>Karakteristieken van een standaard klasse wegvervoer.</documentation>
+    </annotation>
+  </element>
+  <complexType name="StandardVehicleType">
+    <complexContent>
+      <extension base="IMAER:VehicleType">
+        <sequence>
+          <element name="stagnationFactor" type="double">
+            <annotation>
+              <documentation>Fractie van het verkeer dat stagneert.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="maximumSpeed" type="integer">
+            <annotation>
+              <documentation>Maximum snelheid in kilometers per uur.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="strictEnforcement" type="boolean">
+            <annotation>
+              <documentation>Wel of geen strikte handhaving van de snelheid.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+        <attribute name="vehicleType" type="string" use="required">
+          <annotation>
+            <documentation>De klasse van deze standaard voertuigengroep.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="StandardVehiclePropertyType">
+    <sequence>
+      <element ref="IMAER:StandardVehicle"/>
+    </sequence>
+  </complexType>
+  <element name="SubPoint" substitutionGroup="IMAER:CalculationPointType" type="IMAER:SubPointType">
+    <annotation>
+      <documentation>Subrekenpunt.
+NOTE Deze klasse beschrijft een subrekenpunt van een receptorpunt op het AERIUS-grid.</documentation>
+    </annotation>
+  </element>
+  <complexType name="SubPointType">
+    <complexContent>
+      <extension base="IMAER:CalculationPointTypeType">
+        <sequence>
+          <element name="level" type="integer">
+            <annotation>
+              <documentation>Het level waarmee dit subrekenpunt bepaald is. Hoe dichter bij een bron, hoe hoger level en hoe meer subrekenpunten worden gebruikt voor het receptorpunt.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+        <attribute name="subPointId" type="integer" use="required">
+          <annotation>
+            <documentation>Identificatienummer van het subrekenpunt.</documentation>
+          </annotation>
+        </attribute>
+        <attribute name="receptorPointId" type="integer" use="required">
+          <annotation>
+            <documentation>Identificatienummer van het receptorpunt waar dit subrekenpunt op gebaseerd is.</documentation>
+          </annotation>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SubPointPropertyType">
+    <sequence minOccurs="0">
+      <element ref="IMAER:SubPoint"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <simpleType name="SubstanceType">
+    <annotation>
+      <documentation>Lijst met verschillende stofnamen.
+NOTE de AERIUS rekenkern kan emissies berekenen voor een aantal stoffen, die hier in een lijst zijn vastgelegd.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="NH3">
+        <annotation>
+          <documentation>Stof NH3 (ammoniak).</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="NOX">
+        <annotation>
+          <documentation>Stof NOx (stikstofoxiden).</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="NO2">
+        <annotation>
+          <documentation>Stof NO2 (stikstofdioxide).</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="PM10">
+        <annotation>
+          <documentation>Stof PM10 (fijnstof).</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="PM25">
+        <annotation>
+          <documentation>Stof PM2.5 (fijnstof).</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="EC">
+        <annotation>
+          <documentation>Stof EC (elementair koolstof).</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="TimeUnitType">
+    <annotation>
+      <documentation>Lijst met verschillende tijdseenheden.
+NOTE de AERIUS rekenkern kan emissies berekenen op basis van tijdseenheden, die hier in een lijst zijn vastgelegd.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="HOUR"/>
+      <enumeration value="DAY"/>
+      <enumeration value="MONTH"/>
+      <enumeration value="YEAR"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TrafficDirectionType">
+    <annotation>
+      <documentation>Lijst met verschillende richtingen voor verkeer op wegen.
+NOTE Bij een weg kan aangegeven worden in welke richting ten opzichte van de getekende richting het verkeer op het lijnstuk rijdt. De mogelijkheden zijn in deze lijst opgenommen.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="BOTH">
+        <annotation>
+          <documentation>Verkeer kan in beide richtingen verplaatsen.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="A_TO_B">
+        <annotation>
+          <documentation>Verkeer rijdt van A (begin lijnstuk) naar B (eind lijnstuk).</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="B_TO_A">
+        <annotation>
+          <documentation>Verkeer rijdt van B (eind lijnstuk) naar A (begin lijnstuk).</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="TreeProfileType">
+    <annotation>
+      <documentation>Lijst met verschillende types boomprofiel tussen de weg en het rekenpunt.
+NOTE Bij berekenen van emissies voor wegverkeer in buitenstedelijk gebied kan rekening gehouden worden met bomen langs de weg (SRM1).</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="NONE_OR_FEW">
+        <annotation>
+          <documentation>Hier en daar bomen of in het geheel niet.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="SEPARATED">
+        <annotation>
+          <documentation>Een of meer rijen bomen met een onderlinge afstand &lt; 15 meter met openingen tussen de kronen.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="PACKED">
+        <annotation>
+          <documentation>De kronen raken elkaar en overspannen minstens een derde gedeelte van de straatbreedte.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <element abstract="true" name="Vehicle" substitutionGroup="IMAER:EmissionValueType" type="IMAER:VehicleType">
+    <annotation>
+      <documentation>Karakteristieken van een emissietype wegvervoer.
+NOTE Ieder wegvervoer emissietype wordt beschreven aan de hand van een aantal karakteristieken, die in dit separate datatype zijn vastgelegd.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="VehicleType">
+    <complexContent>
+      <extension base="IMAER:EmissionValueTypeType">
+        <sequence>
+          <element name="vehiclesPerTimeUnit" type="double">
+            <annotation>
+              <documentation>Aantal voertuigen per tijdseenheid.</documentation>
+            </annotation>
+          </element>
+          <element name="timeUnit" type="IMAER:TimeUnitType">
+            <annotation>
+              <documentation>Tijdseenheid voor het aantal voertuigen.</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="VehiclePropertyType">
+    <sequence>
+      <element ref="IMAER:Vehicle"/>
+    </sequence>
+  </complexType>
+  <element name="VersionMetadata" substitutionGroup="gml:AbstractObject" type="IMAER:VersionMetadataType">
+    <annotation>
+      <documentation>Metadata over gebruikte versies.
+NOTE Dit data type bevat de versies die gebruikt zijn om tot de data te komen.</documentation>
+    </annotation>
+  </element>
+  <complexType name="VersionMetadataType">
+    <sequence>
+      <element name="aeriusVersion" type="string">
+        <annotation>
+          <documentation>Versienummer van de AERIUS rekenkern.</documentation>
+        </annotation>
+      </element>
+      <element name="databaseVersion" type="string">
+        <annotation>
+          <documentation>Versienummer van de AERIUS database.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="VersionMetadataPropertyType">
+    <sequence>
+      <element ref="IMAER:VersionMetadata"/>
+    </sequence>
+  </complexType>
+  <simpleType name="WaterwayDirectionTypeType">
+    <annotation>
+      <documentation>Keuzemogelijkheden voor de stroom richting van routes voor binnenvaart schepen.
+NOTE Per binnenvaart route kan de stroming meetellen voor de emissiefactoren, afhankelijk van het waterweg type. Indien niet relevant, dan wordt de stroomrichting in de tekenrichting bepaald.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="IRRELEVANT">
+        <annotation>
+          <documentation>Stroming is niet van belang.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="UPSTREAM">
+        <annotation>
+          <documentation>Tegen de stroom in.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="DOWNSTREAM">
+        <annotation>
+          <documentation>Met de stroom mee.</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+</schema>
