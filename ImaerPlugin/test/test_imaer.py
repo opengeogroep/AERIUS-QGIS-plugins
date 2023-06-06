@@ -1,12 +1,9 @@
 import os.path
 import sys
 import unittest
-import json
-from pkg_resources import IMetadataProvider
 import yaml
 import time
 
-#import xmlschema
 from lxml import etree
 
 import faulthandler
@@ -22,12 +19,10 @@ with open('test/dev.yml') as file:
 
 sys.path.append(dev_config['path_qgis_python_folder'])
 
-from qgis.core import QgsGeometry, Qgis
 from qgis.core import *
 
 from imaer5 import *
-from connect import *
-from tasks.import_calc_result import ImportImaerCalculatorResultTask
+# from connect import *
 
 _GEOM0 = QgsGeometry.fromWkt('POINT(148458.0 411641.0)')
 _GEOM1 = QgsGeometry.fromWkt('LINESTRING((1 0, 2 1, 3 0))')
@@ -35,10 +30,11 @@ _GEOM2 = QgsGeometry.fromWkt('MULTIPOLYGON(((1 0, 2 1, 3 0, 2 -1, 1 0)))')
 _GEOM3 = QgsGeometry.fromWkt('LINESTRING((311279.0 723504.3, 311262.5 723349.6))')
 _GEOM4 = QgsGeometry.fromWkt('POLYGON((1 0, 2 1, 3 0, 2 -1, 1 0))')
 
-
+# Load IMAER xsd for validation check. (Needs internet connection and can take pretty long.)
 xsd_fn = os.path.join('test', 'xsd', 'IMAER.xsd')
 xmlschema_doc = etree.parse(xsd_fn)
 xmlschema = etree.XMLSchema(xmlschema_doc)
+
 
 class TestImaer(unittest.TestCase):
 
@@ -54,7 +50,7 @@ class TestImaer(unittest.TestCase):
         # self.aerius_connection = AeriusConnection(None, base_url=connect_base_url, version=connect_version, api_key=connect_key)
         # print(self.aerius_connection)
 
-    def validate_xml_local(self, xml_fn):
+    def validate_xml_locally(self, xml_fn):
         xml_doc = etree.parse(xml_fn)
         result = xmlschema.validate(xml_doc)
         # result = xsd.validate(xml_fn)
@@ -67,7 +63,7 @@ class TestImaer(unittest.TestCase):
         output_fn = os.path.join('test', 'output', f'output_{name}.gml')
         fcc.to_xml_file(output_fn)
 
-        validation_result = self.validate_xml_local(output_fn)
+        validation_result = self.validate_xml_locally(output_fn)
         self.assertTrue(validation_result)
 
     def test_ffc_empty(self):
@@ -94,12 +90,13 @@ class TestImaer(unittest.TestCase):
     def test_ffc_emission_characteristics01(self):
         hc = SpecifiedHeatContent(value=12.5)
         es = EmissionSource(local_id='ES.123', sector_id=9999, label='Bron 123', geom=_GEOM1, epsg_id=28992)
-        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation='CONTINUOUS')
+        dv = StandardDiurnalVariation(standard_type='LIGHT_DUTY_VEHICLES')
+        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation=dv)
         es.emissions.append(Emission('NH3', 1))
         es.emissions.append(Emission('NOX', 3.3))
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
-        # self.generate_gml_file(fcc, 'em_char_01') TODO: Fix this test
+        self.generate_gml_file(fcc, 'em_char_01')
 
     def test_create_srm2road(self):
         es = SRM2Road(
