@@ -263,6 +263,14 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 fcb.setLayer(self.combo_layer_bld.currentLayer())
             if '_rec' in fcb.objectName():
                 fcb.setLayer(self.combo_layer_rec.currentLayer())
+        print(self.combo_layer_bld.currentLayer().geometryType())
+        # if bld is a point layer then show the diameter field
+        if self.combo_layer_bld.currentLayer().geometryType() != 0:
+            self.fcb_bld_diameter.setVisible(False)
+            self.label_bld_diameter.setVisible(False)
+        else:
+            self.fcb_bld_diameter.setVisible(True)
+            self.label_bld_diameter.setVisible(True)
 
     def update_ok_button(self):
         if self.edit_outfile.text() == '':
