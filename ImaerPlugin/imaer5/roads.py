@@ -4,11 +4,11 @@ from .emission_source import EmissionSourceType
 
 
 class RoadEmissionSource(EmissionSourceType):
-    def __init__(self, *, road_area_type, road_type, vehicles=[], traffic_direction=None, **kwargs):
+    def __init__(self, *, road_area_type, road_type, vehicles=None, traffic_direction=None, **kwargs):
         super().__init__(**kwargs)
         self.road_area_type = road_area_type
         self.road_type = road_type
-        self.vehicles = vehicles
+        self.vehicles = vehicles or []
         self.traffic_direction = traffic_direction
 
     def to_xml_elem(self, doc=QDomDocument()):
@@ -82,10 +82,10 @@ class StandardVehicle(Vehicle):
 
 class CustomVehicle(Vehicle):
 
-    def __init__(self, *, description='', emission=[], **kwargs):
+    def __init__(self, *, description='', emission=None, **kwargs):
         super().__init__(**kwargs)
         self.description = description
-        self.emission = emission
+        self.emission = emission or []
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = super().to_xml_elem(doc)
