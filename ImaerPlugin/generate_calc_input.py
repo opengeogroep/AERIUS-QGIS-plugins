@@ -268,9 +268,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 fcb.setLayer(self.combo_layer_rec.currentLayer())
             if '_em_' in fcb.objectName():
                 fcb.setLayer(self.combo_layer_es.currentLayer())
-        print(self.combo_layer_bld.currentLayer().geometryType())
+        # if no combo_layer_bld option (polygon or point layer) in qgis then
+        # do nothing (e.g. upon startup of qgis) 
+        if self.combo_layer_bld.currentLayer() is None:
+            pass
         # if bld is a point layer then show the diameter field
-        if self.combo_layer_bld.currentLayer().geometryType() != 0:
+        elif self.combo_layer_bld.currentLayer().geometryType() != 0:
             self.fcb_bld_diameter.setVisible(False)
             self.label_bld_diameter.setVisible(False)
         else:
@@ -356,7 +359,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         # keep only unique values in the crs_transform_list
         crs_transform_list = list(set(crs_transform_list))
         # if length of the list is more than one raise error
-        print(crs_transform_list)
+
         if len(crs_transform_list) == 0:
             pass # no crs transformation needed
         elif len(crs_transform_list) == 1:
@@ -740,7 +743,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     def save_settings(self):
         work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
-        print(work_dir)
+        #print(work_dir)
         if work_dir is None:
             raise Exception('Work dir not set')
             return
