@@ -217,3 +217,15 @@ class TestImaer(unittest.TestCase):
         fcc.feature_members.append(es)
         fcc.feature_members.append(b)
         self.generate_gml_file(fcc, 'emission_with_building')
+
+    def test_creat_calculation_points(self):
+        cp = CalculationPoint(
+            local_id = 888,
+            geom = _GEOM0,
+            epsg_id=28992,
+            label='Pnt 888',
+            description='Point number 888.'
+        )
+        fcc = ImaerDocument()
+        fcc.feature_members.append(cp)
+        self.generate_gml_file(fcc, 'calculation_points')

@@ -25,5 +25,5 @@ from .roads import (
     CustomVehicle
 )
 from .buildings import Building
-from .receptor_gml import ReceptorGMLType, Receptor
+from .calc_point import CalculationPoint
 from .gml import get_gml_element

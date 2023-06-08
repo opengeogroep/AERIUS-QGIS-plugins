@@ -53,8 +53,6 @@ class ImaerDocument():
             def_elem_2 = self.doc.createElement('imaer:Definitions')
 
             for definition in self.definitions:
-                #def_elem = self.doc.createElement('imaer:featureMember')
-                #fcc_elem.appendChild(feature_member_elem)
                 def_elem_2.appendChild(definition.to_xml_elem(self.doc))
 
             def_elem_1.appendChild(def_elem_2)
