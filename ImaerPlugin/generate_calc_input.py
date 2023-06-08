@@ -47,8 +47,7 @@ from ImaerPlugin.imaer5 import (
     StandardVehicle,
     CustomVehicle,
     Building,
-    Receptor,
-    ReceptorGMLType
+    CalculationPoint
 )
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -269,7 +268,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             if '_em_' in fcb.objectName():
                 fcb.setLayer(self.combo_layer_es.currentLayer())
         # if no combo_layer_bld option (polygon or point layer) in qgis then
-        # do nothing (e.g. upon startup of qgis) 
+        # do nothing (e.g. upon startup of qgis)
         if self.combo_layer_bld.currentLayer() is None:
             pass
         # if bld is a point layer then show the diameter field
@@ -416,8 +415,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
                 # if it is a receptor layer
                 if self.checkBox_rec.isChecked() and input_layer == input_layer_rec:
-                    es = self.get_receptor_from_gui(feat, geom, local_id, crs_dest_srid)
-
+                    es = self.get_calculation_point_from_gui(feat, geom, local_id, crs_dest_srid)
 
                 imaer_doc.feature_members.append(es)
                 # self.plugin.tempes = es # For debugging
@@ -456,7 +454,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                     emission_height=esc_height,
                     spread=esc_spread,
                     heat_content=hc,
-                ) 
+                )
 
         # emissions
         es.emissions = []  # TODO: Figure out why and fix this! (Without setting this clean list, emissions from former features are present.)
@@ -691,7 +689,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 label=bld_name,
                 geom=geom,
                 epsg_id=epsg_id)
-        else:           
+        else:
             b = Building(
                 local_id=bld_name,
                 height=bld_hgt,
@@ -702,19 +700,18 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         return b
 
-    # Receptors
-    def get_receptor_from_gui(self, feat, geom, local_id, epsg_id):
-
+    # CalculationPoints
+    def get_calculation_point_from_gui(self, feat, geom, local_id, epsg_id):
         rec_label = self.get_feature_value(self.fcb_rec_name, feat)
         rec_description = rec_label
 
-        r = Receptor(local_id=local_id,
-                     geom=geom,
-                     label=rec_label,
-                     description=rec_description,
-                     epsg=epsg_id)
+        p = CalculationPoint(local_id=local_id,
+            geom=geom,
+            epsg_id=epsg_id,
+            label=rec_label,
+            description=rec_description)
 
-        return r
+        return p
 
     def get_feature_value(self, widget, feat, cast_to=None):
         if not isinstance(widget, QgsFieldComboBox):
