@@ -17,7 +17,7 @@ class Building(object):
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement(f'imaer:Building')
 
-        result.setAttribute('gml:id', self.local_id)
+        result.setAttribute('gml:id', f'Building.{self.local_id}')
 
         # identifier
         ident_elem = doc.createElement('imaer:identifier')
@@ -27,7 +27,7 @@ class Building(object):
         elem.appendChild(doc.createTextNode('NL.IMAER'))
         nen_elem.appendChild(elem)
         elem = doc.createElement('imaer:localId')
-        elem.appendChild(doc.createTextNode(str(self.local_id)))
+        elem.appendChild(doc.createTextNode(f'Building.{self.local_id}'))
         nen_elem.appendChild(elem)
 
         ident_elem.appendChild(nen_elem)
@@ -54,7 +54,7 @@ class Building(object):
         gml_type = gml_types[self.geometry.type()]
 
         gm_elem = doc.createElement(f'imaer:{gm_tag}')
-        gml_elem = get_gml_element(self.geometry, f'{self.local_id}.{gml_type}', self.epsg_id)
+        gml_elem = get_gml_element(self.geometry, f'Building.{self.local_id}.{gml_type}', self.epsg_id)
 
         gm_elem.appendChild(gml_elem)
         es_geom_elem.appendChild(gm_elem)

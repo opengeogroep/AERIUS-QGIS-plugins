@@ -678,25 +678,18 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
     # Buildings
     def get_building_from_gui(self, feat, geom, epsg_id):
 
+        bld_id = self.get_feature_value(self.fcb_bld_id, feat)
         bld_hgt = self.get_feature_value(self.fcb_bld_height, feat)
         bld_diameter = self.get_feature_value(self.fcb_bld_diameter, feat)
-        bld_name = self.get_feature_value(self.fcb_bld_name, feat)
+        bld_label = self.get_feature_value(self.fcb_bld_label, feat)
 
-        if bld_diameter is None:
-            b = Building(
-                local_id=bld_name,
-                height=bld_hgt,
-                label=bld_name,
-                geom=geom,
-                epsg_id=epsg_id)
-        else:
-            b = Building(
-                local_id=bld_name,
-                height=bld_hgt,
-                label=bld_name,
-                geom=geom,
-                epsg_id=epsg_id,
-                diameter=bld_diameter)
+        b = Building(
+            local_id=bld_id,
+            height=bld_hgt,
+            label=bld_label,
+            geom=geom,
+            epsg_id=epsg_id,
+            diameter=bld_diameter)
 
         return b
 

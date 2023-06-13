@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>555</width>
-    <height>798</height>
+    <width>532</width>
+    <height>924</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -91,7 +91,7 @@
    <item>
     <widget class="QTabWidget" name="tabs_mapping">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tab_metadata">
       <attribute name="title">
@@ -209,8 +209,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>511</width>
-            <height>530</height>
+            <width>490</width>
+            <height>610</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_6">
@@ -380,9 +380,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>494</width>
-            <height>1521</height>
+            <y>-852</y>
+            <width>476</width>
+            <height>1845</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout">
@@ -1181,110 +1181,101 @@
       <attribute name="title">
        <string>Buildings</string>
       </attribute>
-      <widget class="QScrollArea" name="scrollArea_4">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>511</width>
-         <height>256</height>
-        </rect>
-       </property>
-       <property name="widgetResizable">
-        <bool>true</bool>
-       </property>
-       <widget class="QWidget" name="scrollAreaWidgetContents_5">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>509</width>
-          <height>254</height>
-         </rect>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_4">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_bld_layer">
-           <property name="text">
-            <string>Layer</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QgsMapLayerComboBox" name="combo_layer_bld"/>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_bld_name">
-           <property name="text">
-            <string>Name</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QgsFieldComboBox" name="fcb_bld_name"/>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_bld_height">
-           <property name="text">
-            <string>Height</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QgsFieldComboBox" name="fcb_bld_height"/>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_bld_diameter">
-           <property name="text">
-            <string>Diameter</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QgsFieldComboBox" name="fcb_bld_diameter"/>
-         </item>
-         <item row="4" column="0">
-          <spacer name="verticalSpacer_19">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="5" column="0">
-          <spacer name="verticalSpacer_14">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="6" column="0">
-          <spacer name="verticalSpacer_18">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </widget>
-      </widget>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QScrollArea" name="scrollArea_4">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_5">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>490</width>
+            <height>610</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <item>
+            <widget class="QGroupBox" name="group_bld_layer">
+             <property name="title">
+              <string>Input layer</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="0" column="0">
+               <widget class="QgsMapLayerComboBox" name="combo_layer_bld"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="group_bld_values">
+             <property name="title">
+              <string>Values</string>
+             </property>
+             <layout class="QFormLayout" name="formLayout_4">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_bld_id">
+                <property name="text">
+                 <string>id</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_bld_id"/>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_bld_height">
+                <property name="text">
+                 <string>height</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_bld_height"/>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_bld_diameter">
+                <property name="text">
+                 <string>diameter</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_bld_diameter"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_bld_label">
+                <property name="text">
+                 <string>label</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_bld_label"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_18">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>350</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="tab_receptors">
       <attribute name="title">
@@ -1315,27 +1306,10 @@
          <item row="1" column="1">
           <widget class="QgsFieldComboBox" name="fcb_rec_name"/>
          </item>
-         <item row="5" column="0">
-          <spacer name="verticalSpacer_13">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
+         <item row="0" column="1">
+          <widget class="QgsMapLayerComboBox" name="combo_layer_rec"/>
          </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_rd_label_5">
-           <property name="text">
-            <string>Layer</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
+         <item row="4" column="0">
           <spacer name="verticalSpacer_16">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -1348,9 +1322,6 @@
            </property>
           </spacer>
          </item>
-         <item row="0" column="1">
-          <widget class="QgsMapLayerComboBox" name="combo_layer_rec"/>
-         </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_rd_label_3">
            <property name="text">
@@ -1358,18 +1329,12 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="0">
-          <spacer name="verticalSpacer_17">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_rd_label_5">
+           <property name="text">
+            <string>Layer</string>
            </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
+          </widget>
          </item>
         </layout>
        </widget>

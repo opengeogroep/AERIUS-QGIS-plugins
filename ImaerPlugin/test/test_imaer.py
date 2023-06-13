@@ -183,14 +183,14 @@ class TestImaer(unittest.TestCase):
 
     def test_create_buildings(self):
         b1 = Building(
-            local_id='Building.123',
+            local_id='123',
             height=12.3,
             diameter=1.23,
             label='building no. 123',
             geom=_GEOM0,
             epsg_id=28992)
         b2 = Building(
-            local_id='Building.555',
+            local_id='555',
             height=55.5,
             diameter=55,
             label='building no. 555',
@@ -202,7 +202,7 @@ class TestImaer(unittest.TestCase):
         self.generate_gml_file(fcc, 'buildings')
 
     def test_create_emission_with_building(self):
-        building_id = 'Building.555'
+        building_id = '555'
         es = EmissionSource(local_id='ES.444', sector_id=9000, label='Bron 444', geom=_GEOM0, epsg_id=28992)
         hc = SpecifiedHeatContent(value=4)
         es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=5, building=building_id)
