@@ -7,7 +7,7 @@ from .gml import get_gml_element
 class Building(object):
 
     def __init__(self, *, local_id, height, geom, epsg_id, label=None, diameter=None):
-        self.local_id = local_id  # i.e. Building.0
+        self.local_id = local_id
         self.diameter = diameter
         self.height = height
         self.label = label

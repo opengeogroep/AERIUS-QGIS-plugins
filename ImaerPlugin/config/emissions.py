@@ -47,9 +47,9 @@ emission_sectors = {
         'tab_name': 'Buildings',
         'sector_id': 9998
     },
-    'receptors': {
-        'emission_tab': 'tab_receptors',
-        'tab_name': 'Receptors',
+    'calc_points': {
+        'emission_tab': 'tab_calc_points',
+        'tab_name': 'Calculation Points',
         'sector_id': 9997
     }
 }

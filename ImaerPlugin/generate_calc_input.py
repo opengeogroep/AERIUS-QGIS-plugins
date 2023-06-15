@@ -67,7 +67,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.emission_tabs['roads'] = getattr(self, 'tab_roads')
         self.emission_tabs['other'] = getattr(self, 'tab_emission_sources')
         self.emission_tabs['buildings'] = getattr(self, 'tab_buildings')
-        self.emission_tabs['receptors'] = getattr(self, 'tab_receptors')
+        self.emission_tabs['calc_points'] = getattr(self, 'tab_calc_points')
 
         self.init_gui()
 
@@ -77,13 +77,13 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_layer_es.setFilters(QgsMapLayerProxyModel.VectorLayer)
         self.combo_layer_rd.setFilters(QgsMapLayerProxyModel.LineLayer)
         self.combo_layer_bld.setFilters(QgsMapLayerProxyModel.PolygonLayer | QgsMapLayerProxyModel.PointLayer)
-        self.combo_layer_rec.setFilters(QgsMapLayerProxyModel.PointLayer)
+        self.combo_layer_cp.setFilters(QgsMapLayerProxyModel.PointLayer)
 
         #self.combo_sector.currentIndexChanged.connect(self.update_emission_tab)
         self.checkBox_es.toggled.connect(self.update_emission_tab)
         self.checkBox_rd.toggled.connect(self.update_emission_tab)
         self.checkBox_bld.toggled.connect(self.update_emission_tab)
-        self.checkBox_rec.toggled.connect(self.update_emission_tab)
+        self.checkBox_cp.toggled.connect(self.update_emission_tab)
 
         # self.combo_subsector.currentIndexChanged.connect(self.set_elements)
         self.edit_outfile.textChanged.connect(self.update_ok_button)
@@ -91,7 +91,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_layer_es.layerChanged.connect(self.update_field_combos)
         self.combo_layer_rd.layerChanged.connect(self.update_field_combos)
         self.combo_layer_bld.layerChanged.connect(self.update_field_combos)
-        self.combo_layer_rec.layerChanged.connect(self.update_field_combos)
+        self.combo_layer_cp.layerChanged.connect(self.update_field_combos)
 
         self.button_outfile.clicked.connect(self.browse_generate_calc_input_file)
 
@@ -124,7 +124,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_layer_es.layerChanged.disconnect(self.update_field_combos)
         self.combo_layer_rd.layerChanged.disconnect(self.update_field_combos)
         self.combo_layer_bld.layerChanged.disconnect(self.update_field_combos)
-        self.combo_layer_rec.layerChanged.disconnect(self.update_field_combos)
+        self.combo_layer_cp.layerChanged.disconnect(self.update_field_combos)
         self.button_outfile.clicked.disconnect(self.browse_generate_calc_input_file)
 
         self.btn_save_settings.clicked.disconnect(self.save_settings)
@@ -218,8 +218,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         else:
             sector3 = None
 
-        if self.checkBox_rec.isChecked():
-            sector4 = 'receptors'
+        if self.checkBox_cp.isChecked():
+            sector4 = 'calc_points'
             sector_name = emission_sectors[sector4]['tab_name']
             self.tabs_mapping.insertTab(n, self.emission_tabs[sector4], sector_name)
             self.tabs_mapping.setCurrentIndex(n)
@@ -263,8 +263,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 fcb.setLayer(self.combo_layer_rd.currentLayer())
             if '_bld' in fcb.objectName():
                 fcb.setLayer(self.combo_layer_bld.currentLayer())
-            if '_rec' in fcb.objectName():
-                fcb.setLayer(self.combo_layer_rec.currentLayer())
+            if '_cp' in fcb.objectName():
+                fcb.setLayer(self.combo_layer_cp.currentLayer())
             if '_em_' in fcb.objectName():
                 fcb.setLayer(self.combo_layer_es.currentLayer())
         # if no combo_layer_bld option (polygon or point layer) in qgis then
@@ -297,6 +297,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         '''Maps items from GUI widgets to IMAER object'''
         imaer_doc = ImaerDocument()
 
+        # Metadata
         year = self.combo_project_year.currentData()
         description = self.edit_project_description.toPlainText()
 
@@ -316,111 +317,70 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         country = self.combo_country.currentData()
         crs_dest_srid = self.combo_crs.currentData()
-        # print(crs_dest_srid)
         crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
 
-        crs_transform_list = []
-        if self.checkBox_es.isChecked():
-            input_layer_es = self.combo_layer_es.currentLayer()
-            crs_source = input_layer_es.crs()
-            if crs_source == crs_dest:
-                crs_transform = None
-            else:
-                crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
-            crs_transform_list.append(crs_transform)
-        if self.checkBox_rd.isChecked():
-            input_layer_rd = self.combo_layer_rd.currentLayer()
-            crs_source = input_layer_rd.crs()
-            if crs_source == crs_dest:
-                crs_transform = None
-            else:
-                crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
-                crs_transform_list.append(crs_transform)
-        if self.checkBox_bld.isChecked():
-            input_layer_bld = self.combo_layer_bld.currentLayer()
-            crs_source = input_layer_bld.crs()
-            if crs_source == crs_dest:
-                crs_transform = None
-            else:
-                crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
-                crs_transform_list.append(crs_transform)
-        if self.checkBox_rec.isChecked():
-            input_layer_rec = self.combo_layer_rec.currentLayer()
-            crs_source = input_layer_rec.crs()
-            if crs_source == crs_dest:
-                crs_transform = None
-            else:
-                crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
-                crs_transform_list.append(crs_transform)
-
-        # remove any None values from the crs_transform_list
-        crs_transform_list = [x for x in crs_transform_list if x is not None]
-        # keep only unique values in the crs_transform_list
-        crs_transform_list = list(set(crs_transform_list))
-        # if length of the list is more than one raise error
-
-        if len(crs_transform_list) == 0:
-            pass # no crs transformation needed
-        elif len(crs_transform_list) == 1:
-            crs_transform = crs_transform_list[0] # only single crs transformation needed
-        else:
-            raise Exception('Different crs provided for input layers selected')
-
-        # Loop all features
+        # Find all layers to loop
         list_input_layers_to_process = []
         if self.checkBox_es.isChecked():
-            list_input_layers_to_process.append(input_layer_es)
+            list_input_layers_to_process.append({'layer': self.combo_layer_es.currentLayer(), 'code': 'es'})
         if self.checkBox_rd.isChecked():
-            list_input_layers_to_process.append(input_layer_rd)
+            list_input_layers_to_process.append({'layer': self.combo_layer_rd.currentLayer(), 'code': 'rd'})
         if self.checkBox_bld.isChecked():
-            list_input_layers_to_process.append(input_layer_bld)
-        if self.checkBox_rec.isChecked():
-            list_input_layers_to_process.append(input_layer_rec)
+            list_input_layers_to_process.append({'layer': self.combo_layer_bld.currentLayer(), 'code': 'bld'})
+        if self.checkBox_cp.isChecked():
+            list_input_layers_to_process.append({'layer': self.combo_layer_cp.currentLayer(), 'code': 'cp'})
 
-        #for input_layer in [input_layer_es, input_layer_rd, input_layer_bld, input_layer_rec]:
         for input_layer in list_input_layers_to_process:
-            for feat in input_layer.getFeatures():
-                local_id = 'ES.{}'.format(feat.id())
+            layer = input_layer['layer']
+
+            crs_source = layer.crs()
+            if crs_source == crs_dest:
+                crs_transform = None
+            else:
+                crs_transform = QgsCoordinateTransform(crs_source, crs_dest, QgsProject.instance())
+
+            # Loop all features and create IMAER objects
+            for feat in layer.getFeatures():
+                local_id = feat.id()
 
                 # geometry
                 geom = feat.geometry()
-
                 geom2 = self.make_single_part(geom)
                 if geom2 is None:
                     self.plugin.log(f'Input data contains multipart geometry: {geom.asWkt(precision=3)}', bar=True, lvl='Critical')
                     return
                 geom = geom2
-
                 # TODO: Check for invalid geometries
 
                 if crs_transform is not None:
                     geom.transform(crs_transform)
 
                 # if it is the emissions source layer, process this
-                if self.checkBox_es.isChecked() and input_layer == input_layer_es:
+                if input_layer['code'] == 'es':
                     es = self.get_emission_source_from_gui(feat, geom, crs_dest_srid, local_id)
+                    imaer_doc.feature_members.append(es)
 
                 # if it is the road layer process as such
-                if self.checkBox_rd.isChecked() and input_layer == input_layer_rd:
+                if input_layer['code'] == 'rd':
                     if country == 'NL':
                         es = self.get_srm2_road_from_gui(feat, geom, crs_dest_srid, local_id)
                     elif country == 'UK':
                         es = self.get_adms_road_from_gui(feat, geom, crs_dest_srid, local_id)
                     else:
                         print('This should never happen. (No country selected.)')
+                    imaer_doc.feature_members.append(es)
 
                 # if it is a building layer
-                if self.checkBox_bld.isChecked() and input_layer == input_layer_bld:
-                    es = self.get_building_from_gui(feat, geom, crs_dest_srid)
+                if input_layer['code'] == 'bld':
+                    bld = self.get_building_from_gui(feat, geom, crs_dest_srid)
+                    imaer_doc.feature_members.append(bld)
 
-                # if it is a receptor layer
-                if self.checkBox_rec.isChecked() and input_layer == input_layer_rec:
-                    es = self.get_calculation_point_from_gui(feat, geom, local_id, crs_dest_srid)
+                # if it is a calculation point layer
+                if input_layer['code'] == 'cp':
+                    cp = self.get_calculation_point_from_gui(feat, geom, local_id, crs_dest_srid)
+                    imaer_doc.feature_members.append(cp)
 
-                imaer_doc.feature_members.append(es)
-                # self.plugin.tempes = es # For debugging
-
-            return imaer_doc
+        return imaer_doc
 
     # Emission Source
     def get_emission_source_from_gui(self, feat, geom, epsg_id, local_id):
@@ -695,14 +655,17 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     # CalculationPoints
     def get_calculation_point_from_gui(self, feat, geom, local_id, epsg_id):
-        rec_label = self.get_feature_value(self.fcb_rec_name, feat)
-        rec_description = rec_label
+        cp_id = self.get_feature_value(self.fcb_cp_id, feat)
+        if cp_id is None:
+            cp_id = local_id  # fall back to local_id
+        cp_label = self.get_feature_value(self.fcb_cp_label, feat)
+        cp_description = self.get_feature_value(self.fcb_cp_desc, feat)
 
-        p = CalculationPoint(local_id=local_id,
+        p = CalculationPoint(local_id=cp_id,
             geom=geom,
             epsg_id=epsg_id,
-            label=rec_label,
-            description=rec_description)
+            label=cp_label,
+            description=cp_description)
 
         return p
 
@@ -781,24 +744,18 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     def set_field_settings(self, field_cfg):
         '''Sets texts from a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
-        layer_fields_es = self.combo_layer_es.currentLayer().fields().names()
-        layer_fields_rd = self.combo_layer_rd.currentLayer().fields().names()
-        layer_fields_bld = self.combo_layer_bld.currentLayer().fields().names()
-        layer_fields_rec = self.combo_layer_rec.currentLayer().fields().names()
         for fcb in self.findChildren(QgsFieldComboBox):
             widget_name = fcb.objectName()
             if widget_name not in field_cfg:
                 continue
             new_field = field_cfg[widget_name]
             if new_field == '':
-                fcb.setCurrentIndex(0)
+                fcb.setCurrentIndex(0) # Make empty
                 continue
-            if new_field in layer_fields_es or new_field in layer_fields_rd or new_field in layer_fields_bld or new_field in layer_fields_rec:
+            if new_field in fcb.fields().names():
                 fcb.setCurrentText(new_field)
             else:
-                # Set empty
-                fcb.setCurrentIndex(0)
-                # print(f'Current input layer does not contain a field \'{new_field}\'')
+                fcb.setCurrentIndex(0) # Make empty
 
     def make_single_part(self, geom):
         '''Returns single part geometry or None if input has more than 1 part'''

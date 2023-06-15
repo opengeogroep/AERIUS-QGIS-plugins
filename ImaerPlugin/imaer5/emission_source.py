@@ -22,7 +22,7 @@ class EmissionSourceType(object):
         result = doc.createElement(f'imaer:{class_name}')
 
         result.setAttribute('sectorId', self.sector_id)
-        result.setAttribute('gml:id', self.local_id)
+        result.setAttribute('gml:id', f'ES.{self.local_id}')
 
         if class_name in ['RoadEmissionSource', 'SRM2Road', 'ADMSRoad']:  # Check by name instead of class to prevent circular import
             result.setAttribute('roadAreaType', self.road_area_type)
@@ -36,7 +36,7 @@ class EmissionSourceType(object):
         elem.appendChild(doc.createTextNode('NL.IMAER'))
         nen_elem.appendChild(elem)
         elem = doc.createElement('imaer:localId')
-        elem.appendChild(doc.createTextNode(str(self.local_id)))
+        elem.appendChild(doc.createTextNode(f'ES.{self.local_id}'))
         nen_elem.appendChild(elem)
 
         ident_elem.appendChild(nen_elem)
@@ -70,7 +70,7 @@ class EmissionSourceType(object):
         gml_type = gml_types[self.geometry.type()]
 
         gm_elem = doc.createElement(f'imaer:{gm_tag}')
-        gml_elem = get_gml_element(self.geometry, f'{self.local_id}.{gml_type}', self.epsg_id)
+        gml_elem = get_gml_element(self.geometry, f'ES.{self.local_id}.{gml_type}', self.epsg_id)
 
         gm_elem.appendChild(gml_elem)
         es_geom_elem.appendChild(gm_elem)
