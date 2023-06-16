@@ -1378,6 +1378,74 @@
       <attribute name="title">
        <string>Diurnal Variation</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_11">
+       <item>
+        <widget class="QTableWidget" name="table_dv">
+         <column>
+          <property name="text">
+           <string>id</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>label</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>mon-fri</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>sat</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>sun</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QPushButton" name="button_dv_add">
+           <property name="text">
+            <string>Add...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>

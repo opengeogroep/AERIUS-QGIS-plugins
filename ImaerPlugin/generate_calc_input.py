@@ -32,6 +32,8 @@ from ImaerPlugin.config import (
     ui_settings
 )
 
+from ImaerPlugin.diurnal_variation import DiurnalVariationDialog
+
 from ImaerPlugin.imaer5 import (
     ImaerDocument,
     AeriusCalculatorMetadata,
@@ -62,6 +64,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.iface = iface
         self.plugin = plugin
+        self.diurnal_variation_dlg = DiurnalVariationDialog()
 
         self.emission_tabs = {}
         self.emission_tabs['other'] = getattr(self, 'tab_emission_sources')
@@ -111,6 +114,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.fcb_rd_v_custom_movements_units.addItems([''] + ui_settings['units_veh_movements'])
         self.fcb_rd_v_eft_units.addItems([''] + ui_settings['units_veh_movements'])
 
+        self.button_dv_add.clicked.connect(self.open_diurnal_variation_dlg)
+
         # Make sure the corresponding vehicle page is displayed
         self.radio_veh_page_custom.setChecked(True)
         self.stack_rd_veh_adms.setCurrentWidget(self.radio_veh_page_custom.page)
@@ -131,6 +136,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         self.btn_save_settings.clicked.disconnect(self.save_settings)
         self.btn_load_settings.clicked.disconnect(self.load_settings)
+        self.button_dv_add.clicked.disconnect(self.open_diurnal_variation_dlg)
 
     def browse_generate_calc_input_file(self):
         if self.plugin.dev:
@@ -679,6 +685,24 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             description=cp_description)
 
         return p
+
+    def open_diurnal_variation_dlg(self, dv=None):
+        self.plugin.log('open_dv_dlg()', user='dev')
+        print(self.sender(), self.sender().objectName())
+        self.diurnal_variation_dlg.show()
+        result = self.diurnal_variation_dlg.exec_()
+        print(result)
+        if result:
+            pass
+            '''self.log('starting calcinput generation ...', user='user')
+            imaer_doc = self.generate_calc_input_dlg.get_imaer_doc_from_gui()
+            if imaer_doc is None:  # Something went wrong during IMAER doc generation...
+                self.log('Something went wrong during IMAER doc generation.')
+                return
+            fn = self.generate_calc_input_dlg.edit_outfile.text()
+            imaer_doc.to_xml_file(fn)'''
+            self.plugin.log('Diurnal Profile saved', lvl='Info', bar=True, duration=3)
+
 
     def get_feature_value(self, widget, feat, cast_to=None):
         if not isinstance(widget, QgsFieldComboBox):
