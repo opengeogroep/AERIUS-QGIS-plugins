@@ -64,10 +64,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.plugin = plugin
 
         self.emission_tabs = {}
-        self.emission_tabs['roads'] = getattr(self, 'tab_roads')
         self.emission_tabs['other'] = getattr(self, 'tab_emission_sources')
+        self.emission_tabs['roads'] = getattr(self, 'tab_roads')
         self.emission_tabs['buildings'] = getattr(self, 'tab_buildings')
         self.emission_tabs['calc_points'] = getattr(self, 'tab_calc_points')
+        self.emission_tabs['diurnal_variation'] = getattr(self, 'tab_diurnal_variation')
 
         self.init_gui()
 
@@ -84,6 +85,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.checkBox_rd.toggled.connect(self.update_emission_tab)
         self.checkBox_bld.toggled.connect(self.update_emission_tab)
         self.checkBox_cp.toggled.connect(self.update_emission_tab)
+        self.checkBox_dv.toggled.connect(self.update_emission_tab)
 
         # self.combo_subsector.currentIndexChanged.connect(self.set_elements)
         self.edit_outfile.textChanged.connect(self.update_ok_button)
@@ -227,12 +229,21 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         else:
             sector4 = None
 
+        if self.checkBox_dv.isChecked():
+            sector5 = 'diurnal_variation'
+            sector_name = emission_sectors[sector5]['tab_name']
+            self.tabs_mapping.insertTab(n, self.emission_tabs[sector5], sector_name)
+            self.tabs_mapping.setCurrentIndex(n)
+            n += 1
+        else:
+            sector5 = None
+
         # Enable/disable widgets per country
         if country == '' or crs_setting == '':
             return
             # TODO: Raise error
 
-        for sector in [sector1, sector2, sector3, sector4]:
+        for sector in [sector1, sector2, sector3, sector4, sector5]:
             if sector is None:
                 pass
             if sector in emission_sectors and 'ui_settings' in emission_sectors[sector]:

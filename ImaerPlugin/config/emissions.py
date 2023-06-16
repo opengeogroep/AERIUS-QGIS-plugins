@@ -51,6 +51,11 @@ emission_sectors = {
         'emission_tab': 'tab_calc_points',
         'tab_name': 'Calculation Points',
         'sector_id': 9997
+    },
+    'diurnal_variation': {
+        'emission_tab': 'tab_diurnal_variation',
+        'tab_name': 'Diurnal Variation',
+        'sector_id': 9996
     }
 }
 
