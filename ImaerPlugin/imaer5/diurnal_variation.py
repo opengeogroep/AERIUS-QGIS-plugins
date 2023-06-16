@@ -41,7 +41,7 @@ class ReferenceDiurnalVariation(DiurnalVariation):
         rdv = doc.createElement('imaer:ReferenceDiurnalVariation')
 
         dv = doc.createElement('imaer:customDiurnalVariation')
-        dv.setAttribute('xlink:href', f'#{self.local_id}')
+        dv.setAttribute('xlink:href', f'#DiurnalProfile.{self.local_id}')
 
         rdv.appendChild(dv)
         result.appendChild(rdv)
@@ -63,7 +63,7 @@ class CustomDiurnalVariation(DiurnalVariation):
 
         result = doc.createElement('imaer:customDiurnalVariation')
         dv = doc.createElement('imaer:CustomDiurnalVariation')
-        dv.setAttribute('gml:id', self.local_id)
+        dv.setAttribute('gml:id', f'DiurnalProfile.{self.local_id}')
 
         elem = doc.createElement('imaer:customType')
         elem.appendChild(doc.createTextNode(str(self.custom_type)))

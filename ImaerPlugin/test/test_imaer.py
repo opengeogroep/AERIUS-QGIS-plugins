@@ -82,14 +82,14 @@ class TestImaer(unittest.TestCase):
 
     def test_ffc_emission_simple(self):
         fcc = ImaerDocument()
-        es = EmissionSource(local_id='ES.123', sector_id=9000, label='Bron 123', geom=_GEOM0, epsg_id=28992)
+        es = EmissionSource(local_id=123, sector_id=9000, label='Bron 123', geom=_GEOM0, epsg_id=28992)
         es.emissions.append(Emission('NH3', 1))
         fcc.feature_members.append(es)
         self.generate_gml_file(fcc, 'em_simple')
 
     def test_ffc_emission_characteristics01(self):
         hc = SpecifiedHeatContent(value=12.5)
-        es = EmissionSource(local_id='ES.1234', sector_id=9999, label='Bron 1234', geom=_GEOM1, epsg_id=28992)
+        es = EmissionSource(local_id=1234, sector_id=9999, label='Bron 1234', geom=_GEOM1, epsg_id=28992)
         dv = StandardDiurnalVariation(standard_type='LIGHT_DUTY_VEHICLES')
         es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation=dv)
         es.emissions.append(Emission('NH3', 4.3))
@@ -101,9 +101,9 @@ class TestImaer(unittest.TestCase):
     def test_ffc_emission_characteristics02(self):
         fcc = ImaerDocument()
         hc = SpecifiedHeatContent(value=12.5)
-        es = EmissionSource(local_id='ES.125', sector_id=9999, label='Bron 125', geom=_GEOM1, epsg_id=28992)
-        rdv = ReferenceDiurnalVariation(local_id='DiurnalProfile.125')
-        cdv = CustomDiurnalVariation(local_id='DiurnalProfile.125', custom_type='DAY', values=[150, 50]*12)
+        es = EmissionSource(local_id=125, sector_id=9999, label='Bron 125', geom=_GEOM1, epsg_id=28992)
+        rdv = ReferenceDiurnalVariation(local_id=125)
+        cdv = CustomDiurnalVariation(local_id=125, custom_type='DAY', values=[150, 50]*12)
         fcc.definitions.append(cdv)
         es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation=rdv)
         es.emissions.append(Emission('NH3', 5))
@@ -119,7 +119,7 @@ class TestImaer(unittest.TestCase):
                              strict_enforcement='false',
                              stagnation_factor=0.0)
         es = SRM2Road(
-            local_id='ES.33',
+            local_id=33,
             sector_id='3100',
             label='testlabel',
             geom=_GEOM1,
@@ -142,7 +142,7 @@ class TestImaer(unittest.TestCase):
 
         # this is creating the Emissions Source Type (including left barrier)
         es = ADMSRoad(
-            local_id='ES.33',
+            local_id=33,
             sector_id='3100',
             label='testlabel',
             geom=_GEOM3,
@@ -203,7 +203,7 @@ class TestImaer(unittest.TestCase):
 
     def test_create_emission_with_building(self):
         building_id = '555'
-        es = EmissionSource(local_id='ES.444', sector_id=9000, label='Bron 444', geom=_GEOM0, epsg_id=28992)
+        es = EmissionSource(local_id=444, sector_id=9000, label='Bron 444', geom=_GEOM0, epsg_id=28992)
         hc = SpecifiedHeatContent(value=4)
         es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=5, building=building_id)
         es.emissions.append(Emission('NOX', 10))
@@ -218,7 +218,7 @@ class TestImaer(unittest.TestCase):
         fcc.feature_members.append(b)
         self.generate_gml_file(fcc, 'emission_with_building')
 
-    def test_creat_calculation_points(self):
+    def test_create_calculation_points(self):
         cp = CalculationPoint(
             local_id = 888,
             geom = _GEOM0,
