@@ -64,7 +64,7 @@ class CustomDiurnalVariation(DiurnalVariation):
 
         result = doc.createElement('imaer:customDiurnalVariation')
         dv = doc.createElement('imaer:CustomDiurnalVariation')
-        dv.setAttribute('gml:id', f'DiurnalProfileS.{self.local_id}')
+        dv.setAttribute('gml:id', f'DiurnalProfile.{self.local_id}')
 
         if self.label is not None:
             elem = doc.createElement('imaer:label')

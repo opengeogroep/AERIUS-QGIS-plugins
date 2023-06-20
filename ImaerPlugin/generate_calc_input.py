@@ -93,14 +93,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_layer_bld.setFilters(QgsMapLayerProxyModel.PolygonLayer | QgsMapLayerProxyModel.PointLayer)
         self.combo_layer_cp.setFilters(QgsMapLayerProxyModel.PointLayer)
 
-        #self.combo_sector.currentIndexChanged.connect(self.update_emission_tab)
         self.checkBox_es.toggled.connect(self.update_emission_tab)
         self.checkBox_rd.toggled.connect(self.update_emission_tab)
         self.checkBox_bld.toggled.connect(self.update_emission_tab)
         self.checkBox_cp.toggled.connect(self.update_emission_tab)
         self.checkBox_dv.toggled.connect(self.update_emission_tab)
 
-        # self.combo_subsector.currentIndexChanged.connect(self.set_elements)
         self.edit_outfile.textChanged.connect(self.update_ok_button)
 
         self.combo_layer_es.layerChanged.connect(self.update_field_combos)
@@ -124,16 +122,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.fcb_rd_v_custom_movements_units.addItems([''] + ui_settings['units_veh_movements'])
         self.fcb_rd_v_eft_units.addItems([''] + ui_settings['units_veh_movements'])
 
-        print('model')
         self.dv_model = QStandardItemModel()
-        print(self.dv_model)
-        print(self.tableView_dv)
         self.dv_model.setHorizontalHeaderItem(0, QStandardItem('localId'))
         self.dv_model.setHorizontalHeaderItem(1, QStandardItem('label'))
         self.dv_model.setHorizontalHeaderItem(2, QStandardItem('customType'))
         self.dv_model.setHorizontalHeaderItem(3, QStandardItem('values'))
-        #self.dv_model.setHeaderData(0, Qt.Horizontal, 'id')
-        #self.dv_model.setHeaderData(1, Qt.Horizontal, 'label')
 
         self.tableView_dv.horizontalHeader().setStretchLastSection(True)
         self.tableView_dv.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -197,12 +190,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         for crs in ui_settings['crs']:
             crs_name = f"{crs['name']} ({crs['srid']})"
             self.combo_crs.addItem(crs_name, crs['srid'])
-
-        # sectors
-        #self.combo_sector.addItem('<Select sector>', 0)
-        #for sector in emission_sectors:
-        #    sector_name = emission_sectors[sector]['tab_name']
-        #    self.combo_sector.addItem(sector_name, sector)
 
         # year
         for item in ui_settings['project_years']:
@@ -439,6 +426,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                     cp = self.get_calculation_point_from_gui(feat, geom, local_id, crs_dest_srid)
                     imaer_doc.feature_members.append(cp)
 
+        # Custom Diurnal Variation
+        if self.checkBox_dv.isChecked():
+            for row in range(self.tableView_dv.model().rowCount()):
+                dv = self.dv_model.item(row, 0).data()
+                imaer_doc.definitions.append(dv)
+
         return imaer_doc
 
     # Emission Source
@@ -468,8 +461,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                     heat_content=hc,
                 )
             else:
-               es.emission_source_characteristics = EmissionSourceCharacteristics(
-                    building = prim_bld,
+                es.emission_source_characteristics = EmissionSourceCharacteristics(
+                    building=prim_bld,
                     emission_height=esc_height,
                     spread=esc_spread,
                     heat_content=hc,
@@ -720,18 +713,20 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         cp_label = self.get_feature_value(self.fcb_cp_label, feat)
         cp_description = self.get_feature_value(self.fcb_cp_desc, feat)
 
-        p = CalculationPoint(local_id=cp_id,
+        p = CalculationPoint(
+            local_id=cp_id,
             geom=geom,
             epsg_id=epsg_id,
             label=cp_label,
-            description=cp_description)
+            description=cp_description
+        )
 
         return p
 
     def open_diurnal_variation_dlg(self, dv=None):
         self.plugin.log('open_dv_dlg()', user='dev')
         if self.sender().objectName() == 'button_dv_add':
-            dv = CustomDiurnalVariation(local_id='', label='', custom_type='THREE_DAY', values=[150, 50]*36)
+            dv = CustomDiurnalVariation(local_id='', label='', custom_type='THREE_DAY', values=[])
             row = None
         else:
             row = self.tableView_dv.selectionModel().selectedRows()[0].row()
@@ -786,7 +781,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     def save_settings(self):
         work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
-        #print(work_dir)
         if work_dir is None:
             raise Exception('Work dir not set')
             return
@@ -840,12 +834,12 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 continue
             new_field = field_cfg[widget_name]
             if new_field == '':
-                fcb.setCurrentIndex(0) # Make empty
+                fcb.setCurrentIndex(0)  # Make empty
                 continue
             if new_field in fcb.fields().names():
                 fcb.setCurrentText(new_field)
             else:
-                fcb.setCurrentIndex(0) # Make empty
+                fcb.setCurrentIndex(0)  # Make empty
 
     def make_single_part(self, geom):
         '''Returns single part geometry or None if input has more than 1 part'''
