@@ -3,16 +3,25 @@ import os
 import time
 import json
 
-from qgis.PyQt.QtCore import QVariant
+from qgis.PyQt.QtCore import (
+    Qt,
+    QVariant
+)
 from qgis.PyQt.QtWidgets import (
-    QWidget,
+    QAbstractItemView,
     QDialog,
     QDialogButtonBox,
+    QHBoxLayout,
     QLabel,
     QLineEdit,
-    QHBoxLayout,
-    QSizePolicy
+    QSizePolicy,
+    QWidget
 )
+from qgis.PyQt.QtGui import (
+    QStandardItem,
+    QStandardItemModel
+)
+
 from qgis.PyQt import uic
 
 from qgis.utils import iface
@@ -35,21 +44,22 @@ from ImaerPlugin.config import (
 from ImaerPlugin.diurnal_variation import DiurnalVariationDialog
 
 from ImaerPlugin.imaer5 import (
-    ImaerDocument,
-    AeriusCalculatorMetadata,
-    EmissionSourceType,
-    EmissionSourceCharacteristics,
-    EmissionSource,
-    SpecifiedHeatContent,
-    Emission,
-    SRM2Road,
-    Srm2RoadSideBarrier,
     ADMSRoad,
     AdmsRoadSideBarrier,
-    StandardVehicle,
-    CustomVehicle,
+    AeriusCalculatorMetadata,
     Building,
-    CalculationPoint
+    CalculationPoint,
+    CustomDiurnalVariation,
+    CustomVehicle,
+    Emission,
+    EmissionSource,
+    EmissionSourceCharacteristics,
+    EmissionSourceType,
+    ImaerDocument,
+    SpecifiedHeatContent,
+    SRM2Road,
+    Srm2RoadSideBarrier,
+    StandardVehicle
 )
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -114,7 +124,27 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.fcb_rd_v_custom_movements_units.addItems([''] + ui_settings['units_veh_movements'])
         self.fcb_rd_v_eft_units.addItems([''] + ui_settings['units_veh_movements'])
 
+        print('model')
+        self.dv_model = QStandardItemModel()
+        print(self.dv_model)
+        print(self.tableView_dv)
+        self.dv_model.setHorizontalHeaderItem(0, QStandardItem('localId'))
+        self.dv_model.setHorizontalHeaderItem(1, QStandardItem('label'))
+        self.dv_model.setHorizontalHeaderItem(2, QStandardItem('customType'))
+        self.dv_model.setHorizontalHeaderItem(3, QStandardItem('values'))
+        #self.dv_model.setHeaderData(0, Qt.Horizontal, 'id')
+        #self.dv_model.setHeaderData(1, Qt.Horizontal, 'label')
+
+        self.tableView_dv.horizontalHeader().setStretchLastSection(True)
+        self.tableView_dv.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.tableView_dv.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tableView_dv.setSelectionMode(QAbstractItemView.SingleSelection)
+
+        self.tableView_dv.setModel(self.dv_model)
+        self.tableView_dv.resizeColumnsToContents()
+
         self.button_dv_add.clicked.connect(self.open_diurnal_variation_dlg)
+        self.button_dv_edit.clicked.connect(self.open_diurnal_variation_dlg)
 
         # Make sure the corresponding vehicle page is displayed
         self.radio_veh_page_custom.setChecked(True)
@@ -689,11 +719,23 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
     def open_diurnal_variation_dlg(self, dv=None):
         self.plugin.log('open_dv_dlg()', user='dev')
         print(self.sender(), self.sender().objectName())
+        if self.sender().objectName() == 'button_dv_add':
+            dv = CustomDiurnalVariation(local_id='', label='', custom_type='THREE_DAY', values=[150, 50]*36)
+            row = None
+        elif self.sender().objectName() == 'button_dv_edit':
+            row = self.tableView_dv.selectionModel().selectedRows()[0].row()
+            dv = self.dv_model.item(row, 0).data()#Qt.UserRole)
+        print(dv)
+        self.diurnal_variation_dlg.set_by_dv(dv)
         self.diurnal_variation_dlg.show()
         result = self.diurnal_variation_dlg.exec_()
         print(result)
         if result:
-            pass
+            dv = self.diurnal_variation_dlg.get_dv()
+            print(dv)
+            print(dv.values)
+            self.add_dv_to_table(dv, row)
+
             '''self.log('starting calcinput generation ...', user='user')
             imaer_doc = self.generate_calc_input_dlg.get_imaer_doc_from_gui()
             if imaer_doc is None:  # Something went wrong during IMAER doc generation...
@@ -702,6 +744,20 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             fn = self.generate_calc_input_dlg.edit_outfile.text()
             imaer_doc.to_xml_file(fn)'''
             self.plugin.log('Diurnal Profile saved', lvl='Info', bar=True, duration=3)
+
+    def add_dv_to_table(self, dv, row=None):
+        local_id_item = QStandardItem(f'{dv.local_id}')
+        local_id_item.setData(dv)
+        label_item = QStandardItem(f'{dv.label}')
+        custom_type_item = QStandardItem(f'{dv.custom_type}')
+        values_item = QStandardItem(f'{len(dv.values)} values')
+        if row is None:
+            row = self.dv_model.insertRow(0, [local_id_item, label_item, custom_type_item, values_item])
+            print(row)
+        else:
+            self.dv_model.removeRow(row)
+            self.dv_model.insertRow(row, [local_id_item, label_item, custom_type_item, values_item])
+
 
 
     def get_feature_value(self, widget, feat, cast_to=None):

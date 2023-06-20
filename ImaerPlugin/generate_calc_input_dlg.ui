@@ -1380,33 +1380,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_11">
        <item>
-        <widget class="QTableWidget" name="table_dv">
-         <column>
-          <property name="text">
-           <string>id</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>label</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>mon-fri</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>sat</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>sun</string>
-          </property>
-         </column>
-        </widget>
+        <widget class="QTableView" name="tableView_dv"/>
        </item>
        <item>
         <spacer name="verticalSpacer_4">
@@ -1427,6 +1401,13 @@
           <widget class="QPushButton" name="button_dv_add">
            <property name="text">
             <string>Add...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="button_dv_edit">
+           <property name="text">
+            <string>Edit...</string>
            </property>
           </widget>
          </item>

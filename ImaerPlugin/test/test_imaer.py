@@ -103,7 +103,7 @@ class TestImaer(unittest.TestCase):
         hc = SpecifiedHeatContent(value=12.5)
         es = EmissionSource(local_id=125, sector_id=9999, label='Bron 125', geom=_GEOM1, epsg_id=28992)
         rdv = ReferenceDiurnalVariation(local_id=125)
-        cdv = CustomDiurnalVariation(local_id=125, custom_type='DAY', values=[150, 50]*12)
+        cdv = CustomDiurnalVariation(local_id=125, label='Test label', custom_type='DAY', values=[150, 50]*12)
         fcc.definitions.append(cdv)
         es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation=rdv)
         es.emissions.append(Emission('NH3', 5))
