@@ -46,13 +46,6 @@
      <item row="2" column="1">
       <widget class="QPlainTextEdit" name="plainTextEdit_csv"/>
      </item>
-     <item row="3" column="0" colspan="2">
-      <widget class="QLabel" name="label_interpreted">
-       <property name="text">
-        <string>interpreted</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>

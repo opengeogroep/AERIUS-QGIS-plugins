@@ -101,9 +101,9 @@ class CustomDiurnalVariation(DiurnalVariation):
     def values_from_csv(self, csv_text):
         values = []
         for line in csv_text.split('\n'):
-            print(line)
+            # print(line)
             for value in line.split(';'):
-                print('  ', value)
+                # print('  ', value)
                 try:
                     values.append(float(value))
                 except(ValueError):

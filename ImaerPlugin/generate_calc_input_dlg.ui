@@ -1412,6 +1412,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="button_dv_delete">
+           <property name="text">
+            <string>Delete</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="horizontalSpacer_2">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>

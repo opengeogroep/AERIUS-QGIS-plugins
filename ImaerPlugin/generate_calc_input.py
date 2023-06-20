@@ -145,6 +145,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         self.button_dv_add.clicked.connect(self.open_diurnal_variation_dlg)
         self.button_dv_edit.clicked.connect(self.open_diurnal_variation_dlg)
+        self.button_dv_delete.clicked.connect(self.open_diurnal_variation_dlg)
+        self.tableView_dv.selectionModel().selectionChanged.connect(self.update_dv_buttons)
 
         # Make sure the corresponding vehicle page is displayed
         self.radio_veh_page_custom.setChecked(True)
@@ -153,6 +155,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.set_fixed_options()
         self.update_field_combos()
         self.update_ok_button()
+        self.update_dv_buttons()
         self.update_emission_tab()
 
     def __del__(self):
@@ -166,7 +169,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         self.btn_save_settings.clicked.disconnect(self.save_settings)
         self.btn_load_settings.clicked.disconnect(self.load_settings)
+
         self.button_dv_add.clicked.disconnect(self.open_diurnal_variation_dlg)
+        self.button_dv_edit.clicked.disconnect(self.open_diurnal_variation_dlg)
+        self.button_dv_delete.clicked.disconnect(self.open_diurnal_variation_dlg)
+        self.tableView_dv.selectionModel().selectionChanged.disconnect(self.update_dv_buttons)
 
     def browse_generate_calc_input_file(self):
         if self.plugin.dev:
@@ -336,6 +343,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             return
         '''
         self.buttonBox.button(QDialogButtonBox.Save).setEnabled(True)
+
+    def update_dv_buttons(self):
+        selected_rows = self.tableView_dv.selectionModel().selectedRows()
+        self.button_dv_edit.setEnabled(len(selected_rows) == 1)
+        self.button_dv_delete.setEnabled(len(selected_rows) == 1)
 
     def update_adms_vehicle_page(self):
         self.stack_rd_veh_adms.setCurrentWidget(self.sender().page)
@@ -718,32 +730,23 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     def open_diurnal_variation_dlg(self, dv=None):
         self.plugin.log('open_dv_dlg()', user='dev')
-        print(self.sender(), self.sender().objectName())
         if self.sender().objectName() == 'button_dv_add':
             dv = CustomDiurnalVariation(local_id='', label='', custom_type='THREE_DAY', values=[150, 50]*36)
             row = None
-        elif self.sender().objectName() == 'button_dv_edit':
+        else:
             row = self.tableView_dv.selectionModel().selectedRows()[0].row()
-            dv = self.dv_model.item(row, 0).data()#Qt.UserRole)
-        print(dv)
+            if self.sender().objectName() == 'button_dv_delete':
+                # No need to open the dialog, just delete the row
+                self.dv_model.removeRow(row)
+                return
+            dv = self.dv_model.item(row, 0).data()
         self.diurnal_variation_dlg.set_by_dv(dv)
         self.diurnal_variation_dlg.show()
         result = self.diurnal_variation_dlg.exec_()
-        print(result)
         if result:
             dv = self.diurnal_variation_dlg.get_dv()
-            print(dv)
-            print(dv.values)
-            self.add_dv_to_table(dv, row)
-
-            '''self.log('starting calcinput generation ...', user='user')
-            imaer_doc = self.generate_calc_input_dlg.get_imaer_doc_from_gui()
-            if imaer_doc is None:  # Something went wrong during IMAER doc generation...
-                self.log('Something went wrong during IMAER doc generation.')
-                return
-            fn = self.generate_calc_input_dlg.edit_outfile.text()
-            imaer_doc.to_xml_file(fn)'''
-            self.plugin.log('Diurnal Profile saved', lvl='Info', bar=True, duration=3)
+            row = self.add_dv_to_table(dv, row)
+            self.tableView_dv.selectRow(row)
 
     def add_dv_to_table(self, dv, row=None):
         local_id_item = QStandardItem(f'{dv.local_id}')
@@ -752,13 +755,9 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         custom_type_item = QStandardItem(f'{dv.custom_type}')
         values_item = QStandardItem(f'{len(dv.values)} values')
         if row is None:
-            row = self.dv_model.insertRow(0, [local_id_item, label_item, custom_type_item, values_item])
-            print(row)
-        else:
-            self.dv_model.removeRow(row)
-            self.dv_model.insertRow(row, [local_id_item, label_item, custom_type_item, values_item])
-
-
+            row = self.dv_model.rowCount()
+        self.dv_model.insertRow(row, [local_id_item, label_item, custom_type_item, values_item])
+        return row
 
     def get_feature_value(self, widget, feat, cast_to=None):
         if not isinstance(widget, QgsFieldComboBox):
