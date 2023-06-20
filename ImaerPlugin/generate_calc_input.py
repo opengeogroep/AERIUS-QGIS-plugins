@@ -751,6 +751,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         values_item = QStandardItem(f'{len(dv.values)} values')
         if row is None:
             row = self.dv_model.rowCount()
+        else:
+            self.dv_model.removeRow(row)
         self.dv_model.insertRow(row, [local_id_item, label_item, custom_type_item, values_item])
         return row
 

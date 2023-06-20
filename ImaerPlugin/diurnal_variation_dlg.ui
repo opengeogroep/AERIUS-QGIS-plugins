@@ -38,6 +38,9 @@
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_csv">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Insert 24 rows of 3 semicolon separated values for each hour on weekdays, Satudays and Sundays.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>csv</string>
        </property>
