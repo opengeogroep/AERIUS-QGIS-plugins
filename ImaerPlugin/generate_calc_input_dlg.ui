@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>570</width>
-    <height>1237</height>
+    <width>650</width>
+    <height>1023</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,53 +15,9 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QGroupBox" name="group_input">
+    <widget class="QGroupBox" name="group_settings">
      <property name="title">
-      <string>Input</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_17">
-      <item row="1" column="1">
-       <widget class="QCheckBox" name="checkBox_cp">
-        <property name="text">
-         <string>Calculation Points</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="checkBox_rd">
-        <property name="text">
-         <string>Roads Sources</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="checkBox_bld">
-        <property name="text">
-         <string>Buildings</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="checkBox_es">
-        <property name="text">
-         <string>Emission Sources</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="checkBox_dv">
-        <property name="text">
-         <string>Diurnal Variation</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="group_output">
-     <property name="title">
-      <string>Output</string>
+      <string>Settings</string>
      </property>
      <layout class="QFormLayout" name="formLayout_5">
       <item row="0" column="0">
@@ -96,9 +52,72 @@
     </widget>
    </item>
    <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_content">
+     <item>
+      <widget class="QGroupBox" name="group_input_es">
+       <property name="title">
+        <string>Emission Sources</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_17">
+        <item row="1" column="0">
+         <widget class="QRadioButton" name="radioButton_es">
+          <property name="text">
+           <string>Generic</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QRadioButton" name="radioButton_rd">
+          <property name="text">
+           <string>Roads</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="group_input_other">
+       <property name="title">
+        <string>Other Content</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_21">
+        <item row="1" column="0">
+         <widget class="QCheckBox" name="checkBox_bld">
+          <property name="text">
+           <string>Buildings</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QCheckBox" name="checkBox_cp">
+          <property name="text">
+           <string>Calculation Points</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="checkBox_dv">
+          <property name="text">
+           <string>Diurnal Variation</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
     <widget class="QTabWidget" name="tabs_mapping">
      <property name="currentIndex">
-      <number>1</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="tab_metadata">
       <attribute name="title">
@@ -203,7 +222,7 @@
      </widget>
      <widget class="QWidget" name="tab_emission_sources">
       <attribute name="title">
-       <string>Emission Sources</string>
+       <string>Generic Sources</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
@@ -216,8 +235,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>528</width>
-            <height>865</height>
+            <width>608</width>
+            <height>863</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_6">
@@ -390,7 +409,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>514</width>
+            <width>594</width>
             <height>1891</height>
            </rect>
           </property>
@@ -1207,8 +1226,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>528</width>
-            <height>865</height>
+            <width>608</width>
+            <height>863</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1307,8 +1326,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>528</width>
-            <height>865</height>
+            <width>608</width>
+            <height>649</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -1391,19 +1410,6 @@
         <widget class="QTableView" name="tableView_dv"/>
        </item>
        <item>
-        <spacer name="verticalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QPushButton" name="button_dv_add">
@@ -1440,6 +1446,19 @@
           </spacer>
          </item>
         </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

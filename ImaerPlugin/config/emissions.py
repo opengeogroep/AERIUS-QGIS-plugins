@@ -39,7 +39,7 @@ emission_sectors = {
     },
     'other': {
         'emission_tab': 'tab_emission_sources',
-        'tab_name': 'Other',
+        'tab_name': 'Generic Sources',
         'sector_id': 9999
     },
     'buildings': {

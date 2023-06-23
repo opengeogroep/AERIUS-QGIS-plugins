@@ -93,8 +93,9 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.combo_layer_bld.setFilters(QgsMapLayerProxyModel.PolygonLayer | QgsMapLayerProxyModel.PointLayer)
         self.combo_layer_cp.setFilters(QgsMapLayerProxyModel.PointLayer)
 
-        self.checkBox_es.toggled.connect(self.update_emission_tab)
-        self.checkBox_rd.toggled.connect(self.update_emission_tab)
+        self.group_input_es.toggled.connect(self.update_emission_tab)
+        self.radioButton_es.toggled.connect(self.update_emission_tab)
+        self.radioButton_rd.toggled.connect(self.update_emission_tab)
         self.checkBox_bld.toggled.connect(self.update_emission_tab)
         self.checkBox_cp.toggled.connect(self.update_emission_tab)
         self.checkBox_dv.toggled.connect(self.update_emission_tab)
@@ -168,6 +169,14 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.button_dv_delete.clicked.disconnect(self.open_diurnal_variation_dlg)
         self.tableView_dv.selectionModel().selectionChanged.disconnect(self.update_dv_buttons)
 
+        self.group_input_es.toggled.disconnect(self.update_emission_tab)
+        self.radioButton_es.toggled.disconnect(self.update_emission_tab)
+        self.radioButton_rd.toggled.disconnect(self.update_emission_tab)
+        self.checkBox_bld.toggled.disconnect(self.update_emission_tab)
+        self.checkBox_cp.toggled.disconnect(self.update_emission_tab)
+        self.checkBox_dv.toggled.disconnect(self.update_emission_tab)
+
+
     def browse_generate_calc_input_file(self):
         if self.plugin.dev:
             out_path = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input'
@@ -223,7 +232,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             self.tabs_mapping.setCurrentIndex(1)
         '''
         n = 1
-        if self.checkBox_es.isChecked():
+        if self.group_input_es.isChecked() and self.radioButton_es.isChecked():
             sector1 = 'other'
             sector_name = emission_sectors[sector1]['tab_name']
             self.tabs_mapping.insertTab(n, self.emission_tabs[sector1], sector_name)
@@ -232,7 +241,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         else:
             sector1 = None
 
-        if self.checkBox_rd.isChecked():
+        if self.group_input_es.isChecked() and self.radioButton_rd.isChecked():
             sector2 = 'roads'
             sector_name = emission_sectors[sector2]['tab_name']
             self.tabs_mapping.insertTab(n, self.emission_tabs[sector2], sector_name)
@@ -367,10 +376,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         # Find all layers to loop
         list_input_layers_to_process = []
-        if self.checkBox_es.isChecked():
-            list_input_layers_to_process.append({'layer': self.combo_layer_es.currentLayer(), 'code': 'es'})
-        if self.checkBox_rd.isChecked():
-            list_input_layers_to_process.append({'layer': self.combo_layer_rd.currentLayer(), 'code': 'rd'})
+        if self.group_input_es.isChecked():
+            if self.radioButton_es.isChecked():
+                list_input_layers_to_process.append({'layer': self.combo_layer_es.currentLayer(), 'code': 'es'})
+            if self.radioButton_rd.isChecked():
+                list_input_layers_to_process.append({'layer': self.combo_layer_rd.currentLayer(), 'code': 'rd'})
         if self.checkBox_bld.isChecked():
             list_input_layers_to_process.append({'layer': self.combo_layer_bld.currentLayer(), 'code': 'bld'})
         if self.checkBox_cp.isChecked():
