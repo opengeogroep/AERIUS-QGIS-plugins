@@ -56,9 +56,11 @@ from ImaerPlugin.imaer5 import (
     EmissionSourceCharacteristics,
     EmissionSourceType,
     ImaerDocument,
+    ReferenceDiurnalVariation,
     SpecifiedHeatContent,
     SRM2Road,
     Srm2RoadSideBarrier,
+    StandardDiurnalVariation,
     StandardVehicle
 )
 
@@ -617,6 +619,16 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 else:
                     es.barrier_right = rsb
 
+        # Diurnal Variation
+        dv_standard = self.get_feature_value(self.fcb_rd_dv_standard, feat)
+        if dv_standard is not None:
+            dv = StandardDiurnalVariation(standard_type=dv_standard)
+            es.diurnal_variation = dv
+        dv_reference = self.get_feature_value(self.fcb_rd_dv_reference, feat)
+        if dv_reference is not None:
+            dv = ReferenceDiurnalVariation(local_id=dv_reference)
+            es.diurnal_variation = dv
+
         # vehicles
         vehicles = []
 
@@ -645,6 +657,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 time_unit = 'MONTH'
             elif time_unit_ui == 'p/year':
                 time_unit = 'YEAR'
+            else:
+                time_unit = None
 
             for veh_type_key, veh_type_name in vehicle_types.items():
                 fcb = getattr(self, f'fcb_rd_v_eft_n_{veh_type_key}')
@@ -679,6 +693,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 time_unit = 'MONTH'
             elif time_unit_ui == 'p/year':
                 time_unit = 'YEAR'
+            else:
+                time_unit = None
 
             emission = []
             if em_nox is not None:

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#lp=$(grep -A3 'test:' dev.yml | tail -n1); db=${db//*database: /}; echo "$db"
+lp=$(grep 'path_qgis_python_folder' dev.yml | awk '{print $2}' | tr -d '"')
+echo ${lp}
 
-lp='/home/raymond/programs/qgis/qgis-3.22/lib/'
 # echo ${PATH}
 #PATH=${PATH}\:${lp}
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${lp}

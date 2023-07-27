@@ -7,7 +7,7 @@ class ADMSRoad(RoadEmissionSource):
 
     def __init__(self, *, width=None, elevation=None,
                  gradient=None, coverage=None, barrier_left=None,
-                 barrier_right=None, **kwargs):
+                 barrier_right=None, diurnal_variation=None, **kwargs):
         super().__init__(**kwargs)
         self.width = width
         self.elevation = elevation
@@ -15,6 +15,7 @@ class ADMSRoad(RoadEmissionSource):
         self.coverage = coverage
         self.barrier_left = barrier_left
         self.barrier_right = barrier_right
+        self.diurnal_variation = diurnal_variation
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = super().to_xml_elem(doc)
@@ -51,6 +52,12 @@ class ADMSRoad(RoadEmissionSource):
             b_elem.appendChild(elem)
             result.appendChild(b_elem)
 
+        if self.diurnal_variation is not None:
+            dv_elem = doc.createElement('imaer:diurnalVariation')
+            elem = self.diurnal_variation.to_xml_elem(doc)
+            dv_elem.appendChild(elem)
+            result.appendChild(dv_elem)
+            
         return result
 
 
