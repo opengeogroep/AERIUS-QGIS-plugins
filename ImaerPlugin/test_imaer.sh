@@ -1,6 +1,6 @@
 #!/bin/bash
 
-lp=$(grep 'path_qgis_python_folder' dev.yml | awk '{print $2}' | tr -d '"')
+lp=$(grep 'lp_paths' test/dev.yml | awk '{print $2}' | tr -d '"')
 echo ${lp}
 
 # echo ${PATH}

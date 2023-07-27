@@ -31,7 +31,7 @@ _GEOM3 = QgsGeometry.fromWkt('LINESTRING((311279.0 723504.3, 311262.5 723349.6))
 _GEOM4 = QgsGeometry.fromWkt('POLYGON((1 0, 2 1, 3 0, 2 -1, 1 0))')
 
 # Load IMAER xsd for validation check. (Needs internet connection and can take pretty long.)
-xsd_fn = os.path.join('test', 'xsd', 'IMAER.xsd')
+xsd_fn = os.path.join('test', 'xsd', 'IMAER_5.1.1.xsd')
 xmlschema_doc = etree.parse(xsd_fn)
 xmlschema = etree.XMLSchema(xmlschema_doc)
 
