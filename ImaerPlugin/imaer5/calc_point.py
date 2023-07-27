@@ -5,12 +5,14 @@ from .gml import get_gml_element
 
 class CalculationPoint(object):
 
-    def __init__(self, *, local_id, geom, epsg_id, label=None, description=None):
+    def __init__(self, *, local_id, geom, epsg_id, label=None, description=None, height=None, assessment_category=None):
         self.local_id = local_id
         self.geometry = geom
         self.epsg_id = epsg_id
         self.label = label
         self.description = description
+        self.height = height
+        self.assessment_category = assessment_category
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement(f'imaer:CalculationPoint')
@@ -50,6 +52,18 @@ class CalculationPoint(object):
         if self.description is not None:
             elem = doc.createElement('imaer:description')
             elem.appendChild(doc.createTextNode(str(self.description)))
+            result.appendChild(elem)
+
+        # height
+        if self.height is not None:
+            elem = doc.createElement('imaer:height')
+            elem.appendChild(doc.createTextNode(str(self.height)))
+            result.appendChild(elem)
+
+        # assessment_category
+        if self.assessment_category is not None:
+            elem = doc.createElement('imaer:assessmentCategory')
+            elem.appendChild(doc.createTextNode(str(self.assessment_category)))
             result.appendChild(elem)
 
         return result

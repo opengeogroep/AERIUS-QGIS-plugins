@@ -228,4 +228,28 @@ class TestImaer(unittest.TestCase):
         )
         fcc = ImaerDocument()
         fcc.feature_members.append(cp)
-        self.generate_gml_file(fcc, 'calculation_points')
+        self.generate_gml_file(fcc, 'calculation_points_01')
+
+    def test_create_calculation_points_with_height(self):
+        fcc = ImaerDocument()
+        cp = CalculationPoint(
+            local_id = 888,
+            geom = _GEOM0,
+            epsg_id=28992,
+            label='Pnt 888',
+            description='Point number 888.',
+            height=2.34,
+            assessment_category='MONITORING'
+        )
+        fcc.feature_members.append(cp)
+        cp = CalculationPoint(
+            local_id = 999,
+            geom = _GEOM0,
+            epsg_id=28992,
+            label='Pnt 999',
+            description=None,
+            height=3.456,
+            assessment_category=None
+        )
+        fcc.feature_members.append(cp)
+        self.generate_gml_file(fcc, 'calculation_points_02')
