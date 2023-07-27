@@ -117,7 +117,7 @@
    <item>
     <widget class="QTabWidget" name="tabs_mapping">
      <property name="currentIndex">
-      <number>2</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="tab_metadata">
       <attribute name="title">
@@ -235,8 +235,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>608</width>
-            <height>649</height>
+            <width>262</width>
+            <height>504</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_13">
@@ -408,7 +408,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-777</y>
+            <y>0</y>
             <width>594</width>
             <height>1997</height>
            </rect>
@@ -1255,8 +1255,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>608</width>
-            <height>649</height>
+            <width>196</width>
+            <height>261</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1407,6 +1407,26 @@
               </item>
               <item row="2" column="1">
                <widget class="QgsFieldComboBox" name="fcb_cp_desc"/>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_cp_height">
+                <property name="text">
+                 <string>height</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_cp_height"/>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_cp_category">
+                <property name="text">
+                 <string>category</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_cp_category"/>
               </item>
              </layout>
             </widget>

@@ -738,13 +738,17 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             cp_id = local_id  # fall back to local_id
         cp_label = self.get_feature_value(self.fcb_cp_label, feat)
         cp_description = self.get_feature_value(self.fcb_cp_desc, feat)
+        cp_height = self.get_feature_value(self.fcb_cp_height, feat)
+        cp_category = self.get_feature_value(self.fcb_cp_category, feat)
 
         p = CalculationPoint(
             local_id=cp_id,
             geom=geom,
             epsg_id=epsg_id,
             label=cp_label,
-            description=cp_description
+            description=cp_description,
+            height=cp_height,
+            assessment_category=cp_category
         )
 
         return p
