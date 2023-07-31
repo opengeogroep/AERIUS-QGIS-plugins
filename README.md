@@ -7,18 +7,17 @@ QGIS 3 plugin for working with IMAER files
 The user documentation can be found here:
 [Github Pages](http://opengeogroep.github.io/AERIUS-QGIS-plugins/)
 
+## Running tests
+
+* In the folder ```ImaerPlugin/test``` create a dev.yml file with your local settings (use dev_example.yml as a template)
+* To run tests in Linux: Run ```./test_imaer.sh``` from the ImaerPlugin folder
+* To run tests in Windows: Open the command line from the ImaerPlugin folder and run ```python -m unittest test.test_imaer```
+
 ## Releasing
 
 * Make sure the plugin runs fine!
 * Update the metadata.txt (version, changelog)
 * Update the self.version in the ImaerPlugin class
-* Delete all ```__pycache__``` directories
-* zip the ```Imaer_Plugin``` directory
-* Rename zip file with version info
+* Run the release script: ```python3 Make_zip_release.py 3.0.0```
 * Move the zip file to the ```releases``` directory
 * Upload to plugins.qgis.org
-
-## Running tests
-
-* To run test in Linux: dev.yml must be created (use dev_example.yml as a template). Then run the test_imaer.sh from the plugin directory
-* To run the test in Windows: dev.yml must be created (use dev_example.yml as a template). Then open the command line from the Imaer plugin folder and run python -m unittest test.test_imaer 

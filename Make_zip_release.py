@@ -1,23 +1,37 @@
+import argparse
 import zipfile
 import pathlib
 
-release_no = 1234
+def add_to_zip(file_path):
+    # Ignore test directory
+    try:
+        if file_path.parts[1] in ['test']:
+            return False
+    except(IndexError):
+        pass
 
-folders_to_ignore = ['*\\test\\output\\*', '*\__pycache__\*', '*\\__pycache__']
+    # Ignore pycache
+    patterns_to_ignore = ['*/__pycache__/*', '__pycache__']
+    for pattern in patterns_to_ignore:
+        if file_path.match(pattern):
+            return False
 
-output_zip_file_name = f'ImaerPlugin-{release_no}.zip'
+    return True
 
-directory = pathlib.Path('ImaerPlugin')
-all_files = []
-files_to_zip = []
-with zipfile.ZipFile(output_zip_file_name, mode="w") as archive:
-    for file_path in directory.rglob("*"):
-        all_files.append(str(file_path)) # this is all the files in the folder
-        for folder in folders_to_ignore:
-            if file_path.match(folder) is True:
-                files_to_zip.append(str(file_path)) # this is only the files in our folders to remove
+parser = argparse.ArgumentParser()
+parser.add_argument('version', help='Version number (e.g. 3.1.1)')
+parser.add_argument('--verbose', help='Verbose output',  action='store_const', const=True)
+args = parser.parse_args()
 
-    final_list_to_zip = (set(all_files) - set(files_to_zip))
+output_zip_file_name = f'ImaerPlugin-{args.version}.zip'
+plugin_directory = pathlib.Path('ImaerPlugin')
 
-    for file_name in final_list_to_zip:
-        archive.write(pathlib.Path(file_name),arcname=pathlib.Path(file_name))
+with zipfile.ZipFile(output_zip_file_name, mode="w", compression=zipfile.ZIP_DEFLATED) as archive:
+    for file_path in plugin_directory.rglob("*"):
+        if add_to_zip(file_path):
+            archive.write(pathlib.Path(file_path))
+        else:
+            if args.verbose:
+                print(f'Skipping {file_path}')
+
+print(f'Generated: {output_zip_file_name}')
