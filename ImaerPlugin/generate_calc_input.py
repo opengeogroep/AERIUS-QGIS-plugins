@@ -365,16 +365,22 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         else:
             situation = None
 
-        metadata = AeriusCalculatorMetadata(
-            project={'year': year, 'description': description},
-            situation=situation,
-        )
-
-        imaer_doc.metadata = metadata
-
         country = self.combo_country.currentData()
         crs_dest_srid = self.combo_crs.currentData()
         crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
+
+        gml_creator = self.plugin.version
+        # Remove this as soon as IMAER in NL has been updated to 5.1.2 or higher
+        if country == 'NL':
+            gml_creator = None
+
+        metadata = AeriusCalculatorMetadata(
+            project={'year': year, 'description': description},
+            situation=situation,
+            gml_creator=gml_creator
+        )
+
+        imaer_doc.metadata = metadata
 
         # Find all layers to loop
         list_input_layers_to_process = []
@@ -619,7 +625,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 else:
                     es.barrier_right = rsb
 
-        # Diurnal Variation
+        # diurnal variation
         dv_standard = self.get_feature_value(self.fcb_rd_dv_standard, feat)
         if dv_standard is not None:
             dv = StandardDiurnalVariation(standard_type=dv_standard)

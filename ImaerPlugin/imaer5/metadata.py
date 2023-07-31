@@ -4,7 +4,7 @@ from PyQt5.QtXml import QDomDocument
 
 class AeriusCalculatorMetadata():
 
-    def __init__(self, project, situation=None, calculation=None, version=None):
+    def __init__(self, project, situation=None, calculation=None, version=None, gml_creator=None):
         self.project = project
         # year
         # description
@@ -21,6 +21,9 @@ class AeriusCalculatorMetadata():
         self.version = version
         # aeriusVersion
         # databaseVersion
+
+        self.gml_creator = gml_creator
+        # Since IMAER 5.1.2 (0..1)
 
     def to_xml_elem(self, doc):
         result = doc.createElement('imaer:AeriusCalculatorMetadata')
@@ -93,5 +96,11 @@ class AeriusCalculatorMetadata():
                 ver_ele.appendChild(ele)
             ver.appendChild(ver_ele)
             result.appendChild(ver)
+        
+        # gml creator
+        if self.gml_creator is not None:
+            ele = doc.createElement('imaer:gmlCreator')
+            ele.appendChild(doc.createTextNode(str(self.gml_creator)))
+            result.appendChild(ele)
 
         return result
