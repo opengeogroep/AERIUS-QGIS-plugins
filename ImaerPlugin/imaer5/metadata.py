@@ -96,7 +96,7 @@ class AeriusCalculatorMetadata():
                 ver_ele.appendChild(ele)
             ver.appendChild(ver_ele)
             result.appendChild(ver)
-        
+
         # gml creator
         if self.gml_creator is not None:
             ele = doc.createElement('imaer:gmlCreator')

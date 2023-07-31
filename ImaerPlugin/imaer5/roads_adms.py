@@ -57,7 +57,7 @@ class ADMSRoad(RoadEmissionSource):
             elem = self.diurnal_variation.to_xml_elem(doc)
             dv_elem.appendChild(elem)
             result.appendChild(dv_elem)
-            
+
         return result
 
 

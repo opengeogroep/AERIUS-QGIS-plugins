@@ -2,7 +2,6 @@ import os.path
 import sys
 import unittest
 import yaml
-import time
 
 from lxml import etree
 
@@ -22,7 +21,6 @@ sys.path.append(dev_config['path_qgis_python_folder'])
 from qgis.core import *
 
 from imaer5 import *
-# from connect import *
 
 _GEOM0 = QgsGeometry.fromWkt('POINT(148458.0 411641.0)')
 _GEOM1 = QgsGeometry.fromWkt('LINESTRING((1 0, 2 1, 3 0))')
@@ -75,7 +73,7 @@ class TestImaer(unittest.TestCase):
         fcc.metadata = AeriusCalculatorMetadata(
             project={'year': 2020, 'description': 'Some description...'},
             situation={'name': 'Situation 1', 'reference': 'ABCDE12345', 'type': 'PROPOSED'},
-            calculation = {'type':'NATURE_AREA', 'substances':['NH3', 'NOX'], 'result_type':'DEPOSITION'},
+            calculation={'type': 'NATURE_AREA', 'substances': ['NH3', 'NOX'], 'result_type': 'DEPOSITION'},
             version={'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'},
             gml_creator='3.1.1'
         )
@@ -104,7 +102,7 @@ class TestImaer(unittest.TestCase):
         hc = SpecifiedHeatContent(value=12.5)
         es = EmissionSource(local_id=125, sector_id=9999, label='Bron 125', geom=_GEOM1, epsg_id=28992)
         rdv = ReferenceDiurnalVariation(local_id=125)
-        cdv = CustomDiurnalVariation(local_id=125, label='Test label', custom_type='DAY', values=[150, 50]*12)
+        cdv = CustomDiurnalVariation(local_id=125, label='Test label', custom_type='DAY', values=[150, 50] * 12)
         fcc.definitions.append(cdv)
         es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation=rdv)
         es.emissions.append(Emission('NH3', 5))
@@ -221,8 +219,8 @@ class TestImaer(unittest.TestCase):
 
     def test_create_calculation_points(self):
         cp = CalculationPoint(
-            local_id = 888,
-            geom = _GEOM0,
+            local_id=888,
+            geom=_GEOM0,
             epsg_id=28992,
             label='Pnt 888',
             description='Point number 888.'
@@ -234,8 +232,8 @@ class TestImaer(unittest.TestCase):
     def test_create_calculation_points_with_height(self):
         fcc = ImaerDocument()
         cp = CalculationPoint(
-            local_id = 888,
-            geom = _GEOM0,
+            local_id=888,
+            geom=_GEOM0,
             epsg_id=28992,
             label='Pnt 888',
             description='Point number 888.',
@@ -244,8 +242,8 @@ class TestImaer(unittest.TestCase):
         )
         fcc.feature_members.append(cp)
         cp = CalculationPoint(
-            local_id = 999,
-            geom = _GEOM0,
+            local_id=999,
+            geom=_GEOM0,
             epsg_id=28992,
             label='Pnt 999',
             description=None,
