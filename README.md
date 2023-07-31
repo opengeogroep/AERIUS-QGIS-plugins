@@ -11,6 +11,7 @@ The user documentation can be found here:
 
 * Make sure the plugin runs fine!
 * Update the metadata.txt (version, changelog)
+* Update the self.version in the ImaerPlugin class
 * Delete all ```__pycache__``` directories
 * zip the ```Imaer_Plugin``` directory
 * Rename zip file with version info
