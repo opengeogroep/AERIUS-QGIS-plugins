@@ -308,27 +308,25 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     def update_field_combos(self):
         for fcb in self.findChildren(QgsFieldComboBox):
-            if 'es' in fcb.objectName():
+            if 'fcb_es_' in fcb.objectName():
                 fcb.setLayer(self.combo_layer_es.currentLayer())
-            if '_rd' in fcb.objectName():
+            if 'fcb_rd_' in fcb.objectName():
                 fcb.setLayer(self.combo_layer_rd.currentLayer())
-            if '_bld' in fcb.objectName():
+            if 'fcb_bld_' in fcb.objectName():
                 fcb.setLayer(self.combo_layer_bld.currentLayer())
-            if '_cp' in fcb.objectName():
+            if 'fcb_cp_' in fcb.objectName():
                 fcb.setLayer(self.combo_layer_cp.currentLayer())
-            if '_em_' in fcb.objectName():
+            if 'fcb_em_' in fcb.objectName():
                 fcb.setLayer(self.combo_layer_es.currentLayer())
-        # if no combo_layer_bld option (polygon or point layer) in qgis then
-        # do nothing (e.g. upon startup of qgis)
-        if self.combo_layer_bld.currentLayer() is None:
-            pass
+
         # if bld is a point layer then show the diameter field
-        elif self.combo_layer_bld.currentLayer().geometryType() != 0:
-            self.fcb_bld_diameter.setVisible(False)
-            self.label_bld_diameter.setVisible(False)
-        else:
-            self.fcb_bld_diameter.setVisible(True)
-            self.label_bld_diameter.setVisible(True)
+        if self.combo_layer_bld.currentLayer() is not None:
+            if self.combo_layer_bld.currentLayer().geometryType() == 0:
+                self.fcb_bld_diameter.setVisible(True)
+                self.label_bld_diameter.setVisible(True)
+            else:
+                self.fcb_bld_diameter.setVisible(False)
+                self.label_bld_diameter.setVisible(False)
 
     def update_ok_button(self):
         if self.edit_outfile.text() == '':
