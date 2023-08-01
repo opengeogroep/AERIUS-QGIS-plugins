@@ -75,7 +75,7 @@ class TestImaer(unittest.TestCase):
             situation={'name': 'Situation 1', 'reference': 'ABCDE12345', 'type': 'PROPOSED'},
             calculation={'type': 'NATURE_AREA', 'substances': ['NH3', 'NOX'], 'result_type': 'DEPOSITION'},
             version={'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'},
-            gml_creator='3.1.1'
+            gml_creator=f'QgisImaerPlugin-3.1.1'
         )
         self.generate_gml_file(fcc, 'metadata')
 

@@ -13,6 +13,7 @@ about=Plugin for working with AERIUS Calculator IMAER files.
         - Creates Calculator input from your own data.
         - Extracts GML from AERIUS PDF files.
         - Provides a GUI to the AERIUS Connect API.
+# Also change the version number in the plugin class!
 version=version 3.3.1
 tracker=https://github.com/opengeogroep/AERIUS-QGIS-plugins/issues
 repository=https://github.com/opengeogroep/AERIUS-QGIS-plugins
