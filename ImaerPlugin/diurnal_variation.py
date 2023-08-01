@@ -25,13 +25,15 @@ class DiurnalVariationDialog(QDialog, FORM_CLASS):
         self.init_gui()
 
     def init_gui(self):
+        self.plainTextEdit_csv.textChanged.connect(self.update_ok_button)
         self.update_ok_button()
 
     def __del__(self):
-        pass
+        self.plainTextEdit_csv.textChanged.disconnect(self.update_ok_button)
 
     def update_ok_button(self):
-        if False:
+        dv = self.get_dv()
+        if dv is None:
             self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
             return
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(True)
@@ -49,5 +51,8 @@ class DiurnalVariationDialog(QDialog, FORM_CLASS):
         doc = self.plainTextEdit_csv.document()
         csv_txt = doc.toPlainText()
         result = CustomDiurnalVariation(local_id=local_id, label=label, custom_type='THREE_DAY')
-        result.values_from_csv(csv_txt)
-        return result
+        check = result.values_from_csv(csv_txt)
+        if check is True:
+            return result
+        else:
+            return None

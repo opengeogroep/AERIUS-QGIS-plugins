@@ -102,7 +102,9 @@ class TestImaer(unittest.TestCase):
         hc = SpecifiedHeatContent(value=12.5)
         es = EmissionSource(local_id=125, sector_id=9999, label='Bron 125', geom=_GEOM1, epsg_id=28992)
         rdv = ReferenceDiurnalVariation(local_id=125)
-        cdv = CustomDiurnalVariation(local_id=125, label='Test label', custom_type='DAY', values=[150, 50] * 12)
+        cdv = CustomDiurnalVariation(local_id=125, label='Test label', custom_type='DAY', values=[0.5, 1, 1.5] * 8)
+        fcc.definitions.append(cdv)
+        cdv = CustomDiurnalVariation(local_id=126, label='Test label', custom_type='THREE_DAY', values=[5, 1, 1] * 24)
         fcc.definitions.append(cdv)
         es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation=rdv)
         es.emissions.append(Emission('NH3', 5))
@@ -252,3 +254,69 @@ class TestImaer(unittest.TestCase):
         )
         fcc.feature_members.append(cp)
         self.generate_gml_file(fcc, 'calculation_points_02')
+
+    def test_custom_diurnal_variation_csv(self):
+        fcc = ImaerDocument()
+        cdv = CustomDiurnalVariation(local_id=125, label='Test label 1', custom_type='THREE_DAY')
+        csv_text = '''
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+5;1;1
+
+        '''
+        check = cdv.values_from_csv(csv_text)
+        assert check == True
+        fcc.definitions.append(cdv)
+        cdv = CustomDiurnalVariation(local_id=126, label='Test label 2', custom_type='DAY')
+        csv_text = '''
+1
+1
+1
+0.5
+0.5
+0.5
+0.5
+1
+1
+1
+1
+1
+1
+1
+1
+1.5
+1.5
+1.5
+1.5
+1
+1
+1
+1
+1
+        '''
+        check = cdv.values_from_csv(csv_text)
+        assert check == True
+        fcc.definitions.append(cdv)
+        self.generate_gml_file(fcc, 'diurnal_variation_01')
+
