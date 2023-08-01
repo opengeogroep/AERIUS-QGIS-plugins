@@ -6,10 +6,6 @@ class DiurnalVariation(object):
     def __init__(self):
         pass
 
-    def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:diurnalVariation')
-        return result
-
 
 class StandardDiurnalVariation(DiurnalVariation):
 
@@ -18,14 +14,11 @@ class StandardDiurnalVariation(DiurnalVariation):
         self.standard_type = standard_type
 
     def to_xml_elem(self, doc=QDomDocument()):
-        result = super().to_xml_elem(doc)
-
-        dv = doc.createElement('imaer:StandardDiurnalVariation')
+        result = doc.createElement('imaer:StandardDiurnalVariation')
+        
         st = doc.createElement('imaer:standardType')
         st.appendChild(doc.createTextNode(str(self.standard_type)))
-
-        dv.appendChild(st)
-        result.appendChild(dv)
+        result.appendChild(st)
 
         return result
 
@@ -36,15 +29,11 @@ class ReferenceDiurnalVariation(DiurnalVariation):
         self.local_id = local_id
 
     def to_xml_elem(self, doc=QDomDocument()):
-        result = super().to_xml_elem(doc)
-
-        rdv = doc.createElement('imaer:ReferenceDiurnalVariation')
+        result = doc.createElement('imaer:ReferenceDiurnalVariation')
 
         dv = doc.createElement('imaer:customDiurnalVariation')
         dv.setAttribute('xlink:href', f'#DiurnalProfile.{self.local_id}')
-
-        rdv.appendChild(dv)
-        result.appendChild(rdv)
+        result.appendChild(dv)
 
         return result
 
@@ -59,9 +48,6 @@ class CustomDiurnalVariation(DiurnalVariation):
         self.values = values or []
 
     def to_xml_elem(self, doc=QDomDocument()):
-        # Does not run super class method because this element will be added
-        # to the document as a "definition".
-
         result = doc.createElement('imaer:customDiurnalVariation')
         dv = doc.createElement('imaer:CustomDiurnalVariation')
         dv.setAttribute('gml:id', f'DiurnalProfile.{self.local_id}')

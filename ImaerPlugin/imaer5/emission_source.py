@@ -136,7 +136,9 @@ class EmissionSourceCharacteristics(object):
 
         # diurnal variation
         if self.diurnal_variation is not None:
-            elem = self.diurnal_variation.to_xml_elem(doc)
+            elem = doc.createElement('imaer:diurnalVariation')
+            dv = self.diurnal_variation.to_xml_elem(doc)
+            elem.appendChild(dv)
             result.appendChild(elem)
 
         return result
