@@ -481,7 +481,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 dv = ReferenceDiurnalVariation(local_id=dv_reference)
             
             esc = EmissionSourceCharacteristics(
-                building=prim_bld,
+                building_id=prim_bld,
                 emission_height=esc_height,
                 spread=esc_spread,
                 heat_content=hc,

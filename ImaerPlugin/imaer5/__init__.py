@@ -9,6 +9,7 @@ from .emission_source import (
     EmissionSourceType,
     EmissionSource,
     EmissionSourceCharacteristics,
+    ADMSSourceCharacteristics,
     SpecifiedHeatContent,
     Emission
 )

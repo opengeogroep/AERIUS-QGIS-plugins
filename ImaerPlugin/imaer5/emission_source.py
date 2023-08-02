@@ -101,8 +101,8 @@ class EmissionSource(EmissionSourceType):
 
 class EmissionSourceCharacteristics(object):
 
-    def __init__(self, building=None, heat_content=None, emission_height=None, spread=None, diurnal_variation=None):
-        self.building = building
+    def __init__(self, building_id=None, heat_content=None, emission_height=None, spread=None, diurnal_variation=None):
+        self.building_id = building_id
         self.heat_content = heat_content
         self.emission_height = emission_height
         self.spread = spread
@@ -112,9 +112,9 @@ class EmissionSourceCharacteristics(object):
         result = doc.createElement('imaer:EmissionSourceCharacteristics')
 
         # building
-        if self.building is not None:
+        if self.building_id is not None:
             elem = doc.createElement('imaer:building')
-            elem.setAttribute('xlink:href', f'#{self.building}')
+            elem.setAttribute('xlink:href', f'#{self.building_id}')
             result.appendChild(elem)
 
         # heat content
@@ -132,6 +132,89 @@ class EmissionSourceCharacteristics(object):
         if self.spread is not None:
             elem = doc.createElement('imaer:spread')
             elem.appendChild(doc.createTextNode(str(self.spread)))
+            result.appendChild(elem)
+
+        # diurnal variation
+        if self.diurnal_variation is not None:
+            elem = doc.createElement('imaer:diurnalVariation')
+            dv = self.diurnal_variation.to_xml_elem(doc)
+            elem.appendChild(dv)
+            result.appendChild(elem)
+
+        return result
+
+
+class ADMSSourceCharacteristics(object):
+
+    def __init__(self, building_id=None, height=None, specific_heat_capacity=None, source_type=None,
+        diameter=None, buoyancy_type=None, temperature=None, efflux_type=None, vertical_velocity=None,
+        diurnal_variation=None):
+        self.building_id = building_id
+        self.height = height
+        self.specific_heat_capacity = specific_heat_capacity
+        self.source_type = source_type
+        self.diameter = diameter
+        self.buoyancy_type = buoyancy_type
+        self.temperature = temperature
+        self.efflux_type = efflux_type
+        self.vertical_velocity = vertical_velocity
+        self.diurnal_variation = diurnal_variation
+
+    def to_xml_elem(self, doc=QDomDocument()):
+        result = doc.createElement('imaer:ADMSSourceCharacteristics')
+
+        # building
+        if self.building_id is not None:
+            elem = doc.createElement('imaer:building')
+            elem.setAttribute('xlink:href', f'#{self.building_id}')
+            result.appendChild(elem)
+
+        # height
+        if self.height is not None:
+            elem = doc.createElement('imaer:height')
+            elem.appendChild(doc.createTextNode(str(self.height)))
+            result.appendChild(elem)
+
+        # specific heat capacity
+        if self.specific_heat_capacity is not None:
+            elem = doc.createElement('imaer:specificHeatCapacity')
+            elem.appendChild(doc.createTextNode(str(self.specific_heat_capacity)))
+            result.appendChild(elem)
+
+        # source type
+        if self.source_type is not None:
+            elem = doc.createElement('imaer:sourceType')
+            elem.appendChild(doc.createTextNode(str(self.source_type)))
+            result.appendChild(elem)
+
+        # diameter
+        if self.diameter is not None:
+            elem = doc.createElement('imaer:diameter')
+            elem.appendChild(doc.createTextNode(str(self.diameter)))
+            result.appendChild(elem)
+
+        # buoyancy type
+        if self.buoyancy_type is not None:
+            elem = doc.createElement('imaer:buoyancyType')
+            elem.appendChild(doc.createTextNode(str(self.buoyancy_type)))
+            result.appendChild(elem)
+
+        # temperature
+        if self.temperature is not None:
+            elem = doc.createElement('imaer:temperature')
+            elem.appendChild(doc.createTextNode(str(self.temperature)))
+            result.appendChild(elem)
+
+        # efflux type
+        if self.efflux_type is not None:
+            elem = doc.createElement('imaer:effluxType')
+            elem.appendChild(doc.createTextNode(str(self.efflux_type)))
+            result.appendChild(elem)
+
+        # vertical velocity
+        if self.vertical_velocity is not None:
+            elem = doc.createElement('imaer:verticalVelocity')
+            elem.appendChild(doc.createTextNode(str(self.vertical_velocity)))
             result.appendChild(elem)
 
         # diurnal variation
