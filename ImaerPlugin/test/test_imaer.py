@@ -27,6 +27,8 @@ _GEOM1 = QgsGeometry.fromWkt('LINESTRING((1 0, 2 1, 3 0))')
 _GEOM2 = QgsGeometry.fromWkt('MULTIPOLYGON(((1 0, 2 1, 3 0, 2 -1, 1 0)))')
 _GEOM3 = QgsGeometry.fromWkt('LINESTRING((311279.0 723504.3, 311262.5 723349.6))')
 _GEOM4 = QgsGeometry.fromWkt('POLYGON((1 0, 2 1, 3 0, 2 -1, 1 0))')
+_GEOM_POINT_UK_1 = QgsGeometry.fromWkt('POINT(311618 723548)')
+_GEOM_POLY_UK_1 = QgsGeometry.fromWkt('POLYGON((311608 723548, 311618 723558, 311628 723548, 311618 723538, 311608 723548))')
 
 # Load IMAER xsd for validation check. (Needs internet connection and can take pretty long.)
 xsd_fn = os.path.join('test', 'xsd', 'IMAER_5.1.2.xsd')
@@ -113,24 +115,24 @@ class TestImaer(unittest.TestCase):
         self.generate_gml_file(fcc, 'em_char_02')
 
     def test_ffc_emission_characteristics03(self):
-        es = EmissionSource(local_id=1234, sector_id=9999, label='Bron 1234', geom=_GEOM1, epsg_id=27700)
+        es = EmissionSource(local_id=1234, sector_id=9999, label='Bron 1234', geom=_GEOM_POINT_UK_1, epsg_id=27700)
         building_id = 123
         bld = Building(
             local_id=building_id,
             height=12.3,
-            diameter=1.23,
             label='building no. 123',
-            geom=_GEOM0,
-            epsg_id=28992)
+            geom=_GEOM_POLY_UK_1,
+            epsg_id=27700)
         dv = StandardDiurnalVariation(standard_type='LIGHT_DUTY_VEHICLES')
         es.emission_source_characteristics = ADMSSourceCharacteristics(
-            building_id=building_id, height=0.5, specific_heat_capacity=1012, source_type='POINT',
-            diameter=0.001, buoyancy_type='TEMPERATURE', temperature=15, efflux_type='VELOCITY',
-            vertical_velocity=15.0, diurnal_variation=dv)
+            height=0.5, specific_heat_capacity=1012, source_type='POINT',
+            diameter=0.01, buoyancy_type='TEMPERATURE', temperature=15, efflux_type='VELOCITY',
+            vertical_velocity=15.0)
         es.emissions.append(Emission('NH3', 10))
         es.emissions.append(Emission('NOX', 50))
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
+        fcc.feature_members.append(bld)
         self.generate_gml_file(fcc, 'em_char_03')
 
     def test_create_srm2road(self):
