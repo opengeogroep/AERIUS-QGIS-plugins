@@ -40,7 +40,32 @@ emission_sectors = {
     'other': {
         'emission_tab': 'tab_emission_sources',
         'tab_name': 'Generic Sources',
-        'sector_id': 9999
+        'sector_id': 9999,
+        'ui_settings': {
+            'default': {
+                'disable_widgets': [],
+            },
+            'NL': {
+                'disable_widgets': [
+                    'label_es_adms_height', 'fcb_es_adms_height',
+                    'label_es_adms_heat_capacity', 'fcb_es_adms_heat_capacity',
+                    'label_es_adms_source_type', 'fcb_es_adms_source_type',
+                    'label_es_adms_diameter', 'fcb_es_adms_diameter',
+                    'label_es_adms_buoyancy_type', 'fcb_es_adms_buoyancy_type',
+                    'label_es_adms_temperature', 'fcb_es_adms_temperature',
+                    'label_es_adms_efflux_type', 'fcb_es_adms_efflux_type',
+                    'label_es_adms_vertical_velocity', 'fcb_es_adms_vertical_velocity',
+                ]
+            },
+            'UK': {
+                'disable_widgets': [
+                    'label_es_emission_height', 'fcb_es_emission_height',
+                    'label_es_spread', 'fcb_es_spread',
+                    'label_es_prim_bld', 'fcb_es_prim_bld',
+                    'groupBox_heatContent',
+                ],
+            }
+        }
     },
     'buildings': {
         'emission_tab': 'tab_buildings',

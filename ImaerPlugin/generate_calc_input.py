@@ -15,7 +15,8 @@ from qgis.PyQt.QtWidgets import (
     QLabel,
     QLineEdit,
     QSizePolicy,
-    QWidget
+    QWidget,
+    QGroupBox
 )
 from qgis.PyQt.QtGui import (
     QStandardItem,
@@ -46,6 +47,7 @@ from ImaerPlugin.diurnal_variation import DiurnalVariationDialog
 from ImaerPlugin.imaer5 import (
     ADMSRoad,
     AdmsRoadSideBarrier,
+    ADMSSourceCharacteristics,
     AeriusCalculatorMetadata,
     Building,
     CalculationPoint,
@@ -284,8 +286,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             # TODO: Raise error
 
         for sector in [sector1, sector2, sector3, sector4, sector5]:
-            if sector is None:
-                pass
             if sector in emission_sectors and 'ui_settings' in emission_sectors[sector]:
                 # Running this loop twice because looping all objects of the QWidget
                 # class resulted in a frozen dialog.
@@ -299,12 +299,20 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                         widget.setVisible(False)
                     else:
                         widget.setVisible(True)
+                for widget in self.findChildren(QGroupBox):
+                    if widget.objectName() in emission_sectors[sector]['ui_settings'][country]['disable_widgets']:
+                        widget.setVisible(False)
+                    else:
+                        widget.setVisible(True)
                 if 'emission_tab' in emission_sectors[sector]:
-                    vehicle_page = emission_sectors[sector]['ui_settings'][country]['vehicle_page']
-                    # print(vehicle_page)
-                    stack = getattr(self, 'stack_rd_veh')
-                    page = getattr(self, vehicle_page)
-                    stack.setCurrentWidget(page)
+                    try:
+                        vehicle_page = emission_sectors[sector]['ui_settings'][country]['vehicle_page']
+                        # print(vehicle_page)
+                        stack = getattr(self, 'stack_rd_veh')
+                        page = getattr(self, vehicle_page)
+                        stack.setCurrentWidget(page)
+                    except(KeyError):
+                        pass
 
     def update_field_combos(self):
         for fcb in self.findChildren(QgsFieldComboBox):
@@ -418,7 +426,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
                 # if it is the emissions source layer, process this
                 if input_layer['code'] == 'es':
-                    es = self.get_emission_source_from_gui(feat, geom, crs_dest_srid, local_id)
+                    if country == 'NL':
+                        es = self.get_emission_source_from_gui(feat, geom, crs_dest_srid, local_id)
+                    elif country == 'UK':
+                        es = self.get_adms_emission_source_from_gui(feat, geom, crs_dest_srid, local_id)
                     imaer_doc.feature_members.append(es)
 
                 # if it is the road layer process as such
@@ -488,6 +499,52 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 diurnal_variation=dv,
             )
             es.emission_source_characteristics = esc
+
+        # emissions
+        es.emissions = []
+        em = self.get_feature_value(self.fcb_em_nox, feat)
+        if em is not None:
+            es.emissions.append(Emission('NOX', em))
+        em = self.get_feature_value(self.fcb_em_nh3, feat)
+        if em is not None:
+            es.emissions.append(Emission('NH3', em))
+
+        return es
+
+    # ADMS Emission Source
+    def get_adms_emission_source_from_gui(self, feat, geom, epsg_id, local_id):
+        sector_id = self.get_feature_value(self.fcb_es_sector_id, feat)
+        label = self.get_feature_value(self.fcb_es_label, feat)
+        description = self.get_feature_value(self.fcb_es_description, feat)
+
+        es = EmissionSource(local_id=local_id, sector_id=sector_id, label=label, geom=geom, epsg_id=epsg_id)
+        es.description = description
+
+        # emission source characteristics
+        if self.groupBox_es_characteristics.isChecked():
+            asc_height = self.get_feature_value(self.fcb_es_adms_height, feat)
+            asc_heat_capacity = self.get_feature_value(self.fcb_es_adms_heat_capacity, feat)
+            asc_source_type = self.get_feature_value(self.fcb_es_adms_source_type, feat)
+            asc_diameter = self.get_feature_value(self.fcb_es_adms_diameter, feat)
+            asc_buoyancy_type = self.get_feature_value(self.fcb_es_adms_buoyancy_type, feat)
+            asc_temperature = self.get_feature_value(self.fcb_es_adms_temperature, feat)
+            asc_efflux_type = self.get_feature_value(self.fcb_es_adms_efflux_type, feat)
+            asc_vertical_velocity = self.get_feature_value(self.fcb_es_adms_vertical_velocity, feat)
+
+             # diurnal variation
+            dv = None
+            dv_standard = self.get_feature_value(self.fcb_es_dv_standard, feat)
+            if dv_standard is not None:
+                dv = StandardDiurnalVariation(standard_type=dv_standard)
+            dv_reference = self.get_feature_value(self.fcb_es_dv_reference, feat)
+            if dv_reference is not None:
+                dv = ReferenceDiurnalVariation(local_id=dv_reference)
+            
+            asc = ADMSSourceCharacteristics(
+                height=asc_height, specific_heat_capacity=asc_heat_capacity, source_type=asc_source_type,
+                diameter=asc_diameter, buoyancy_type=asc_buoyancy_type, temperature=asc_temperature,
+                efflux_type=asc_efflux_type, vertical_velocity=asc_vertical_velocity)
+            es.emission_source_characteristics = asc
 
         # emissions
         es.emissions = []

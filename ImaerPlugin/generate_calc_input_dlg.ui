@@ -238,8 +238,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>608</width>
-            <height>633</height>
+            <width>594</width>
+            <height>864</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_13">
@@ -321,7 +321,7 @@
                <widget class="QgsFieldComboBox" name="fcb_es_emission_height"/>
               </item>
               <item row="1" column="0">
-               <widget class="QLabel" name="label_es_emission_spread">
+               <widget class="QLabel" name="label_es_spread">
                 <property name="text">
                  <string>spread</string>
                 </property>
@@ -340,7 +340,7 @@
               <item row="2" column="1">
                <widget class="QgsFieldComboBox" name="fcb_es_prim_bld"/>
               </item>
-              <item row="3" column="0" colspan="2">
+              <item row="11" column="0" colspan="2">
                <widget class="QGroupBox" name="groupBox_heatContent">
                 <property name="title">
                  <string>Specified heat content</string>
@@ -359,7 +359,7 @@
                 </layout>
                </widget>
               </item>
-              <item row="4" column="0" colspan="2">
+              <item row="12" column="0" colspan="2">
                <widget class="QGroupBox" name="groupBox_5">
                 <property name="title">
                  <string>Diurnal Variation</string>
@@ -387,6 +387,86 @@
                  </item>
                 </layout>
                </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_es_adms_height">
+                <property name="text">
+                 <string>height</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_es_adms_heat_capacity">
+                <property name="text">
+                 <string>specific heat capacity</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_es_adms_source_type">
+                <property name="text">
+                 <string>source type</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="0">
+               <widget class="QLabel" name="label_es_adms_diameter">
+                <property name="text">
+                 <string>diameter</string>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="0">
+               <widget class="QLabel" name="label_es_adms_buoyancy_type">
+                <property name="text">
+                 <string>buoyancy type</string>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="0">
+               <widget class="QLabel" name="label_es_adms_temperature">
+                <property name="text">
+                 <string>temperature</string>
+                </property>
+               </widget>
+              </item>
+              <item row="9" column="0">
+               <widget class="QLabel" name="label_es_adms_efflux_type">
+                <property name="text">
+                 <string>efflux type</string>
+                </property>
+               </widget>
+              </item>
+              <item row="10" column="0">
+               <widget class="QLabel" name="label_es_adms_vertical_velocity">
+                <property name="text">
+                 <string>vertical velocity</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_height"/>
+              </item>
+              <item row="4" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_heat_capacity"/>
+              </item>
+              <item row="5" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_source_type"/>
+              </item>
+              <item row="6" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_diameter"/>
+              </item>
+              <item row="7" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_buoyancy_type"/>
+              </item>
+              <item row="8" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_temperature"/>
+              </item>
+              <item row="9" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_efflux_type"/>
+              </item>
+              <item row="10" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_vertical_velocity"/>
               </item>
              </layout>
             </widget>
