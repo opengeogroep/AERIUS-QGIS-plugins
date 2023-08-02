@@ -464,27 +464,33 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             esc_spread = self.get_feature_value(self.fcb_es_spread, feat)
             prim_bld = self.get_feature_value(self.fcb_es_prim_bld, feat)
 
+            # heat content
             hc_value = self.get_feature_value(self.fcb_es_hc_value, feat)
             if hc_value is not None:
                 hc = SpecifiedHeatContent(value=hc_value)
             else:
                 hc = None
-            if prim_bld is None:
-                es.emission_source_characteristics = EmissionSourceCharacteristics(
-                    emission_height=esc_height,
-                    spread=esc_spread,
-                    heat_content=hc,
-                )
-            else:
-                es.emission_source_characteristics = EmissionSourceCharacteristics(
-                    building=prim_bld,
-                    emission_height=esc_height,
-                    spread=esc_spread,
-                    heat_content=hc,
-                )
+
+            # diurnal variation
+            dv = None
+            dv_standard = self.get_feature_value(self.fcb_es_dv_standard, feat)
+            if dv_standard is not None:
+                dv = StandardDiurnalVariation(standard_type=dv_standard)
+            dv_reference = self.get_feature_value(self.fcb_es_dv_reference, feat)
+            if dv_reference is not None:
+                dv = ReferenceDiurnalVariation(local_id=dv_reference)
+            
+            esc = EmissionSourceCharacteristics(
+                building=prim_bld,
+                emission_height=esc_height,
+                spread=esc_spread,
+                heat_content=hc,
+                diurnal_variation=dv,
+            )
+            es.emission_source_characteristics = esc
 
         # emissions
-        es.emissions = []  # TODO: Figure out why and fix this! (Without setting this clean list, emissions from former features are present.)
+        es.emissions = []
         em = self.get_feature_value(self.fcb_em_nox, feat)
         if em is not None:
             es.emissions.append(Emission('NOX', em))
