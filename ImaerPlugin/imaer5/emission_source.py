@@ -114,7 +114,7 @@ class EmissionSourceCharacteristics(object):
         # building
         if self.building_id is not None:
             elem = doc.createElement('imaer:building')
-            elem.setAttribute('xlink:href', f'#{self.building_id}')
+            elem.setAttribute('xlink:href', f'#Building.{self.building_id}')
             result.appendChild(elem)
 
         # heat content
@@ -166,7 +166,7 @@ class ADMSSourceCharacteristics(object):
         # building
         if self.building_id is not None:
             elem = doc.createElement('imaer:building')
-            elem.setAttribute('xlink:href', f'#{self.building_id}')
+            elem.setAttribute('xlink:href', f'#Building.{self.building_id}')
             result.appendChild(elem)
 
         # height
