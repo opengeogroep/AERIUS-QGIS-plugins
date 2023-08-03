@@ -13,12 +13,17 @@
 
 # Generate Calculator Input
 
-Convert your emission source data from a QGIS layer into an IMAER GML file which can be used as AERIUS Calculator input.
+Convert your own data into IMAER GML data for use in AERIUS Calculator. This feature can turn data from any type of QGIS vector layer into emission sources, buildings and/or calculation points.
+
+The the available fields in the interface are depending on your country setting.
+
+The plugin simply attempts to generate the GML code based on your input data and plugin settings. There is no check for data validity! The easiest way to check validity is using the website.
+In general, leaving a field blank or having NULL values in your data will result in NULL values in the output. For optional parameters, this will simply not output anything. But in case of mandatory data it might result in errors.
 
 ## Emission Sources
 
 Open your emission data as a regular vector layer in QGIS. The geometries can be points,
-lines or polygons.
+lines or polygons. (And not multi-points, -lines or -polygons.)
 
 ![dialog](img/generate_aerius_calculator_input_dlg_2.png)
 
@@ -34,7 +39,7 @@ After pressing Save, the GML file will be generated. A link to the file will be 
 
 ## Other Content
 
-You can also generate other information to GML, such as buildings and calculation points.
+You can also generate other information into GML, such as buildings and calculation points.
 
 ### Buildings
 
@@ -43,15 +48,13 @@ You can also generate other information to GML, such as buildings and calculatio
 Buildings can either be created from a (single) polygon layer or a point layer containing
 a diameter value (for circular buildings).
 
-The id field should contain the same integer value as used in the emission source pointing to it. The
-generated GML will automatically contain the right localId values referring to the buildings.
+The id field should contain the same integer value as used in the emission source pointing to it. The generated GML will automatically contain the right localId values referring to the buildings.
 
 ### Calculation Points
 
 ![dialog](img/generate_aerius_calculator_input_dlg_cp.png)
 
-Those are typically stand alone GML files to upload to AERIUS Connect for calulating depositions
-at your own locations. The input must be a point layer.
+Those are typically stand alone GML files to upload to AERIUS Connect for calulating depositions at your peronally picked locations. The input must be a point layer.
 
 ### Diurnal Variation
 
@@ -92,6 +95,5 @@ create your own software to connect to it.
 
 * The current version of the generated GML file is `IMAER 5.1`
 * IMAER does not support multi geometry types (like MultiLineString) and will try to
-convert your data in case it has a multi type, as single geometry data is often stored as multi geometry in GIS.
-* Your attribute data must contain the exact values that should end up in the GML file. The plugin
-does not attempt to convert values in some smart way.
+convert your data in case it has a multi type, because single geometry data is often stored as multi geometry type in GIS.
+* Your attribute data must contain the exact values that should end up in the GML file. The plugin does not attempt to convert values in some smart way.
