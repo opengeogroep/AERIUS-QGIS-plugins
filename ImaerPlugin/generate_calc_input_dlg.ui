@@ -120,7 +120,7 @@
    <item>
     <widget class="QTabWidget" name="tabs_mapping">
      <property name="currentIndex">
-      <number>1</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="tab_metadata">
       <attribute name="title">
@@ -580,7 +580,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-1364</y>
             <width>594</width>
             <height>1997</height>
            </rect>
@@ -595,7 +595,7 @@
               <item row="0" column="0">
                <widget class="QStackedWidget" name="stack_rd_veh">
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>0</number>
                 </property>
                 <widget class="QWidget" name="page_veh_srm2">
                  <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -1767,6 +1767,135 @@
    <header>qgsmaplayercombobox.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>combo_country</tabstop>
+  <tabstop>combo_crs</tabstop>
+  <tabstop>group_input_es</tabstop>
+  <tabstop>radioButton_es</tabstop>
+  <tabstop>radioButton_rd</tabstop>
+  <tabstop>checkBox_bld</tabstop>
+  <tabstop>checkBox_cp</tabstop>
+  <tabstop>checkBox_dv</tabstop>
+  <tabstop>tabs_mapping</tabstop>
+  <tabstop>group_project</tabstop>
+  <tabstop>combo_project_year</tabstop>
+  <tabstop>edit_project_description</tabstop>
+  <tabstop>group_situation</tabstop>
+  <tabstop>edit_situation_name</tabstop>
+  <tabstop>combo_situation_type</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>fcb_es_emission_height</tabstop>
+  <tabstop>fcb_es_spread</tabstop>
+  <tabstop>fcb_es_prim_bld</tabstop>
+  <tabstop>fcb_es_adms_height</tabstop>
+  <tabstop>fcb_es_adms_heat_capacity</tabstop>
+  <tabstop>fcb_es_adms_source_type</tabstop>
+  <tabstop>fcb_es_adms_diameter</tabstop>
+  <tabstop>fcb_es_adms_elevation_angle</tabstop>
+  <tabstop>fcb_es_adms_horizontal_angle</tabstop>
+  <tabstop>fcb_es_adms_width</tabstop>
+  <tabstop>fcb_es_adms_vertical_dimension</tabstop>
+  <tabstop>fcb_es_adms_buoyancy_type</tabstop>
+  <tabstop>fcb_es_adms_density</tabstop>
+  <tabstop>fcb_es_adms_temperature</tabstop>
+  <tabstop>fcb_es_adms_efflux_type</tabstop>
+  <tabstop>fcb_es_adms_vertical_velocity</tabstop>
+  <tabstop>fcb_es_adms_volumetric_flow_rate</tabstop>
+  <tabstop>fcb_es_hc_value</tabstop>
+  <tabstop>fcb_es_dv_standard</tabstop>
+  <tabstop>fcb_es_dv_reference</tabstop>
+  <tabstop>scrollArea_2</tabstop>
+  <tabstop>combo_layer_rd</tabstop>
+  <tabstop>fcb_rd_label</tabstop>
+  <tabstop>fcb_rd_description</tabstop>
+  <tabstop>fcb_rd_area_type</tabstop>
+  <tabstop>fcb_rd_type</tabstop>
+  <tabstop>fcb_rd_width</tabstop>
+  <tabstop>fcb_rd_elevation</tabstop>
+  <tabstop>fcb_rd_gradient</tabstop>
+  <tabstop>fcb_rd_coverage</tabstop>
+  <tabstop>fcb_rd_tunnel_factor</tabstop>
+  <tabstop>fcb_rd_elevation_height</tabstop>
+  <tabstop>fcb_rd_b_left_type</tabstop>
+  <tabstop>fcb_rd_b_left_height</tabstop>
+  <tabstop>fcb_rd_b_left_height_av</tabstop>
+  <tabstop>fcb_rd_b_left_height_max</tabstop>
+  <tabstop>fcb_rd_b_left_height_min</tabstop>
+  <tabstop>fcb_rd_b_left_distance</tabstop>
+  <tabstop>fcb_rd_b_left_porosity</tabstop>
+  <tabstop>fcb_rd_v_eft_n_taxi</tabstop>
+  <tabstop>fcb_rd_v_eft_n_car</tabstop>
+  <tabstop>fcb_rd_b_right_type</tabstop>
+  <tabstop>fcb_rd_b_right_height</tabstop>
+  <tabstop>fcb_rd_b_right_height_av</tabstop>
+  <tabstop>fcb_rd_b_right_height_max</tabstop>
+  <tabstop>fcb_rd_b_right_height_min</tabstop>
+  <tabstop>fcb_rd_b_right_distance</tabstop>
+  <tabstop>fcb_rd_b_right_porosity</tabstop>
+  <tabstop>fcb_rd_dv_standard</tabstop>
+  <tabstop>fcb_rd_dv_reference</tabstop>
+  <tabstop>radio_veh_page_custom</tabstop>
+  <tabstop>radio_veh_page_eft</tabstop>
+  <tabstop>fcb_rd_v_custom_description</tabstop>
+  <tabstop>fcb_rd_v_custom_movements</tabstop>
+  <tabstop>fcb_rd_v_custom_movements_units</tabstop>
+  <tabstop>fcb_rd_v_custom_em_nox</tabstop>
+  <tabstop>fcb_rd_v_custom_em_nh3</tabstop>
+  <tabstop>fcb_rd_v_lt1_vehicles_per_time</tabstop>
+  <tabstop>fcb_rd_v_lt1_stagnation</tabstop>
+  <tabstop>fcb_rd_v_lt1_maxspeed</tabstop>
+  <tabstop>fcb_rd_v_lt1_strict</tabstop>
+  <tabstop>fcb_rd_v_lt2_vehicles_per_time</tabstop>
+  <tabstop>fcb_rd_v_lt2_stagnation</tabstop>
+  <tabstop>fcb_rd_v_lt2_maxspeed</tabstop>
+  <tabstop>fcb_rd_v_lt2_strict</tabstop>
+  <tabstop>fcb_rd_v_nf_vehicles_per_time</tabstop>
+  <tabstop>fcb_rd_v_nf_stagnation</tabstop>
+  <tabstop>fcb_rd_v_nf_maxspeed</tabstop>
+  <tabstop>fcb_rd_v_nf_strict</tabstop>
+  <tabstop>fcb_rd_v_hf_vehicles_per_time</tabstop>
+  <tabstop>fcb_rd_v_hf_stagnation</tabstop>
+  <tabstop>fcb_rd_v_hf_maxspeed</tabstop>
+  <tabstop>fcb_rd_v_hf_strict</tabstop>
+  <tabstop>fcb_rd_v_ab_vehicles_per_time</tabstop>
+  <tabstop>fcb_rd_v_ab_stagnation</tabstop>
+  <tabstop>fcb_rd_v_ab_maxspeed</tabstop>
+  <tabstop>fcb_rd_v_ab_strict</tabstop>
+  <tabstop>scrollArea_4</tabstop>
+  <tabstop>combo_layer_bld</tabstop>
+  <tabstop>fcb_bld_id</tabstop>
+  <tabstop>fcb_bld_label</tabstop>
+  <tabstop>fcb_bld_height</tabstop>
+  <tabstop>fcb_bld_diameter</tabstop>
+  <tabstop>scrollArea_3</tabstop>
+  <tabstop>combo_layer_cp</tabstop>
+  <tabstop>fcb_cp_id</tabstop>
+  <tabstop>fcb_cp_label</tabstop>
+  <tabstop>fcb_cp_desc</tabstop>
+  <tabstop>fcb_cp_height</tabstop>
+  <tabstop>fcb_cp_category</tabstop>
+  <tabstop>tableView_dv</tabstop>
+  <tabstop>button_dv_add</tabstop>
+  <tabstop>button_dv_edit</tabstop>
+  <tabstop>button_dv_delete</tabstop>
+  <tabstop>edit_outfile</tabstop>
+  <tabstop>button_outfile</tabstop>
+  <tabstop>btn_save_settings</tabstop>
+  <tabstop>btn_load_settings</tabstop>
+  <tabstop>fcb_rd_v_eft_n_motor</tabstop>
+  <tabstop>fcb_rd_v_eft_n_lgv</tabstop>
+  <tabstop>fcb_rd_v_eft_n_bus</tabstop>
+  <tabstop>fcb_em_nh3</tabstop>
+  <tabstop>fcb_rd_v_eft_n_hgv</tabstop>
+  <tabstop>fcb_rd_v_eft_units</tabstop>
+  <tabstop>fcb_rd_v_eft_link_speed</tabstop>
+  <tabstop>fcb_es_description</tabstop>
+  <tabstop>fcb_es_label</tabstop>
+  <tabstop>combo_layer_es</tabstop>
+  <tabstop>fcb_em_nox</tabstop>
+  <tabstop>groupBox_es_characteristics</tabstop>
+  <tabstop>fcb_es_sector_id</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -1776,8 +1905,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>639</x>
+     <y>1012</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -1792,8 +1921,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>639</x>
+     <y>1012</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
