@@ -61,7 +61,6 @@ emission_sectors = {
                 'disable_widgets': [
                     'label_es_emission_height', 'fcb_es_emission_height',
                     'label_es_spread', 'fcb_es_spread',
-                    'label_es_prim_bld', 'fcb_es_prim_bld',
                     'groupBox_heatContent',
                 ],
             }

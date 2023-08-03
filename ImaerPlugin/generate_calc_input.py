@@ -522,6 +522,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         # emission source characteristics
         if self.groupBox_es_characteristics.isChecked():
+            prim_bld = self.get_feature_value(self.fcb_es_prim_bld, feat)
             asc_height = self.get_feature_value(self.fcb_es_adms_height, feat)
             asc_heat_capacity = self.get_feature_value(self.fcb_es_adms_heat_capacity, feat)
             asc_source_type = self.get_feature_value(self.fcb_es_adms_source_type, feat)
@@ -541,7 +542,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 dv = ReferenceDiurnalVariation(local_id=dv_reference)
             
             asc = ADMSSourceCharacteristics(
-                height=asc_height, specific_heat_capacity=asc_heat_capacity, source_type=asc_source_type,
+                building_id=prim_bld, height=asc_height, specific_heat_capacity=asc_heat_capacity, source_type=asc_source_type,
                 diameter=asc_diameter, buoyancy_type=asc_buoyancy_type, temperature=asc_temperature,
                 efflux_type=asc_efflux_type, vertical_velocity=asc_vertical_velocity, diurnal_variation=dv)
             es.emission_source_characteristics = asc
