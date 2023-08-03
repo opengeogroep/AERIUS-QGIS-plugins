@@ -13,56 +13,22 @@
 
 # Generate Calculator Input
 
-Convert your emission source data from a QGIS layer into an IMAER GML file which can be used as AERIUS Calculator input.
+Convert your emission source data into an IMAER GML file which can be used as AERIUS Calculator input.
 
-## Emission Sources
+## Howto
 
 Open your emission data as a regular vector layer in QGIS. The geometries can be points,
 lines or polygons.
 
 ![dialog](img/generate_aerius_calculator_input_dlg_2.png)
 
-1. Make sure your Country and CRS are set to the right values. If not, change them in the plugin configuration dialog.
-2. Click the Generate IMAER Calculator input GML button to open the dialog for generating Calculator input GML.
-3. Choose the emission source type for your data. Currently only 2 sectors are available, `Roads` and `Generic` (for generic emission sources).
-4. In both the Metadata and Emission Source tabs, choose the fields from your layer for every variable you want to store in the GML file.
-5. Choose a file name for your GML file. The dialog will suggest a name including the current date and time (like `calcinput_20230623_130244.gml`)
-
-![dialog](img/generate_aerius_calculator_input_dlg_es.png)
+1. Click the Generate input GML button to open the dialog for generating Calculator input GML.
+2. Choose the layer with your input data and coordinate reference system (CRS).
+3. Choose the sector for your data. Currently only 2 sectors are available, `ROAD_TRANSPORTATION` and `OTHER` (for generic emission sources).
+4. In both the Metadata and Sector tabs, choose the fields from your layer for every variable you want to store in the GML file.
+5. Choose a file name for your GML file. The dialog will suggest a name including the current date and time (like `calcinput_20200907_193245.gml`)
 
 After pressing Save, the GML file will be generated. A link to the file will be displayed in the message bar on top of your map. If anything goes wrong, an error will be displayed there.
-
-## Other Content
-
-You can also generate other information to GML, such as buildings and calculation points.
-
-### Buildings
-
-![dialog](img/generate_aerius_calculator_input_dlg_bld.png)
-
-Buildings can either be created from a (single) polygon layer or a point layer containing
-a diameter value (for circular buildings).
-
-The id field should contain the same integer value as used in the emission source pointing to it. The
-generated GML will automatically contain the right localId values referring to the buildings.
-
-### Calculation Points
-
-![dialog](img/generate_aerius_calculator_input_dlg_cp.png)
-
-Those are typically stand alone GML files to upload to AERIUS Connect for calulating depositions
-at your own locations. The input must be a point layer.
-
-### Diurnal Variation
-
-![dialog](img/generate_aerius_calculator_input_dlg_dv.png)
-
-Diurnal variation profiles are not created from a layer (as there is no geometry needed) but by hand
-from a semicolon separated value table.
-
-The three values per hour of the day are for mon-fri ; saturday ; sunday. In total there should b 72 values (24h x 7d).
-
-The id field should contain the same integer value as used in the emission source pointing to it.
 
 ## Saving and loading settings
 
