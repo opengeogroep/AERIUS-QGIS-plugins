@@ -309,7 +309,7 @@ class TestImaer(unittest.TestCase):
 
         '''
         check = cdv.values_from_csv(csv_text)
-        assert check == True
+        assert check is True
         fcc.definitions.append(cdv)
         cdv = CustomDiurnalVariation(local_id=126, label='Test label 2', custom_type='DAY')
         csv_text = '''
@@ -339,7 +339,6 @@ class TestImaer(unittest.TestCase):
 1
         '''
         check = cdv.values_from_csv(csv_text)
-        assert check == True
+        assert check is True
         fcc.definitions.append(cdv)
         self.generate_gml_file(fcc, 'diurnal_variation_01')
-

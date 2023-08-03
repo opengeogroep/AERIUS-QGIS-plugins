@@ -490,7 +490,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             dv_reference = self.get_feature_value(self.fcb_es_dv_reference, feat)
             if dv_reference is not None:
                 dv = ReferenceDiurnalVariation(local_id=dv_reference)
-            
+
             esc = EmissionSourceCharacteristics(
                 building_id=prim_bld,
                 emission_height=esc_height,
@@ -538,7 +538,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             asc_vertical_velocity = self.get_feature_value(self.fcb_es_adms_vertical_velocity, feat)
             asc_volumetric_flow_rate = self.get_feature_value(self.fcb_es_adms_volumetric_flow_rate, feat)
 
-             # diurnal variation
+            # diurnal variation
             dv = None
             dv_standard = self.get_feature_value(self.fcb_es_dv_standard, feat)
             if dv_standard is not None:
@@ -546,13 +546,13 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             dv_reference = self.get_feature_value(self.fcb_es_dv_reference, feat)
             if dv_reference is not None:
                 dv = ReferenceDiurnalVariation(local_id=dv_reference)
-            
+
             asc = ADMSSourceCharacteristics(
                 building_id=prim_bld, height=asc_height, specific_heat_capacity=asc_heat_capacity,
                 source_type=asc_source_type, diameter=asc_diameter, elevation_angle=asc_elevation_angle,
                 horizontal_angle=asc_horizontal_angle, width=asc_width,
                 vertical_dimension=asc_vertical_dimension, buoyancy_type=asc_buoyancy_type,
-                density=asc_density, temperature=asc_temperature, efflux_type=asc_efflux_type, 
+                density=asc_density, temperature=asc_temperature, efflux_type=asc_efflux_type,
                 vertical_velocity=asc_vertical_velocity, volumetric_flow_rate=asc_volumetric_flow_rate,
                 diurnal_variation=dv)
             es.emission_source_characteristics = asc

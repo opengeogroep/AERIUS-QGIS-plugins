@@ -146,11 +146,13 @@ class EmissionSourceCharacteristics(object):
 
 class ADMSSourceCharacteristics(object):
 
-    def __init__(self, building_id=None, height=None, specific_heat_capacity=None,
+    def __init__(
+        self, building_id=None, height=None, specific_heat_capacity=None,
         source_type=None, diameter=None, elevation_angle=None, horizontal_angle=None,
         width=None, vertical_dimension=None, buoyancy_type=None, density=None,
         temperature=None, efflux_type=None, vertical_velocity=None,
-        volumetric_flow_rate=None, diurnal_variation=None):
+        volumetric_flow_rate=None, diurnal_variation=None
+    ):
         self.building_id = building_id
         self.height = height
         self.specific_heat_capacity = specific_heat_capacity

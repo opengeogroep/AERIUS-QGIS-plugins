@@ -15,7 +15,7 @@ class StandardDiurnalVariation(DiurnalVariation):
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement('imaer:StandardDiurnalVariation')
-        
+
         st = doc.createElement('imaer:standardType')
         st.appendChild(doc.createTextNode(str(self.standard_type)))
         result.appendChild(st)
@@ -104,11 +104,11 @@ class CustomDiurnalVariation(DiurnalVariation):
                 for value in line.split(';'):
                     try:
                         values.append(float(value))
-                    except(ValueError):
+                    except ValueError:
                         return False
             if len(values) == cols:
                 rows.append(values)
-        
+
         cnt = 0
         for col in rows:
             cnt += len(col)
