@@ -543,7 +543,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             asc = ADMSSourceCharacteristics(
                 height=asc_height, specific_heat_capacity=asc_heat_capacity, source_type=asc_source_type,
                 diameter=asc_diameter, buoyancy_type=asc_buoyancy_type, temperature=asc_temperature,
-                efflux_type=asc_efflux_type, vertical_velocity=asc_vertical_velocity)
+                efflux_type=asc_efflux_type, vertical_velocity=asc_vertical_velocity, diurnal_variation=dv)
             es.emission_source_characteristics = asc
 
         # emissions
