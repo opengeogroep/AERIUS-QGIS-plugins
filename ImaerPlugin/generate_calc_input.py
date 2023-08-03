@@ -527,10 +527,16 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             asc_heat_capacity = self.get_feature_value(self.fcb_es_adms_heat_capacity, feat)
             asc_source_type = self.get_feature_value(self.fcb_es_adms_source_type, feat)
             asc_diameter = self.get_feature_value(self.fcb_es_adms_diameter, feat)
+            asc_elevation_angle = self.get_feature_value(self.fcb_es_adms_elevation_angle, feat)
+            asc_horizontal_angle = self.get_feature_value(self.fcb_es_adms_horizontal_angle, feat)
+            asc_width = self.get_feature_value(self.fcb_es_adms_width, feat)
+            asc_vertical_dimension = self.get_feature_value(self.fcb_es_adms_vertical_dimension, feat)
             asc_buoyancy_type = self.get_feature_value(self.fcb_es_adms_buoyancy_type, feat)
+            asc_density = self.get_feature_value(self.fcb_es_adms_density, feat)
             asc_temperature = self.get_feature_value(self.fcb_es_adms_temperature, feat)
             asc_efflux_type = self.get_feature_value(self.fcb_es_adms_efflux_type, feat)
             asc_vertical_velocity = self.get_feature_value(self.fcb_es_adms_vertical_velocity, feat)
+            asc_volumetric_flow_rate = self.get_feature_value(self.fcb_es_adms_volumetric_flow_rate, feat)
 
              # diurnal variation
             dv = None
@@ -542,9 +548,13 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 dv = ReferenceDiurnalVariation(local_id=dv_reference)
             
             asc = ADMSSourceCharacteristics(
-                building_id=prim_bld, height=asc_height, specific_heat_capacity=asc_heat_capacity, source_type=asc_source_type,
-                diameter=asc_diameter, buoyancy_type=asc_buoyancy_type, temperature=asc_temperature,
-                efflux_type=asc_efflux_type, vertical_velocity=asc_vertical_velocity, diurnal_variation=dv)
+                building_id=prim_bld, height=asc_height, specific_heat_capacity=asc_heat_capacity,
+                source_type=asc_source_type, diameter=asc_diameter, elevation_angle=asc_elevation_angle,
+                horizontal_angle=asc_horizontal_angle, width=asc_width,
+                vertical_dimension=asc_vertical_dimension, buoyancy_type=asc_buoyancy_type,
+                density=asc_density, temperature=asc_temperature, efflux_type=asc_efflux_type, 
+                vertical_velocity=asc_vertical_velocity, volumetric_flow_rate=asc_volumetric_flow_rate,
+                diurnal_variation=dv)
             es.emission_source_characteristics = asc
 
         # emissions

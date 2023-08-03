@@ -237,9 +237,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-295</y>
             <width>594</width>
-            <height>864</height>
+            <height>1050</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_13">
@@ -340,7 +340,97 @@
               <item row="2" column="1">
                <widget class="QgsFieldComboBox" name="fcb_es_prim_bld"/>
               </item>
-              <item row="11" column="0" colspan="2">
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_es_adms_height">
+                <property name="text">
+                 <string>height</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_height"/>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_es_adms_heat_capacity">
+                <property name="text">
+                 <string>specific heat capacity</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_heat_capacity"/>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_es_adms_source_type">
+                <property name="text">
+                 <string>source type</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_source_type"/>
+              </item>
+              <item row="6" column="0">
+               <widget class="QLabel" name="label_es_adms_diameter">
+                <property name="text">
+                 <string>diameter</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_diameter"/>
+              </item>
+              <item row="7" column="0">
+               <widget class="QLabel" name="label_es_adms_elevation_angle">
+                <property name="text">
+                 <string>elevation angle</string>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_elevation_angle"/>
+              </item>
+              <item row="11" column="0">
+               <widget class="QLabel" name="label_es_adms_buoyancy_type">
+                <property name="text">
+                 <string>buoyancy type</string>
+                </property>
+               </widget>
+              </item>
+              <item row="11" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_buoyancy_type"/>
+              </item>
+              <item row="13" column="0">
+               <widget class="QLabel" name="label_es_adms_temperature">
+                <property name="text">
+                 <string>temperature</string>
+                </property>
+               </widget>
+              </item>
+              <item row="13" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_temperature"/>
+              </item>
+              <item row="14" column="0">
+               <widget class="QLabel" name="label_es_adms_efflux_type">
+                <property name="text">
+                 <string>efflux type</string>
+                </property>
+               </widget>
+              </item>
+              <item row="14" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_efflux_type"/>
+              </item>
+              <item row="15" column="0">
+               <widget class="QLabel" name="label_es_adms_vertical_velocity">
+                <property name="text">
+                 <string>vertical velocity</string>
+                </property>
+               </widget>
+              </item>
+              <item row="15" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_vertical_velocity"/>
+              </item>
+              <item row="17" column="0" colspan="2">
                <widget class="QGroupBox" name="groupBox_heatContent">
                 <property name="title">
                  <string>Specified heat content</string>
@@ -359,7 +449,7 @@
                 </layout>
                </widget>
               </item>
-              <item row="12" column="0" colspan="2">
+              <item row="18" column="0" colspan="2">
                <widget class="QGroupBox" name="groupBox_5">
                 <property name="title">
                  <string>Diurnal Variation</string>
@@ -388,85 +478,55 @@
                 </layout>
                </widget>
               </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="label_es_adms_height">
-                <property name="text">
-                 <string>height</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
-               <widget class="QLabel" name="label_es_adms_heat_capacity">
-                <property name="text">
-                 <string>specific heat capacity</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="0">
-               <widget class="QLabel" name="label_es_adms_source_type">
-                <property name="text">
-                 <string>source type</string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="0">
-               <widget class="QLabel" name="label_es_adms_diameter">
-                <property name="text">
-                 <string>diameter</string>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="0">
-               <widget class="QLabel" name="label_es_adms_buoyancy_type">
-                <property name="text">
-                 <string>buoyancy type</string>
-                </property>
-               </widget>
-              </item>
               <item row="8" column="0">
-               <widget class="QLabel" name="label_es_adms_temperature">
+               <widget class="QLabel" name="label_es_adms_horizontal_angle">
                 <property name="text">
-                 <string>temperature</string>
+                 <string>horizontal angle</string>
                 </property>
                </widget>
-              </item>
-              <item row="9" column="0">
-               <widget class="QLabel" name="label_es_adms_efflux_type">
-                <property name="text">
-                 <string>efflux type</string>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="0">
-               <widget class="QLabel" name="label_es_adms_vertical_velocity">
-                <property name="text">
-                 <string>vertical velocity</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_adms_height"/>
-              </item>
-              <item row="4" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_adms_heat_capacity"/>
-              </item>
-              <item row="5" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_adms_source_type"/>
-              </item>
-              <item row="6" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_adms_diameter"/>
-              </item>
-              <item row="7" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_adms_buoyancy_type"/>
               </item>
               <item row="8" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_adms_temperature"/>
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_horizontal_angle"/>
+              </item>
+              <item row="9" column="0">
+               <widget class="QLabel" name="label_es_adms_width">
+                <property name="text">
+                 <string>width</string>
+                </property>
+               </widget>
               </item>
               <item row="9" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_adms_efflux_type"/>
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_width"/>
+              </item>
+              <item row="10" column="0">
+               <widget class="QLabel" name="label_es_adms_vertical_dimension">
+                <property name="text">
+                 <string>vertical dimension</string>
+                </property>
+               </widget>
               </item>
               <item row="10" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_adms_vertical_velocity"/>
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_vertical_dimension"/>
+              </item>
+              <item row="12" column="0">
+               <widget class="QLabel" name="label_es_adms_density">
+                <property name="text">
+                 <string>density</string>
+                </property>
+               </widget>
+              </item>
+              <item row="12" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_density"/>
+              </item>
+              <item row="16" column="0">
+               <widget class="QLabel" name="label_es_adms_volumetric_flow_rate">
+                <property name="text">
+                 <string>volumetric flow rate</string>
+                </property>
+               </widget>
+              </item>
+              <item row="16" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_volumetric_flow_rate"/>
               </item>
              </layout>
             </widget>

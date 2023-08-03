@@ -146,18 +146,26 @@ class EmissionSourceCharacteristics(object):
 
 class ADMSSourceCharacteristics(object):
 
-    def __init__(self, building_id=None, height=None, specific_heat_capacity=None, source_type=None,
-        diameter=None, buoyancy_type=None, temperature=None, efflux_type=None, vertical_velocity=None,
-        diurnal_variation=None):
+    def __init__(self, building_id=None, height=None, specific_heat_capacity=None,
+        source_type=None, diameter=None, elevation_angle=None, horizontal_angle=None,
+        width=None, vertical_dimension=None, buoyancy_type=None, density=None,
+        temperature=None, efflux_type=None, vertical_velocity=None,
+        volumetric_flow_rate=None, diurnal_variation=None):
         self.building_id = building_id
         self.height = height
         self.specific_heat_capacity = specific_heat_capacity
         self.source_type = source_type
         self.diameter = diameter
+        self.elevation_angle = elevation_angle
+        self.horizontal_angle = horizontal_angle
+        self.width = width
+        self.vertical_dimension = vertical_dimension
         self.buoyancy_type = buoyancy_type
+        self.density = density
         self.temperature = temperature
         self.efflux_type = efflux_type
         self.vertical_velocity = vertical_velocity
+        self.volumetric_flow_rate = volumetric_flow_rate
         self.diurnal_variation = diurnal_variation
 
     def to_xml_elem(self, doc=QDomDocument()):
@@ -193,10 +201,40 @@ class ADMSSourceCharacteristics(object):
             elem.appendChild(doc.createTextNode(str(self.diameter)))
             result.appendChild(elem)
 
+        # elevation angle
+        if self.elevation_angle is not None:
+            elem = doc.createElement('imaer:elevationAngle')
+            elem.appendChild(doc.createTextNode(str(self.elevation_angle)))
+            result.appendChild(elem)
+
+        # horizontal angle
+        if self.horizontal_angle is not None:
+            elem = doc.createElement('imaer:horizontalAngle')
+            elem.appendChild(doc.createTextNode(str(self.horizontal_angle)))
+            result.appendChild(elem)
+
+        # width
+        if self.width is not None:
+            elem = doc.createElement('imaer:width')
+            elem.appendChild(doc.createTextNode(str(self.width)))
+            result.appendChild(elem)
+
+        # vertical dimension
+        if self.vertical_dimension is not None:
+            elem = doc.createElement('imaer:verticalDimension')
+            elem.appendChild(doc.createTextNode(str(self.vertical_dimension)))
+            result.appendChild(elem)
+
         # buoyancy type
         if self.buoyancy_type is not None:
             elem = doc.createElement('imaer:buoyancyType')
             elem.appendChild(doc.createTextNode(str(self.buoyancy_type)))
+            result.appendChild(elem)
+
+        # density
+        if self.density is not None:
+            elem = doc.createElement('imaer:density')
+            elem.appendChild(doc.createTextNode(str(self.density)))
             result.appendChild(elem)
 
         # temperature
@@ -215,6 +253,12 @@ class ADMSSourceCharacteristics(object):
         if self.vertical_velocity is not None:
             elem = doc.createElement('imaer:verticalVelocity')
             elem.appendChild(doc.createTextNode(str(self.vertical_velocity)))
+            result.appendChild(elem)
+
+        # volumetric flow rate
+        if self.volumetric_flow_rate is not None:
+            elem = doc.createElement('imaer:volumetricFlowRate')
+            elem.appendChild(doc.createTextNode(str(self.volumetric_flow_rate)))
             result.appendChild(elem)
 
         # diurnal variation

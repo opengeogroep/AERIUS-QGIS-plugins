@@ -51,10 +51,16 @@ emission_sectors = {
                     'label_es_adms_heat_capacity', 'fcb_es_adms_heat_capacity',
                     'label_es_adms_source_type', 'fcb_es_adms_source_type',
                     'label_es_adms_diameter', 'fcb_es_adms_diameter',
+                    'label_es_adms_elevation_angle', 'fcb_es_adms_elevation_angle',
+                    'label_es_adms_horizontal_angle', 'fcb_es_adms_horizontal_angle',
+                    'label_es_adms_width', 'fcb_es_adms_width',
+                    'label_es_adms_vertical_dimension', 'fcb_es_adms_vertical_dimension',
                     'label_es_adms_buoyancy_type', 'fcb_es_adms_buoyancy_type',
+                    'label_es_adms_density', 'fcb_es_adms_density',
                     'label_es_adms_temperature', 'fcb_es_adms_temperature',
                     'label_es_adms_efflux_type', 'fcb_es_adms_efflux_type',
                     'label_es_adms_vertical_velocity', 'fcb_es_adms_vertical_velocity',
+                    'label_es_adms_volumetric_flow_rate', 'fcb_es_adms_volumetric_flow_rate',
                 ]
             },
             'UK': {
