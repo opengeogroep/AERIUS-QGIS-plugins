@@ -14,7 +14,7 @@ about=Plugin for working with AERIUS Calculator IMAER files.
         - Extracts GML from AERIUS PDF files.
         - Provides a GUI to the AERIUS Connect API.
 # Also change the version number in the plugin class!
-version=version 3.4.0
+version=version 3.4.1
 tracker=https://github.com/opengeogroep/AERIUS-QGIS-plugins/issues
 repository=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 homepage=https://github.com/opengeogroep/AERIUS-QGIS-plugins
@@ -23,6 +23,7 @@ homepage=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 # Recommended items:
 
 changelog=
+    3.4.1   (06-10-2023) Support for IMAER 5.1, buildings, diurnal variations and UK options
     3.4.0   (02-08-2023) First UK (zip only) release for testing
     3.3.1   (07-02-2023) Bug fix for enabled import calculator result button while no CRS specified
     3.3.0   (30-01-2023) Support for Calculation Tasks and IMAER 5.1, Processing Algorithms for relating depositions (thanks Provincie Zeeland)
@@ -43,7 +44,7 @@ changelog=
     3.0.0   (29-05-2020) IMAER Calculator Result GML import
 
 # Tags are comma separated without spaces. (Spaces are allowed within the tag.)
-tags=imaer,aerius,calculator,connect,gml,stikstof,nitrogen,air,pollution
+tags=imaer,aerius,calculator,connect,gml,stikstof,nitrogen,air,pollution,nl,uk
 
 category=Plugins
 icon=img/icon_import_calc_result.svg
