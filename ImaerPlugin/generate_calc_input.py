@@ -375,9 +375,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
 
         gml_creator = f'QgisImaerPlugin-{self.plugin.version}'
-        # Remove this as soon as IMAER in NL has been updated to 5.1.2 or higher
-        if country == 'NL':
-            gml_creator = None
 
         metadata = AeriusCalculatorMetadata(
             project={'year': year, 'description': description},
