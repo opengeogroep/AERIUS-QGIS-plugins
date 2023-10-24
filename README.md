@@ -21,3 +21,30 @@ The user documentation can be found here:
 * Run the release script: ```python3 Make_zip_release.py 3.0.0```
 * Move the zip file to the ```releases``` directory
 * Upload to plugins.qgis.org
+
+## Dependencies in AERIUS project
+
+Changes in IMAER and CONNECT can affect the working of the plugin. 
+
+## IMAER
+* Version number
+* Metadata
+* Calculation results (depositions)
+* Emission sources:
+  * generic ("other")
+  * roads (adms & srmt)
+  * buildings
+  * diurnal variation
+  * calculation points
+  * Connect API
+
+## CONNECT
+* Version number
+* URL
+* Services:
+  * actuator/health
+  * user/generateApiKey
+  * jobs
+  * wnb/calculate
+  * receptorSets
+  * utility/validate
