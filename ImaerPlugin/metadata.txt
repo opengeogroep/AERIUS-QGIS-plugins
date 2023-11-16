@@ -19,7 +19,7 @@ about=This plugin is co-developed between the Dutch and British government and s
     - Provides a GUI to the AERIUS Connect API.
 
 # Also change the version number in the plugin class in imaer_plugin.py!
-version=version 3.4.1
+version=version 3.4.2
 
 tracker=https://github.com/opengeogroep/AERIUS-QGIS-plugins/issues
 repository=https://github.com/opengeogroep/AERIUS-QGIS-plugins
@@ -29,6 +29,7 @@ homepage=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 # Recommended items:
 
 changelog=
+    3.4.2   (16-11-2023) Improved Plugin metadata for UK
     3.4.1   (06-10-2023) Support for IMAER 5.1, buildings, diurnal variations and UK options
     3.4.0   (02-08-2023) First UK (zip only) release for testing
     3.3.1   (07-02-2023) Bug fix for enabled import calculator result button while no CRS specified
