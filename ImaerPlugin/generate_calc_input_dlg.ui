@@ -120,7 +120,7 @@
    <item>
     <widget class="QTabWidget" name="tabs_mapping">
      <property name="currentIndex">
-      <number>5</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab_metadata">
       <attribute name="title">
@@ -237,7 +237,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-295</y>
+            <y>0</y>
             <width>594</width>
             <height>1050</height>
            </rect>
@@ -580,7 +580,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-1364</y>
+            <y>-1123</y>
             <width>594</width>
             <height>1997</height>
            </rect>
@@ -595,7 +595,7 @@
               <item row="0" column="0">
                <widget class="QStackedWidget" name="stack_rd_veh">
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <widget class="QWidget" name="page_veh_srm2">
                  <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -868,7 +868,7 @@
                   <item>
                    <widget class="QStackedWidget" name="stack_rd_veh_adms">
                     <property name="currentIndex">
-                     <number>0</number>
+                     <number>1</number>
                     </property>
                     <widget class="QWidget" name="page_veh_custom">
                      <layout class="QFormLayout" name="formLayout_6">
@@ -938,6 +938,33 @@
                     </widget>
                     <widget class="QWidget" name="page_veh_eft">
                      <layout class="QFormLayout" name="formLayout_2">
+                      <item row="0" column="0">
+                       <widget class="QLabel" name="label_fcb_rd_v_eft_units">
+                        <property name="text">
+                         <string>Movement units</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="1">
+                       <layout class="QHBoxLayout" name="horizontalLayout_2">
+                        <item>
+                         <widget class="QComboBox" name="fcb_rd_v_eft_units"/>
+                        </item>
+                        <item>
+                         <spacer name="horizontalSpacer_3">
+                          <property name="orientation">
+                           <enum>Qt::Horizontal</enum>
+                          </property>
+                          <property name="sizeHint" stdset="0">
+                           <size>
+                            <width>40</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                         </spacer>
+                        </item>
+                       </layout>
+                      </item>
                       <item row="1" column="0">
                        <widget class="QLabel" name="label_rd_v_eft_link_speed">
                         <property name="text">
@@ -1007,16 +1034,6 @@
                       </item>
                       <item row="7" column="1">
                        <widget class="QgsFieldComboBox" name="fcb_rd_v_eft_n_bus"/>
-                      </item>
-                      <item row="0" column="0">
-                       <widget class="QLabel" name="label_fcb_rd_v_eft_units">
-                        <property name="text">
-                         <string>Movement units</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="0" column="1">
-                       <widget class="QComboBox" name="fcb_rd_v_eft_units"/>
                       </item>
                      </layout>
                     </widget>
@@ -1823,8 +1840,6 @@
   <tabstop>fcb_rd_b_left_height_min</tabstop>
   <tabstop>fcb_rd_b_left_distance</tabstop>
   <tabstop>fcb_rd_b_left_porosity</tabstop>
-  <tabstop>fcb_rd_v_eft_n_taxi</tabstop>
-  <tabstop>fcb_rd_v_eft_n_car</tabstop>
   <tabstop>fcb_rd_b_right_type</tabstop>
   <tabstop>fcb_rd_b_right_height</tabstop>
   <tabstop>fcb_rd_b_right_height_av</tabstop>
@@ -1882,13 +1897,7 @@
   <tabstop>button_outfile</tabstop>
   <tabstop>btn_save_settings</tabstop>
   <tabstop>btn_load_settings</tabstop>
-  <tabstop>fcb_rd_v_eft_n_motor</tabstop>
-  <tabstop>fcb_rd_v_eft_n_lgv</tabstop>
-  <tabstop>fcb_rd_v_eft_n_bus</tabstop>
   <tabstop>fcb_em_nh3</tabstop>
-  <tabstop>fcb_rd_v_eft_n_hgv</tabstop>
-  <tabstop>fcb_rd_v_eft_units</tabstop>
-  <tabstop>fcb_rd_v_eft_link_speed</tabstop>
   <tabstop>fcb_es_description</tabstop>
   <tabstop>fcb_es_label</tabstop>
   <tabstop>combo_layer_es</tabstop>

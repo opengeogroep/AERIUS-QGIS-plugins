@@ -125,7 +125,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             fcb.setAllowEmptyFieldName(True)
 
         self.fcb_rd_v_custom_movements_units.addItems([''] + ui_settings['units_veh_movements'])
-        self.fcb_rd_v_eft_units.addItems([''] + ui_settings['units_veh_movements'])
+        self.fcb_rd_v_eft_units.addItems(ui_settings['units_veh_movements'])
+        self.fcb_rd_v_eft_units.setCurrentIndex(1)  # Default to 'p/24 hour'
 
         self.dv_model = QStandardItemModel()
         self.dv_model.setHorizontalHeaderItem(0, QStandardItem('localId'))
