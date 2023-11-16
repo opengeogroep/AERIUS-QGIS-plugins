@@ -6,15 +6,18 @@ email=info@opengeogroep.nl
 author=OpenGeoGroep
 qgisMinimumVersion=3.16.0
 qgisMaximumVersion=3.99.99
-description=Plugin for handling AERIUS Calculator IMAER files
-about=Plugin for working with AERIUS Calculator IMAER files.
-        - Imports and exports AERIUS Calculator result IMAER files as QGIS layers.
-        - Calculates on result layers.
-        - Creates Calculator input from your own data.
-        - Extracts GML from AERIUS PDF files.
-        - Provides a GUI to the AERIUS Connect API.
-# Also change the version number in the plugin class!
+description=Plugin for handling AERIUS and UK Air Pollution Assessment Service (APAS) IMAER files
+about=This plugin is co-developed between the Dutch and British government and supports from version 3.4.1 working with IMAER files for NL AERIUS and UK APAS. IMAER files comply with the international gml standards.
+    
+    Shared functionality:
+    - Creates IMAER files for generic sources or road networks to import in AERIUS/APAS based on available GIS information.
+    - Imports and exports IMAER files with calculation results as QGIS layers.
+    - Extracts IMAER file(s) from PDF exports created by AERIUS/APAS.
+    - Has algorithms to calculate sums, differences and maximums of multiple result layers.
+
+# Also change the version number in the plugin class in imaer_plugin.py!
 version=version 3.4.1
+
 tracker=https://github.com/opengeogroep/AERIUS-QGIS-plugins/issues
 repository=https://github.com/opengeogroep/AERIUS-QGIS-plugins
 homepage=https://github.com/opengeogroep/AERIUS-QGIS-plugins
@@ -44,7 +47,7 @@ changelog=
     3.0.0   (29-05-2020) IMAER Calculator Result GML import
 
 # Tags are comma separated without spaces. (Spaces are allowed within the tag.)
-tags=imaer,aerius,calculator,connect,gml,stikstof,nitrogen,air,pollution,nl,uk
+tags=imaer,aerius,calculator,connect,gml,stikstof,nitrogen,air,pollution,nl,uk,apas
 
 category=Plugins
 icon=img/icon_import_calc_result.svg
