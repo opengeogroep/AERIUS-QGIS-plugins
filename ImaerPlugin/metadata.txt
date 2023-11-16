@@ -15,6 +15,9 @@ about=This plugin is co-developed between the Dutch and British government and s
     - Extracts IMAER file(s) from PDF exports created by AERIUS/APAS.
     - Has algorithms to calculate sums, differences and maximums of multiple result layers.
 
+    NL AERIUS specific functionality:
+    - Provides a GUI to the AERIUS Connect API.
+
 # Also change the version number in the plugin class in imaer_plugin.py!
 version=version 3.4.1
 
