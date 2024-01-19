@@ -51,6 +51,8 @@ from ImaerPlugin.connect import (
     AeriusOpenData
 )
 
+from ImaerPlugin.imaer5 import ImaerDocument
+
 
 class ImaerPlugin:
 
@@ -69,6 +71,7 @@ class ImaerPlugin:
         self.imaer_calc_layers = {}
         self.settings = QgsSettings()
         self.version = '3.4.2'
+        self.imaer_doc = ImaerDocument()
 
         # Making sure users will NOT keep on using the prerelease.
         # TODO: Make a future proof generic solution for URL management

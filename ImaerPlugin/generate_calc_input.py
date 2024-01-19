@@ -87,6 +87,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.emission_tabs['calc_points'] = getattr(self, 'tab_calc_points')
         self.emission_tabs['diurnal_variation'] = getattr(self, 'tab_diurnal_variation')
 
+        self.imaer_doc = ImaerDocument()
+
         self.init_gui()
 
     def init_gui(self):

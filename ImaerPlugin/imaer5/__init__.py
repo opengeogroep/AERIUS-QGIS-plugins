@@ -28,3 +28,5 @@ from .roads import (
 from .buildings import Building
 from .calc_point import CalculationPoint
 from .gml import get_gml_element
+
+from .receptors import ReceptorPoint

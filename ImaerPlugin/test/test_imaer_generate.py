@@ -36,7 +36,7 @@ xmlschema_doc = etree.parse(xsd_fn)
 xmlschema = etree.XMLSchema(xmlschema_doc)
 
 
-class TestImaer(unittest.TestCase):
+class TestImaerGenerate(unittest.TestCase):
 
     def __init__(self, whatever):
         # print('init')
