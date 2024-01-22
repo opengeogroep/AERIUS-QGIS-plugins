@@ -2,12 +2,8 @@ import sys
 
 from PyQt5.QtXml import QDomDocument
 
-#path_qgis_python_folder = "/home/raymond/programs/qgis/qgis-master/share/qgis/python/"
-#sys.path.append(path_qgis_python_folder)
-#from qgis.core import QgsGeometry
 
-
-class Identifier():
+class Nen3610Id():
 
     def __init__(self, namespace=None, local_id=None):
         self.namespace = namespace

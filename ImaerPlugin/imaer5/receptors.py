@@ -2,7 +2,7 @@
 
 #from .generic import xml_reader_to_current_node
 from .geometry import GmlPoint, GmlPolygon
-from .identifier import Identifier
+from .identifier import Nen3610Id
 
 class CalculationResult(object):
 
@@ -65,7 +65,7 @@ class ReceptorPoint(object):
             if xml_reader.name() == 'identifier':
                 xml_reader.readNextStartElement()
                 if xml_reader.name() == 'NEN3610ID':
-                    identifier = Identifier()
+                    identifier = Nen3610Id()
                     identifier.from_xml_reader(xml_reader)
                     # print(identifier)
                     if identifier.is_valid():
@@ -94,3 +94,6 @@ class ReceptorPoint(object):
                 result.from_xml_reader(xml_reader)
                 if result.is_valid():
                     self.results.append(result)
+
+class SubPoint(object):
+
