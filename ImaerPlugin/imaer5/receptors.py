@@ -96,6 +96,12 @@ class Receptor(object):
                 if result.is_valid():
                     self.results.append(result)
 
+            if xml_reader.name() == 'level' and xml_reader.isStartElement():
+                xml_reader.readNext()
+                text = xml_reader.text().strip()
+                # print(f'>{text}<')
+                self.level = int(text)
+
 class ReceptorPoint(Receptor):
 
     def __init__(self, **kwargs):
@@ -113,9 +119,10 @@ class SubPoint(Receptor):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.sub_point_id = None
+        self.level = None
 
     def is_valid(self):
         return self.local_id is not None and self.sub_point_id is not None
     
     def __str__(self):
-        return f'SubPoint[{self.local_id}, {self.sub_point_id}, {len(self.results)}]'
+        return f'SubPoint[{self.local_id}, {self.sub_point_id}, {self.level}, {len(self.results)}]'
