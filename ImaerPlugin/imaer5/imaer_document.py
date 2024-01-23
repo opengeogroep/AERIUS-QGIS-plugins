@@ -3,7 +3,7 @@ from PyQt5.QtXml import QDomDocument
 
 from .metadata import AeriusCalculatorMetadata
 from .emission_source import EmissionSource
-from .receptors import ReceptorPoint
+from .receptors import ReceptorPoint, SubPoint
 
 
 class ImaerDocument():
@@ -84,10 +84,16 @@ class ImaerDocument():
 
                     if tag_name == 'ReceptorPoint':
                         #print(f'  Processing {tag_name}')
-                        rp = ReceptorPoint()
-                        rp.from_xml_reader(xml_reader)
-                        if rp.is_valid():
-                            self.feature_members.append(rp)
+                        member = ReceptorPoint()
+                        member.from_xml_reader(xml_reader)
+                        if member.is_valid():
+                            self.feature_members.append(member)
+                    elif tag_name == 'SubPoint':
+                        # print(f'  Processing {tag_name}')
+                        member = SubPoint()
+                        member.from_xml_reader(xml_reader)
+                        if member.is_valid():
+                            self.feature_members.append(member)
                     else:
                         #print(f'  Skipping {tag_name}')
                         xml_reader.skipCurrentElement()

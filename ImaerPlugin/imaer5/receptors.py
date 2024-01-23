@@ -34,7 +34,7 @@ class CalculationResult(object):
             text = xml_reader.text()
             self.value = float(text)
 
-class ReceptorPoint(object):
+class Receptor(object):
 
     def __init__(self, local_id=None, identifier= None, geom=None, epsg_id=None, results=None):
         self.local_id = local_id
@@ -47,19 +47,20 @@ class ReceptorPoint(object):
         return self.local_id is not None
     
     def __str__(self):
-        return f'ReceptorPoint[{self.local_id}, {len(self.results)}]'
+        return f'Receptor[{self.local_id}, {len(self.results)}]'
 
     def from_xml_reader(self, xml_reader):
-        #print('        from_xml_reader()')
-        #if xml_reader.isStartElement():
-        tag_name = xml_reader.name()
-        #print(tag_name)
-        if not tag_name == 'ReceptorPoint':
+        start_tag_name = xml_reader.name()
+
+        if start_tag_name not in ['ReceptorPoint', 'SubPoint']:
             return False
+
         attributes = xml_reader.attributes()
         if attributes.hasAttribute('receptorPointId'):
             self.local_id = attributes.value('receptorPointId')
-        while not (xml_reader.name() == 'ReceptorPoint' and xml_reader.isEndElement()):
+        if attributes.hasAttribute('subPointId'):
+            self.sub_point_id = attributes.value('subPointId')
+        while not (xml_reader.name() == start_tag_name and xml_reader.isEndElement()):
             xml_reader.readNextStartElement()
 
             if xml_reader.name() == 'identifier':
@@ -95,5 +96,26 @@ class ReceptorPoint(object):
                 if result.is_valid():
                     self.results.append(result)
 
-class SubPoint(object):
+class ReceptorPoint(Receptor):
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def is_valid(self):
+        return self.local_id is not None
+    
+    def __str__(self):
+        return f'ReceptorPoint[{self.local_id}, {len(self.results)}]'
+
+
+class SubPoint(Receptor):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.sub_point_id = None
+
+    def is_valid(self):
+        return self.local_id is not None and self.sub_point_id is not None
+    
+    def __str__(self):
+        return f'SubPoint[{self.local_id}, {self.sub_point_id}, {len(self.results)}]'
