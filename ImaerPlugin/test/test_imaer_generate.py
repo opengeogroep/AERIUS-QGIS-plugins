@@ -88,6 +88,14 @@ class TestImaerGenerate(unittest.TestCase):
         fcc.feature_members.append(es)
         self.generate_gml_file(fcc, 'em_simple')
 
+    def test_ffc_emission_simple_with_identifier(self):
+        fcc = ImaerDocument()
+        identifier = Nen3610Id(namespace='UK.IMAER', local_id=1234)
+        es = EmissionSource(local_id=123, sector_id=9000, label='Bron 123', geom=_GEOM0, epsg_id=28992, identifier=identifier)
+        es.emissions.append(Emission('NH3', 1))
+        fcc.feature_members.append(es)
+        self.generate_gml_file(fcc, 'em_simple_with_identifier')
+
     def test_ffc_emission_characteristics01(self):
         hc = SpecifiedHeatContent(value=12.5)
         es = EmissionSource(local_id=1234, sector_id=9999, label='Bron 1234', geom=_GEOM1, epsg_id=28992)

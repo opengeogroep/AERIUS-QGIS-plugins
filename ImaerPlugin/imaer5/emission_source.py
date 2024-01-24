@@ -1,11 +1,12 @@
 from PyQt5.QtXml import QDomDocument
 
 from .gml import get_gml_element
+from .identifier import Nen3610Id
 
 
 class EmissionSourceType(object):
 
-    def __init__(self, *, local_id, sector_id, geom, epsg_id, label=None, description=None):
+    def __init__(self, *, local_id, sector_id, geom, epsg_id, label=None, description=None, identifier=None):
         self.label = label
         self.description = description
         self.emission_source_characteristics = None
@@ -15,6 +16,10 @@ class EmissionSourceType(object):
         self.geometry = geom
         self.epsg_id = epsg_id
         self.local_id = local_id
+        if identifier is None:
+            self.identifier = Nen3610Id(local_id=f'ES.{self.local_id}')
+        else:
+            self.identifier = identifier
 
     def to_xml_elem(self, doc=QDomDocument()):
         # print('class:', self.__class__.__name__)
@@ -30,15 +35,7 @@ class EmissionSourceType(object):
 
         # identifier
         ident_elem = doc.createElement('imaer:identifier')
-        nen_elem = doc.createElement('imaer:NEN3610ID')
-
-        elem = doc.createElement('imaer:namespace')
-        elem.appendChild(doc.createTextNode('NL.IMAER'))
-        nen_elem.appendChild(elem)
-        elem = doc.createElement('imaer:localId')
-        elem.appendChild(doc.createTextNode(f'ES.{self.local_id}'))
-        nen_elem.appendChild(elem)
-
+        nen_elem = self.identifier.to_xml_elem(doc)
         ident_elem.appendChild(nen_elem)
         result.appendChild(ident_elem)
 

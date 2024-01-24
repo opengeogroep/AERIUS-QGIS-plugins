@@ -10,4 +10,4 @@ export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${lp}
 echo ${LD_LIBRARY_PATH}
 
 #python connect/test.py
-python3 -m unittest test.test_imaer_parse
+python3 -m unittest test.test_imaer_generate

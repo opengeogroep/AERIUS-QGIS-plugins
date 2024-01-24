@@ -5,12 +5,25 @@ from PyQt5.QtXml import QDomDocument
 
 class Nen3610Id():
 
-    def __init__(self, namespace=None, local_id=None):
+    def __init__(self, namespace='NL.IMAER', local_id=None):
         self.namespace = namespace
         self.local_id = local_id
 
     def __str__(self):
         return f'Identifier[{self.namespace}, {self.local_id}]'
+
+    def to_xml_elem(self, doc):
+        result = doc.createElement('imaer:NEN3610ID')
+
+        if self.namespace is not None:
+            ele = doc.createElement('imaer:namespace')
+            ele.appendChild(doc.createTextNode(str(self.namespace)))
+            result.appendChild(ele)
+        if self.local_id is not None:
+            ele = doc.createElement('imaer:localId')
+            ele.appendChild(doc.createTextNode(str(self.local_id)))
+            result.appendChild(ele)
+        return result
 
     def from_xml_reader(self, xml_reader):
         if not xml_reader.isStartElement():
