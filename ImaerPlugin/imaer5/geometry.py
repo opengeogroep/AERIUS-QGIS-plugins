@@ -2,7 +2,7 @@ import sys
 
 from PyQt5.QtXml import QDomDocument
 
-from qgis.core import QgsPoint
+from qgis.core import QgsPoint, QgsLineString, QgsPolygon
 
 #path_qgis_python_folder = "/home/raymond/programs/qgis/qgis-master/share/qgis/python/"
 #sys.path.append(path_qgis_python_folder)
@@ -108,5 +108,15 @@ class GmlPolygon(GmlGeometry):
                 coords = xml_reader.text()
                 parts = coords.split()
                 for part in parts:
-                    self.exterior.append(float(parts[0]))
+                    self.exterior.append(float(part))
+    
+    def to_geometry(self):
+        l = QgsLineString()
+        for i in range(0, len(self.exterior), 2):
+            l.addVertex(QgsPoint(self.exterior[i], self.exterior[i+1]))
+
+        result = QgsPolygon()
+        result.setExteriorRing(l)
+
+        return result
 

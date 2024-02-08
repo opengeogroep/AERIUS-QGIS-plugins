@@ -137,7 +137,7 @@ class ReceptorPoint(Receptor):
             return
         
         feat = QgsFeature()
-        feat.setGeometry(self.gm_point.to_geometry())
+        feat.setGeometry(self.representation.to_geometry())
 
         attributes = []
         attributes.append(fid)

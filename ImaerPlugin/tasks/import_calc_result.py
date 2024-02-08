@@ -64,6 +64,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
                     receptor_points_layer = QgsVectorLayer(f'{self.gpkg_fn}|layername=receptor_points', 'receptor_points', 'ogr')
                     receptor_points_layer.startEditing()
                 feat = member.to_feature()
+                self.log(feat.geometry())
                 receptor_points_layer.addFeature(feat)
                 member_cnt += 1
             elif member.__class__.__name__ == 'SubPoint':

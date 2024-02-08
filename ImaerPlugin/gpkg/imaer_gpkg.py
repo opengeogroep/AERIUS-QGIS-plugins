@@ -78,7 +78,7 @@ class ImaerGpkg():
         self.version = self.get_metadata('db_version')
         '''
     
-    def create_layer(self, name, specific_fields):
+    def create_layer(self, name, specific_fields, geometry_type):
         if self.conn is None:
             print('Non connection')
             return
@@ -107,7 +107,7 @@ class ImaerGpkg():
             '',
             name,
             fields,
-            QgsWkbTypes.Point,
+            geometry_type,
             QgsCoordinateReferenceSystem(self.epsg_id),
             True,
             {'layerOptions': 'FID=ogc_fid'}
@@ -117,12 +117,12 @@ class ImaerGpkg():
         fields = QgsFields()
         fields.append(QgsField('receptor_id', QVariant.LongLong))
         fields.append(QgsField('edge_effect', QVariant.LongLong))
-        self.create_layer('receptor_points', fields)
+        self.create_layer('receptor_points', fields, QgsWkbTypes.Polygon)
     
     def create_layer_sub_points(self):
         fields = QgsFields()
         fields.append(QgsField('receptor_id', QVariant.LongLong))
         fields.append(QgsField('sub_point_id', QVariant.LongLong))
         fields.append(QgsField('level', QVariant.LongLong))
-        self.create_layer('sub_points', fields)
+        self.create_layer('sub_points', fields, QgsWkbTypes.Point)
         
