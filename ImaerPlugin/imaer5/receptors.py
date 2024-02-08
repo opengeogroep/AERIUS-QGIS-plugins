@@ -1,5 +1,7 @@
 #from PyQt5.QtXml import QDomDocument
 
+from qgis.core import QgsFeature
+
 #from .generic import xml_reader_to_current_node
 from .geometry import GmlPoint, GmlPolygon
 from .identifier import Nen3610Id
@@ -34,6 +36,7 @@ class CalculationResult(object):
             text = xml_reader.text()
             self.value = float(text)
 
+
 class Receptor(object):
 
     def __init__(self, local_id=None, identifier= None, geom=None, epsg_id=None, results=None):
@@ -41,6 +44,8 @@ class Receptor(object):
         self.identifier = identifier
         self.gm_point = geom
         self.representation = None
+        self.edge_effect = None
+        self.level = None
         self.results = results or []
     
     def is_valid(self):
@@ -96,11 +101,25 @@ class Receptor(object):
                 if result.is_valid():
                     self.results.append(result)
 
+            if xml_reader.name() == 'edgeEffect' and xml_reader.isStartElement():
+                xml_reader.readNext()
+                text = xml_reader.text().strip()
+                self.edge_effect = int(text)
+
             if xml_reader.name() == 'level' and xml_reader.isStartElement():
                 xml_reader.readNext()
                 text = xml_reader.text().strip()
                 # print(f'>{text}<')
                 self.level = int(text)
+
+    def get_results_dict(self):
+        results_dict = {}
+        for result in self.results:
+            if result.is_valid():
+                key = '{}_{}'.format(result.result_type.lower(), result.substance.lower())
+                results_dict[key] = result.value
+        return results_dict
+
 
 class ReceptorPoint(Receptor):
 
@@ -112,6 +131,28 @@ class ReceptorPoint(Receptor):
     
     def __str__(self):
         return f'ReceptorPoint[{self.local_id}, {len(self.results)}]'
+
+    def to_feature(self, fid=None):
+        if not self.is_valid():
+            return
+        
+        feat = QgsFeature()
+        feat.setGeometry(self.gm_point.to_geometry())
+
+        attributes = []
+        attributes.append(fid)
+        attributes.append(self.local_id)
+        attributes.append(self.edge_effect)
+
+        results_dict = self.get_results_dict()
+        attributes.append(results_dict.get('deposition_nh3', None))
+        attributes.append(results_dict.get('deposition_nox', None))
+        attributes.append(results_dict.get('concentration_nh3', None))
+        attributes.append(results_dict.get('concentration_nox', None))
+        attributes.append(results_dict.get('concentration_no2', None))
+
+        feat.setAttributes(attributes)
+        return feat
 
 
 class SubPoint(Receptor):
@@ -126,3 +167,28 @@ class SubPoint(Receptor):
     
     def __str__(self):
         return f'SubPoint[{self.local_id}, {self.sub_point_id}, {self.level}, {len(self.results)}]'
+
+    
+    def to_feature(self, fid=None):
+        if not self.is_valid():
+            print('invalid')
+            return
+        
+        feat = QgsFeature()
+        feat.setGeometry(self.gm_point.to_geometry())
+
+        attributes = []
+        attributes.append(fid)
+        attributes.append(self.local_id)
+        attributes.append(self.sub_point_id)
+        attributes.append(self.level)
+
+        results_dict = self.get_results_dict()
+        attributes.append(results_dict.get('deposition_nh3', None))
+        attributes.append(results_dict.get('deposition_nox', None))
+        attributes.append(results_dict.get('concentration_nh3', None))
+        attributes.append(results_dict.get('concentration_nox', None))
+        attributes.append(results_dict.get('concentration_no2', None))
+
+        feat.setAttributes(attributes)
+        return feat

@@ -2,6 +2,8 @@ import sys
 
 from PyQt5.QtXml import QDomDocument
 
+from qgis.core import QgsPoint
+
 #path_qgis_python_folder = "/home/raymond/programs/qgis/qgis-master/share/qgis/python/"
 #sys.path.append(path_qgis_python_folder)
 #from qgis.core import QgsGeometry
@@ -52,6 +54,9 @@ class GmlPoint(GmlGeometry):
                 parts = coords.split()
                 self.x = float(parts[0])
                 self.y = float(parts[1])
+    
+    def to_geometry(self):
+        return QgsPoint(round(self.x, 3), round(self.y, 3))
 
 
 class GmlLineString(GmlGeometry): # NEVER TESTED!!!

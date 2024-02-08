@@ -52,7 +52,7 @@ from ImaerPlugin.connect import (
 )
 
 from ImaerPlugin.imaer5 import ImaerDocument
-
+from ImaerPlugin.gpkg import ImaerGpkg
 
 class ImaerPlugin:
 
@@ -72,6 +72,7 @@ class ImaerPlugin:
         self.settings = QgsSettings()
         self.version = '3.4.2'
         self.imaer_doc = ImaerDocument()
+        self.imaer_gpkg = ImaerGpkg(None)
 
         # Making sure users will NOT keep on using the prerelease.
         # TODO: Make a future proof generic solution for URL management
@@ -262,6 +263,10 @@ class ImaerPlugin:
 
         if rp_without_geom_cnt is not None and rp_without_geom_cnt > 0:
             self.log(f'Could not import {rp_without_geom_cnt} receptors without hexagon geometry.', lvl='Warning', bar=True, duration=5)
+
+    def load_calc_layer(self, layer):
+        QgsProject.instance().addMapLayer(layer)
+        
 
     def run_extract_gml_from_pdf(self):
         if self.dev:
