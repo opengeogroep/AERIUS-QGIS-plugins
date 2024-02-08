@@ -46,6 +46,8 @@ class Receptor(object):
         self.representation = None
         self.edge_effect = None
         self.level = None
+        self.sub_point_id = None
+        self.level = None
         self.results = results or []
     
     def is_valid(self):
@@ -120,6 +122,33 @@ class Receptor(object):
                 results_dict[key] = result.value
         return results_dict
 
+    def get_attributes_dict(self):
+        result = {}
+        result['receptor_id'] = self.local_id
+        result['edge_effect'] = self.edge_effect
+        result['sub_point_id'] = self.sub_point_id
+        result['level'] = self.level
+        result['deposition_nh3'] = None
+        result['deposition_nox'] = None
+        result['deposition_sum_nh3_nox'] = None
+        result['concentration_nh3'] = None
+        result['concentration_nox'] = None
+        result['concentration_n02'] = None
+        result['concentration_pm25'] = None
+        result['concentration_pm10'] = None
+        result['exceedance_days_pm25'] = None
+        result['exceedance_days_pm10'] = None
+        result['exceedance_hours_pm25'] = None
+        result['exceedance_hours_pm10'] = None
+
+        result.update(self.get_results_dict())
+
+        # Add sum if 
+        if result['deposition_nh3'] is not None and result['deposition_nox'] is not None:
+            result['deposition_sum_nh3_nox'] = (result['deposition_nh3'] or 0) + (result['deposition_nox'] or 0)
+
+        return result
+
 
 class ReceptorPoint(Receptor):
 
@@ -132,7 +161,26 @@ class ReceptorPoint(Receptor):
     def __str__(self):
         return f'ReceptorPoint[{self.local_id}, {len(self.results)}]'
 
-    def to_feature(self, fid=None):
+    def to_point_feature(self, fid=None):
+        if not self.is_valid():
+            return
+        
+        feat = QgsFeature()
+        feat.setGeometry(self.gm_point.to_geometry())
+
+        attributes = []
+        attributes.append(fid)
+
+        attr_dict = self.get_attributes_dict()
+        attributes.append(attr_dict['receptor_id'])
+        attributes.append(attr_dict['concentration_nh3'])
+        attributes.append(attr_dict['concentration_nox'])
+        attributes.append(attr_dict['concentration_no2'])
+
+        feat.setAttributes(attributes)
+        return feat
+
+    def to_polygon_feature(self, fid=None):
         if not self.is_valid():
             return
         
@@ -141,15 +189,13 @@ class ReceptorPoint(Receptor):
 
         attributes = []
         attributes.append(fid)
-        attributes.append(self.local_id)
-        attributes.append(self.edge_effect)
 
-        results_dict = self.get_results_dict()
-        attributes.append(results_dict.get('deposition_nh3', None))
-        attributes.append(results_dict.get('deposition_nox', None))
-        attributes.append(results_dict.get('concentration_nh3', None))
-        attributes.append(results_dict.get('concentration_nox', None))
-        attributes.append(results_dict.get('concentration_no2', None))
+        attr_dict = self.get_attributes_dict()
+        attributes.append(attr_dict['receptor_id'])
+        attributes.append(attr_dict['edge_effect'])
+        attributes.append(attr_dict['deposition_nh3'])
+        attributes.append(attr_dict['deposition_nox'])
+        attributes.append(attr_dict['deposition_sum_nh3_nox'])
 
         feat.setAttributes(attributes)
         return feat
@@ -159,8 +205,6 @@ class SubPoint(Receptor):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.sub_point_id = None
-        self.level = None
 
     def is_valid(self):
         return self.local_id is not None and self.sub_point_id is not None
@@ -169,7 +213,7 @@ class SubPoint(Receptor):
         return f'SubPoint[{self.local_id}, {self.sub_point_id}, {self.level}, {len(self.results)}]'
 
     
-    def to_feature(self, fid=None):
+    def to_point_feature(self, fid=None):
         if not self.is_valid():
             print('invalid')
             return
@@ -183,12 +227,13 @@ class SubPoint(Receptor):
         attributes.append(self.sub_point_id)
         attributes.append(self.level)
 
-        results_dict = self.get_results_dict()
-        attributes.append(results_dict.get('deposition_nh3', None))
-        attributes.append(results_dict.get('deposition_nox', None))
-        attributes.append(results_dict.get('concentration_nh3', None))
-        attributes.append(results_dict.get('concentration_nox', None))
-        attributes.append(results_dict.get('concentration_no2', None))
+        attr_dict = self.get_attributes_dict()
+        attributes.append(attr_dict['deposition_nh3'])
+        attributes.append(attr_dict['deposition_nox'])
+        attributes.append(attr_dict['deposition_sum_nh3_nox'])
+        attributes.append(attr_dict['concentration_nh3'])
+        attributes.append(attr_dict['concentration_nox'])
+        attributes.append(attr_dict['concentration_no2'])
 
         feat.setAttributes(attributes)
         return feat

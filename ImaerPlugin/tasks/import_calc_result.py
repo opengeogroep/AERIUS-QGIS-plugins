@@ -53,6 +53,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         self.log(str(gpkg))
 
         receptor_points_layer = None
+        receptor_hexagons_layer = None
         sub_points_layer = None
 
         member_cnt = 0
@@ -63,27 +64,38 @@ class ImportImaerCalculatorResultTask(QgsTask):
                 if receptor_points_layer is None:
                     receptor_points_layer = QgsVectorLayer(f'{self.gpkg_fn}|layername=receptor_points', 'receptor_points', 'ogr')
                     receptor_points_layer.startEditing()
-                feat = member.to_feature()
+                if receptor_hexagons_layer is None:
+                    receptor_hexagons_layer = QgsVectorLayer(f'{self.gpkg_fn}|layername=receptor_hexagons', 'receptor_hexagons', 'ogr')
+                    receptor_hexagons_layer.startEditing()
+                
+                feat = member.to_point_feature()
                 self.log(feat.geometry())
                 receptor_points_layer.addFeature(feat)
+                
+                feat = member.to_polygon_feature()
+                self.log(feat.geometry())
+                receptor_hexagons_layer.addFeature(feat)
+                
                 member_cnt += 1
             elif member.__class__.__name__ == 'SubPoint':
                 if sub_points_layer is None:
                     sub_points_layer = QgsVectorLayer(f'{self.gpkg_fn}|layername=sub_points', 'sub_points', 'ogr')
                     sub_points_layer.startEditing()
-                feat = member.to_feature()
+                feat = member.to_point_feature()
                 sub_points_layer.addFeature(feat)
                 member_cnt += 1
 
         if receptor_points_layer is not None:
             receptor_points_layer.commitChanges()
             self.load_layer_callback(receptor_points_layer)
+        if receptor_hexagons_layer is not None:
+            receptor_hexagons_layer.commitChanges()
+            self.load_layer_callback(receptor_hexagons_layer)
         if sub_points_layer is not None:
             sub_points_layer.commitChanges()
             self.load_layer_callback(sub_points_layer)
 
         return True
-
 
     def finished(self, result):
         pass

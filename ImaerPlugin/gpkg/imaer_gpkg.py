@@ -52,23 +52,10 @@ class ImaerGpkg():
         self.conn = self.md.createConnection(self.filename, {})
 
         self.create_layer_receptor_points()
+        self.create_layer_receptor_hexagons()
         self.create_layer_sub_points()
 
         '''
-        # Raster cells table
-        raster_cells_fields = QgsFields()
-        raster_cells_fields.append(QgsField('raster_cell_id', QVariant.LongLong))
-        raster_cells_fields.append(QgsField('x', QVariant.Double))
-        raster_cells_fields.append(QgsField('y', QVariant.Double))
-        self.conn.createVectorTable(
-            '',
-            'soilexc_raster_cells',
-            raster_cells_fields,
-            QgsWkbTypes.Polygon,
-            QgsCoordinateReferenceSystem(self.epsg_id),
-            True,
-            {'FID':'fid'}
-        )
         self.create_base_tables()
         self.create_voxels_view()
         self.create_indices()
@@ -90,16 +77,6 @@ class ImaerGpkg():
         for field in specific_fields:
             fields.append(field)
         
-        result_fields = [
-            QgsField('deposition_nh3', QVariant.Double),
-            QgsField('deposition_nox', QVariant.Double),
-            QgsField('concentration_nh3', QVariant.Double),
-            QgsField('concentration_nox', QVariant.Double),
-            QgsField('concentration_no2', QVariant.Double)
-        ]
-        for field in result_fields:
-            fields.append(field)
-        
         print(fields)
         print(self.conn)
 
@@ -113,16 +90,42 @@ class ImaerGpkg():
             {'layerOptions': 'FID=ogc_fid'}
         )
 
+    def get_deposition_fields(self):
+        result = []
+        result.append(QgsField('deposition_nh3', QVariant.Double))
+        result.append(QgsField('deposition_nox', QVariant.Double))
+        result.append(QgsField('deposition_sum_nh3_nox', QVariant.Double))
+        return result
+        
+    def get_concentration_fields(self):
+        result = []
+        result.append(QgsField('concentration_nh3', QVariant.Double))
+        result.append(QgsField('concentration_nox', QVariant.Double))
+        result.append(QgsField('concentration_no2', QVariant.Double))
+        return result
+
     def create_layer_receptor_points(self):
         fields = QgsFields()
         fields.append(QgsField('receptor_id', QVariant.LongLong))
+        for field in self.get_concentration_fields():
+            fields.append(field)
+        self.create_layer('receptor_points', fields, QgsWkbTypes.Point)
+    
+    def create_layer_receptor_hexagons(self):
+        fields = QgsFields()
+        fields.append(QgsField('receptor_id', QVariant.LongLong))
         fields.append(QgsField('edge_effect', QVariant.LongLong))
-        self.create_layer('receptor_points', fields, QgsWkbTypes.Polygon)
+        for field in self.get_deposition_fields():
+            fields.append(field)
+        self.create_layer('receptor_hexagons', fields, QgsWkbTypes.Polygon)
     
     def create_layer_sub_points(self):
         fields = QgsFields()
         fields.append(QgsField('receptor_id', QVariant.LongLong))
         fields.append(QgsField('sub_point_id', QVariant.LongLong))
         fields.append(QgsField('level', QVariant.LongLong))
+        for field in self.get_deposition_fields():
+            fields.append(field)
+        for field in self.get_concentration_fields():
+            fields.append(field)
         self.create_layer('sub_points', fields, QgsWkbTypes.Point)
-        
