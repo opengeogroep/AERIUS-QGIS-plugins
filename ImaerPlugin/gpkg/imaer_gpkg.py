@@ -8,11 +8,7 @@ from qgis.core import (
     QgsCoordinateReferenceSystem,
     QgsFields,
     QgsField,
-    QgsWkbTypes,
-    #QgsFeature,
-    #QgsGeometry,
-    #QgsRectangle,
-    #QgsVectorLayer
+    QgsWkbTypes
 )
 
 class ImaerGpkg():
@@ -31,55 +27,34 @@ class ImaerGpkg():
         return f'ImaerGpkg[{self.filename}]'
 
     def connect(self):
-        print('connect()')
         '''Try to connect to existing db, or create a new one.'''
         if self.filename is None:
-            print('no filename')
             return
         if os.path.isfile(self.filename):
             self.conn = self.md.createConnection(self.filename, {})
-            self.version = self.get_metadata('db_version')
+            self.version = self.get_metadata('db_version')  # TODO!!!
             self.epsg_id = self.get_epsg_id()
         else:
             if self.epsg_id is not None:
                 self.create_new()
     
     def create_new(self):
-        print('create_new()')
         if Qgis.QGIS_VERSION_INT >= 32800:
             self.md.createDatabase(self.filename)
-        
         self.conn = self.md.createConnection(self.filename, {})
 
         self.create_layer_receptor_points()
         self.create_layer_receptor_hexagons()
         self.create_layer_sub_points()
 
-        '''
-        self.create_base_tables()
-        self.create_voxels_view()
-        self.create_indices()
-        self.set_metadata('db_version', '1.0.0')
-
-        self.upgrade_version(self.version)
-        self.version = self.get_metadata('db_version')
-        '''
-    
     def create_layer(self, name, specific_fields, geometry_type):
         if self.conn is None:
-            print('Non connection')
             return
 
         fields = QgsFields()
-
-        #fields.append(QgsField('ogc_fid', QVariant.LongLong))
-
         for field in specific_fields:
             fields.append(field)
         
-        print(fields)
-        print(self.conn)
-
         self.conn.createVectorTable(
             '',
             name,
@@ -92,22 +67,34 @@ class ImaerGpkg():
 
     def get_deposition_fields(self):
         result = []
-        result.append(QgsField('deposition_nh3', QVariant.Double))
+        result.append(QgsField('deposition_nox_nh3_sum', QVariant.Double))
         result.append(QgsField('deposition_nox', QVariant.Double))
-        result.append(QgsField('deposition_sum_nh3_nox', QVariant.Double))
+        result.append(QgsField('deposition_nh3', QVariant.Double))
         return result
         
     def get_concentration_fields(self):
         result = []
-        result.append(QgsField('concentration_nh3', QVariant.Double))
         result.append(QgsField('concentration_nox', QVariant.Double))
         result.append(QgsField('concentration_no2', QVariant.Double))
+        result.append(QgsField('concentration_nh3', QVariant.Double))
+        result.append(QgsField('concentration_pm10', QVariant.Double))
+        result.append(QgsField('concentration_pm25', QVariant.Double))
+        return result
+
+    def get_exceedance_fields(self):
+        result = []
+        result.append(QgsField('exceedance_days_pm10', QVariant.LongLong))
+        result.append(QgsField('exceedance_days_pm25', QVariant.LongLong))
+        result.append(QgsField('exceedance_hours_pm10', QVariant.LongLong))
+        result.append(QgsField('exceedance_hours_pm25', QVariant.LongLong))
         return result
 
     def create_layer_receptor_points(self):
         fields = QgsFields()
         fields.append(QgsField('receptor_id', QVariant.LongLong))
         for field in self.get_concentration_fields():
+            fields.append(field)
+        for field in self.get_exceedance_fields():
             fields.append(field)
         self.create_layer('receptor_points', fields, QgsWkbTypes.Point)
     
@@ -127,5 +114,7 @@ class ImaerGpkg():
         for field in self.get_deposition_fields():
             fields.append(field)
         for field in self.get_concentration_fields():
+            fields.append(field)
+        for field in self.get_exceedance_fields():
             fields.append(field)
         self.create_layer('sub_points', fields, QgsWkbTypes.Point)

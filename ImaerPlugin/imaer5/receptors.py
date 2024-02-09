@@ -130,7 +130,7 @@ class Receptor(object):
         result['level'] = self.level
         result['deposition_nh3'] = None
         result['deposition_nox'] = None
-        result['deposition_sum_nh3_nox'] = None
+        result['deposition_nox_nh3_sum'] = None
         result['concentration_nh3'] = None
         result['concentration_nox'] = None
         result['concentration_n02'] = None
@@ -145,7 +145,7 @@ class Receptor(object):
 
         # Add sum if 
         if result['deposition_nh3'] is not None and result['deposition_nox'] is not None:
-            result['deposition_sum_nh3_nox'] = (result['deposition_nh3'] or 0) + (result['deposition_nox'] or 0)
+            result['deposition_nox_nh3_sum'] = (result['deposition_nh3'] or 0) + (result['deposition_nox'] or 0)
 
         return result
 
@@ -173,10 +173,15 @@ class ReceptorPoint(Receptor):
 
         attr_dict = self.get_attributes_dict()
         attributes.append(attr_dict['receptor_id'])
-        attributes.append(attr_dict['concentration_nh3'])
         attributes.append(attr_dict['concentration_nox'])
         attributes.append(attr_dict['concentration_no2'])
-
+        attributes.append(attr_dict['concentration_nh3'])
+        attributes.append(attr_dict['concentration_pm10'])
+        attributes.append(attr_dict['concentration_pm25'])
+        attributes.append(attr_dict['exceedance_days_pm10'])
+        attributes.append(attr_dict['exceedance_days_pm25'])
+        attributes.append(attr_dict['exceedance_hours_pm10'])
+        attributes.append(attr_dict['exceedance_hours_pm25'])
         feat.setAttributes(attributes)
         return feat
 
@@ -193,9 +198,9 @@ class ReceptorPoint(Receptor):
         attr_dict = self.get_attributes_dict()
         attributes.append(attr_dict['receptor_id'])
         attributes.append(attr_dict['edge_effect'])
-        attributes.append(attr_dict['deposition_nh3'])
+        attributes.append(attr_dict['deposition_nox_nh3_sum'])
         attributes.append(attr_dict['deposition_nox'])
-        attributes.append(attr_dict['deposition_sum_nh3_nox'])
+        attributes.append(attr_dict['deposition_nh3'])
 
         feat.setAttributes(attributes)
         return feat
@@ -228,12 +233,18 @@ class SubPoint(Receptor):
         attributes.append(self.level)
 
         attr_dict = self.get_attributes_dict()
-        attributes.append(attr_dict['deposition_nh3'])
+        attributes.append(attr_dict['deposition_nox_nh3_sum'])
         attributes.append(attr_dict['deposition_nox'])
-        attributes.append(attr_dict['deposition_sum_nh3_nox'])
-        attributes.append(attr_dict['concentration_nh3'])
+        attributes.append(attr_dict['deposition_nh3'])
         attributes.append(attr_dict['concentration_nox'])
         attributes.append(attr_dict['concentration_no2'])
+        attributes.append(attr_dict['concentration_nh3'])
+        attributes.append(attr_dict['concentration_pm10'])
+        attributes.append(attr_dict['concentration_pm25'])
+        attributes.append(attr_dict['exceedance_days_pm10'])
+        attributes.append(attr_dict['exceedance_days_pm25'])
+        attributes.append(attr_dict['exceedance_hours_pm10'])
+        attributes.append(attr_dict['exceedance_hours_pm25'])
 
         feat.setAttributes(attributes)
         return feat
