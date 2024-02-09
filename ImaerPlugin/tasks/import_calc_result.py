@@ -42,9 +42,13 @@ class ImportImaerCalculatorResultTask(QgsTask):
         self.log(self.gml_fn)
         self.log(self.gpkg_fn)
 
+        self.setProgress(1)  # Cause setting to 0% does not work.
+        
         doc = ImaerDocument()
         doc.from_xml_file(self.gml_fn)
         self.log(str(doc))
+
+        self.setProgress(40)
 
         if os.path.isfile(self.gpkg_fn):
             os.remove(self.gpkg_fn)
@@ -85,6 +89,9 @@ class ImportImaerCalculatorResultTask(QgsTask):
                 sub_points_layer.addFeature(feat)
                 member_cnt += 1
 
+        self.setProgress(80)
+
+
         if receptor_points_layer is not None:
             receptor_points_layer.commitChanges()
             self.load_layer_callback(receptor_points_layer)
@@ -95,7 +102,10 @@ class ImportImaerCalculatorResultTask(QgsTask):
             sub_points_layer.commitChanges()
             self.load_layer_callback(sub_points_layer)
 
+        self.setProgress(100)
+
         return True
+
 
     def finished(self, result):
         pass
