@@ -133,7 +133,7 @@ class Receptor(object):
         result['deposition_nox_nh3_sum'] = None
         result['concentration_nh3'] = None
         result['concentration_nox'] = None
-        result['concentration_n02'] = None
+        result['concentration_no2'] = None
         result['concentration_pm25'] = None
         result['concentration_pm10'] = None
         result['exceedance_days_pm25'] = None
