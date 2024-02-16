@@ -21,6 +21,17 @@ class CalculationResult(object):
             and self.substance is not None \
             and self.value is not None
 
+    def to_xml_elem(self, doc):
+        result = doc.createElement(f'imaer:CalculationResult')
+        result.setAttribute('resultType', self.result_type)
+        result.setAttribute('substance', self.substance)
+
+        value_elem = doc.createElement(f'imaer:value')
+        value_elem.appendChild(doc.createTextNode(str(self.value)))
+        result.appendChild(value_elem)
+
+        return result
+
     def from_xml_reader(self, xml_reader):
         #print('--- 1', xml_reader.name(), xml_reader.isStartElement())
         if not xml_reader.name() == 'CalculationResult':
@@ -39,7 +50,7 @@ class CalculationResult(object):
 
 class Receptor(object):
 
-    def __init__(self, local_id=None, identifier= None, geom=None, epsg_id=None, results=None):
+    def __init__(self, local_id=None, identifier=None, geom=None, epsg_id=None, results=None):
         self.local_id = local_id
         self.identifier = identifier
         self.gm_point = geom
@@ -58,8 +69,32 @@ class Receptor(object):
 
     def to_xml_elem(self, doc):
         class_name = self.__class__.__name__
-        result = doc.createElement(f'imaer:{class_name}')
-        return result
+        elem = doc.createElement(f'imaer:{class_name}')
+
+        if self.identifier is not None:
+            ident_elem = doc.createElement('imaer:identifier')
+            nen_elem = self.identifier.to_xml_elem(doc)
+            ident_elem.appendChild(nen_elem)
+            elem.appendChild(ident_elem)
+
+        if self.gm_point is not None:
+            gmp_elem = doc.createElement('imaer:GM_Point')
+            pnt_elem = self.gm_point.to_xml_elem(doc)
+            gmp_elem.appendChild(pnt_elem)
+            elem.appendChild(gmp_elem)
+        
+        if self.representation is not None:
+            repr_elem = doc.createElement('imaer:representation')
+            poly_elem = self.representation.to_xml_elem(doc)
+            repr_elem.appendChild(poly_elem)
+            elem.appendChild(repr_elem)
+        
+        for result in self.results:
+            result_elem = doc.createElement('result')
+            result_elem.appendChild(result.to_xml_elem(doc))
+            elem.appendChild(result_elem)
+
+        return elem
 
     def from_xml_reader(self, xml_reader):
         start_tag_name = xml_reader.name()
@@ -111,7 +146,10 @@ class Receptor(object):
             if xml_reader.name() == 'edgeEffect' and xml_reader.isStartElement():
                 xml_reader.readNext()
                 text = xml_reader.text().strip()
-                self.edge_effect = int(text)
+                if text == 'true':
+                    self.edge_effect = 1
+                else:
+                    self.edge_effect = 0
 
             if xml_reader.name() == 'level' and xml_reader.isStartElement():
                 xml_reader.readNext()
@@ -212,9 +250,18 @@ class ReceptorPoint(Receptor):
 
     def to_xml_elem(self, doc):
         result = super().to_xml_elem(doc)
-        result.setAttribute('test', 'test')
+
+        if self.edge_effect is not None:
+            elem = doc.createElement('imaer:edgeEffect')
+            if self.edge_effect == 1:
+                text = 'true'
+            else:
+                text = 'false'
+            elem.appendChild(doc.createTextNode(text))
+            result.appendChild(elem)
 
         return result
+
 
 class SubPoint(Receptor):
 
@@ -258,3 +305,13 @@ class SubPoint(Receptor):
 
         feat.setAttributes(attributes)
         return feat
+
+    def to_xml_elem(self, doc):
+        result = super().to_xml_elem(doc)
+
+        if self.level is not None:
+            lvl_elem = doc.createElement('imaer:level')
+            lvl_elem.appendChild(doc.createTextNode(str(self.level)))
+            result.appendChild(lvl_elem)
+
+        return result
