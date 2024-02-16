@@ -56,6 +56,11 @@ class Receptor(object):
     def __str__(self):
         return f'Receptor[{self.local_id}, {len(self.results)}]'
 
+    def to_xml_elem(self, doc):
+        class_name = self.__class__.__name__
+        result = doc.createElement(f'imaer:{class_name}')
+        return result
+
     def from_xml_reader(self, xml_reader):
         start_tag_name = xml_reader.name()
 
@@ -205,6 +210,11 @@ class ReceptorPoint(Receptor):
         feat.setAttributes(attributes)
         return feat
 
+    def to_xml_elem(self, doc):
+        result = super().to_xml_elem(doc)
+        result.setAttribute('test', 'test')
+
+        return result
 
 class SubPoint(Receptor):
 

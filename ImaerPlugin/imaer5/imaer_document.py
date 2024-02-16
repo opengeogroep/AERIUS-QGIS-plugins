@@ -78,6 +78,11 @@ class ImaerDocument():
             if xml_reader.isStartElement():
                 tag_name = xml_reader.name()
                 #print(tag_name)
+
+                if tag_name == 'AeriusCalculatorMetadata':
+                    self.metadata = AeriusCalculatorMetadata()
+                    self.metadata.from_xml_reader(xml_reader)
+
                 if tag_name == 'featureMember':
                     xml_reader.readNextStartElement()
                     tag_name = xml_reader.name()
