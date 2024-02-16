@@ -5,10 +5,25 @@ from .metadata import AeriusCalculatorMetadata
 from .emission_source import EmissionSource
 from .receptors import ReceptorPoint, SubPoint
 
+_default_namespaces = {
+    'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+    'xmlns:imaer': 'http://imaer.aerius.nl/5.1',
+    'xmlns:xlink': 'http://www.w3.org/1999/xlink',
+    'xmlns:gml': 'http://www.opengis.net/gml/3.2'
+}
+
+_default_attributes = {
+    'gml:id': 'NL.IMAER.Collection',
+    'xsi:schemaLocation': 'http://imaer.aerius.nl/5.1 http://imaer.aerius.nl/5.1/IMAER.xsd'
+}
+
 
 class ImaerDocument():
 
     def __init__(self):
+        self.namespaces = _default_namespaces
+        self.attributes = _default_attributes
+
         self.metadata = None
         self.feature_members = []
         self.definitions = []
@@ -33,13 +48,10 @@ class ImaerDocument():
         self.doc.appendChild(inst)
 
         fcc_elem = self.doc.createElement('imaer:FeatureCollectionCalculator')
-        fcc_elem.setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')
-        # fcc_elem.setAttribute('xmlns:imaer', 'http://www.kadaster.nl/schemas/geovalidaties/manifestbestand/v20181101')
-        fcc_elem.setAttribute('xmlns:imaer', 'http://imaer.aerius.nl/5.1')
-        fcc_elem.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
-        fcc_elem.setAttribute('xmlns:gml', 'http://www.opengis.net/gml/3.2')
-        fcc_elem.setAttribute('gml:id', 'NL.IMAER.Collection')
-        fcc_elem.setAttribute('xsi:schemaLocation', 'http://imaer.aerius.nl/5.1 http://imaer.aerius.nl/5.1/IMAER.xsd')
+        for k, v in self.namespaces.items():
+            fcc_elem.setAttribute(k, v)
+        for k, v in self.attributes.items():
+            fcc_elem.setAttribute(k, v)
         self.doc.appendChild(fcc_elem)
 
         if self.metadata is not None:
@@ -73,11 +85,18 @@ class ImaerDocument():
         file.open(QFile.ReadOnly | QFile.Text)
         xml_reader = QXmlStreamReader(file)
 
-        xml_reader.readNext()
         while not xml_reader.atEnd():
             if xml_reader.isStartElement():
                 tag_name = xml_reader.name()
                 #print(tag_name)
+
+                if tag_name == 'FeatureCollectionCalculator' and xml_reader.isStartElement():
+                    self.namespaces = {}
+                    for ns_declaration in xml_reader.namespaceDeclarations():
+                        self.namespaces[f'xmlns:{ns_declaration.prefix()}'] = ns_declaration.namespaceUri()
+                    self.attributes = {}
+                    for attrib in xml_reader.attributes():
+                        self.attributes[f'{attrib.prefix()}:{attrib.name()}'] = attrib.value()
 
                 if tag_name == 'AeriusCalculatorMetadata':
                     self.metadata = AeriusCalculatorMetadata()
