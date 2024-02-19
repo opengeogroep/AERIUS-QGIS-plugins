@@ -1,6 +1,8 @@
 from PyQt5.QtCore import QXmlStreamReader, QFile
 from PyQt5.QtXml import QDomDocument
 
+from ..version import VersionNumber
+
 from .metadata import AeriusCalculatorMetadata
 from .emission_source import EmissionSource
 from .receptors import ReceptorPoint, SubPoint
@@ -36,7 +38,19 @@ class ImaerDocument():
             len(self.feature_members)
         )
         return result
-    
+
+    def get_version(self):
+        if not 'xmlns:imaer' in self.namespaces:
+            return None
+        
+        imaer_ns_link = self.namespaces['xmlns:imaer'].split()[0]
+        imaer_version_parts = [part for part in imaer_ns_link.split('/') if part != '']
+        imaer_version_str = imaer_version_parts[-1]
+
+        result = VersionNumber()
+        result.from_string(imaer_version_str)
+        return result
+
     def clear(self):
         self.metadata = None
         self.feature_members = []
