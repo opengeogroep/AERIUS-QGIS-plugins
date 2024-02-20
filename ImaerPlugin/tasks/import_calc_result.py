@@ -53,7 +53,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         if os.path.isfile(self.gpkg_fn):
             os.remove(self.gpkg_fn)
 
-        gpkg = ImaerGpkg(self.gpkg_fn, epsg_id=27700)
+        gpkg = ImaerGpkg(self.gpkg_fn)
         self.log(str(gpkg))
 
         receptor_points_layer = None
@@ -63,12 +63,15 @@ class ImportImaerCalculatorResultTask(QgsTask):
         member_cnt = 0
 
         for member in doc.feature_members:
-            self.log(member)
             if member.__class__.__name__ == 'ReceptorPoint':
                 if receptor_points_layer is None:
+                    epsg_id = int(member.gm_point.epsg_id)
+                    gpkg.create_layer_receptor_points(epsg_id)
                     receptor_points_layer = QgsVectorLayer(f'{self.gpkg_fn}|layername=receptor_points', 'receptor_points', 'ogr')
                     receptor_points_layer.startEditing()
                 if receptor_hexagons_layer is None:
+                    epsg_id = int(member.representation.epsg_id)
+                    gpkg.create_layer_receptor_hexagons(epsg_id)
                     receptor_hexagons_layer = QgsVectorLayer(f'{self.gpkg_fn}|layername=receptor_hexagons', 'receptor_hexagons', 'ogr')
                     receptor_hexagons_layer.startEditing()
                 
@@ -83,6 +86,8 @@ class ImportImaerCalculatorResultTask(QgsTask):
                 member_cnt += 1
             elif member.__class__.__name__ == 'SubPoint':
                 if sub_points_layer is None:
+                    epsg_id = int(member.gm_point.epsg_id)
+                    gpkg.create_layer_sub_points(epsg_id)
                     sub_points_layer = QgsVectorLayer(f'{self.gpkg_fn}|layername=sub_points', 'sub_points', 'ogr')
                     sub_points_layer.startEditing()
                 feat = member.to_point_feature()

@@ -13,12 +13,11 @@ from qgis.core import (
 
 class ImaerGpkg():
 
-    def __init__(self, filename, version='99.99.99', epsg_id=None, plugin=None):
+    def __init__(self, filename, version='99.99.99', plugin=None):
         self.conn = None
         self.md = QgsProviderRegistry.instance().providerMetadata('ogr')
         self.filename = filename
         self.version = version
-        self.epsg_id = epsg_id
         self.plugin = plugin
 
         self.connect()
@@ -33,21 +32,19 @@ class ImaerGpkg():
         if os.path.isfile(self.filename):
             self.conn = self.md.createConnection(self.filename, {})
             self.version = self.get_metadata('db_version')  # TODO!!!
-            self.epsg_id = self.get_epsg_id()
         else:
-            if self.epsg_id is not None:
-                self.create_new()
+            self.create_new()
     
     def create_new(self):
         if Qgis.QGIS_VERSION_INT >= 32800:
             self.md.createDatabase(self.filename)
         self.conn = self.md.createConnection(self.filename, {})
 
-        self.create_layer_receptor_points()
-        self.create_layer_receptor_hexagons()
-        self.create_layer_sub_points()
+        #self.create_layer_receptor_points()
+        #self.create_layer_receptor_hexagons()
+        #self.create_layer_sub_points()
 
-    def create_layer(self, name, specific_fields, geometry_type):
+    def create_layer(self, name, specific_fields, geometry_type, epsg_id):
         if self.conn is None:
             return
 
@@ -60,7 +57,7 @@ class ImaerGpkg():
             name,
             fields,
             geometry_type,
-            QgsCoordinateReferenceSystem(self.epsg_id),
+            QgsCoordinateReferenceSystem(epsg_id),
             True,
             {'layerOptions': 'FID=ogc_fid'}
         )
@@ -89,24 +86,24 @@ class ImaerGpkg():
         result.append(QgsField('exceedance_hours_pm25', QVariant.LongLong))
         return result
 
-    def create_layer_receptor_points(self):
+    def create_layer_receptor_points(self, epsg_id):
         fields = QgsFields()
         fields.append(QgsField('receptor_id', QVariant.LongLong))
         for field in self.get_concentration_fields():
             fields.append(field)
         for field in self.get_exceedance_fields():
             fields.append(field)
-        self.create_layer('receptor_points', fields, QgsWkbTypes.Point)
+        self.create_layer('receptor_points', fields, QgsWkbTypes.Point, epsg_id)
     
-    def create_layer_receptor_hexagons(self):
+    def create_layer_receptor_hexagons(self, epsg_id):
         fields = QgsFields()
         fields.append(QgsField('receptor_id', QVariant.LongLong))
         fields.append(QgsField('edge_effect', QVariant.LongLong))
         for field in self.get_deposition_fields():
             fields.append(field)
-        self.create_layer('receptor_hexagons', fields, QgsWkbTypes.Polygon)
+        self.create_layer('receptor_hexagons', fields, QgsWkbTypes.Polygon, epsg_id)
     
-    def create_layer_sub_points(self):
+    def create_layer_sub_points(self, epsg_id):
         fields = QgsFields()
         fields.append(QgsField('receptor_id', QVariant.LongLong))
         fields.append(QgsField('sub_point_id', QVariant.LongLong))
@@ -117,4 +114,4 @@ class ImaerGpkg():
             fields.append(field)
         for field in self.get_exceedance_fields():
             fields.append(field)
-        self.create_layer('sub_points', fields, QgsWkbTypes.Point)
+        self.create_layer('sub_points', fields, QgsWkbTypes.Point, epsg_id)
