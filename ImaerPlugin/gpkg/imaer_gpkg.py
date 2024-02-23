@@ -40,6 +40,9 @@ class ImaerGpkg():
             self.md.createDatabase(self.filename)
         self.conn = self.md.createConnection(self.filename, {})
 
+        self.create_metadata_table()
+        self.set_metadata('version', '1.3.2')
+
         #self.create_layer_receptor_points()
         #self.create_layer_receptor_hexagons()
         #self.create_layer_sub_points()
@@ -115,3 +118,69 @@ class ImaerGpkg():
         for field in self.get_exceedance_fields():
             fields.append(field)
         self.create_layer('sub_points', fields, QgsWkbTypes.Point, epsg_id)
+
+    def create_metadata_table(self):
+        q = '''
+            CREATE TABLE imaer_metadata (
+                metadata_id INTEGER PRIMARY KEY,
+                key TEXT UNIQUE,
+                value TEXT,
+                data_type TEXT
+            );
+        '''
+        self.conn.executeSql(q)
+
+    def set_metadata(self, key, value):
+        if value is None:
+            q = f'DELETE FROM imaer_metadata WHERE key = \'{key}\';'
+            self.conn.executeSql(q)
+            return True
+
+        if isinstance(value, str):
+            data_type = 'str'
+        elif isinstance(value, float):
+            data_type = 'float'
+        elif isinstance(value, int):
+            data_type = 'int'
+        else:
+            return False
+        str_value = str(value)
+
+        q = f'SELECT * FROM imaer_metadata WHERE key = \'{key}\';'
+        result = self.conn.executeSql(q)
+
+        if len(result) == 0:
+            q = f'INSERT INTO imaer_metadata (key, value, data_type) VALUES (\'{key}\', \'{str_value}\', \'{data_type}\');'
+        else:
+            q = f'UPDATE imaer_metadata SET (value, data_type) = (\'{str_value}\', \'{data_type}\') WHERE key = \'{key}\';'
+        result = self.conn.executeSql(q)
+
+        return True
+
+    def get_metadata(self, key):
+        q = f'SELECT key, value, data_type FROM imaer_metadata WHERE key = \'{key}\';'
+        result = self.conn.executeSql(q)
+
+        if len(result) == 0:
+            return None
+
+        data_type = result[0][2]
+        str_value = result[0][1]
+        if data_type == 'int':
+            return int(str_value)
+        elif data_type == 'float':
+            return float(str_value)
+        else:
+            return str_value
+    
+    def get_all_metadata(self):
+        q = 'SELECT key FROM imaer_metadata;'
+        qr = self.conn.executeSql(q)
+
+        result = {}
+
+        for rec in qr:
+            key = rec[0]
+            result[key] = self.get_metadata(key)
+        
+        return result
