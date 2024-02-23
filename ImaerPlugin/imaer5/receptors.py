@@ -187,7 +187,7 @@ class Receptor(object):
         result.update(self.get_results_dict())
 
         # Add sum if 
-        if result['deposition_nh3'] is not None and result['deposition_nox'] is not None:
+        if result['deposition_nh3'] is not None or result['deposition_nox'] is not None:
             result['deposition_nox_nh3_sum'] = (result['deposition_nh3'] or 0) + (result['deposition_nox'] or 0)
 
         return result
