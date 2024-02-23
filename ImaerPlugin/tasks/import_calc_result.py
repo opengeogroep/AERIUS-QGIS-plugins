@@ -67,8 +67,14 @@ class ImportImaerCalculatorResultTask(QgsTask):
             # TODO User feedback
             return False
 
-        gpkg = ImaerGpkg(self.gpkg_fn)
+        gpkg = ImaerGpkg(self.gpkg_fn, plugin=self.plugin)
         self.log(str(gpkg))
+
+        # metadata
+        gpkg.set_metadata('gml_fn', doc.gml_fn)
+        gpkg.set_metadata('imaer_version', doc.get_version().to_string())
+
+        self.log(gpkg.get_all_metadata())
 
         receptor_points_layer = None
         receptor_hexagons_layer = None

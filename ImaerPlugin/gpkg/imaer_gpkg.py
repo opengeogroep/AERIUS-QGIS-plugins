@@ -1,6 +1,6 @@
 import os
 
-from PyQt5.QtCore import QVariant
+from PyQt5.QtCore import Qt, QVariant, QDateTime
 
 from qgis.core import (
     Qgis,
@@ -31,7 +31,7 @@ class ImaerGpkg():
             return
         if os.path.isfile(self.filename):
             self.conn = self.md.createConnection(self.filename, {})
-            self.version = self.get_metadata('db_version')  # TODO!!!
+            self.version = self.get_metadata('db_version')
         else:
             self.create_new()
     
@@ -41,11 +41,10 @@ class ImaerGpkg():
         self.conn = self.md.createConnection(self.filename, {})
 
         self.create_metadata_table()
-        self.set_metadata('version', '1.3.2')
 
-        #self.create_layer_receptor_points()
-        #self.create_layer_receptor_hexagons()
-        #self.create_layer_sub_points()
+        if self.plugin is not None:
+            self.set_metadata('qgis_plugin_version', self.plugin.version)
+        self.set_metadata('gpkg_creation_time', QDateTime().currentDateTime().toString(Qt.ISODate))
 
     def create_layer(self, name, specific_fields, geometry_type, epsg_id):
         if self.conn is None:
@@ -174,7 +173,7 @@ class ImaerGpkg():
             return str_value
     
     def get_all_metadata(self):
-        q = 'SELECT key FROM imaer_metadata;'
+        q = 'SELECT key FROM imaer_metadata ORDER BY key;'
         qr = self.conn.executeSql(q)
 
         result = {}

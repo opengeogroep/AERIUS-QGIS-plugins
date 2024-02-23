@@ -23,6 +23,7 @@ _default_attributes = {
 class ImaerDocument():
 
     def __init__(self):
+        self.gml_fn = None
         self.namespaces = _default_namespaces
         self.attributes = _default_attributes
 
@@ -95,6 +96,7 @@ class ImaerDocument():
             out_file.write(self.doc.toString(4))
 
     def from_xml_file(self, fn):
+        self.gml_fn = fn
         file = QFile(fn)
         file.open(QFile.ReadOnly | QFile.Text)
         xml_reader = QXmlStreamReader(file)
