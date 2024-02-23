@@ -53,6 +53,20 @@ class ImportImaerCalculatorResultTask(QgsTask):
         if os.path.isfile(self.gpkg_fn):
             os.remove(self.gpkg_fn)
 
+        member_info = doc.get_member_count()
+        self.log(member_info)
+
+        result_member_count = 0
+        for k, v in member_info.items():
+            if k in ['ReceptorPoint', 'SubPoint']:
+                result_member_count += v
+        self.log(result_member_count)
+
+        if result_member_count == 0:
+            self.log('No results found')
+            # TODO User feedback
+            return False
+
         gpkg = ImaerGpkg(self.gpkg_fn)
         self.log(str(gpkg))
 
@@ -76,11 +90,9 @@ class ImportImaerCalculatorResultTask(QgsTask):
                     receptor_hexagons_layer.startEditing()
                 
                 feat = member.to_point_feature()
-                self.log(feat.geometry())
                 receptor_points_layer.addFeature(feat)
                 
                 feat = member.to_polygon_feature()
-                self.log(feat.geometry())
                 receptor_hexagons_layer.addFeature(feat)
                 
                 member_cnt += 1
@@ -96,7 +108,6 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
         self.setProgress(80)
 
-
         if receptor_points_layer is not None:
             receptor_points_layer.commitChanges()
             self.load_layer_callback(receptor_points_layer)
@@ -111,7 +122,6 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
         return True
 
-
     def finished(self, result):
         pass
 
@@ -121,7 +131,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         # TODO delete gpkg file
         super().cancel()
 
-    def log(self, message, tab='Imaer'):
+    def log(self, message, tab='IMAER'):
         if self.do_log:
             QgsMessageLog.logMessage(repr(message), tab, level=Qgis.Info)
 

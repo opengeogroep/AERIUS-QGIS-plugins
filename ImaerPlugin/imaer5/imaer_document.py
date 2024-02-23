@@ -34,7 +34,7 @@ class ImaerDocument():
 
     def __str__(self):
         result = 'ImaerDocument[{}, feature_members:{}]'.format(
-            self.metadata,
+            self.get_version(),
             len(self.feature_members)
         )
         return result
@@ -140,7 +140,7 @@ class ImaerDocument():
         if xml_reader.hasError():
             pass        
 
-    def get_statistics(self):
+    def get_member_count(self):
         feature_members = {}
         for member in self.feature_members:
             # print(member, feature_members)
