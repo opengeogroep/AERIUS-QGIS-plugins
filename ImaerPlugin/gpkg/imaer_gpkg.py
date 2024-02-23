@@ -59,7 +59,7 @@ class ImaerGpkg():
             name,
             fields,
             geometry_type,
-            QgsCoordinateReferenceSystem(epsg_id),
+            QgsCoordinateReferenceSystem(f'EPSG:{epsg_id}'),
             True,
             {'layerOptions': 'FID=ogc_fid'}
         )
