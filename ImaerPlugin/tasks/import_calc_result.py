@@ -116,13 +116,12 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
         if receptor_points_layer is not None:
             receptor_points_layer.commitChanges()
-            self.load_layer_callback(receptor_points_layer)
         if receptor_hexagons_layer is not None:
             receptor_hexagons_layer.commitChanges()
-            self.load_layer_callback(receptor_hexagons_layer)
         if sub_points_layer is not None:
             sub_points_layer.commitChanges()
-            self.load_layer_callback(sub_points_layer)
+        
+        self.load_layer_callback(self.gpkg_fn)
 
         self.setProgress(100)
 

@@ -226,47 +226,47 @@ class ImaerPlugin:
 
             if os.path.exists(gpkg_fn):
                 self.log(f'Gpkg file already exists: {gpkg_fn}', lvl='Warning', bar=True, duration=5)
-                return
+                #return
 
-            task = ImportImaerCalculatorResultTask(self, gml_fn, gpkg_fn, self.load_calc_layer)
+            task = ImportImaerCalculatorResultTask(self, gml_fn, gpkg_fn, self.load_calculation_results_gpkg)
             task_result = self.task_manager.addTask(task)
             self.log(task_result)
 
-    def load_calc_layer(self, gpkg_fn, feat_cnt, rp_without_geom_cnt=None, zoom=True):
+    def load_calculation_results_gpkg(self, gpkg_fn, layer_names=None, zoom=True):
         '''Callback function from the task after finishing the gpkg'''
-        # Prevent loading an empty layer
-        if feat_cnt == 0:
-            msg = 'Layer does not contain calculation results.'
-            if rp_without_geom_cnt > 0:
-                msg += f' (Could not import {rp_without_geom_cnt} receptors without hexagon geometry.)'
-            self.log(msg, lvl='Warning', bar=True, duration=5)
-            os.remove(gpkg_fn)
-            return
+
+        result_layer_names = ['receptor_hexagons', 'receptor_points', 'sub_points']
+        if layer_names is not None:
+            result_layer_names = set(result_layer_names).intersection(set(layer_names))
 
         base = os.path.basename(gpkg_fn)
         stem, ext = os.path.splitext(base)
-        layer_name = '{} receptors'.format(stem)
-        if self.dev:
-            self.log(layer_name)
-        layer_data_source = '{}|layername={}'.format(gpkg_fn, 'receptors')
-        receptors_layer = QgsVectorLayer(layer_data_source, layer_name, 'ogr')
+        #self.log(stem)
 
-        qml = os.path.join(self.plugin_dir, 'styles', 'calc_result_abs.qml')
-        receptors_layer.loadNamedStyle(qml)
-        QgsProject.instance().addMapLayer(receptors_layer)
+        total_extent = None
+
+        for layer_name in result_layer_names:
+            layer_data_source = f'{gpkg_fn}|layername={layer_name}'
+            layer = QgsVectorLayer(layer_data_source, layer_name, 'ogr')
+            if not layer.isValid():
+                continue
+
+            if total_extent is None:
+                total_extent = layer.extent()
+            else:
+                total_extent.combineExtentWith(layer.extent())
+
+            '''
+            qml = os.path.join(self.plugin_dir, 'styles', 'calc_result_abs.qml')
+            layer.loadNamedStyle(qml)
+            '''
+
+            QgsProject.instance().addMapLayer(layer)
 
         if zoom:
             canvas = self.iface.mapCanvas()
-            extent = receptors_layer.extent()
-            extent.grow(100)
-            canvas.setExtent(extent)
-
-        if rp_without_geom_cnt is not None and rp_without_geom_cnt > 0:
-            self.log(f'Could not import {rp_without_geom_cnt} receptors without hexagon geometry.', lvl='Warning', bar=True, duration=5)
-
-    def load_calc_layer(self, layer):
-        QgsProject.instance().addMapLayer(layer)
-        
+            total_extent.grow(100)
+            canvas.setExtent(total_extent)
 
     def run_extract_gml_from_pdf(self):
         if self.dev:
