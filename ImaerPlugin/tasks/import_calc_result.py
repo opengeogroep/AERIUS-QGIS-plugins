@@ -21,8 +21,7 @@ from .. task_timer import TaskTimer
 from ImaerPlugin.imaer5 import ImaerDocument
 from ImaerPlugin.gpkg import ImaerGpkg
 
-_SUPPORTED_IMAER_VERSIONS = ['2.2', '3.1', '4.0', '5.0', '5.1']
-_EDGE_EFFECT_VALUES = {'false': 0, 'true': 1}
+_SUPPORTED_IMAER_VERSIONS = ['3.1', '4.0', '5.0', '5.1']
 
 
 class ImportImaerCalculatorResultTask(QgsTask):
@@ -121,14 +120,14 @@ class ImportImaerCalculatorResultTask(QgsTask):
         if sub_points_layer is not None:
             sub_points_layer.commitChanges()
         
-        self.load_layer_callback(self.gpkg_fn)
-
         self.setProgress(100)
 
         return True
 
     def finished(self, result):
-        pass
+        #self.log('finished task')
+        #self.log(result)
+        self.load_layer_callback(self.gpkg_fn)
 
     def cancel(self):
         self.log(

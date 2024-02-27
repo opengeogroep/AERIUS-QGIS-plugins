@@ -225,15 +225,23 @@ class ImaerPlugin:
             gpkg_fn = gml_fn.replace('.gml', '.gpkg')  # TODO change extension in a proper way
 
             if os.path.exists(gpkg_fn):
-                self.log(f'Gpkg file already exists: {gpkg_fn}', lvl='Warning', bar=True, duration=5)
+                pass
+                #self.log(f'Gpkg file already exists: {gpkg_fn}', lvl='Warning', bar=True, duration=5)
                 #return
 
             task = ImportImaerCalculatorResultTask(self, gml_fn, gpkg_fn, self.load_calculation_results_gpkg)
+            #task.taskCompleted.connect(self.import_result_task_completed)
             task_result = self.task_manager.addTask(task)
-            self.log(task_result)
+            self.log(f'task result: {task_result}')
+
+    def import_result_task_completed(self, name, revision, arguments):
+        self.log('task completed')
+        self.log(name)
+        self.log(revision)
+        self.log(arguments)
 
     def load_calculation_results_gpkg(self, gpkg_fn, layer_names=None, zoom=True):
-        '''Callback function from the task after finishing the gpkg'''
+        '''Callback function from the import task after finishing the gpkg'''
 
         result_layer_names = ['receptor_hexagons', 'receptor_points', 'sub_points']
         if layer_names is not None:
@@ -241,12 +249,13 @@ class ImaerPlugin:
 
         base = os.path.basename(gpkg_fn)
         stem, ext = os.path.splitext(base)
-        #self.log(stem)
 
         total_extent = None
+        loaded_layer_cnt = 0
 
-        for layer_name in result_layer_names:
-            layer_data_source = f'{gpkg_fn}|layername={layer_name}'
+        for result_layer_name in result_layer_names:
+            layer_data_source = f'{gpkg_fn}|layername={result_layer_name}'
+            layer_name = f'{stem} {result_layer_name}'
             layer = QgsVectorLayer(layer_data_source, layer_name, 'ogr')
             if not layer.isValid():
                 continue
@@ -256,18 +265,22 @@ class ImaerPlugin:
             else:
                 total_extent.combineExtentWith(layer.extent())
 
-            '''
-            qml = os.path.join(self.plugin_dir, 'styles', 'calc_result_abs.qml')
+            qml = os.path.join(self.plugin_dir, 'styles', f'calculation_result_{result_layer_name}_absolute.qml')
             layer.loadNamedStyle(qml)
-            '''
-
+            
             QgsProject.instance().addMapLayer(layer)
+            loaded_layer_cnt += 1
 
-        if zoom:
+        if zoom and total_extent is not None:
             canvas = self.iface.mapCanvas()
-            total_extent.grow(100)
+            total_extent.grow(100) # map units
             canvas.setExtent(total_extent)
-
+        
+        if loaded_layer_cnt == 0:
+            self.log(f'No result layers found.', lvl='Warning', bar=True, duration=3)
+        else:
+            self.log(f'Loaded {loaded_layer_cnt} result layers.', lvl='Info', bar=True, duration=3)
+        
     def run_extract_gml_from_pdf(self):
         if self.dev:
             self.calc_result_file_dialog.setDirectory('/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata')
