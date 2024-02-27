@@ -127,7 +127,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
     def finished(self, result):
         #self.log('finished task')
         #self.log(result)
-        self.load_layer_callback(self.gpkg_fn)
+        self.load_layer_callback(self.gpkg_fn, make_groups=True)
 
     def cancel(self):
         self.log(

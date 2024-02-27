@@ -240,10 +240,13 @@ class ImaerPlugin:
         self.log(revision)
         self.log(arguments)
 
-    def load_calculation_results_gpkg(self, gpkg_fn, layer_names=None, zoom=True):
+    def load_calculation_results_gpkg(self, gpkg_fn, layer_names=None, zoom=True, make_groups=True):
         '''Callback function from the import task after finishing the gpkg'''
 
         result_layer_names = ['receptor_hexagons', 'receptor_points', 'sub_points']
+        if make_groups:
+            result_layer_names.reverse()
+
         if layer_names is not None:
             result_layer_names = set(result_layer_names).intersection(set(layer_names))
 
@@ -253,9 +256,14 @@ class ImaerPlugin:
         total_extent = None
         loaded_layer_cnt = 0
 
+        layer_group = None
+
         for result_layer_name in result_layer_names:
             layer_data_source = f'{gpkg_fn}|layername={result_layer_name}'
-            layer_name = f'{stem} {result_layer_name}'
+            if make_groups:
+                layer_name = result_layer_name
+            else:
+                layer_name = f'{stem} - {result_layer_name}'
             layer = QgsVectorLayer(layer_data_source, layer_name, 'ogr')
             if not layer.isValid():
                 continue
@@ -267,8 +275,20 @@ class ImaerPlugin:
 
             qml = os.path.join(self.plugin_dir, 'styles', f'calculation_result_{result_layer_name}_absolute.qml')
             layer.loadNamedStyle(qml)
+
+            if make_groups and (layer_group is None):
+                root = QgsProject.instance().layerTreeRoot()
+                temp_group = root.addGroup(stem)
+                layer_group = temp_group.clone()
+                root.insertChildNode(0, layer_group)
+                root.removeChildNode(temp_group)
             
-            QgsProject.instance().addMapLayer(layer)
+            if make_groups:
+                QgsProject.instance().addMapLayer(layer, False)
+                layer_group.addLayer(layer)
+            else:
+                QgsProject.instance().addMapLayer(layer)
+
             loaded_layer_cnt += 1
 
         if zoom and total_extent is not None:
