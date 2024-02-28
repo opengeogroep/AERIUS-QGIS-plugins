@@ -26,15 +26,17 @@ class StyleFactory():
         self.plugin = plugin
     
     def create_renderer(self, name):
-        style_name = f'nl_{name}'
-        print(style_name)
+        country_setting = self.plugin.settings.value('imaer_plugin/country', defaultValue='')
+        if country_setting == '':
+            return None
+
+        style_name = f'{country_setting.lower()}_{name}'
         classification = classifications[style_name]
         
         result = None
-
         if classification['render_type'] == 'graduated':
             result = self.__create_graduated_renderer(classification)
-        
+
         return result
 
     def __create_graduated_renderer(self, classification):
@@ -56,32 +58,4 @@ class StyleFactory():
 
             renderer.addClassRange(QgsRendererRange(QgsClassificationRange(cls[0], cls[1], cls[2]), symbol))
 
-        print(classification)
-
         return renderer
-
-
-
-'''
-    def __create_categorized_renderer(self, style_name):
-        self.plugin.log(f'generate_soilexc_renderers({style_name})')
-
-        categorized_def = self.__categorized_defs[style_name]
-
-        renderer = QgsCategorizedSymbolRenderer()
-        renderer.setClassAttribute(categorized_def['field'])
-
-        class_items = self.plugin.db_metadata['classes'][style_name].copy()
-        class_items.append({'class_id': None, 'name': 'no data', 'color': self.__colors['nodata']})
-        for class_item in class_items:
-            category = QgsRendererCategory()
-            category.setValue(class_item['class_id'])
-            category.setLabel(class_item['name'])
-            fill_color = QColor(class_item['color'])
-            
-            symbol = QgsFillSymbol().createSimple(self.__base_properties)
-            symbol.setColor(fill_color)
-            category.setSymbol(symbol)
-            renderer.addCategory(category)
-        return renderer
-'''

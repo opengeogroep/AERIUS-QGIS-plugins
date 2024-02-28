@@ -287,9 +287,10 @@ class ImaerPlugin:
                 style_name = 'contribution_deposition'
             
                 renderer = self.style_factory.create_renderer(style_name)
-                style_manager = layer.styleManager()
-                style_manager.renameStyle('default', style_name)
-                layer.setRenderer(renderer)
+                if renderer is not None:
+                    style_manager = layer.styleManager()
+                    style_manager.renameStyle('default', style_name)
+                    layer.setRenderer(renderer)
 
             loaded_layer_cnt += 1
 
