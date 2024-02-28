@@ -237,12 +237,6 @@ class ImaerPlugin:
             task_result = self.task_manager.addTask(task)
             self.log(f'task result: {task_result}')
 
-    def import_result_task_completed(self, name, revision, arguments):
-        self.log('task completed')
-        self.log(name)
-        self.log(revision)
-        self.log(arguments)
-
     def load_calculation_results_gpkg(self, gpkg_fn, layer_names=None, zoom=True, make_groups=True):
         '''Callback function from the import task after finishing the gpkg'''
 
