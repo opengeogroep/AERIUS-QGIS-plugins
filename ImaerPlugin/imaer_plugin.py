@@ -53,6 +53,8 @@ from ImaerPlugin.connect import (
 
 from ImaerPlugin.imaer5 import ImaerDocument
 from ImaerPlugin.gpkg import ImaerGpkg
+from ImaerPlugin.styles import StyleFactory
+
 
 class ImaerPlugin:
 
@@ -73,6 +75,7 @@ class ImaerPlugin:
         self.version = '3.4.2'
         self.imaer_doc = ImaerDocument()
         self.imaer_gpkg = ImaerGpkg(None)
+        self.style_factory = StyleFactory(self)
 
         # Making sure users will NOT keep on using the prerelease.
         # TODO: Make a future proof generic solution for URL management
@@ -273,9 +276,6 @@ class ImaerPlugin:
             else:
                 total_extent.combineExtentWith(layer.extent())
 
-            qml = os.path.join(self.plugin_dir, 'styles', f'calculation_result_{result_layer_name}_absolute.qml')
-            layer.loadNamedStyle(qml)
-
             if make_groups and (layer_group is None):
                 root = QgsProject.instance().layerTreeRoot()
                 temp_group = root.addGroup(stem)
@@ -288,6 +288,14 @@ class ImaerPlugin:
                 layer_group.addLayer(layer)
             else:
                 QgsProject.instance().addMapLayer(layer)
+
+            if result_layer_name == 'receptor_hexagons':
+                style_name = 'contribution_deposition'
+            
+                renderer = self.style_factory.create_renderer(style_name)
+                style_manager = layer.styleManager()
+                style_manager.renameStyle('default', style_name)
+                layer.setRenderer(renderer)
 
             loaded_layer_cnt += 1
 
