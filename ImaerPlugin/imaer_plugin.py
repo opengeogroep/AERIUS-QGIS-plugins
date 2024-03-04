@@ -284,48 +284,29 @@ class ImaerPlugin:
                 QgsProject.instance().addMapLayer(layer)
 
             # Set renderers
-            style_manager = layer.styleManager()
+            style_name = 'contribution'
 
             if result_layer_name == 'receptor_hexagons':
-                style_name = 'contribution_deposition'
-                layer_style_name = style_name
                 renderer = self.style_factory.create_renderer(style_name, 'polygon')
                 renderer.setClassAttribute('"deposition_nox_nh3_sum"')
-                if renderer is not None:
-                    style_manager.addStyleFromLayer(layer_style_name)
-                    style_manager.setCurrentStyle(layer_style_name)
-                    layer.setRenderer(renderer)
+                self.set_layer_renderer(layer, renderer, f'{style_name}_deposition')
 
             elif result_layer_name == 'receptor_points':
-                style_name = 'contribution_deposition'
-                layer_style_name = 'contribution_concentration'
                 renderer = self.style_factory.create_renderer(style_name, 'point')
                 exp = 'coalesce("concentration_nox", 0) + coalesce("concentration_no2", 0) + coalesce("concentration_nh3", 0)'
                 renderer.setClassAttribute(exp)
-                if renderer is not None:
-                    style_manager.addStyleFromLayer(layer_style_name)
-                    style_manager.setCurrentStyle(layer_style_name)
-                    layer.setRenderer(renderer)
+                self.set_layer_renderer(layer, renderer, f'{style_name}_concentration')
 
             elif result_layer_name == 'sub_points':
-                style_name = 'contribution_deposition'
-                layer_style_name = style_name
                 renderer = self.style_factory.create_renderer(style_name, 'point')
                 exp = 'coalesce("deposition_nox", 0) + coalesce("deposition_nh3", 0)'
                 renderer.setClassAttribute(exp)
-                if renderer is not None:
-                    style_manager.addStyleFromLayer(layer_style_name)
-                    style_manager.setCurrentStyle(layer_style_name)
-                    layer.setRenderer(renderer)
+                self.set_layer_renderer(layer, renderer, f'{style_name}_deposition')
 
-                layer_style_name = 'contribution_concentration'
                 renderer = self.style_factory.create_renderer(style_name, 'point')
                 exp = 'coalesce("concentration_nox", 0) + coalesce("concentration_no2", 0) + coalesce("concentration_nh3", 0)'
                 renderer.setClassAttribute(exp)
-                if renderer is not None:
-                    style_manager.addStyleFromLayer(layer_style_name)
-                    style_manager.setCurrentStyle(layer_style_name)
-                    layer.setRenderer(renderer)
+                self.set_layer_renderer(layer, renderer, f'{style_name}_concentration')
 
             loaded_layer_cnt += 1
 
@@ -338,7 +319,14 @@ class ImaerPlugin:
             self.log(f'No result layers found.', lvl='Warning', bar=True, duration=3)
         else:
             self.log(f'Loaded {loaded_layer_cnt} result layers.', lvl='Info', bar=True, duration=3)
-        
+
+    def set_layer_renderer(self, layer, renderer, layer_style_name):
+        if renderer is not None:
+            style_manager = layer.styleManager()
+            style_manager.addStyleFromLayer(layer_style_name)
+            style_manager.setCurrentStyle(layer_style_name)
+            layer.setRenderer(renderer)
+
     def run_extract_gml_from_pdf(self):
         if self.dev:
             self.calc_result_file_dialog.setDirectory('/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata')

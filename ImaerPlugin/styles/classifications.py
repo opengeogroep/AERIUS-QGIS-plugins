@@ -1,7 +1,7 @@
 
 classifications = {}
 
-classifications['nl_contribution_deposition'] = {
+classifications['nl_contribution'] = {
     'render_type': 'graduated',
     'field': 'deposition_nox_nh3_sum',
     'classes': [
@@ -21,7 +21,7 @@ classifications['nl_contribution_deposition'] = {
     ]
 }
 
-classifications['uk_contribution_deposition'] = {
+classifications['uk_contribution'] = {
     'render_type': 'graduated',
     'field': 'deposition_nox_nh3_sum',
     'classes': [
