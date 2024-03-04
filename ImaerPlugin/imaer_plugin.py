@@ -283,18 +283,53 @@ class ImaerPlugin:
             else:
                 QgsProject.instance().addMapLayer(layer)
 
+            # Set renderers
+            style_manager = layer.styleManager()
+
             if result_layer_name == 'receptor_hexagons':
                 style_name = 'contribution_deposition'
-            
-                renderer = self.style_factory.create_renderer(style_name)
+                layer_style_name = style_name
+                renderer = self.style_factory.create_renderer(style_name, 'polygon')
+                renderer.setClassAttribute('"deposition_nox_nh3_sum"')
                 if renderer is not None:
-                    style_manager = layer.styleManager()
-                    style_manager.renameStyle('default', style_name)
+                    style_manager.addStyleFromLayer(layer_style_name)
+                    style_manager.setCurrentStyle(layer_style_name)
+                    layer.setRenderer(renderer)
+
+            elif result_layer_name == 'receptor_points':
+                style_name = 'contribution_deposition'
+                layer_style_name = 'contribution_concentration'
+                renderer = self.style_factory.create_renderer(style_name, 'point')
+                exp = 'coalesce("concentration_nox", 0) + coalesce("concentration_no2", 0) + coalesce("concentration_nh3", 0)'
+                renderer.setClassAttribute(exp)
+                if renderer is not None:
+                    style_manager.addStyleFromLayer(layer_style_name)
+                    style_manager.setCurrentStyle(layer_style_name)
+                    layer.setRenderer(renderer)
+
+            elif result_layer_name == 'sub_points':
+                style_name = 'contribution_deposition'
+                layer_style_name = style_name
+                renderer = self.style_factory.create_renderer(style_name, 'point')
+                exp = 'coalesce("deposition_nox", 0) + coalesce("deposition_nh3", 0)'
+                renderer.setClassAttribute(exp)
+                if renderer is not None:
+                    style_manager.addStyleFromLayer(layer_style_name)
+                    style_manager.setCurrentStyle(layer_style_name)
+                    layer.setRenderer(renderer)
+
+                layer_style_name = 'contribution_concentration'
+                renderer = self.style_factory.create_renderer(style_name, 'point')
+                exp = 'coalesce("concentration_nox", 0) + coalesce("concentration_no2", 0) + coalesce("concentration_nh3", 0)'
+                renderer.setClassAttribute(exp)
+                if renderer is not None:
+                    style_manager.addStyleFromLayer(layer_style_name)
+                    style_manager.setCurrentStyle(layer_style_name)
                     layer.setRenderer(renderer)
 
             loaded_layer_cnt += 1
 
-        if zoom and total_extent is not None:
+        if zoom and (total_extent is not None):
             canvas = self.iface.mapCanvas()
             total_extent.grow(100) # map units
             canvas.setExtent(total_extent)
