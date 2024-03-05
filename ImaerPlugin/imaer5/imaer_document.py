@@ -5,7 +5,7 @@ from ..version import VersionNumber
 
 from .metadata import AeriusCalculatorMetadata
 from .emission_source import EmissionSource
-from .receptors import ReceptorPoint, SubPoint
+from .receptors import ReceptorPoint, SubPoint, CalculationPoint, NcaCustomCalculationPoint
 
 _default_namespaces = {
     'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
@@ -131,6 +131,18 @@ class ImaerDocument():
                     elif tag_name == 'SubPoint':
                         # print(f'  Processing {tag_name}')
                         member = SubPoint()
+                        member.from_xml_reader(xml_reader)
+                        if member.is_valid():
+                            self.feature_members.append(member)
+                    elif tag_name == 'CalculationPoint':
+                        print(f'  Processing {tag_name}')
+                        member = CalculationPoint()
+                        member.from_xml_reader(xml_reader)
+                        if member.is_valid():
+                            self.feature_members.append(member)
+                    elif tag_name == 'NcaCustomCalculationPoint':
+                        print(f'  Processing {tag_name}')
+                        member = NcaCustomCalculationPoint()
                         member.from_xml_reader(xml_reader)
                         if member.is_valid():
                             self.feature_members.append(member)

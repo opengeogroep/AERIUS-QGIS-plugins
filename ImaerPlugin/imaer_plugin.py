@@ -240,7 +240,7 @@ class ImaerPlugin:
     def load_calculation_results_gpkg(self, gpkg_fn, layer_names=None, zoom=True, make_groups=True):
         '''Callback function from the import task after finishing the gpkg'''
 
-        result_layer_names = ['receptor_hexagons', 'receptor_points', 'sub_points']
+        result_layer_names = ['receptor_hexagons', 'receptor_points', 'sub_points', 'calculation_points']
         if make_groups:
             result_layer_names.reverse()
 
@@ -299,7 +299,18 @@ class ImaerPlugin:
 
             elif result_layer_name == 'sub_points':
                 renderer = self.style_factory.create_renderer(style_name, 'point')
-                exp = 'coalesce("deposition_nox", 0) + coalesce("deposition_nh3", 0)'
+                exp = '"deposition_nox_nh3_sum"'
+                renderer.setClassAttribute(exp)
+                self.set_layer_renderer(layer, renderer, f'{style_name}_deposition')
+
+                renderer = self.style_factory.create_renderer(style_name, 'point')
+                exp = 'coalesce("concentration_nox", 0) + coalesce("concentration_no2", 0) + coalesce("concentration_nh3", 0)'
+                renderer.setClassAttribute(exp)
+                self.set_layer_renderer(layer, renderer, f'{style_name}_concentration')
+
+            elif result_layer_name == 'calculation_points':
+                renderer = self.style_factory.create_renderer(style_name, 'point')
+                exp = '"deposition_nox_nh3_sum"'
                 renderer.setClassAttribute(exp)
                 self.set_layer_renderer(layer, renderer, f'{style_name}_deposition')
 

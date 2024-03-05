@@ -57,7 +57,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
         result_member_count = 0
         for k, v in member_info.items():
-            if k in ['ReceptorPoint', 'SubPoint']:
+            if k in ['ReceptorPoint', 'SubPoint', 'CalculationPoint']:
                 result_member_count += v
         self.log(result_member_count)
 
@@ -78,10 +78,12 @@ class ImportImaerCalculatorResultTask(QgsTask):
         receptor_points_layer = None
         receptor_hexagons_layer = None
         sub_points_layer = None
+        calculation_points_layer = None
 
         member_cnt = 0
 
         for member in doc.feature_members:
+            self.log(member.__class__.__name__)
             if member.__class__.__name__ == 'ReceptorPoint':
                 if receptor_points_layer is None:
                     epsg_id = int(member.gm_point.epsg_id)
@@ -111,6 +113,17 @@ class ImportImaerCalculatorResultTask(QgsTask):
                 sub_points_layer.addFeature(feat)
                 member_cnt += 1
 
+            elif member.__class__.__name__ == 'CalculationPoint':
+                if calculation_points_layer is None:
+                    epsg_id = int(member.gm_point.epsg_id)
+                    gpkg.create_layer_calculation_points(epsg_id)
+                    calculation_points_layer = QgsVectorLayer(f'{self.gpkg_fn}|layername=calculation_points', 'calcultion_points', 'ogr')
+                    calculation_points_layer.startEditing()
+                feat = member.to_point_feature()
+                self.log(feat)
+                calculation_points_layer.addFeature(feat)
+                member_cnt += 1
+
         self.setProgress(80)
 
         if receptor_points_layer is not None:
@@ -119,6 +132,8 @@ class ImportImaerCalculatorResultTask(QgsTask):
             receptor_hexagons_layer.commitChanges()
         if sub_points_layer is not None:
             sub_points_layer.commitChanges()
+        if calculation_points_layer is not None:
+            calculation_points_layer.commitChanges()
         
         self.setProgress(100)
 

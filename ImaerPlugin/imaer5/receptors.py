@@ -57,9 +57,18 @@ class Receptor(object):
         self.representation = None
         self.edge_effect = None
         self.level = None
+        self.results = results or []
+        
+        # SubPoint attributes
         self.sub_point_id = None
         self.level = None
-        self.results = results or []
+
+        # CalculationPoint attributes
+        self.label = None
+        self.height = None
+        self.assessment_category = None
+        self.road_local_fraction_no2 = None
+        self.habitat_code = None
     
     def is_valid(self):
         return self.local_id is not None
@@ -99,7 +108,7 @@ class Receptor(object):
     def from_xml_reader(self, xml_reader):
         start_tag_name = xml_reader.name()
 
-        if start_tag_name not in ['ReceptorPoint', 'SubPoint']:
+        if start_tag_name not in ['ReceptorPoint', 'SubPoint', 'CalculationPoint', 'NcaCustomCalculationPoint']:
             return False
 
         attributes = xml_reader.attributes()
@@ -128,7 +137,7 @@ class Receptor(object):
                     if geom.is_valid():
                         self.gm_point = geom
 
-            if xml_reader.name() == 'representation':
+            elif xml_reader.name() == 'representation':
                 xml_reader.readNextStartElement()
                 if xml_reader.name() == 'Polygon':
                     geom = GmlPolygon()
@@ -137,13 +146,13 @@ class Receptor(object):
                     if geom.is_valid():
                         self.representation = geom
 
-            if xml_reader.name() == 'CalculationResult':
+            elif xml_reader.name() == 'CalculationResult':
                 result = CalculationResult()
                 result.from_xml_reader(xml_reader)
                 if result.is_valid():
                     self.results.append(result)
 
-            if xml_reader.name() == 'edgeEffect' and xml_reader.isStartElement():
+            elif xml_reader.name() == 'edgeEffect' and xml_reader.isStartElement():
                 xml_reader.readNext()
                 text = xml_reader.text().strip()
                 if text == 'true':
@@ -151,11 +160,23 @@ class Receptor(object):
                 else:
                     self.edge_effect = 0
 
-            if xml_reader.name() == 'level' and xml_reader.isStartElement():
+            elif xml_reader.name() == 'level' and xml_reader.isStartElement():
                 xml_reader.readNext()
                 text = xml_reader.text().strip()
-                # print(f'>{text}<')
                 self.level = int(text)
+
+            elif xml_reader.name() == 'label' and xml_reader.isStartElement():
+                xml_reader.readNext()
+                self.label = xml_reader.text()
+
+            elif xml_reader.name() == 'height' and xml_reader.isStartElement():
+                xml_reader.readNext()
+                text = xml_reader.text().strip()
+                self.height = float(text)
+
+            elif xml_reader.name() == 'assessmentCategory' and xml_reader.isStartElement():
+                xml_reader.readNext()
+                self.assessment_category = xml_reader.text()
 
     def get_results_dict(self):
         results_dict = {}
@@ -171,6 +192,9 @@ class Receptor(object):
         result['edge_effect'] = self.edge_effect
         result['sub_point_id'] = self.sub_point_id
         result['level'] = self.level
+        result['label'] = self.label
+        result['height'] = self.height
+        result['assessment_category'] = self.assessment_category
         result['deposition_nh3'] = None
         result['deposition_nox'] = None
         result['deposition_nox_nh3_sum'] = None
@@ -273,7 +297,6 @@ class SubPoint(Receptor):
     
     def __str__(self):
         return f'SubPoint[{self.local_id}, {self.sub_point_id}, {self.level}, {len(self.results)}]'
-
     
     def to_point_feature(self, fid=None):
         if not self.is_valid():
@@ -315,3 +338,57 @@ class SubPoint(Receptor):
             result.appendChild(lvl_elem)
 
         return result
+
+
+class CalculationPoint(Receptor):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def __str__(self):
+        class_name = self.__class__.__name__
+        return f'{class_name}[{self.identifier}, {self.label}, {self.height}, {self.assessment_category}, {self.road_local_fraction_no2}, {self.habitat_code}, {len(self.results)}]'
+
+    def is_valid(self):
+        return True #self.local_id is not None
+
+    def to_point_feature(self, fid=None):
+        if not self.is_valid():
+            print('invalid')
+            return
+        
+        feat = QgsFeature()
+        feat.setGeometry(self.gm_point.to_geometry())
+
+        attributes = []
+        attributes.append(fid)
+        attributes.append(self.local_id)
+        attributes.append(self.label)
+        attributes.append(self.height)
+        #attributes.append(self.assessment_category)
+
+        attr_dict = self.get_attributes_dict()
+        attributes.append(attr_dict['deposition_nox_nh3_sum'])
+        attributes.append(attr_dict['deposition_nox'])
+        attributes.append(attr_dict['deposition_nh3'])
+        attributes.append(attr_dict['concentration_nox'])
+        attributes.append(attr_dict['concentration_no2'])
+        attributes.append(attr_dict['concentration_nh3'])
+        attributes.append(attr_dict['concentration_pm10'])
+        attributes.append(attr_dict['concentration_pm25'])
+        attributes.append(attr_dict['exceedance_days_pm10'])
+        attributes.append(attr_dict['exceedance_days_pm25'])
+        attributes.append(attr_dict['exceedance_hours_pm10'])
+        attributes.append(attr_dict['exceedance_hours_pm25'])
+
+        feat.setAttributes(attributes)
+        return feat
+
+class NcaCustomCalculationPoint(CalculationPoint):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def is_valid(self):
+        return True #self.local_id is not None
+    

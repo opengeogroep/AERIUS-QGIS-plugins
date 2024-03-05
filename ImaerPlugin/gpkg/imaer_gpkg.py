@@ -118,6 +118,19 @@ class ImaerGpkg():
             fields.append(field)
         self.create_layer('sub_points', fields, QgsWkbTypes.Point, epsg_id)
 
+    def create_layer_calculation_points(self, epsg_id):
+        fields = QgsFields()
+        fields.append(QgsField('calculation_point_id', QVariant.String))
+        fields.append(QgsField('label', QVariant.String))
+        fields.append(QgsField('height', QVariant.Double))
+        for field in self.get_deposition_fields():
+            fields.append(field)
+        for field in self.get_concentration_fields():
+            fields.append(field)
+        for field in self.get_exceedance_fields():
+            fields.append(field)
+        self.create_layer('calculation_points', fields, QgsWkbTypes.Point, epsg_id)
+
     def create_metadata_table(self):
         q = '''
             CREATE TABLE imaer_metadata (
