@@ -363,15 +363,20 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         imaer_doc = ImaerDocument()
 
         # Metadata
+        project = {}
         year = self.combo_project_year.currentData()
+        project['year'] = year
         description = self.edit_project_description.toPlainText()
+        if not description == '':
+            project['description'] = description
 
+        situation = None
         if self.group_situation.isChecked():
+            situation = {}
             situation_name = self.edit_situation_name.text()
-            situation_type = self.combo_situation_type.currentText()
-            situation = {'name': situation_name, 'type': situation_type}
-        else:
-            situation = None
+            if not situation_name == '':
+                situation['name'] = situation_name
+            situation['type'] = self.combo_situation_type.currentText()
 
         country = self.combo_country.currentData()
         crs_dest_srid = self.combo_crs.currentData()
@@ -380,7 +385,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         gml_creator = f'QgisImaerPlugin-{self.plugin.version}'
 
         metadata = AeriusCalculatorMetadata(
-            project={'year': year, 'description': description},
+            project=project,
             situation=situation,
             gml_creator=gml_creator
         )

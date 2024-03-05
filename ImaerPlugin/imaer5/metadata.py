@@ -29,7 +29,7 @@ class AeriusCalculatorMetadata():
         result = doc.createElement('imaer:AeriusCalculatorMetadata')
 
         # project
-        if self.situation is not None:
+        if self.project is not None:
             if len(self.project) > 0:
                 pr = doc.createElement('imaer:project')
                 pr_ele = doc.createElement('imaer:ProjectMetadata')
