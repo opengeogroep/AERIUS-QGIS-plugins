@@ -137,7 +137,7 @@ class Receptor(object):
                     if geom.is_valid():
                         self.gm_point = geom
 
-            elif xml_reader.name() == 'representation':
+            if xml_reader.name() == 'representation':
                 xml_reader.readNextStartElement()
                 if xml_reader.name() == 'Polygon':
                     geom = GmlPolygon()
@@ -146,13 +146,13 @@ class Receptor(object):
                     if geom.is_valid():
                         self.representation = geom
 
-            elif xml_reader.name() == 'CalculationResult':
+            if xml_reader.name() == 'CalculationResult':
                 result = CalculationResult()
                 result.from_xml_reader(xml_reader)
                 if result.is_valid():
                     self.results.append(result)
 
-            elif xml_reader.name() == 'edgeEffect' and xml_reader.isStartElement():
+            if xml_reader.name() == 'edgeEffect' and xml_reader.isStartElement():
                 xml_reader.readNext()
                 text = xml_reader.text().strip()
                 if text == 'true':
@@ -160,21 +160,21 @@ class Receptor(object):
                 else:
                     self.edge_effect = 0
 
-            elif xml_reader.name() == 'level' and xml_reader.isStartElement():
+            if xml_reader.name() == 'level' and xml_reader.isStartElement():
                 xml_reader.readNext()
                 text = xml_reader.text().strip()
                 self.level = int(text)
 
-            elif xml_reader.name() == 'label' and xml_reader.isStartElement():
+            if xml_reader.name() == 'label' and xml_reader.isStartElement():
                 xml_reader.readNext()
                 self.label = xml_reader.text()
 
-            elif xml_reader.name() == 'height' and xml_reader.isStartElement():
+            if xml_reader.name() == 'height' and xml_reader.isStartElement():
                 xml_reader.readNext()
                 text = xml_reader.text().strip()
                 self.height = float(text)
 
-            elif xml_reader.name() == 'assessmentCategory' and xml_reader.isStartElement():
+            if xml_reader.name() == 'assessmentCategory' and xml_reader.isStartElement():
                 xml_reader.readNext()
                 self.assessment_category = xml_reader.text()
 
