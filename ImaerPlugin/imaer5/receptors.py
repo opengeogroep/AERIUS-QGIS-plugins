@@ -109,7 +109,7 @@ class Receptor(object):
         start_tag_name = xml_reader.name()
 
         if start_tag_name not in ['ReceptorPoint', 'SubPoint', 'CalculationPoint', 'NcaCustomCalculationPoint']:
-            return False
+            return
 
         attributes = xml_reader.attributes()
         if attributes.hasAttribute('receptorPointId'):
@@ -347,7 +347,7 @@ class CalculationPoint(Receptor):
 
     def __str__(self):
         class_name = self.__class__.__name__
-        return f'{class_name}[{self.identifier}, {self.label}, {self.height}, {self.assessment_category}, {self.road_local_fraction_no2}, {self.habitat_code}, {len(self.results)}]'
+        return f'{class_name}[{self.identifier}, {self.label}, {self.height}, {self.assessment_category}, {len(self.results)}]'
 
     def is_valid(self):
         return True #self.local_id is not None
@@ -360,12 +360,17 @@ class CalculationPoint(Receptor):
         feat = QgsFeature()
         feat.setGeometry(self.gm_point.to_geometry())
 
+        if self.identifier is not None:
+            local_id = self.identifier.local_id
+        else:
+            local_id = None
+
         attributes = []
         attributes.append(fid)
-        attributes.append(self.local_id)
+        attributes.append(local_id)
         attributes.append(self.label)
         attributes.append(self.height)
-        #attributes.append(self.assessment_category)
+        attributes.append(self.assessment_category)
 
         attr_dict = self.get_attributes_dict()
         attributes.append(attr_dict['deposition_nox_nh3_sum'])
@@ -384,11 +389,3 @@ class CalculationPoint(Receptor):
         feat.setAttributes(attributes)
         return feat
 
-class NcaCustomCalculationPoint(CalculationPoint):
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def is_valid(self):
-        return True #self.local_id is not None
-    

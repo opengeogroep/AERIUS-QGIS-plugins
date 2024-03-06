@@ -123,6 +123,7 @@ class ImaerGpkg():
         fields.append(QgsField('calculation_point_id', QVariant.String))
         fields.append(QgsField('label', QVariant.String))
         fields.append(QgsField('height', QVariant.Double))
+        fields.append(QgsField('assessment_category', QVariant.String))
         for field in self.get_deposition_fields():
             fields.append(field)
         for field in self.get_concentration_fields():
