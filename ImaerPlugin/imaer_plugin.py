@@ -401,27 +401,28 @@ class ImaerPlugin:
             return
 
         layer_id = layer.id()
+        # print(layer_id)
 
         if layer_id in self.imaer_calc_layers:
             return self.imaer_calc_layers[layer_id]
 
-        self.imaer_calc_layers[layer_id] = {}
-        self.imaer_calc_layers[layer_id]['is_imaer_calc_layer'] = False
+        self.imaer_calc_layers[layer_id] = {'is_imaer_calc_layer': False}
 
         if not isinstance(layer, QgsVectorLayer):
             return self.imaer_calc_layers[layer_id]
 
         provider = layer.dataProvider()
-        if not provider.wkbType() == 3:
+        if not provider.wkbType() in [1, 3]:
             return self.imaer_calc_layers[layer_id]
 
         ds = provider.dataSourceUri()
+        # print(ds)
         if '|layername=' in ds:
             gpkg_fn, gpkg_layer = ds.split('|layername=')
             # print(' ', gpkg_fn, gpkg_layer)
         else:
             return self.imaer_calc_layers[layer_id]
-        if not gpkg_layer == 'receptors':
+        if not gpkg_layer in ['receptor_hexagons', 'receptor_points', 'sub_points', 'calculation_points']:
             # print('  not receptors')
             return self.imaer_calc_layers[layer_id]
 
@@ -436,6 +437,7 @@ class ImaerPlugin:
             self.imaer_calc_layers[layer_id][md_feat[1]] = md_feat[2]
         self.imaer_calc_layers[layer_id]['is_imaer_calc_layer'] = True
         self.imaer_calc_layers[layer_id]['gpkg_fn'] = gpkg_fn
+        self.imaer_calc_layers[layer_id]['imaer_layer_type'] = gpkg_layer
 
         return self.imaer_calc_layers[layer_id]
 
