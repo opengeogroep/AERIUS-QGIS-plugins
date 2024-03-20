@@ -1,6 +1,6 @@
 from qgis.PyQt.QtGui import (
     QColor,
-    #QFont
+    QFont
 )
 
 from qgis.core import (
@@ -8,7 +8,10 @@ from qgis.core import (
     QgsRendererRange,
     QgsClassificationRange,
     QgsFillSymbol,
-    QgsMarkerSymbol
+    QgsMarkerSymbol,
+    QgsPalLayerSettings,
+    QgsVectorLayerSimpleLabeling,
+    QgsTextFormat
 )
 
 from .classifications import classifications
@@ -86,3 +89,29 @@ class StyleFactory():
             renderer.addClassRange(QgsRendererRange(QgsClassificationRange(cls[0], cls[1], cls[2]), symbol))
 
         return renderer
+
+    def create_labeling(self, field_name, minimum_scale=8000):
+        layer_settings = QgsPalLayerSettings()
+
+        text_format = QgsTextFormat()
+        text_format.setFont(QFont("Sans"))
+        text_format.setSize(8)
+
+        text_color = QColor('#000000')
+        text_format.setOpacity(0.5)
+        text_format.setColor(text_color)
+
+        layer_settings.setFormat(text_format)
+
+        layer_settings.fieldName = field_name
+
+        layer_settings.minimumScale = minimum_scale
+        layer_settings.scaleVisibility = True
+
+        layer_settings.decimals = 3
+        layer_settings.formatNumbers = True
+
+        layer_settings.enabled = True
+
+        result = QgsVectorLayerSimpleLabeling(layer_settings)
+        return result

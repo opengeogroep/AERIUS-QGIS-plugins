@@ -283,41 +283,48 @@ class ImaerPlugin:
             else:
                 QgsProject.instance().addMapLayer(layer)
 
-            # Set renderers
+            # Set styles (renderers and labels)
             style_name = 'contribution'
 
             if result_layer_name == 'receptor_hexagons':
                 renderer = self.style_factory.create_renderer(style_name, 'polygon')
-                renderer.setClassAttribute('"deposition_nox_nh3_sum"')
-                self.set_layer_renderer(layer, renderer, f'{style_name}_deposition')
+                exp = '"deposition_nox_nh3_sum"'
+                renderer.setClassAttribute(exp)
+                labeling = self.style_factory.create_labeling(exp)
+                self.add_layer_style(layer, renderer, f'{style_name}_deposition', labeling)
 
             elif result_layer_name == 'receptor_points':
                 renderer = self.style_factory.create_renderer(style_name, 'point')
                 exp = 'coalesce("concentration_nox", 0) + coalesce("concentration_no2", 0) + coalesce("concentration_nh3", 0)'
                 renderer.setClassAttribute(exp)
-                self.set_layer_renderer(layer, renderer, f'{style_name}_concentration')
+                labeling = self.style_factory.create_labeling(exp)
+                self.add_layer_style(layer, renderer, f'{style_name}_concentration', labeling)
 
             elif result_layer_name == 'sub_points':
                 renderer = self.style_factory.create_renderer(style_name, 'point')
                 exp = '"deposition_nox_nh3_sum"'
                 renderer.setClassAttribute(exp)
-                self.set_layer_renderer(layer, renderer, f'{style_name}_deposition')
+                labeling = self.style_factory.create_labeling(exp)
+                self.add_layer_style(layer, renderer, f'{style_name}_deposition', labeling)
 
                 renderer = self.style_factory.create_renderer(style_name, 'point')
                 exp = 'coalesce("concentration_nox", 0) + coalesce("concentration_no2", 0) + coalesce("concentration_nh3", 0)'
                 renderer.setClassAttribute(exp)
-                self.set_layer_renderer(layer, renderer, f'{style_name}_concentration')
+                labeling = self.style_factory.create_labeling(exp)
+                self.add_layer_style(layer, renderer, f'{style_name}_concentration', labeling)
 
             elif result_layer_name == 'calculation_points':
                 renderer = self.style_factory.create_renderer(style_name, 'point')
                 exp = '"deposition_nox_nh3_sum"'
                 renderer.setClassAttribute(exp)
-                self.set_layer_renderer(layer, renderer, f'{style_name}_deposition')
+                labeling = self.style_factory.create_labeling(exp)
+                self.add_layer_style(layer, renderer, f'{style_name}_deposition', labeling)
 
                 renderer = self.style_factory.create_renderer(style_name, 'point')
                 exp = 'coalesce("concentration_nox", 0) + coalesce("concentration_no2", 0) + coalesce("concentration_nh3", 0)'
                 renderer.setClassAttribute(exp)
-                self.set_layer_renderer(layer, renderer, f'{style_name}_concentration')
+                labeling = self.style_factory.create_labeling(exp)
+                self.add_layer_style(layer, renderer, f'{style_name}_concentration', labeling)
 
             loaded_layer_cnt += 1
 
@@ -331,12 +338,15 @@ class ImaerPlugin:
         else:
             self.log(f'Loaded {loaded_layer_cnt} result layers.', lvl='Info', bar=True, duration=3)
 
-    def set_layer_renderer(self, layer, renderer, layer_style_name):
+    def add_layer_style(self, layer, renderer, layer_style_name, labeling=None):
         if renderer is not None:
             style_manager = layer.styleManager()
             style_manager.addStyleFromLayer(layer_style_name)
             style_manager.setCurrentStyle(layer_style_name)
             layer.setRenderer(renderer)
+            if labeling is not None:
+                layer.setLabeling(labeling)
+                #layer.setLabelsEnabled(True)
 
     def run_extract_gml_from_pdf(self):
         if self.dev:
