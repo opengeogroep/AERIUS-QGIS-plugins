@@ -20,6 +20,8 @@ from qgis.core import (
 from qgis.gui import QgsMessageBar
 from qgis import processing
 
+from ImaerPlugin.styles import StyleFactory
+
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'relate_calc_results_dlg.ui'))
 
@@ -32,6 +34,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.plugin = plugin
         self.iface = plugin.iface
+        self.style_factory = StyleFactory(plugin)
 
         self.init_gui()
 
@@ -45,7 +48,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         }
         for key, widget in self.layer_widgets.items():
             # print(widget)
-            widget.setFilters(QgsMapLayerProxyModel.PolygonLayer)
+            #widget.setFilters(LayerFilters(QgsMapLayerProxyModel.PointLayer, QgsMapLayerProxyModel.PolygonLayer))
             widget.setAllowEmptyLayer(True)
             widget.setCurrentIndex(0)
             widget.currentIndexChanged.connect(self.gui_update_layer_combo)
@@ -71,6 +74,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
     def is_dep_layer(self, layer):
         '''Checks if layer contains all mandatory fields'''
+        return True # TODO Make this check work again.
         mandatory_fields = ['fid', 'dep_NH3', 'dep_NOX']
 
         layer_field_names = [fld.name() for fld in layer.fields()]
@@ -92,6 +96,8 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
                         result.append(layer)
                     else:
                         widget.setStyleSheet("QgsMapLayerComboBox { color : red; }")
+                else:
+                    widget.setStyleSheet("QgsMapLayerComboBox { color : black; }")
         return result
 
     def gui_update_layer_combo(self):
@@ -100,12 +106,13 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         enable_ok_button = len(layers) >= 2
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable_ok_button)
 
-    def add_result_layer(self, layer, layer_name, qml_file_name=None):
+    def add_result_layer(self, layer, layer_name):
         layer.setName(layer_name)
+
+        self.plugin.set_imaer_styles(layer, 'difference')
+
         QgsProject.instance().addMapLayer(layer)
 
-        if qml_file_name is not None:
-            layer.loadNamedStyle(qml_file_name)
 
     def calculate_difference(self, layers, layer_name, add_totals=True):
         layer_1 = layers[0]
@@ -132,8 +139,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         result = processing.run("imaer:relate_sum", params)
         layer = result['OUTPUT']
 
-        qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
-        self.add_result_layer(layer, layer_name, qml_file_name)
+        self.add_result_layer(layer, layer_name)
 
     def calculate_maximum(self, layers, layer_name, add_totals=True):
         params = {
@@ -144,5 +150,4 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         result = processing.run("imaer:relate_maximum", params)
         layer = result['OUTPUT']
 
-        qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
-        self.add_result_layer(layer, layer_name, qml_file_name)
+        self.add_result_layer(layer, layer_name)

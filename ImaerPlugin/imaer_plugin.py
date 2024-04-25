@@ -283,7 +283,7 @@ class ImaerPlugin:
             else:
                 QgsProject.instance().addMapLayer(layer)
 
-            # Set styles (renderers and labels)
+            # Set styles (renderers and labels) TODO: Use set_imaer_styles
             style_name = 'contribution'
 
             if result_layer_name == 'receptor_hexagons':
@@ -337,6 +337,30 @@ class ImaerPlugin:
             self.log(f'No result layers found.', lvl='Warning', bar=True, duration=3)
         else:
             self.log(f'Loaded {loaded_layer_cnt} result layers.', lvl='Info', bar=True, duration=3)
+
+    def set_imaer_styles(self, layer, style_name, labeling=None):
+        field_names = layer.fields().names()
+
+        if layer.geometryType() == 0:
+            geometry_type = 'point'
+        elif layer.geometryType() == 2:
+            geometry_type = 'polygon'
+        else:
+            return
+
+        if 'deposition_nox_nh3_sum' in field_names:
+            renderer = self.style_factory.create_renderer(style_name, geometry_type)
+            exp = '"deposition_nox_nh3_sum"'
+            renderer.setClassAttribute(exp)
+            labeling = self.style_factory.create_labeling(exp)
+            self.add_layer_style(layer, renderer, f'{style_name}_deposition', labeling)
+
+        if set(['concentration_nox', 'concentration_no2', 'concentration_nh3']).issubset(field_names):
+            renderer = self.style_factory.create_renderer(style_name, geometry_type)
+            exp = 'coalesce("concentration_nox", 0) + coalesce("concentration_no2", 0) + coalesce("concentration_nh3", 0)'
+            renderer.setClassAttribute(exp)
+            labeling = self.style_factory.create_labeling(exp)
+            self.add_layer_style(layer, renderer, f'{style_name}_concentration', labeling)
 
     def add_layer_style(self, layer, renderer, layer_style_name, labeling=None):
         if renderer is not None:

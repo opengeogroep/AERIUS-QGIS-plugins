@@ -70,22 +70,36 @@ class RelateSumAlgorithm(RelateAlgorithm):
         current = 1
 
         self.geometry_cache = {}
+        result_value_dicts = []
 
-        dep_dict_layers = []
+        layer_types = self.find_layer_type(layers)
+        feedback.pushInfo(repr(layer_types))
+
+        if len(layer_types) == 0:
+            raise QgsProcessingException(f'No IMAER layer type found')
+        elif len(layer_types) > 1:
+            raise QgsProcessingException(f'Multiple IMAER layer types found')
+        
+        layer_type = layer_types[0]
+
         for layer in layers:
             layer_name = layer.name()
-            if not self._is_dep_layer(layer):
+            feedback.pushInfo(layer_name)
+            
+            value_dict = self._create_value_dictionary(layer, feedback)
+            #feedback.pushInfo(repr(value_dict))
+
+            if value_dict is None:
                 raise QgsProcessingException(f'"{layer_name}" is not a valid deposition layer.')
-            dep_dict_layer = self._create_receptor_dictionary(layer)
-            if dep_dict_layer is None:
-                raise QgsProcessingException(f'"{layer_name}" is not a valid deposition layer.')
-            dep_dict_layers.append(dep_dict_layer)
+            result_value_dicts.append(value_dict)
 
             feedback.setProgress(int(current * step))
             current += 1
 
-        add_totals = self.parameterAsBoolean(parameters, self.ADD_TOTALS, context)
-        output_fields = self._get_output_fields(with_totals=add_totals)
+        output_fields = self.field_factory.create_fields_for_layer_type(layer_type, value_fields_only=False)
+        feedback.pushInfo(repr(output_fields))
+        for f in output_fields:
+            feedback.pushInfo(f.name())
 
         (sink, dest_id) = self.parameterAsSink(
             parameters,
@@ -99,7 +113,7 @@ class RelateSumAlgorithm(RelateAlgorithm):
         if sink is None:
             raise QgsProcessingException(self.invalidSinkError(parameters, self.OUTPUT))
 
-        calc_result_dict = self._calc_dict_sum(dep_dict_layers)
+        calc_result_dict = self._calc_dict_sum(result_value_dicts)
 
         if len(calc_result_dict) == 0:
             raise QgsProcessingException(f'No result features to load.')
@@ -107,11 +121,11 @@ class RelateSumAlgorithm(RelateAlgorithm):
         step = 50 / len(calc_result_dict)
         current = 1
 
-        for receptor_id in calc_result_dict:
+        for key in calc_result_dict:
             if feedback.isCanceled():
                 break
 
-            feat = self._create_result_feature(receptor_id, calc_result_dict[receptor_id], max_decimals=6, with_totals=add_totals)
+            feat = self._create_result_feature(layer_type, key, calc_result_dict[key], max_decimals=6)
             sink.addFeature(feat, QgsFeatureSink.FastInsert)
 
             feedback.setProgress(50 + int(current * step))
@@ -119,16 +133,23 @@ class RelateSumAlgorithm(RelateAlgorithm):
 
         return {self.OUTPUT: dest_id}
 
-    def _calc_dict_sum(self, in_dep_dicts):
+
+    def _calc_dict_sum(self, result_value_dicts):
         result = {}
-        for receptor_id in self.geometry_cache:
-            out_dep_dict = {}
-            for in_dep_dict in in_dep_dicts:
-                for dep_field_name in self.dep_field_names:
-                    v = self._get_receptor_value(in_dep_dict, receptor_id, dep_field_name, no_data=0)
-                    if dep_field_name in out_dep_dict:
-                        out_dep_dict[dep_field_name] += v
+        for in_dep_dict in result_value_dicts:
+            for id in in_dep_dict:
+                #print(id)
+                for substance, value in in_dep_dict[id].items():
+                    #print(substance, value)
+                    if not id in result:
+                        result[id] = {}
+                    if not substance in result[id]:
+                        result[id][substance] = value
                     else:
-                        out_dep_dict[dep_field_name] = v
-            result[receptor_id] = out_dep_dict
+                        old_value = result[id][substance]
+                        if old_value is None:
+                            result[id][substance] = value
+                        else:
+                            if value is not None:
+                                result[id][substance] += value
         return result

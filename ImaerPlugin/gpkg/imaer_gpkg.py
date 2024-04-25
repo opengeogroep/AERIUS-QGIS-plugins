@@ -11,6 +11,9 @@ from qgis.core import (
     QgsWkbTypes
 )
 
+from ImaerPlugin.gpkg import ImaerGpkgFieldFactory
+
+
 class ImaerGpkg():
 
     def __init__(self, filename, version='99.99.99', plugin=None):
@@ -19,6 +22,7 @@ class ImaerGpkg():
         self.filename = filename
         self.version = version
         self.plugin = plugin
+        self.field_factory = ImaerGpkgFieldFactory()
 
         self.connect()
     
@@ -64,73 +68,25 @@ class ImaerGpkg():
             {'layerOptions': 'FID=ogc_fid'}
         )
 
-    def get_deposition_fields(self):
-        result = []
-        result.append(QgsField('deposition_nox_nh3_sum', QVariant.Double))
-        result.append(QgsField('deposition_nox', QVariant.Double))
-        result.append(QgsField('deposition_nh3', QVariant.Double))
-        return result
-        
-    def get_concentration_fields(self):
-        result = []
-        result.append(QgsField('concentration_nox', QVariant.Double))
-        result.append(QgsField('concentration_no2', QVariant.Double))
-        result.append(QgsField('concentration_nh3', QVariant.Double))
-        result.append(QgsField('concentration_pm10', QVariant.Double))
-        result.append(QgsField('concentration_pm25', QVariant.Double))
-        return result
-
-    def get_exceedance_fields(self):
-        result = []
-        result.append(QgsField('exceedance_days_pm10', QVariant.LongLong))
-        result.append(QgsField('exceedance_days_pm25', QVariant.LongLong))
-        result.append(QgsField('exceedance_hours_pm10', QVariant.LongLong))
-        result.append(QgsField('exceedance_hours_pm25', QVariant.LongLong))
-        return result
-
     def create_layer_receptor_points(self, epsg_id):
-        fields = QgsFields()
-        fields.append(QgsField('receptor_id', QVariant.LongLong))
-        for field in self.get_concentration_fields():
-            fields.append(field)
-        for field in self.get_exceedance_fields():
-            fields.append(field)
-        self.create_layer('receptor_points', fields, QgsWkbTypes.Point, epsg_id)
+        layer_type = 'receptor_points'
+        fields = self.field_factory.create_fields_for_layer_type(layer_type)
+        self.create_layer(layer_type, fields, QgsWkbTypes.Point, epsg_id)
     
     def create_layer_receptor_hexagons(self, epsg_id):
-        fields = QgsFields()
-        fields.append(QgsField('receptor_id', QVariant.LongLong))
-        fields.append(QgsField('edge_effect', QVariant.LongLong))
-        for field in self.get_deposition_fields():
-            fields.append(field)
-        self.create_layer('receptor_hexagons', fields, QgsWkbTypes.Polygon, epsg_id)
+        layer_type = 'receptor_hexagons'
+        fields = self.field_factory.create_fields_for_layer_type(layer_type)
+        self.create_layer(layer_type, fields, QgsWkbTypes.Polygon, epsg_id)
     
     def create_layer_sub_points(self, epsg_id):
-        fields = QgsFields()
-        fields.append(QgsField('receptor_id', QVariant.LongLong))
-        fields.append(QgsField('sub_point_id', QVariant.LongLong))
-        fields.append(QgsField('level', QVariant.LongLong))
-        for field in self.get_deposition_fields():
-            fields.append(field)
-        for field in self.get_concentration_fields():
-            fields.append(field)
-        for field in self.get_exceedance_fields():
-            fields.append(field)
-        self.create_layer('sub_points', fields, QgsWkbTypes.Point, epsg_id)
+        layer_type = 'sub_points'
+        fields = self.field_factory.create_fields_for_layer_type(layer_type)
+        self.create_layer(layer_type, fields, QgsWkbTypes.Point, epsg_id)
 
     def create_layer_calculation_points(self, epsg_id):
-        fields = QgsFields()
-        fields.append(QgsField('calculation_point_id', QVariant.String))
-        fields.append(QgsField('label', QVariant.String))
-        fields.append(QgsField('height', QVariant.Double))
-        fields.append(QgsField('assessment_category', QVariant.String))
-        for field in self.get_deposition_fields():
-            fields.append(field)
-        for field in self.get_concentration_fields():
-            fields.append(field)
-        for field in self.get_exceedance_fields():
-            fields.append(field)
-        self.create_layer('calculation_points', fields, QgsWkbTypes.Point, epsg_id)
+        layer_type = 'calculation_points'
+        fields = self.field_factory.create_fields_for_layer_type(layer_type)
+        self.create_layer(layer_type, fields, QgsWkbTypes.Point, epsg_id)
 
     def create_metadata_table(self):
         q = '''
