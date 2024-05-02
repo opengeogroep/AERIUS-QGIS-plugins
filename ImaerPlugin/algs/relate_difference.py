@@ -85,22 +85,33 @@ class RelateDifferenceAlgorithm(RelateAlgorithm):
         current = 1
 
         self.geometry_cache = {}
+        result_value_dicts = []
 
-        dep_dict_layers = []
+        layer_types = self.find_layer_type([layer_1, layer_2])
+        feedback.pushInfo(repr(layer_types))
+
+        if len(layer_types) == 0:
+            raise QgsProcessingException(f'No IMAER layer type found')
+        elif len(layer_types) > 1:
+            raise QgsProcessingException(f'Multiple IMAER layer types found')
+        
+        layer_type = layer_types[0]
+
         for layer in [layer_1, layer_2]:
             layer_name = layer.name()
-            if not self._is_dep_layer(layer):
+
+            value_dict = self._create_value_dictionary(layer, feedback)
+
+            if value_dict is None:
                 raise QgsProcessingException(f'"{layer_name}" is not a valid deposition layer.')
-            dep_dict_layer = self._create_receptor_dictionary(layer)
-            if dep_dict_layer is None:
-                raise QgsProcessingException(f'"{layer_name}" is not a valid deposition layer.')
-            dep_dict_layers.append(dep_dict_layer)
+            
+            result_value_dicts.append(value_dict)
 
             feedback.setProgress(int(current * step))
             current += 1
 
-        add_totals = self.parameterAsBoolean(parameters, self.ADD_TOTALS, context)
-        output_fields = self._get_output_fields(with_totals=add_totals)
+        output_fields = self.field_factory.create_fields_for_layer_type(layer_type, value_fields_only=False)
+        feedback.pushInfo(repr(output_fields))
 
         (sink, dest_id) = self.parameterAsSink(
             parameters,
@@ -114,7 +125,7 @@ class RelateDifferenceAlgorithm(RelateAlgorithm):
         if sink is None:
             raise QgsProcessingException(self.invalidSinkError(parameters, self.OUTPUT))
 
-        calc_result_dict = self._calc_dict_difference(dep_dict_layers[0], dep_dict_layers[1])
+        calc_result_dict = self._calc_dict_difference(result_value_dicts[0], result_value_dicts[1])
         feedback.setProgress(50)
 
         if len(calc_result_dict) == 0:
@@ -123,11 +134,11 @@ class RelateDifferenceAlgorithm(RelateAlgorithm):
         step = 50 / len(calc_result_dict)
         current = 1
 
-        for receptor_id in calc_result_dict:
+        for key in calc_result_dict:
             if feedback.isCanceled():
                 break
 
-            feat = self._create_result_feature(receptor_id, calc_result_dict[receptor_id], max_decimals=6, with_totals=add_totals)
+            feat = self._create_result_feature(layer_type, key, calc_result_dict[key], max_decimals=6)
             sink.addFeature(feat, QgsFeatureSink.FastInsert)
 
             feedback.setProgress(50 + int(current * step))
@@ -135,13 +146,31 @@ class RelateDifferenceAlgorithm(RelateAlgorithm):
 
         return {self.OUTPUT: dest_id}
 
-    def _calc_dict_difference(self, dep_dict_layer_1, dep_dict_layer_2):
+
+    def _calc_dict_difference(self, result_value_dict_1, result_value_dict_2):
         result = {}
-        for receptor_id in self.geometry_cache:
-            dep_dict = {}
-            for dep_field_name in self.dep_field_names:
-                v1 = self._get_receptor_value(dep_dict_layer_1, receptor_id, dep_field_name, no_data=0)
-                v2 = self._get_receptor_value(dep_dict_layer_2, receptor_id, dep_field_name, no_data=0)
-                dep_dict[dep_field_name] = v1 - v2
-            result[receptor_id] = dep_dict
+
+        for id in result_value_dict_1:
+            for substance, value in result_value_dict_1[id].items():
+                if not id in result:
+                    result[id] = {}
+                if not substance in result[id]:
+                    result[id][substance] = value
+
+        for id in result_value_dict_2:
+            for substance, value in result_value_dict_2[id].items():
+                if not id in result:
+                    result[id] = {}
+                    if not substance in result[id]:
+                        if value is None:
+                            result[id][substance] = value
+                        else:
+                            result[id][substance] = -value
+                else:
+                    if value is not None:
+                        old_value = result[id].get(substance)
+                        if old_value is None:
+                            result[id][substance] = -value
+                        else:
+                            result[id][substance] = old_value - value
         return result

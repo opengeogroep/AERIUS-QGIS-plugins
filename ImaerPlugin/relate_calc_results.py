@@ -127,8 +127,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         result = processing.run("imaer:relate_difference", params)
         layer = result['OUTPUT']
 
-        qml_file_name = os.path.join(self.plugin.plugin_dir, 'styles', 'calc_result_diff.qml')
-        self.add_result_layer(layer, layer_name, qml_file_name)
+        self.add_result_layer(layer, layer_name)
 
     def calculate_sum(self, layers, layer_name, add_totals=True):
         params = {
