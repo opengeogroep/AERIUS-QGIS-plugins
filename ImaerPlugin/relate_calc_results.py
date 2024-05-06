@@ -47,8 +47,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
             5: self.combo_layer5
         }
         for key, widget in self.layer_widgets.items():
-            # print(widget)
-            #widget.setFilters(LayerFilters(QgsMapLayerProxyModel.PointLayer, QgsMapLayerProxyModel.PolygonLayer))
+            widget.setFilters(QgsMapLayerProxyModel.PointLayer | QgsMapLayerProxyModel.PolygonLayer)
             widget.setAllowEmptyLayer(True)
             widget.setCurrentIndex(0)
             widget.currentIndexChanged.connect(self.gui_update_layer_combo)
