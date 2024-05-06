@@ -21,7 +21,6 @@ class RelateDifferenceAlgorithm(RelateAlgorithm):
 
     INPUT1 = 'INPUT_1'
     INPUT2 = 'INPUT_2'
-    ADD_TOTALS = 'ADD_TOTALS'
     OUTPUT = 'OUTPUT'
 
     def tr(self, string):
@@ -59,13 +58,6 @@ class RelateDifferenceAlgorithm(RelateAlgorithm):
                 self.INPUT2,
                 self.tr('Input deposition layer 2'),
                 [QgsProcessing.TypeVectorPolygon]
-            )
-        )
-        self.addParameter(
-            QgsProcessingParameterBoolean(
-                self.ADD_TOTALS,
-                self.tr('Add field with total depositions'),
-                defaultValue=True
             )
         )
         self.addParameter(

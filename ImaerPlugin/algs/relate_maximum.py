@@ -15,7 +15,6 @@ from .relate import RelateAlgorithm
 
 class RelateMaximumAlgorithm(RelateAlgorithm):
     INPUT_LAYERS = 'INPUT_LAYERS'
-    ADD_TOTALS = 'ADD_TOTALS'
     OUTPUT = 'OUTPUT'
 
     def tr(self, string):
@@ -46,13 +45,6 @@ class RelateMaximumAlgorithm(RelateAlgorithm):
                 self.tr('Input deposition layers'),
                 QgsProcessing.TypeVectorPolygon,
                 optional=False
-            )
-        )
-        self.addParameter(
-            QgsProcessingParameterBoolean(
-                self.ADD_TOTALS,
-                self.tr('Add field with total depositions'),
-                defaultValue=True
             )
         )
         self.addParameter(

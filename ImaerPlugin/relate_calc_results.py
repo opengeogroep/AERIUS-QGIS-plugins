@@ -114,14 +114,13 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         QgsProject.instance().addMapLayer(layer)
 
 
-    def calculate_difference(self, layers, layer_name, add_totals=True):
+    def calculate_difference(self, layers, layer_name):
         layer_1 = layers[0]
         layer_2 = layers[1]
 
         params = {
             'INPUT_1': layer_1,
             'INPUT_2': layer_2,
-            'ADD_TOTALS': add_totals,
             'OUTPUT': 'memory:'
         }
         result = processing.run("imaer:relate_difference", params)
@@ -129,10 +128,9 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
         self.add_result_layer(layer, layer_name)
 
-    def calculate_sum(self, layers, layer_name, add_totals=True):
+    def calculate_sum(self, layers, layer_name):
         params = {
             'INPUT_LAYERS': layers,
-            'ADD_TOTALS': add_totals,
             'OUTPUT': 'memory:'
         }
         result = processing.run("imaer:relate_sum", params)
@@ -140,10 +138,9 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
         self.add_result_layer(layer, layer_name)
 
-    def calculate_maximum(self, layers, layer_name, add_totals=True):
+    def calculate_maximum(self, layers, layer_name):
         params = {
             'INPUT_LAYERS': layers,
-            'ADD_TOTALS': add_totals,
             'OUTPUT': 'memory:'
         }
         result = processing.run("imaer:relate_maximum", params)
