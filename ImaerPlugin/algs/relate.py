@@ -75,33 +75,6 @@ class RelateAlgorithm(QgsProcessingAlgorithm):
         feat.setAttributes(attributes)
         return feat
 
-
-    def _create_result_feature_old(self, receptor_id, dep_dict, max_decimals=None, with_totals=True):
-        feat = QgsFeature()
-        geometry = self.geometry_cache[receptor_id]
-        feat.setGeometry(geometry)
-
-        attributes = [receptor_id]
-        dep_total = 0
-        for field_name in self.dep_field_names:
-            if field_name in dep_dict:
-                v = dep_dict[field_name]
-                if v is not None:
-                    dep_total += v
-                    if max_decimals is not None:
-                        v = round(v, max_decimals)
-            else:
-                v = None
-            attributes.append(v)
-
-        if with_totals:
-            if max_decimals is not None:
-                dep_total = round(dep_total, max_decimals)
-            attributes.append(dep_total)
-
-        feat.setAttributes(attributes)
-        return feat
-
     def _create_value_dictionary(self, layer, feedback=None):
         '''
         Returns a dictionary with unique keys and a dictionary with
@@ -125,7 +98,6 @@ class RelateAlgorithm(QgsProcessingAlgorithm):
 
         if feedback is not None:
             feedback.pushInfo(repr(value_field_names))
-
         
         result = {}
         self.geometry_cache = {} # Clear cache
