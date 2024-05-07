@@ -54,6 +54,7 @@ from ImaerPlugin.connect import (
 from ImaerPlugin.imaer5 import ImaerDocument
 from ImaerPlugin.gpkg import ImaerGpkg
 from ImaerPlugin.styles import StyleFactory
+from ImaerPlugin.gpkg import ImaerGpkgFieldFactory
 
 
 class ImaerPlugin:
@@ -75,6 +76,7 @@ class ImaerPlugin:
         self.version = '3.4.2'
         self.imaer_doc = ImaerDocument()
         self.imaer_gpkg = ImaerGpkg(None)
+        self.imaer_gpkg_field_factory = ImaerGpkgFieldFactory()
         self.style_factory = StyleFactory(self)
 
         # Making sure users will NOT keep on using the prerelease.
@@ -472,8 +474,39 @@ class ImaerPlugin:
         self.imaer_calc_layers[layer_id]['is_imaer_calc_layer'] = True
         self.imaer_calc_layers[layer_id]['gpkg_fn'] = gpkg_fn
         self.imaer_calc_layers[layer_id]['imaer_layer_type'] = gpkg_layer
+        self.imaer_calc_layers[layer_id]['imaer_contribution_layer'] = self.is_contribution_layer(layer)
 
         return self.imaer_calc_layers[layer_id]
+
+    def is_contribution_layer(self, layer):
+        if not isinstance(layer, QgsVectorLayer):
+            return False
+        
+        layer_fields = layer.fields()
+        for layer_type in ['receptor_hexagons', 'receptor_points', 'sub_points', 'calculation_points']:
+            #print('>>', layer_type)
+            layer_type_fields = self.imaer_gpkg_field_factory.create_fields_for_layer_type(layer_type)
+
+            if self.contains_fields(layer_type_fields, layer_fields):
+                #print(layer_type)
+                return layer_type
+        return None
+    
+    def contains_fields(self, fields, mandatory_fields):
+        for mandatory_field in mandatory_fields:
+            if mandatory_field.name() in ['fid', 'ogc_fid']:
+                continue
+            field_found = False
+            for field in fields:
+                if mandatory_field == field:
+                    pass
+                    #print(mandatory_field.name(), field.name(), mandatory_field == field)
+                if mandatory_field == field:
+                    field_found = True
+            if not field_found:
+                #print(f'{mandatory_field.name()} not found')
+                return False
+        return True
 
     def run_generate_calc_input(self):
         self.log('run_generate_calc_input()', user='dev')
