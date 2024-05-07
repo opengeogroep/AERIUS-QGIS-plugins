@@ -40,6 +40,8 @@ class RelateAlgorithm(QgsProcessingAlgorithm):
         md = plugin.get_imaer_calc_metadata(layer)
         if md['is_imaer_calc_layer']:
             return md['imaer_layer_type']
+        elif md['imaer_contribution_layer'] is not None:
+            return md['imaer_contribution_layer']
         else:
             return None
 

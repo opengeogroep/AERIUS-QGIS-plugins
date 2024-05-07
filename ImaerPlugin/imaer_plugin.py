@@ -475,7 +475,7 @@ class ImaerPlugin:
 
     def is_contribution_layer(self, layer):
         if not isinstance(layer, QgsVectorLayer):
-            return False
+            return None
         
         layer_fields = layer.fields()
         for layer_type in ['receptor_hexagons', 'receptor_points', 'sub_points', 'calculation_points']:
