@@ -252,6 +252,14 @@ class ImaerPlugin:
         base = os.path.basename(gpkg_fn)
         stem, ext = os.path.splitext(base)
 
+        imaer_metadata_source = f'{gpkg_fn}|layername=imaer_metadata'
+        imaer_metadata_layer = QgsVectorLayer(imaer_metadata_source, 'md', 'ogr')
+        
+        situation_name = '---'
+        for feat in imaer_metadata_layer.getFeatures():
+            if feat['key'] == 'situation_name':
+                situation_name = feat['value']
+
         total_extent = None
         loaded_layer_cnt = 0
 
@@ -260,7 +268,7 @@ class ImaerPlugin:
         for result_layer_name in result_layer_names:
             layer_data_source = f'{gpkg_fn}|layername={result_layer_name}'
             if make_groups:
-                layer_name = result_layer_name
+                layer_name = f'{situation_name} - {result_layer_name}'.strip()
             else:
                 layer_name = f'{stem} - {result_layer_name}'
             layer = QgsVectorLayer(layer_data_source, layer_name, 'ogr')
