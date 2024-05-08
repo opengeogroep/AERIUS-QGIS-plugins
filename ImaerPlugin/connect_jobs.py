@@ -263,8 +263,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         print('update_widgets()')
 
         receptors_ok = False
-        if self.combo_calc_type.currentText() == 'WNB_RECEPTORS':
-            self.plugin.log('wnb_receptors', user='dev')
+        if self.combo_calc_type.currentText() in ['WNB_RECEPTORS', 'OWN2000_RECEPTORS']:
             self.combo_receptor_set.clear()
             receptors_ok = True
             self.label_receptor_set.setEnabled(False)
@@ -301,6 +300,16 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.button_delete.setEnabled(jobs_to_delete > 0)
         self.button_cancel.setEnabled(jobs_to_cancel > 0)
         self.button_download.setEnabled(jobs_to_download > 0)
+
+    def update_combo_calculation_type(self):
+        self.combo_calc_type.clear()
+        
+        version = self.plugin.settings.value('imaer_plugin/connect_version')
+        if version == '7':
+            self.combo_calc_type.addItem('WNB_RECEPTORS')
+        elif version == '8':
+            self.combo_calc_type.addItem('OWN2000_RECEPTORS')
+        self.combo_calc_type.addItem('CUSTOM_POINTS')
 
     def update_combo_receptor_set(self):
         """requests available receptor sets and fills combo box """
