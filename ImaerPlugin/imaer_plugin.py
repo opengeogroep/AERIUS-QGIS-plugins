@@ -55,7 +55,7 @@ from ImaerPlugin.imaer5 import ImaerDocument
 from ImaerPlugin.gpkg import ImaerGpkg
 from ImaerPlugin.styles import StyleFactory
 from ImaerPlugin.gpkg import ImaerGpkgFieldFactory
-
+from ImaerPlugin.config import ui_settings
 
 class ImaerPlugin:
 
@@ -132,11 +132,6 @@ class ImaerPlugin:
                 'tool_tip': 'Relate Calculation results',
                 'triggered_slot': self.run_relate_calc_results
             }, {
-                'name': 'add_open_data',
-                'icon': 'icon_add_open_data_layer.svg',
-                'tool_tip': 'Add Open Data Layer',
-                'triggered_slot': self.open_add_open_data
-            }, {
                 'name': 'connect_receptorsets',
                 'icon': 'icon_connect_receptorsets.svg',
                 'tool_tip': 'Receptor Sets',
@@ -172,10 +167,6 @@ class ImaerPlugin:
             action.triggered.connect(action_config['triggered_slot'])
             self.toolbar.addAction(action)
             self.actions[action_config['name']] = action
-
-        # Disable Open data for now
-        if not self.dev:
-            self.actions['add_open_data'].setEnabled(False)
 
         # Widget update logic
         self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
@@ -558,13 +549,19 @@ class ImaerPlugin:
 
     def update_connect_widgets(self):
         conn_ok = self.aerius_connection.api_key_is_ok
+        
+        country = self.configuration_dlg.combo_country.currentText()
+        is_connect_country = country in ui_settings['connect_countries']
+
+        enable_connect_widgets = conn_ok and is_connect_country
+
         old_state = self.actions['connect_receptorsets'].isEnabled()
 
-        self.actions['connect_receptorsets'].setEnabled(conn_ok)
-        self.actions['connect_jobs'].setEnabled(conn_ok)
+        self.actions['connect_receptorsets'].setEnabled(enable_connect_widgets)
+        self.actions['connect_jobs'].setEnabled(enable_connect_widgets)
 
         # If buttons have been enabled, update dialog tables content.
-        if (not old_state) and conn_ok:
+        if (not old_state) and enable_connect_widgets:
             self.connect_receptorsets_dlg.get_receptor_sets()
             self.connect_jobs_dlg.get_jobs()
 
@@ -609,40 +606,3 @@ class ImaerPlugin:
 
         if calc_type == 'maximum':
             self.relate_calc_results_dlg.calculate_maximum(layers, layer_name)
-
-    def open_add_open_data(self):
-        layer_ns = 'base_geometries'
-        layer_name = 'hexagons'
-        allow_cache = True
-
-        # TODO Move this to a QgsTask when specs are clear
-
-        base_fn = f'imaer_{layer_ns}_{layer_name}'
-
-        work_dir = self.settings.value('imaer_plugin/work_dir', defaultValue=None)
-        if work_dir is None:
-            raise Exception('Work dir not set')
-            return
-        # zip_fn = os.path.join(work_dir, f'{base_fn}.zip')
-        zip_fn = os.path.join(work_dir, f'{base_fn}.gpkg')
-
-        if not os.path.isfile(zip_fn) or not allow_cache:
-            # Download data
-            conn = AeriusOpenData()
-
-            QgsApplication.setOverrideCursor(Qt.WaitCursor)
-            response = conn.get_dataset(layer_ns, layer_name, output_format='geopackage')  # TODO Download a better file format then SHP when available
-            QgsApplication.restoreOverrideCursor()
-
-            if response is None:
-                print('Download failed')
-                return
-
-            with open(zip_fn, 'wb') as zip_file:
-                zip_file.write(response)
-
-        download_layer = QgsVectorLayer(zip_fn, f'{layer_ns}:{layer_name}', 'ogr')
-
-        qml = os.path.join(self.plugin_dir, 'styles', f'{layer_ns}_{layer_name}.qml')
-        download_layer.loadNamedStyle(qml)
-        QgsProject.instance().addMapLayer(download_layer)
