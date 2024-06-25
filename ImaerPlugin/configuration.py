@@ -54,6 +54,7 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         self.file_dialog = QFileDialog()
         self.button_get_key.clicked.connect(self.get_api_key)
         self.button_browse_work_dir.clicked.connect(self.browse_work_dir)
+        self.combo_country.currentTextChanged.connect(self.update_all_widgets)
 
     def init_default_values(self):
         work_dir_setting = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
@@ -107,6 +108,13 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         self.plugin.aerius_connection.check_connection()
         self.plugin.generate_calc_input_dlg.update_emission_tab()
         self.plugin.connect_jobs_dlg.update_combo_calculation_type()
+
+    def update_all_widgets(self):
+        country = self.combo_country.currentText()
+        if country in ui_settings['connect_countries']:
+            self.groupBox_connect.setEnabled(True)
+        else:
+            self.groupBox_connect.setEnabled(False)
 
     def get_api_key(self):
         email = self.edit_email.text()
