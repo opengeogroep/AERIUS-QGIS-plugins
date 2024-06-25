@@ -35,8 +35,8 @@ from qgis.gui import QgsMapLayerComboBox
 
 from ImaerPlugin.tasks import (
     ImportImaerCalculatorResultTask,
-    ExportImaerCalculatorResultTask,
-    ExtractGmlFromPdfTask)
+    ExtractGmlFromPdfTask
+)
 
 from ImaerPlugin.algs.provider import ImaerProvider
 
@@ -112,11 +112,6 @@ class ImaerPlugin:
                 'tool_tip': 'Import IMAER Calculator result GML',
                 'triggered_slot': self.run_import_calc_result
             }, {
-                'name': 'export_calc_result',
-                'icon': 'icon_export_calc_result.svg',
-                'tool_tip': 'Export to IMAER Calculator result GML',
-                'triggered_slot': self.run_export_calc_result
-            }, {
                 'name': 'extract_gml_from_pdf',
                 'icon': 'icon_extract_gml_from_pdf.svg',
                 'tool_tip': 'Extract GML from Aerius PDF',
@@ -169,7 +164,6 @@ class ImaerPlugin:
             self.actions[action_config['name']] = action
 
         # Widget update logic
-        self.iface.mapCanvas().currentLayerChanged.connect(self.update_export_calc_widgets)
         self.update_all_widgets()
         self.initProcessing()
 
@@ -180,8 +174,6 @@ class ImaerPlugin:
 
     def unload(self):
         '''Removes all plugin widgets and connections'''
-        # Clean up connections
-        self.iface.mapCanvas().currentLayerChanged.disconnect(self.update_export_calc_widgets)
 
         # Remove processing provider
         QgsApplication.processingRegistry().removeProvider(self.provider)
@@ -400,41 +392,6 @@ class ImaerPlugin:
             msg = 'Extracted GML file saved as: <a href="{0}">{0}</a>'.format(fn)
             self.iface.messageBar().pushMessage('Success', msg, level=Qgis.Info, duration=10)
 
-    def suggest_export_calc_result_fn(self, gpkg_fn):
-        time_str = time.strftime("%Y%m%d-%H%M%S")
-        gpkg_path = pathlib.Path(gpkg_fn)
-        gml_basename = f'{gpkg_path.stem}_modified-{time_str}.gml'
-        gml_fn = os.path.join(gpkg_path.parent, gml_basename)
-        return gml_fn
-
-    def run_export_calc_result(self):
-        self.log('run_export_calc_result()', user='dev')
-
-        receptor_layer = self.iface.activeLayer()
-        metadata = self.get_imaer_calc_metadata(receptor_layer)
-
-        if not metadata['is_imaer_calc_layer']:
-            self.log('active layer is not an Imaer layer', lvl='Warning')
-
-        gml_fn = self.suggest_export_calc_result_fn(metadata['gpkg_fn'])
-        gml_fn, filter = self.calc_result_file_dialog.getSaveFileName(caption="Save as Calculator result gml file", directory=gml_fn, parent=self.iface.mainWindow())
-        # self.log(gml_fn, user = 'dev')
-        if gml_fn == '' and filter == '':
-            return
-
-        xml_lines = []
-        for line in metadata['xml'].split('\n'):
-            if not line.strip() == '':
-                # print(line)
-                xml_lines.append(line)
-
-        layer_imaer_version = metadata['imaer_version']
-        layer_country = metadata['country']
-        layer_crs = metadata['crs']
-
-        task = ExportImaerCalculatorResultTask(receptor_layer, gml_fn, xml_lines, layer_imaer_version, layer_country, layer_crs)
-        self.task_manager.addTask(task)
-
     def get_imaer_calc_metadata(self, layer):
         '''Returns IMAER gpkg metadata from cache or attempts
         to find metadata.'''
@@ -525,27 +482,15 @@ class ImaerPlugin:
         # self.log('Could not export GML file to {0}'.format(fn), lvl='Critical', bar=True, duration=10)
 
     def update_all_widgets(self):
-        self.update_import_calc_widgets()
-        self.update_export_calc_widgets()
+        self.update_crs_widgets()
         self.update_connect_widgets()
 
-    def update_import_calc_widgets(self):
+    def update_crs_widgets(self):
         epsg_id = self.settings.value('imaer_plugin/crs', defaultValue=None)
         if epsg_id is None:
-            self.actions['import_calc_result'].setEnabled(False)
             self.actions['generate_calc_input'].setEnabled(False)
-            self.actions['export_calc_result'].setEnabled(False)
         else:
-            self.actions['import_calc_result'].setEnabled(True)
             self.actions['generate_calc_input'].setEnabled(True)
-            self.actions['export_calc_result'].setEnabled(True)
-
-    def update_export_calc_widgets(self):
-        if self.iface.activeLayer() is not None:
-            metadata = self.get_imaer_calc_metadata(self.iface.activeLayer())
-            self.actions['export_calc_result'].setEnabled(metadata['is_imaer_calc_layer'])
-        else:
-            self.actions['export_calc_result'].setEnabled(False)
 
     def update_connect_widgets(self):
         conn_ok = self.aerius_connection.api_key_is_ok
@@ -578,7 +523,7 @@ class ImaerPlugin:
             self.configuration_dlg.save_ui_to_settings()
             self.aerius_connection.check_connection()
             self.update_connect_widgets()
-            self.update_import_calc_widgets()
+            self.update_crs_widgets()
 
     def open_connect_receptorsets(self):
         self.log('open_connect_receptorsets()', user='dev')
