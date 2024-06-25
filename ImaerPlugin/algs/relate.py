@@ -102,7 +102,6 @@ class RelateAlgorithm(QgsProcessingAlgorithm):
             feedback.pushInfo(repr(value_field_names))
         
         result = {}
-        self.geometry_cache = {} # Clear cache
         for feat in layer.getFeatures():
             if layer_type in ['receptor_points', 'receptor_hexagons']:
                 key = feat['receptor_id']
