@@ -265,6 +265,8 @@ class ImaerPlugin:
 
         layer_group = None
 
+        canvas_crs = self.iface.mapCanvas().mapSettings().destinationCrs()
+
         for result_layer_name in result_layer_names:
             layer_data_source = f'{gpkg_fn}|layername={result_layer_name}'
             if make_groups:
@@ -275,10 +277,14 @@ class ImaerPlugin:
             if not layer.isValid():
                 continue
 
+            layer_crs = layer.crs()
+            extent_transform = QgsCoordinateTransform(layer_crs, canvas_crs, QgsProject.instance())
+            layer_extent = extent_transform.transformBoundingBox(layer.extent())
+
             if total_extent is None:
-                total_extent = layer.extent()
+                total_extent = layer_extent
             else:
-                total_extent.combineExtentWith(layer.extent())
+                total_extent.combineExtentWith(layer_extent)
 
             if make_groups and (layer_group is None):
                 root = QgsProject.instance().layerTreeRoot()
@@ -340,7 +346,7 @@ class ImaerPlugin:
 
         if zoom and (total_extent is not None):
             canvas = self.iface.mapCanvas()
-            total_extent.grow(100) # map units
+            total_extent.scale(1.2)
             canvas.setExtent(total_extent)
         
         if loaded_layer_cnt == 0:
