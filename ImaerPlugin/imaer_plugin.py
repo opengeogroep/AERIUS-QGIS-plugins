@@ -51,7 +51,7 @@ from ImaerPlugin.connect import (
     AeriusOpenData
 )
 
-from ImaerPlugin.imaer5 import ImaerDocument
+from ImaerPlugin.imaer6 import ImaerDocument
 from ImaerPlugin.gpkg import ImaerGpkg
 from ImaerPlugin.styles import StyleFactory
 from ImaerPlugin.gpkg import ImaerGpkgFieldFactory

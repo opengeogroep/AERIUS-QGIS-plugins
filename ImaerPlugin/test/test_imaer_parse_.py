@@ -19,7 +19,7 @@ sys.path.append(dev_config['path_qgis_python_folder'])
 
 from qgis.core import *
 
-from imaer5 import *
+from imaer6 import *
 
 _fn = '/home/raymond/terglobo/projecten/aerius/202401_subreceptors/CAPER_demo_roads_including_results_20230116/AERIUS_20240116163736_0_Localroadplanwithbarrier.gml'
 _fn_short = '/home/raymond/terglobo/projecten/aerius/202401_subreceptors/CAPER_demo_roads_including_results_20230116/AERIUS_20240116163736_0_Localroadplanwithbarrier_short.gml'

@@ -44,7 +44,7 @@ from ImaerPlugin.config import (
 
 from ImaerPlugin.diurnal_variation import DiurnalVariationDialog
 
-from ImaerPlugin.imaer5 import (
+from ImaerPlugin.imaer6 import (
     ADMSRoad,
     AdmsRoadSideBarrier,
     ADMSSourceCharacteristics,

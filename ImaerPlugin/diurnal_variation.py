@@ -9,7 +9,7 @@ from qgis.PyQt.QtWidgets import (
 
 from qgis.utils import iface
 
-from ImaerPlugin.imaer5 import CustomDiurnalVariation
+from ImaerPlugin.imaer6 import CustomDiurnalVariation
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'diurnal_variation_dlg.ui'))

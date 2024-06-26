@@ -20,7 +20,7 @@ sys.path.append(dev_config['path_qgis_python_folder'])
 
 from qgis.core import *
 
-from imaer5 import *
+from imaer6 import *
 
 _GEOM0 = QgsGeometry.fromWkt('POINT(148458.0 411641.0)')
 _GEOM1 = QgsGeometry.fromWkt('LINESTRING((1 0, 2 1, 3 0))')

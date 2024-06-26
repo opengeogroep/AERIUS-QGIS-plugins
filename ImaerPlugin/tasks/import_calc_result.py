@@ -18,7 +18,7 @@ from qgis.core import (
 )
 
 from .. task_timer import TaskTimer
-from ImaerPlugin.imaer5 import ImaerDocument
+from ImaerPlugin.imaer6 import ImaerDocument
 from ImaerPlugin.gpkg import ImaerGpkg
 
 _SUPPORTED_IMAER_VERSIONS = ['3.1', '4.0', '5.0', '5.1']
