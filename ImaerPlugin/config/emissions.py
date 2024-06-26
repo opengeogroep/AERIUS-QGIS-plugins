@@ -99,7 +99,7 @@ ui_settings = {
     'project_default_year': 2023,
     'situation_name': 'Situation 1',
     'situation_types_connect': ['DEFINED_BY_FILE', 'REFERENCE', 'PROPOSED', 'TEMPORARY'],
-    'situation_types_gml': ['REFERENCE', 'PROPOSED', 'TEMPORARY', 'NETTING'],
+    'situation_types_gml': ['REFERENCE', 'PROPOSED', 'TEMPORARY', '‘OFF_SITE_REDUCTION’'],
     'countries': ['NL', 'UK'],
     'connect_countries': ['NL'],
     'imaer_versions': ['5.1'],
