@@ -20,7 +20,7 @@ sys.path.append(dev_config['path_qgis_python_folder'])
 
 from qgis.core import *
 
-from imaer6 import *
+from imaer5 import *
 
 _GEOM0 = QgsGeometry.fromWkt('POINT(148458.0 411641.0)')
 _GEOM1 = QgsGeometry.fromWkt('LINESTRING((1 0, 2 1, 3 0))')
@@ -75,7 +75,7 @@ class TestImaerGenerate(unittest.TestCase):
         fcc.metadata = AeriusCalculatorMetadata(
             project={'year': 2020, 'description': 'Some description...'},
             situation={'name': 'Situation 1', 'reference': 'ABCDE12345', 'type': 'PROPOSED'},
-            calculation={'type': 'NATURE_AREA', 'substances': ['NH3', 'NOX'], 'result_type': 'DEPOSITION'},
+            calculation={'type': 'NATURE_AREA', 'substances': ['NH3', 'NOX'], 'result_types': ['DEPOSITION']},
             version={'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'},
             gml_creator=f'QgisImaerPlugin-3.1.1'
         )
