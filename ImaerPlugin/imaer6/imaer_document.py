@@ -1,7 +1,11 @@
 from PyQt5.QtCore import QXmlStreamReader, QFile
 from PyQt5.QtXml import QDomDocument
 
-from ..version import VersionNumber
+# Fix for import error while running tests.
+try:
+    from ..version import VersionNumber
+except ImportError:
+    pass
 
 from .metadata import AeriusCalculatorMetadata
 from .emission_source import EmissionSource
@@ -9,14 +13,14 @@ from .receptors import ReceptorPoint, SubPoint, CalculationPoint
 
 _default_namespaces = {
     'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-    'xmlns:imaer': 'http://imaer.aerius.nl/5.1',
+    'xmlns:imaer': 'http://imaer.aerius.nl/6.0',
     'xmlns:xlink': 'http://www.w3.org/1999/xlink',
     'xmlns:gml': 'http://www.opengis.net/gml/3.2'
 }
 
 _default_attributes = {
     'gml:id': 'NL.IMAER.Collection',
-    'xsi:schemaLocation': 'http://imaer.aerius.nl/5.1 http://imaer.aerius.nl/5.1/IMAER.xsd'
+    'xsi:schemaLocation': 'http://imaer.aerius.nl/6.0 http://imaer.aerius.nl/6.0/IMAER.xsd'
 }
 
 

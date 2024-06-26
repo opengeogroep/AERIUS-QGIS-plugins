@@ -1,7 +1,11 @@
 from PyQt5.QtCore import QXmlStreamReader, QFile
 from PyQt5.QtXml import QDomDocument
 
-from ..version import VersionNumber
+# Fix for import error while running tests.
+try:
+    from ..version import VersionNumber
+except ImportError:
+    pass
 
 from .metadata import AeriusCalculatorMetadata
 from .emission_source import EmissionSource
