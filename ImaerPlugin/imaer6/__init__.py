@@ -1,9 +1,9 @@
 from .imaer_document import ImaerDocument
 from .metadata import AeriusCalculatorMetadata
-from .diurnal_variation import (
-    StandardDiurnalVariation,
-    ReferenceDiurnalVariation,
-    CustomDiurnalVariation
+from .time_varying_profile import (
+    StandardTimeVaryingProfile,
+    ReferenceTimeVaryingProfile,
+    CustomTimeVaryingProfile
 )
 from .emission_source import (
     EmissionSourceType,

@@ -100,25 +100,24 @@ class TestImaerGenerate(unittest.TestCase):
     def test_ffc_emission_characteristics01(self):
         hc = SpecifiedHeatContent(value=12.5)
         es = EmissionSource(local_id=1234, sector_id=9999, label='Bron 1234', geom=_GEOM1, epsg_id=28992)
-        dv = StandardDiurnalVariation(standard_type='LIGHT_DUTY_VEHICLES')
-        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation=dv)
+        tvp = StandardTimeVaryingProfile(standard_type='LIGHT_DUTY_VEHICLES')
+        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, time_varying_profile=tvp)
         es.emissions.append(Emission('NH3', 4.3))
         es.emissions.append(Emission('NOX', 4.4))
         fcc = ImaerDocument()
         fcc.feature_members.append(es)
         self.generate_gml_file(fcc, 'em_char_01')
 
-    '''
     def test_ffc_emission_characteristics02(self):
         fcc = ImaerDocument()
         hc = SpecifiedHeatContent(value=12.5)
         es = EmissionSource(local_id=125, sector_id=9999, label='Bron 125', geom=_GEOM1, epsg_id=28992)
-        rdv = ReferenceDiurnalVariation(local_id=125)
-        cdv = CustomDiurnalVariation(local_id=125, label='Test label', custom_type='DAY', values=[0.5, 1, 1.5] * 8)
-        fcc.definitions.append(cdv)
-        cdv = CustomDiurnalVariation(local_id=126, label='Test label', custom_type='THREE_DAY', values=[5, 1, 1] * 24)
-        fcc.definitions.append(cdv)
-        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation=rdv)
+        rtvp = ReferenceTimeVaryingProfile(local_id=125)
+        ctvp = CustomTimeVaryingProfile(local_id=125, label='Test label', custom_type='DAY', values=[0.5, 1, 1.5] * 8)
+        fcc.definitions.append(ctvp)
+        ctvp = CustomTimeVaryingProfile(local_id=126, label='Test label', custom_type='THREE_DAY', values=[5, 1, 1] * 24)
+        fcc.definitions.append(ctvp)
+        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, time_varying_profile=rtvp)
         es.emissions.append(Emission('NH3', 5))
         es.emissions.append(Emission('NOX', 5.22))
         fcc.feature_members.append(es)
@@ -133,11 +132,11 @@ class TestImaerGenerate(unittest.TestCase):
             label='building no. 123',
             geom=_GEOM_POLY_UK_1,
             epsg_id=27700)
-        dv = StandardDiurnalVariation(standard_type='LIGHT_DUTY_VEHICLES')
+        tvp = None #StandardTimeVaryingProfile(standard_type='LIGHT_DUTY_VEHICLES')
         es.emission_source_characteristics = ADMSSourceCharacteristics(
             height=0.5, specific_heat_capacity=1012, source_type='POINT',
             diameter=0.01, buoyancy_type='TEMPERATURE', temperature=15, efflux_type='VELOCITY',
-            vertical_velocity=15.0)
+            vertical_velocity=15.0, time_varying_profile=tvp)
         es.emissions.append(Emission('NH3', 10))
         es.emissions.append(Emission('NOX', 50))
         fcc = ImaerDocument()
@@ -145,6 +144,7 @@ class TestImaerGenerate(unittest.TestCase):
         fcc.feature_members.append(bld)
         self.generate_gml_file(fcc, 'em_char_03')
 
+    '''
     def test_create_srm2road(self):
         v1 = StandardVehicle(vehicles_per_time_unit=333,
                              time_unit='DAY',
@@ -288,9 +288,9 @@ class TestImaerGenerate(unittest.TestCase):
         fcc.feature_members.append(cp)
         self.generate_gml_file(fcc, 'calculation_points_02')
     '''
-    def test_custom_diurnal_variation_csv(self):
+    def test_custom_time_varying_profile_csv(self):
         fcc = ImaerDocument()
-        cdv = CustomDiurnalVariation(local_id=125, label='Test label 1', custom_type='THREE_DAY')
+        tvp = CustomTimeVaryingProfile(local_id=125, label='Test label 1', custom_type='THREE_DAY')
         csv_text = '''
 0.9;1.0;1.0
 0.9;1.0;1.0
@@ -318,10 +318,10 @@ class TestImaerGenerate(unittest.TestCase):
 0.9;1.0;1.0
 
         '''
-        check = cdv.values_from_csv(csv_text)
+        check = tvp.values_from_csv(csv_text)
         assert check is True
-        fcc.definitions.append(cdv)
-        cdv = CustomDiurnalVariation(local_id=126, label='Test label 2', custom_type='DAY')
+        fcc.definitions.append(tvp)
+        tvp = CustomTimeVaryingProfile(local_id=126, label='Test label 2', custom_type='DAY')
         csv_text = '''
 1
 1
@@ -348,7 +348,7 @@ class TestImaerGenerate(unittest.TestCase):
 1
 1
         '''
-        check = cdv.values_from_csv(csv_text)
+        check = tvp.values_from_csv(csv_text)
         assert check is True
-        fcc.definitions.append(cdv)
-        #self.generate_gml_file(fcc, 'diurnal_variation_01')
+        fcc.definitions.append(tvp)
+        self.generate_gml_file(fcc, 'time_varying_profile_01')

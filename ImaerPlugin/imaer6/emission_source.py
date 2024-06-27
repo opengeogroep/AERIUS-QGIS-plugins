@@ -97,12 +97,12 @@ class EmissionSource(EmissionSourceType):
 
 class EmissionSourceCharacteristics(object):
 
-    def __init__(self, building_id=None, heat_content=None, emission_height=None, spread=None, diurnal_variation=None):
+    def __init__(self, building_id=None, heat_content=None, emission_height=None, spread=None, time_varying_profile=None):
         self.building_id = building_id
         self.heat_content = heat_content
         self.emission_height = emission_height
         self.spread = spread
-        self.diurnal_variation = diurnal_variation
+        self.time_varying_profile = time_varying_profile
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement('imaer:EmissionSourceCharacteristics')
@@ -130,11 +130,11 @@ class EmissionSourceCharacteristics(object):
             elem.appendChild(doc.createTextNode(str(self.spread)))
             result.appendChild(elem)
 
-        # diurnal variation
-        if self.diurnal_variation is not None:
-            elem = doc.createElement('imaer:diurnalVariation')
-            dv = self.diurnal_variation.to_xml_elem(doc)
-            elem.appendChild(dv)
+        # time varying profile
+        if self.time_varying_profile is not None:
+            elem = doc.createElement('imaer:timeVaryingProfile')
+            tvp = self.time_varying_profile.to_xml_elem(doc)
+            elem.appendChild(tvp)
             result.appendChild(elem)
 
         return result
@@ -147,7 +147,7 @@ class ADMSSourceCharacteristics(object):
         source_type=None, diameter=None, elevation_angle=None, horizontal_angle=None,
         width=None, vertical_dimension=None, buoyancy_type=None, density=None,
         temperature=None, efflux_type=None, vertical_velocity=None,
-        volumetric_flow_rate=None, diurnal_variation=None
+        volumetric_flow_rate=None, time_varying_profile=None
     ):
         self.building_id = building_id
         self.height = height
@@ -164,7 +164,7 @@ class ADMSSourceCharacteristics(object):
         self.efflux_type = efflux_type
         self.vertical_velocity = vertical_velocity
         self.volumetric_flow_rate = volumetric_flow_rate
-        self.diurnal_variation = diurnal_variation
+        self.time_varying_profile = time_varying_profile
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement('imaer:ADMSSourceCharacteristics')
@@ -259,11 +259,11 @@ class ADMSSourceCharacteristics(object):
             elem.appendChild(doc.createTextNode(str(self.volumetric_flow_rate)))
             result.appendChild(elem)
 
-        # diurnal variation
-        if self.diurnal_variation is not None:
-            elem = doc.createElement('imaer:diurnalVariation')
-            dv = self.diurnal_variation.to_xml_elem(doc)
-            elem.appendChild(dv)
+        # time varying profile
+        if self.time_varying_profile is not None:
+            elem = doc.createElement('imaer:timeVaryingProfile')
+            tvp = self.time_varying_profile.to_xml_elem(doc)
+            elem.appendChild(tvp)
             result.appendChild(elem)
 
         return result

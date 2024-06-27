@@ -1,20 +1,20 @@
 from PyQt5.QtXml import QDomDocument
 
 
-class DiurnalVariation(object):
+class TimeVaryingProfile(object):
 
     def __init__(self):
         pass
 
 
-class StandardDiurnalVariation(DiurnalVariation):
+class StandardTimeVaryingProfile(TimeVaryingProfile):
 
     def __init__(self, *, standard_type, **kwargs):
         super().__init__(**kwargs)
         self.standard_type = standard_type
 
     def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:StandardDiurnalVariation')
+        result = doc.createElement('imaer:StandardTimeVaryingProfile')
 
         st = doc.createElement('imaer:standardType')
         st.appendChild(doc.createTextNode(str(self.standard_type)))
@@ -23,22 +23,22 @@ class StandardDiurnalVariation(DiurnalVariation):
         return result
 
 
-class ReferenceDiurnalVariation(DiurnalVariation):
+class ReferenceTimeVaryingProfile(TimeVaryingProfile):
     def __init__(self, *, local_id, **kwargs):
         super().__init__(**kwargs)
         self.local_id = local_id
 
     def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:ReferenceDiurnalVariation')
+        result = doc.createElement('imaer:ReferenceTimeVaryingProfile')
 
-        dv = doc.createElement('imaer:customDiurnalVariation')
-        dv.setAttribute('xlink:href', f'#DiurnalProfile.{self.local_id}')
+        dv = doc.createElement('imaer:customTimeVaryingProfile')
+        dv.setAttribute('xlink:href', f'#TimeVaryingProfile.{self.local_id}')
         result.appendChild(dv)
 
         return result
 
 
-class CustomDiurnalVariation(DiurnalVariation):
+class CustomTimeVaryingProfile(TimeVaryingProfile):
 
     def __init__(self, *, local_id, custom_type, label=None, values=None, **kwargs):
         super().__init__(**kwargs)
@@ -52,9 +52,9 @@ class CustomDiurnalVariation(DiurnalVariation):
         }
 
     def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:customDiurnalVariation')
-        dv = doc.createElement('imaer:CustomDiurnalVariation')
-        dv.setAttribute('gml:id', f'DiurnalProfile.{self.local_id}')
+        result = doc.createElement('imaer:customTimeVaryingProfile')
+        dv = doc.createElement('imaer:CustomTimeVaryingProfile')
+        dv.setAttribute('gml:id', f'TimeVaryingProfile.{self.local_id}')
 
         if self.label is not None:
             elem = doc.createElement('imaer:label')
