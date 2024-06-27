@@ -12,6 +12,7 @@ class AeriusCalculatorMetadata():
         self.situation = situation
         # name
         # reference
+        # type: REFERENCE, PROPOSED, TEMPORARY, OFF_SITE_REDUCTION, COMBINATION_REFERENCE, COMBINATION_PROPOSED (1)
 
         self.calculation = calculation
         # resultType: DEPOSITION, CONCENTRATION, EXCEEDANCE_DAYS, EXCEEDANCE_HOURS (1..n)
@@ -36,6 +37,10 @@ class AeriusCalculatorMetadata():
                 if 'year' in self.project:
                     ele = doc.createElement('imaer:year')
                     ele.appendChild(doc.createTextNode(str(self.project['year'])))
+                    pr_ele.appendChild(ele)
+                if 'name' in self.project:
+                    ele = doc.createElement('imaer:name')
+                    ele.appendChild(doc.createTextNode(str(self.project['name'])))
                     pr_ele.appendChild(ele)
                 if 'description' in self.project:
                     ele = doc.createElement('imaer:description')
@@ -120,6 +125,9 @@ class AeriusCalculatorMetadata():
                     if xml_reader.name() == 'year' and xml_reader.isStartElement():
                         xml_reader.readNext()
                         self.project['year'] = int(xml_reader.text())
+                    if xml_reader.name() == 'name' and xml_reader.isStartElement():
+                        xml_reader.readNext()
+                        self.project['name'] = int(xml_reader.text())
                     elif xml_reader.name() == 'description' and xml_reader.isStartElement():
                         xml_reader.readNext()
                         self.project['descripton'] = xml_reader.text()
