@@ -132,11 +132,11 @@ class TestImaerGenerate(unittest.TestCase):
             label='building no. 123',
             geom=_GEOM_POLY_UK_1,
             epsg_id=27700)
-        tvp = None #StandardTimeVaryingProfile(standard_type='LIGHT_DUTY_VEHICLES')
+        tvp = StandardTimeVaryingProfile(standard_type='LIGHT_DUTY_VEHICLES')
         es.emission_source_characteristics = ADMSSourceCharacteristics(
             height=0.5, specific_heat_capacity=1012, source_type='POINT',
             diameter=0.01, buoyancy_type='TEMPERATURE', temperature=15, efflux_type='VELOCITY',
-            vertical_velocity=15.0, time_varying_profile=tvp)
+            vertical_velocity=15.0, hourly_variation=tvp, monthly_variation=tvp)
         es.emissions.append(Emission('NH3', 10))
         es.emissions.append(Emission('NOX', 50))
         fcc = ImaerDocument()
@@ -144,7 +144,6 @@ class TestImaerGenerate(unittest.TestCase):
         fcc.feature_members.append(bld)
         self.generate_gml_file(fcc, 'em_char_03')
 
-    '''
     def test_create_srm2road(self):
         v1 = StandardVehicle(vehicles_per_time_unit=333,
                              time_unit='DAY',
@@ -206,7 +205,7 @@ class TestImaerGenerate(unittest.TestCase):
             vehicles_per_time_unit=1000,
             time_unit='DAY',
             description='Test test ...',
-            emission=[em]
+            emissions=[em]
         )
         es.vehicles.append(v2)
 
@@ -287,7 +286,7 @@ class TestImaerGenerate(unittest.TestCase):
         )
         fcc.feature_members.append(cp)
         self.generate_gml_file(fcc, 'calculation_points_02')
-    '''
+
     def test_custom_time_varying_profile_csv(self):
         fcc = ImaerDocument()
         tvp = CustomTimeVaryingProfile(local_id=125, label='Test label 1', custom_type='THREE_DAY')

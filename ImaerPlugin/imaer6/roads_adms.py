@@ -7,7 +7,8 @@ class ADMSRoad(RoadEmissionSource):
 
     def __init__(self, *, width=None, elevation=None,
                  gradient=None, coverage=None, barrier_left=None,
-                 barrier_right=None, time_varying_profile=None, **kwargs):
+                 barrier_right=None, hourly_variation=None,
+                 monthly_variation=None, **kwargs):
         super().__init__(**kwargs)
         self.width = width
         self.elevation = elevation
@@ -15,7 +16,8 @@ class ADMSRoad(RoadEmissionSource):
         self.coverage = coverage
         self.barrier_left = barrier_left
         self.barrier_right = barrier_right
-        self.time_varying_profile = time_varying_profile
+        self.hourly_variation = hourly_variation
+        self.monthly_variation = monthly_variation
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = super().to_xml_elem(doc)
@@ -52,11 +54,19 @@ class ADMSRoad(RoadEmissionSource):
             b_elem.appendChild(elem)
             result.appendChild(b_elem)
 
-        if self.time_varying_profile is not None:
-            dv_elem = doc.createElement('imaer:timeVaryingProfile')
-            elem = self.time_varying_profile.to_xml_elem(doc)
-            dv_elem.appendChild(elem)
-            result.appendChild(dv_elem)
+        # hourly variation
+        if self.hourly_variation is not None:
+            elem = doc.createElement('imaer:hourlyVariation')
+            tvp = self.hourly_variation.to_xml_elem(doc)
+            elem.appendChild(tvp)
+            result.appendChild(elem)
+
+        # monthly variation
+        if self.monthly_variation is not None:
+            elem = doc.createElement('imaer:monthlyVariation')
+            tvp = self.monthly_variation.to_xml_elem(doc)
+            elem.appendChild(tvp)
+            result.appendChild(elem)
 
         return result
 

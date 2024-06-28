@@ -89,8 +89,12 @@ class EmissionSource(EmissionSourceType):
         result = super().to_xml_elem(doc)
 
         for em in self.emissions:
+            em_elem = doc.createElement('imaer:emission')
+
             elem = em.to_xml_elem(doc)
-            result.appendChild(elem)
+            em_elem.appendChild(elem)
+            
+            result.appendChild(em_elem)
 
         return result
 
@@ -147,7 +151,7 @@ class ADMSSourceCharacteristics(object):
         source_type=None, diameter=None, elevation_angle=None, horizontal_angle=None,
         width=None, vertical_dimension=None, buoyancy_type=None, density=None,
         temperature=None, efflux_type=None, vertical_velocity=None,
-        volumetric_flow_rate=None, time_varying_profile=None
+        volumetric_flow_rate=None, hourly_variation=None, monthly_variation=None
     ):
         self.building_id = building_id
         self.height = height
@@ -164,7 +168,8 @@ class ADMSSourceCharacteristics(object):
         self.efflux_type = efflux_type
         self.vertical_velocity = vertical_velocity
         self.volumetric_flow_rate = volumetric_flow_rate
-        self.time_varying_profile = time_varying_profile
+        self.hourly_variation = hourly_variation
+        self.monthly_variation = monthly_variation
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement('imaer:ADMSSourceCharacteristics')
@@ -259,10 +264,17 @@ class ADMSSourceCharacteristics(object):
             elem.appendChild(doc.createTextNode(str(self.volumetric_flow_rate)))
             result.appendChild(elem)
 
-        # time varying profile
-        if self.time_varying_profile is not None:
-            elem = doc.createElement('imaer:timeVaryingProfile')
-            tvp = self.time_varying_profile.to_xml_elem(doc)
+        # hourly variation
+        if self.hourly_variation is not None:
+            elem = doc.createElement('imaer:hourlyVariation')
+            tvp = self.hourly_variation.to_xml_elem(doc)
+            elem.appendChild(tvp)
+            result.appendChild(elem)
+
+        # monthly variation
+        if self.monthly_variation is not None:
+            elem = doc.createElement('imaer:monthlyVariation')
+            tvp = self.monthly_variation.to_xml_elem(doc)
             elem.appendChild(tvp)
             result.appendChild(elem)
 
@@ -305,14 +317,12 @@ class Emission(object):
         self.value = value
 
     def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:emission')
+        result = doc.createElement('imaer:Emission')
+        result.setAttribute('substance', self.substance)
 
-        em_elem = doc.createElement('imaer:Emission')
-        em_elem.setAttribute('substance', self.substance)
         v_elem = doc.createElement('imaer:value')
         v_elem.appendChild(doc.createTextNode(str(self.value)))
 
-        em_elem.appendChild(v_elem)
-        result.appendChild(em_elem)
+        result.appendChild(v_elem)
 
         return result
