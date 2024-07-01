@@ -42,7 +42,7 @@ from ImaerPlugin.config import (
     ui_settings
 )
 
-from ImaerPlugin.diurnal_variation import DiurnalVariationDialog
+from ImaerPlugin.time_varying_profile import TimeVaryingProfileDialog
 
 from ImaerPlugin.imaer6 import (
     ADMSRoad,
@@ -51,18 +51,18 @@ from ImaerPlugin.imaer6 import (
     AeriusCalculatorMetadata,
     Building,
     CalculationPoint,
-    CustomDiurnalVariation,
+    CustomTimeVaryingProfile,
     CustomVehicle,
     Emission,
     EmissionSource,
     EmissionSourceCharacteristics,
     EmissionSourceType,
     ImaerDocument,
-    ReferenceDiurnalVariation,
+    ReferenceTimeVaryingProfile,
     SpecifiedHeatContent,
     SRM2Road,
     Srm2RoadSideBarrier,
-    StandardDiurnalVariation,
+    StandardTimeVaryingProfile,
     StandardVehicle
 )
 
@@ -78,14 +78,14 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.iface = iface
         self.plugin = plugin
-        self.diurnal_variation_dlg = DiurnalVariationDialog()
+        self.time_varying_profile_dlg = TimeVaryingProfileDialog()
 
         self.emission_tabs = {}
         self.emission_tabs['other'] = getattr(self, 'tab_emission_sources')
         self.emission_tabs['roads'] = getattr(self, 'tab_roads')
         self.emission_tabs['buildings'] = getattr(self, 'tab_buildings')
         self.emission_tabs['calc_points'] = getattr(self, 'tab_calc_points')
-        self.emission_tabs['diurnal_variation'] = getattr(self, 'tab_diurnal_variation')
+        self.emission_tabs['time_varying_profiles'] = getattr(self, 'tab_time_varying_profiles')
 
         self.imaer_doc = ImaerDocument()
 
@@ -104,7 +104,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.radioButton_rd.toggled.connect(self.update_emission_tab)
         self.checkBox_bld.toggled.connect(self.update_emission_tab)
         self.checkBox_cp.toggled.connect(self.update_emission_tab)
-        self.checkBox_dv.toggled.connect(self.update_emission_tab)
+        self.checkBox_tvp.toggled.connect(self.update_emission_tab)
 
         self.edit_outfile.textChanged.connect(self.update_ok_button)
 
@@ -130,24 +130,24 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.fcb_rd_v_eft_units.addItems(ui_settings['units_veh_movements'])
         self.fcb_rd_v_eft_units.setCurrentIndex(1)  # Default to 'p/24 hour'
 
-        self.dv_model = QStandardItemModel()
-        self.dv_model.setHorizontalHeaderItem(0, QStandardItem('localId'))
-        self.dv_model.setHorizontalHeaderItem(1, QStandardItem('label'))
-        self.dv_model.setHorizontalHeaderItem(2, QStandardItem('customType'))
-        self.dv_model.setHorizontalHeaderItem(3, QStandardItem('values'))
+        self.tvp_model = QStandardItemModel()
+        self.tvp_model.setHorizontalHeaderItem(0, QStandardItem('localId'))
+        self.tvp_model.setHorizontalHeaderItem(1, QStandardItem('label'))
+        self.tvp_model.setHorizontalHeaderItem(2, QStandardItem('customType'))
+        self.tvp_model.setHorizontalHeaderItem(3, QStandardItem('values'))
 
-        self.tableView_dv.horizontalHeader().setStretchLastSection(True)
-        self.tableView_dv.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.tableView_dv.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.tableView_dv.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.tableView_tvp.horizontalHeader().setStretchLastSection(True)
+        self.tableView_tvp.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.tableView_tvp.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tableView_tvp.setSelectionMode(QAbstractItemView.SingleSelection)
 
-        self.tableView_dv.setModel(self.dv_model)
-        self.tableView_dv.resizeColumnsToContents()
+        self.tableView_tvp.setModel(self.tvp_model)
+        self.tableView_tvp.resizeColumnsToContents()
 
-        self.button_dv_add.clicked.connect(self.open_diurnal_variation_dlg)
-        self.button_dv_edit.clicked.connect(self.open_diurnal_variation_dlg)
-        self.button_dv_delete.clicked.connect(self.open_diurnal_variation_dlg)
-        self.tableView_dv.selectionModel().selectionChanged.connect(self.update_dv_buttons)
+        self.button_tvp_add.clicked.connect(self.open_time_varying_profile_dlg)
+        self.button_tvp_edit.clicked.connect(self.open_time_varying_profile_dlg)
+        self.button_tvp_delete.clicked.connect(self.open_time_varying_profile_dlg)
+        self.tableView_tvp.selectionModel().selectionChanged.connect(self.update_tvp_buttons)
 
         # Make sure the corresponding vehicle page is displayed
         self.radio_veh_page_custom.setChecked(True)
@@ -156,7 +156,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.set_fixed_options()
         self.update_field_combos()
         self.update_ok_button()
-        self.update_dv_buttons()
+        self.update_tvp_buttons()
         self.update_emission_tab()
 
     def __del__(self):
@@ -171,17 +171,17 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.btn_save_settings.clicked.disconnect(self.save_settings)
         self.btn_load_settings.clicked.disconnect(self.load_settings)
 
-        self.button_dv_add.clicked.disconnect(self.open_diurnal_variation_dlg)
-        self.button_dv_edit.clicked.disconnect(self.open_diurnal_variation_dlg)
-        self.button_dv_delete.clicked.disconnect(self.open_diurnal_variation_dlg)
-        self.tableView_dv.selectionModel().selectionChanged.disconnect(self.update_dv_buttons)
+        self.button_tvp_add.clicked.disconnect(self.open_time_varying_profile_dlg)
+        self.button_tvp_edit.clicked.disconnect(self.open_time_varying_profile_dlg)
+        self.button_tvp_delete.clicked.disconnect(self.open_time_varying_profile_dlg)
+        self.tableView_tvp.selectionModel().selectionChanged.disconnect(self.update_tvp_buttons)
 
         self.group_input_es.toggled.disconnect(self.update_emission_tab)
         self.radioButton_es.toggled.disconnect(self.update_emission_tab)
         self.radioButton_rd.toggled.disconnect(self.update_emission_tab)
         self.checkBox_bld.toggled.disconnect(self.update_emission_tab)
         self.checkBox_cp.toggled.disconnect(self.update_emission_tab)
-        self.checkBox_dv.toggled.disconnect(self.update_emission_tab)
+        self.checkBox_tvp.toggled.disconnect(self.update_emission_tab)
 
     def browse_generate_calc_input_file(self):
         if self.plugin.dev:
@@ -274,8 +274,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         else:
             sector4 = None
 
-        if self.checkBox_dv.isChecked():
-            sector5 = 'diurnal_variation'
+        if self.checkBox_tvp.isChecked():
+            sector5 = 'time_varying_profiles'
             sector_name = emission_sectors[sector5]['tab_name']
             self.tabs_mapping.insertTab(n, self.emission_tabs[sector5], sector_name)
             self.tabs_mapping.setCurrentIndex(n)
@@ -350,10 +350,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         '''
         self.buttonBox.button(QDialogButtonBox.Save).setEnabled(True)
 
-    def update_dv_buttons(self):
-        selected_rows = self.tableView_dv.selectionModel().selectedRows()
-        self.button_dv_edit.setEnabled(len(selected_rows) == 1)
-        self.button_dv_delete.setEnabled(len(selected_rows) == 1)
+    def update_tvp_buttons(self):
+        selected_rows = self.tableView_tvp.selectionModel().selectedRows()
+        self.button_tvp_edit.setEnabled(len(selected_rows) == 1)
+        self.button_tvp_delete.setEnabled(len(selected_rows) == 1)
 
     def update_adms_vehicle_page(self):
         self.stack_rd_veh_adms.setCurrentWidget(self.sender().page)
@@ -457,11 +457,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                     cp = self.get_calculation_point_from_gui(feat, geom, local_id, crs_dest_srid)
                     imaer_doc.feature_members.append(cp)
 
-        # Custom Diurnal Variation
-        if self.checkBox_dv.isChecked():
-            for row in range(self.tableView_dv.model().rowCount()):
-                dv = self.dv_model.item(row, 0).data()
-                imaer_doc.definitions.append(dv)
+        # Custom Time Varying Profile
+        if self.checkBox_tvp.isChecked():
+            for row in range(self.tableView_tvp.model().rowCount()):
+                tvp = self.tvp_model.item(row, 0).data()
+                imaer_doc.definitions.append(tvp)
 
         return imaer_doc
 
@@ -487,21 +487,21 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             else:
                 hc = None
 
-            # diurnal variation
-            dv = None
-            dv_standard = self.get_feature_value(self.fcb_es_dv_standard, feat)
-            if dv_standard is not None:
-                dv = StandardDiurnalVariation(standard_type=dv_standard)
-            dv_reference = self.get_feature_value(self.fcb_es_dv_reference, feat)
-            if dv_reference is not None:
-                dv = ReferenceDiurnalVariation(local_id=dv_reference)
+            # time varying profile
+            tvp = None
+            tvp_standard = self.get_feature_value(self.fcb_es_tvp_standard, feat)
+            if tvp_standard is not None:
+                tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+            tvp_reference = self.get_feature_value(self.fcb_es_tvp_reference, feat)
+            if tvp_reference is not None:
+                tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
 
             esc = EmissionSourceCharacteristics(
                 building_id=prim_bld,
                 emission_height=esc_height,
                 spread=esc_spread,
                 heat_content=hc,
-                diurnal_variation=dv,
+                time_varying_profile=tvp,
             )
             es.emission_source_characteristics = esc
 
@@ -543,14 +543,15 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             asc_vertical_velocity = self.get_feature_value(self.fcb_es_adms_vertical_velocity, feat)
             asc_volumetric_flow_rate = self.get_feature_value(self.fcb_es_adms_volumetric_flow_rate, feat)
 
-            # diurnal variation
-            dv = None
-            dv_standard = self.get_feature_value(self.fcb_es_dv_standard, feat)
-            if dv_standard is not None:
-                dv = StandardDiurnalVariation(standard_type=dv_standard)
-            dv_reference = self.get_feature_value(self.fcb_es_dv_reference, feat)
-            if dv_reference is not None:
-                dv = ReferenceDiurnalVariation(local_id=dv_reference)
+            # time varying profile
+            tvp = None
+            tvp_standard = self.get_feature_value(self.fcb_es_tvp_standard, feat)
+            if tvp_standard is not None:
+                tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+            tvp_reference = self.get_feature_value(self.fcb_es_tvp_reference, feat)
+            if tvp_reference is not None:
+                tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
+            print(tvp)
 
             asc = ADMSSourceCharacteristics(
                 building_id=prim_bld, height=asc_height, specific_heat_capacity=asc_heat_capacity,
@@ -559,7 +560,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 vertical_dimension=asc_vertical_dimension, buoyancy_type=asc_buoyancy_type,
                 density=asc_density, temperature=asc_temperature, efflux_type=asc_efflux_type,
                 vertical_velocity=asc_vertical_velocity, volumetric_flow_rate=asc_volumetric_flow_rate,
-                diurnal_variation=dv)
+                hourlyVariation=tvp, monthlyVariation=tvp)
             es.emission_source_characteristics = asc
 
         # emissions
@@ -698,15 +699,19 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 else:
                     es.barrier_right = rsb
 
-        # diurnal variation
-        dv_standard = self.get_feature_value(self.fcb_rd_dv_standard, feat)
-        if dv_standard is not None:
-            dv = StandardDiurnalVariation(standard_type=dv_standard)
-            es.diurnal_variation = dv
-        dv_reference = self.get_feature_value(self.fcb_rd_dv_reference, feat)
-        if dv_reference is not None:
-            dv = ReferenceDiurnalVariation(local_id=dv_reference)
-            es.diurnal_variation = dv
+        # time varying profile
+        tvp_standard = self.get_feature_value(self.fcb_rd_tvp_standard, feat)
+        if tvp_standard is not None:
+            tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+            es.time_varying_profile = tvp
+        tvp_reference = self.get_feature_value(self.fcb_rd_tvp_reference, feat)
+        if tvp_reference is not None:
+            tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
+            es.time_varying_profile = tvp
+        print(tvp)
+
+        es.hourly_variation = tvp
+        es.monthly_variation = tvp
 
         # vehicles
         vehicles = []
@@ -832,37 +837,37 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         return p
 
-    def open_diurnal_variation_dlg(self, dv=None):
-        self.plugin.log('open_dv_dlg()', user='dev')
-        if self.sender().objectName() == 'button_dv_add':
-            dv = CustomDiurnalVariation(local_id='', label='', custom_type='THREE_DAY', values=[])
+    def open_time_varying_profile_dlg(self, tvp=None):
+        self.plugin.log('open_tvp_dlg()', user='dev')
+        if self.sender().objectName() == 'button_tvp_add':
+            tvp = CustomTimeVaryingProfile(local_id='', label='', custom_type='THREE_DAY', values=[])
             row = None
         else:
-            row = self.tableView_dv.selectionModel().selectedRows()[0].row()
-            if self.sender().objectName() == 'button_dv_delete':
+            row = self.tableView_tvp.selectionModel().selectedRows()[0].row()
+            if self.sender().objectName() == 'button_tvp_delete':
                 # No need to open the dialog, just delete the row
-                self.dv_model.removeRow(row)
+                self.tvp_model.removeRow(row)
                 return
-            dv = self.dv_model.item(row, 0).data()
-        self.diurnal_variation_dlg.set_by_dv(dv)
-        self.diurnal_variation_dlg.show()
-        result = self.diurnal_variation_dlg.exec_()
+            tvp = self.tvp_model.item(row, 0).data()
+        self.time_varying_profile_dlg.set_by_tvp(tvp)
+        self.time_varying_profile_dlg.show()
+        result = self.time_varying_profile_dlg.exec_()
         if result:
-            dv = self.diurnal_variation_dlg.get_dv()
-            row = self.add_dv_to_table(dv, row)
-            self.tableView_dv.selectRow(row)
+            tvp = self.time_varying_profile_dlg.get_tvp()
+            row = self.add_tvp_to_table(tvp, row)
+            self.tableView_tvp.selectRow(row)
 
-    def add_dv_to_table(self, dv, row=None):
-        local_id_item = QStandardItem(f'{dv.local_id}')
-        local_id_item.setData(dv)
-        label_item = QStandardItem(f'{dv.label}')
-        custom_type_item = QStandardItem(f'{dv.custom_type}')
-        values_item = QStandardItem(f'{len(dv.values)} values')
+    def add_tvp_to_table(self, tvp, row=None):
+        local_id_item = QStandardItem(f'{tvp.local_id}')
+        local_id_item.setData(tvp)
+        label_item = QStandardItem(f'{tvp.label}')
+        custom_type_item = QStandardItem(f'{tvp.custom_type}')
+        values_item = QStandardItem(f'{len(tvp.values)} values')
         if row is None:
-            row = self.dv_model.rowCount()
+            row = self.tvp_model.rowCount()
         else:
-            self.dv_model.removeRow(row)
-        self.dv_model.insertRow(row, [local_id_item, label_item, custom_type_item, values_item])
+            self.tvp_model.removeRow(row)
+        self.tvp_model.insertRow(row, [local_id_item, label_item, custom_type_item, values_item])
         return row
 
     def get_feature_value(self, widget, feat, cast_to=None):

@@ -106,9 +106,9 @@
          </widget>
         </item>
         <item row="3" column="0">
-         <widget class="QCheckBox" name="checkBox_dv">
+         <widget class="QCheckBox" name="checkBox_tvp">
           <property name="text">
-           <string>Diurnal Variation</string>
+           <string>Time Varying Profiles</string>
           </property>
          </widget>
         </item>
@@ -237,7 +237,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-417</y>
             <width>594</width>
             <height>1050</height>
            </rect>
@@ -452,24 +452,24 @@
               <item row="18" column="0" colspan="2">
                <widget class="QGroupBox" name="groupBox_5">
                 <property name="title">
-                 <string>Diurnal Variation</string>
+                 <string>Time varying profile</string>
                 </property>
                 <layout class="QFormLayout" name="formLayout_17">
                  <item row="0" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_es_dv_standard"/>
+                  <widget class="QgsFieldComboBox" name="fcb_es_tvp_standard"/>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_es_dv_reference"/>
+                  <widget class="QgsFieldComboBox" name="fcb_es_tvp_reference"/>
                  </item>
                  <item row="0" column="0">
-                  <widget class="QLabel" name="label_es_dv_standard">
+                  <widget class="QLabel" name="label_es_tvp_standard">
                    <property name="text">
                     <string>standard</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <widget class="QLabel" name="label_es_dv_reference">
+                  <widget class="QLabel" name="label_es_tvp_reference">
                    <property name="text">
                     <string>reference id</string>
                    </property>
@@ -580,7 +580,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-1123</y>
+            <y>-563</y>
             <width>594</width>
             <height>1997</height>
            </rect>
@@ -1397,24 +1397,24 @@
            <item row="13" column="0" colspan="3">
             <widget class="QGroupBox" name="groupBox_4">
              <property name="title">
-              <string>Diurnal Variation</string>
+              <string>Time varying profile</string>
              </property>
              <layout class="QFormLayout" name="formLayout_9">
               <item row="0" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_rd_dv_standard"/>
+               <widget class="QgsFieldComboBox" name="fcb_rd_tvp_standard"/>
               </item>
               <item row="1" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_rd_dv_reference"/>
+               <widget class="QgsFieldComboBox" name="fcb_rd_tvp_reference"/>
               </item>
               <item row="0" column="0">
-               <widget class="QLabel" name="label_rd_dv_standard">
+               <widget class="QLabel" name="label_rd_tvp_standard">
                 <property name="text">
                  <string>standard</string>
                 </property>
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QLabel" name="label_rd_dv_reference">
+               <widget class="QLabel" name="label_rd_tvp_reference">
                 <property name="text">
                  <string>reference id</string>
                 </property>
@@ -1639,32 +1639,32 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_diurnal_variation">
+     <widget class="QWidget" name="tab_time_varying_profiles">
       <attribute name="title">
-       <string>Diurnal Variation</string>
+       <string>Time Varying Profiles</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_11">
        <item>
-        <widget class="QTableView" name="tableView_dv"/>
+        <widget class="QTableView" name="tableView_tvp"/>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QPushButton" name="button_dv_add">
+          <widget class="QPushButton" name="button_tvp_add">
            <property name="text">
             <string>Add...</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="button_dv_edit">
+          <widget class="QPushButton" name="button_tvp_edit">
            <property name="text">
             <string>Edit...</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="button_dv_delete">
+          <widget class="QPushButton" name="button_tvp_delete">
            <property name="text">
             <string>Delete</string>
            </property>
@@ -1792,7 +1792,7 @@
   <tabstop>radioButton_rd</tabstop>
   <tabstop>checkBox_bld</tabstop>
   <tabstop>checkBox_cp</tabstop>
-  <tabstop>checkBox_dv</tabstop>
+  <tabstop>checkBox_tvp</tabstop>
   <tabstop>tabs_mapping</tabstop>
   <tabstop>group_project</tabstop>
   <tabstop>combo_project_year</tabstop>
@@ -1819,8 +1819,8 @@
   <tabstop>fcb_es_adms_vertical_velocity</tabstop>
   <tabstop>fcb_es_adms_volumetric_flow_rate</tabstop>
   <tabstop>fcb_es_hc_value</tabstop>
-  <tabstop>fcb_es_dv_standard</tabstop>
-  <tabstop>fcb_es_dv_reference</tabstop>
+  <tabstop>fcb_es_tvp_standard</tabstop>
+  <tabstop>fcb_es_tvp_reference</tabstop>
   <tabstop>scrollArea_2</tabstop>
   <tabstop>combo_layer_rd</tabstop>
   <tabstop>fcb_rd_label</tabstop>
@@ -1847,8 +1847,8 @@
   <tabstop>fcb_rd_b_right_height_min</tabstop>
   <tabstop>fcb_rd_b_right_distance</tabstop>
   <tabstop>fcb_rd_b_right_porosity</tabstop>
-  <tabstop>fcb_rd_dv_standard</tabstop>
-  <tabstop>fcb_rd_dv_reference</tabstop>
+  <tabstop>fcb_rd_tvp_standard</tabstop>
+  <tabstop>fcb_rd_tvp_reference</tabstop>
   <tabstop>radio_veh_page_custom</tabstop>
   <tabstop>radio_veh_page_eft</tabstop>
   <tabstop>fcb_rd_v_custom_description</tabstop>
@@ -1889,10 +1889,10 @@
   <tabstop>fcb_cp_desc</tabstop>
   <tabstop>fcb_cp_height</tabstop>
   <tabstop>fcb_cp_category</tabstop>
-  <tabstop>tableView_dv</tabstop>
-  <tabstop>button_dv_add</tabstop>
-  <tabstop>button_dv_edit</tabstop>
-  <tabstop>button_dv_delete</tabstop>
+  <tabstop>tableView_tvp</tabstop>
+  <tabstop>button_tvp_add</tabstop>
+  <tabstop>button_tvp_edit</tabstop>
+  <tabstop>button_tvp_delete</tabstop>
   <tabstop>edit_outfile</tabstop>
   <tabstop>button_outfile</tabstop>
   <tabstop>btn_save_settings</tabstop>

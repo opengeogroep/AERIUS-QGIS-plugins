@@ -82,9 +82,9 @@ emission_sectors = {
         'tab_name': 'Calculation Points',
         'sector_id': 9997
     },
-    'diurnal_variation': {
-        'emission_tab': 'tab_diurnal_variation',
-        'tab_name': 'Diurnal Variation',
+    'time_varying_profiles': {
+        'emission_tab': 'tab_time_varying_profiles',
+        'tab_name': 'Time Varying Profiles',
         'sector_id': 9996
     }
 }
@@ -107,5 +107,6 @@ ui_settings = {
         {'name': 'Amersfoort / RD New - Netherlands', 'srid': 28992},
         {'name': 'OSGB 1936 / British National Grid', 'srid': 27700}
     ],
-    'units_veh_movements': ['p/hour', 'p/24 hour', 'p/month', 'p/year']
+    'units_veh_movements': ['p/hour', 'p/24 hour', 'p/month', 'p/year'],
+    'time_varying_profile_types': ['DAY', 'THREE_DAY', 'MONTHLY']
 }
