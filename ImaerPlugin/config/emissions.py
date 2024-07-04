@@ -91,12 +91,12 @@ emission_sectors = {
 
 ui_settings = {
     'project_years': [
-        2020, 2021, 2022, 2023, 2024,
+        2024,
         2025, 2026, 2027, 2028, 2029,
         2030, 2031, 2032, 2033, 2034,
         2035, 2036, 2037, 2038, 2039,
         2040],
-    'project_default_year': 2023,
+    'project_default_year': 2024,
     'situation_name': 'Situation 1',
     'situation_types_connect': ['DEFINED_BY_FILE', 'REFERENCE', 'PROPOSED', 'TEMPORARY'],
     'situation_types_gml': ['REFERENCE', 'PROPOSED', 'TEMPORARY', 'OFF_SITE_REDUCTION'],
