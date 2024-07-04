@@ -132,6 +132,17 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>combo_country</tabstop>
+  <tabstop>combo_crs</tabstop>
+  <tabstop>edit_work_dir</tabstop>
+  <tabstop>button_browse_work_dir</tabstop>
+  <tabstop>edit_connect_base_url</tabstop>
+  <tabstop>combo_connect_ver</tabstop>
+  <tabstop>edit_email</tabstop>
+  <tabstop>edit_key</tabstop>
+  <tabstop>button_get_key</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
