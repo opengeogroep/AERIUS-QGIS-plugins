@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>650</width>
-    <height>1023</height>
+    <height>1259</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,13 +30,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="combo_country">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_crs">
         <property name="text">
@@ -46,6 +39,13 @@
       </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="combo_crs">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="combo_country">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -237,9 +237,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-417</y>
+            <y>-443</y>
             <width>594</width>
-            <height>1050</height>
+            <height>1312</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_13">
@@ -390,6 +390,36 @@
               <item row="7" column="1">
                <widget class="QgsFieldComboBox" name="fcb_es_adms_elevation_angle"/>
               </item>
+              <item row="8" column="0">
+               <widget class="QLabel" name="label_es_adms_horizontal_angle">
+                <property name="text">
+                 <string>horizontal angle</string>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_horizontal_angle"/>
+              </item>
+              <item row="9" column="0">
+               <widget class="QLabel" name="label_es_adms_width">
+                <property name="text">
+                 <string>width</string>
+                </property>
+               </widget>
+              </item>
+              <item row="9" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_width"/>
+              </item>
+              <item row="10" column="0">
+               <widget class="QLabel" name="label_es_adms_vertical_dimension">
+                <property name="text">
+                 <string>vertical dimension</string>
+                </property>
+               </widget>
+              </item>
+              <item row="10" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_vertical_dimension"/>
+              </item>
               <item row="11" column="0">
                <widget class="QLabel" name="label_es_adms_buoyancy_type">
                 <property name="text">
@@ -399,6 +429,16 @@
               </item>
               <item row="11" column="1">
                <widget class="QgsFieldComboBox" name="fcb_es_adms_buoyancy_type"/>
+              </item>
+              <item row="12" column="0">
+               <widget class="QLabel" name="label_es_adms_density">
+                <property name="text">
+                 <string>density</string>
+                </property>
+               </widget>
+              </item>
+              <item row="12" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_density"/>
               </item>
               <item row="13" column="0">
                <widget class="QLabel" name="label_es_adms_temperature">
@@ -430,6 +470,16 @@
               <item row="15" column="1">
                <widget class="QgsFieldComboBox" name="fcb_es_adms_vertical_velocity"/>
               </item>
+              <item row="16" column="0">
+               <widget class="QLabel" name="label_es_adms_volumetric_flow_rate">
+                <property name="text">
+                 <string>volumetric flow rate</string>
+                </property>
+               </widget>
+              </item>
+              <item row="16" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_es_adms_volumetric_flow_rate"/>
+              </item>
               <item row="17" column="0" colspan="2">
                <widget class="QGroupBox" name="groupBox_heatContent">
                 <property name="title">
@@ -450,11 +500,11 @@
                </widget>
               </item>
               <item row="18" column="0" colspan="2">
-               <widget class="QGroupBox" name="groupBox_5">
+               <widget class="QGroupBox" name="groupBox_es_tvp">
                 <property name="title">
                  <string>Time varying profile</string>
                 </property>
-                <layout class="QFormLayout" name="formLayout_17">
+                <layout class="QFormLayout" name="formLayout_21">
                  <item row="0" column="1">
                   <widget class="QgsFieldComboBox" name="fcb_es_tvp_standard"/>
                  </item>
@@ -477,56 +527,6 @@
                  </item>
                 </layout>
                </widget>
-              </item>
-              <item row="8" column="0">
-               <widget class="QLabel" name="label_es_adms_horizontal_angle">
-                <property name="text">
-                 <string>horizontal angle</string>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_adms_horizontal_angle"/>
-              </item>
-              <item row="9" column="0">
-               <widget class="QLabel" name="label_es_adms_width">
-                <property name="text">
-                 <string>width</string>
-                </property>
-               </widget>
-              </item>
-              <item row="9" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_adms_width"/>
-              </item>
-              <item row="10" column="0">
-               <widget class="QLabel" name="label_es_adms_vertical_dimension">
-                <property name="text">
-                 <string>vertical dimension</string>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_adms_vertical_dimension"/>
-              </item>
-              <item row="12" column="0">
-               <widget class="QLabel" name="label_es_adms_density">
-                <property name="text">
-                 <string>density</string>
-                </property>
-               </widget>
-              </item>
-              <item row="12" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_adms_density"/>
-              </item>
-              <item row="16" column="0">
-               <widget class="QLabel" name="label_es_adms_volumetric_flow_rate">
-                <property name="text">
-                 <string>volumetric flow rate</string>
-                </property>
-               </widget>
-              </item>
-              <item row="16" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_es_adms_volumetric_flow_rate"/>
               </item>
              </layout>
             </widget>
@@ -560,6 +560,73 @@
              </layout>
             </widget>
            </item>
+           <item row="5" column="0" colspan="2">
+            <widget class="QGroupBox" name="groupBox_es_tvp_adms">
+             <property name="title">
+              <string>Time varying profile</string>
+             </property>
+             <layout class="QFormLayout" name="formLayout_22">
+              <item row="2" column="0" colspan="2">
+               <widget class="QGroupBox" name="groupBox_es_tvp_adms_hourly">
+                <property name="title">
+                 <string>Hourly</string>
+                </property>
+                <layout class="QFormLayout" name="formLayout_23">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_es_tvp_adms_hourly_standard">
+                   <property name="text">
+                    <string>standard</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_es_tvp_adms_hourly_standard"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_es_tvp_adms_hourly_reference">
+                   <property name="text">
+                    <string>reference id</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_es_tvp_adms_hourly_reference"/>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="3" column="0" colspan="2">
+               <widget class="QGroupBox" name="groupBox_es_tvp_adms_monthly">
+                <property name="title">
+                 <string>Monthly</string>
+                </property>
+                <layout class="QFormLayout" name="formLayout_24">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_es_tvp_adms_monthly_standard">
+                   <property name="text">
+                    <string>standard</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_es_tvp_adms_monthly_standard"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_es_tvp_adms_monthly_reference">
+                   <property name="text">
+                    <string>reference id</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_es_tvp_adms_monthly_reference"/>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
           </layout>
          </widget>
         </widget>
@@ -580,13 +647,364 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-563</y>
+            <y>-791</y>
             <width>594</width>
-            <height>1997</height>
+            <height>2265</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout">
-           <item row="14" column="0" colspan="3">
+           <item row="0" column="0" colspan="3">
+            <widget class="QGroupBox" name="groupBox_2">
+             <property name="title">
+              <string>Input layer</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_18">
+              <item row="0" column="0">
+               <widget class="QgsMapLayerComboBox" name="combo_layer_rd"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="12" column="0" colspan="3">
+            <widget class="QGroupBox" name="groupBox_rd_barriers">
+             <property name="title">
+              <string>Road side barriers</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_9">
+              <item row="0" column="0">
+               <widget class="QGroupBox" name="groupBox_rd_b_left">
+                <property name="title">
+                 <string>Left</string>
+                </property>
+                <layout class="QFormLayout" name="formLayout_11">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_rd_b_left_type">
+                   <property name="text">
+                    <string>type</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_type"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_rd_b_left_height">
+                   <property name="text">
+                    <string>height</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_height"/>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_rd_b_left_height_av">
+                   <property name="text">
+                    <string>average height</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_height_av"/>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_rd_b_left_height_max">
+                   <property name="text">
+                    <string>maximum height</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_height_max"/>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_rd_b_left_height_min">
+                   <property name="text">
+                    <string>minimum height</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_height_min"/>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="label_rd_b_left_distance">
+                   <property name="text">
+                    <string>distance</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_distance"/>
+                 </item>
+                 <item row="6" column="0">
+                  <widget class="QLabel" name="label_rd_b_left_porosity">
+                   <property name="text">
+                    <string>porosity</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_porosity"/>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QGroupBox" name="groupBox_rd_b_right">
+                <property name="title">
+                 <string>Right</string>
+                </property>
+                <layout class="QFormLayout" name="formLayout_10">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_rd_b_right_type">
+                   <property name="text">
+                    <string>type</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_type"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_rd_b_right_height">
+                   <property name="text">
+                    <string>height</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_height"/>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_rd_b_right_height_av">
+                   <property name="text">
+                    <string>average height</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_height_av"/>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_rd_b_right_height_max">
+                   <property name="text">
+                    <string>maximum height</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_height_max"/>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_rd_b_right_height_min">
+                   <property name="text">
+                    <string>minimum height</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_height_min"/>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="label_rd_b_right_distance">
+                   <property name="text">
+                    <string>distance</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_distance"/>
+                 </item>
+                 <item row="6" column="0">
+                  <widget class="QLabel" name="label_rd_b_right_porosity">
+                   <property name="text">
+                    <string>porosity</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_porosity"/>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="16" column="1">
+            <spacer name="verticalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="0" colspan="3">
+            <layout class="QFormLayout" name="formLayout_12">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_rd_label">
+               <property name="text">
+                <string>label</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QgsFieldComboBox" name="fcb_rd_label"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_rd_description">
+               <property name="text">
+                <string>description</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QgsFieldComboBox" name="fcb_rd_description"/>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_rd_area_type">
+               <property name="text">
+                <string>area type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QgsFieldComboBox" name="fcb_rd_area_type"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_rd_type">
+               <property name="text">
+                <string>type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QgsFieldComboBox" name="fcb_rd_type"/>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_rd_width">
+               <property name="text">
+                <string>width</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QgsFieldComboBox" name="fcb_rd_width"/>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_rd_elevation">
+               <property name="text">
+                <string>elevation</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QgsFieldComboBox" name="fcb_rd_elevation"/>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="label_rd_gradient">
+               <property name="text">
+                <string>gradient</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="QgsFieldComboBox" name="fcb_rd_gradient"/>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="label_rd_coverage">
+               <property name="text">
+                <string>coverage</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="1">
+              <widget class="QgsFieldComboBox" name="fcb_rd_coverage"/>
+             </item>
+             <item row="8" column="0">
+              <widget class="QLabel" name="label_rd_tunnel_factor">
+               <property name="text">
+                <string>tunnel factor</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="1">
+              <widget class="QgsFieldComboBox" name="fcb_rd_tunnel_factor"/>
+             </item>
+             <item row="9" column="0">
+              <widget class="QLabel" name="label_rd_elevation_height">
+               <property name="text">
+                <string>elevation height</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="1">
+              <widget class="QgsFieldComboBox" name="fcb_rd_elevation_height"/>
+             </item>
+            </layout>
+           </item>
+           <item row="17" column="1">
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="13" column="0" colspan="3">
+            <widget class="QGroupBox" name="groupBox_rd_tvp">
+             <property name="title">
+              <string>Time varying profile</string>
+             </property>
+             <layout class="QFormLayout" name="formLayout_9">
+              <item row="0" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_rd_tvp_standard"/>
+              </item>
+              <item row="1" column="1">
+               <widget class="QgsFieldComboBox" name="fcb_rd_tvp_reference"/>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_rd_tvp_standard">
+                <property name="text">
+                 <string>standard</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_rd_tvp_reference">
+                <property name="text">
+                 <string>reference id</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="18" column="1">
+            <spacer name="verticalSpacer_8">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="15" column="0" colspan="3">
             <widget class="QGroupBox" name="groupBox_rd_vehicles">
              <property name="title">
               <string>Vehicles</string>
@@ -1072,352 +1490,68 @@
              </layout>
             </widget>
            </item>
-           <item row="16" column="1">
-            <spacer name="verticalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="17" column="1">
-            <spacer name="verticalSpacer_8">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="15" column="1">
-            <spacer name="verticalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="1" column="0" colspan="3">
-            <layout class="QFormLayout" name="formLayout_12">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_rd_label">
-               <property name="text">
-                <string>label</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QgsFieldComboBox" name="fcb_rd_label"/>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_rd_description">
-               <property name="text">
-                <string>description</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QgsFieldComboBox" name="fcb_rd_description"/>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_rd_area_type">
-               <property name="text">
-                <string>area type</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QgsFieldComboBox" name="fcb_rd_area_type"/>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="label_rd_type">
-               <property name="text">
-                <string>type</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QgsFieldComboBox" name="fcb_rd_type"/>
-             </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="label_rd_width">
-               <property name="text">
-                <string>width</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
-              <widget class="QgsFieldComboBox" name="fcb_rd_width"/>
-             </item>
-             <item row="5" column="0">
-              <widget class="QLabel" name="label_rd_elevation">
-               <property name="text">
-                <string>elevation</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="1">
-              <widget class="QgsFieldComboBox" name="fcb_rd_elevation"/>
-             </item>
-             <item row="6" column="0">
-              <widget class="QLabel" name="label_rd_gradient">
-               <property name="text">
-                <string>gradient</string>
-               </property>
-              </widget>
-             </item>
-             <item row="6" column="1">
-              <widget class="QgsFieldComboBox" name="fcb_rd_gradient"/>
-             </item>
-             <item row="7" column="0">
-              <widget class="QLabel" name="label_rd_coverage">
-               <property name="text">
-                <string>coverage</string>
-               </property>
-              </widget>
-             </item>
-             <item row="7" column="1">
-              <widget class="QgsFieldComboBox" name="fcb_rd_coverage"/>
-             </item>
-             <item row="8" column="0">
-              <widget class="QLabel" name="label_rd_tunnel_factor">
-               <property name="text">
-                <string>tunnel factor</string>
-               </property>
-              </widget>
-             </item>
-             <item row="8" column="1">
-              <widget class="QgsFieldComboBox" name="fcb_rd_tunnel_factor"/>
-             </item>
-             <item row="9" column="0">
-              <widget class="QLabel" name="label_rd_elevation_height">
-               <property name="text">
-                <string>elevation height</string>
-               </property>
-              </widget>
-             </item>
-             <item row="9" column="1">
-              <widget class="QgsFieldComboBox" name="fcb_rd_elevation_height"/>
-             </item>
-            </layout>
-           </item>
-           <item row="12" column="0" colspan="3">
-            <widget class="QGroupBox" name="groupBox_rd_barriers">
-             <property name="title">
-              <string>Road side barriers</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_9">
-              <item row="0" column="0">
-               <widget class="QGroupBox" name="groupBox_rd_b_left">
-                <property name="title">
-                 <string>Left</string>
-                </property>
-                <layout class="QFormLayout" name="formLayout_11">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_rd_b_left_type">
-                   <property name="text">
-                    <string>type</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_type"/>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_rd_b_left_height">
-                   <property name="text">
-                    <string>height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_height"/>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_rd_b_left_height_av">
-                   <property name="text">
-                    <string>average height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_height_av"/>
-                 </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="label_rd_b_left_height_max">
-                   <property name="text">
-                    <string>maximum height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_height_max"/>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label_rd_b_left_height_min">
-                   <property name="text">
-                    <string>minimum height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_height_min"/>
-                 </item>
-                 <item row="5" column="0">
-                  <widget class="QLabel" name="label_rd_b_left_distance">
-                   <property name="text">
-                    <string>distance</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="5" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_distance"/>
-                 </item>
-                 <item row="6" column="0">
-                  <widget class="QLabel" name="label_rd_b_left_porosity">
-                   <property name="text">
-                    <string>porosity</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_left_porosity"/>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QGroupBox" name="groupBox_rd_b_right">
-                <property name="title">
-                 <string>Right</string>
-                </property>
-                <layout class="QFormLayout" name="formLayout_10">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_rd_b_right_type">
-                   <property name="text">
-                    <string>type</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_type"/>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_rd_b_right_height">
-                   <property name="text">
-                    <string>height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_height"/>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_rd_b_right_height_av">
-                   <property name="text">
-                    <string>average height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_height_av"/>
-                 </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="label_rd_b_right_height_max">
-                   <property name="text">
-                    <string>maximum height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_height_max"/>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label_rd_b_right_height_min">
-                   <property name="text">
-                    <string>minimum height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_height_min"/>
-                 </item>
-                 <item row="5" column="0">
-                  <widget class="QLabel" name="label_rd_b_right_distance">
-                   <property name="text">
-                    <string>distance</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="5" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_distance"/>
-                 </item>
-                 <item row="6" column="0">
-                  <widget class="QLabel" name="label_rd_b_right_porosity">
-                   <property name="text">
-                    <string>porosity</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="1">
-                  <widget class="QgsFieldComboBox" name="fcb_rd_b_right_porosity"/>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="0" column="0" colspan="3">
-            <widget class="QGroupBox" name="groupBox_2">
-             <property name="title">
-              <string>Input layer</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_18">
-              <item row="0" column="0">
-               <widget class="QgsMapLayerComboBox" name="combo_layer_rd"/>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="13" column="0" colspan="3">
-            <widget class="QGroupBox" name="groupBox_4">
+           <item row="14" column="0" colspan="3">
+            <widget class="QGroupBox" name="groupBox_rd_tvp_adms">
              <property name="title">
               <string>Time varying profile</string>
              </property>
-             <layout class="QFormLayout" name="formLayout_9">
-              <item row="0" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_rd_tvp_standard"/>
-              </item>
-              <item row="1" column="1">
-               <widget class="QgsFieldComboBox" name="fcb_rd_tvp_reference"/>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_rd_tvp_standard">
-                <property name="text">
-                 <string>standard</string>
+             <layout class="QFormLayout" name="formLayout_18">
+              <item row="2" column="0" colspan="2">
+               <widget class="QGroupBox" name="groupBox_rd_tvp_adms_hourly">
+                <property name="title">
+                 <string>Hourly</string>
                 </property>
+                <layout class="QFormLayout" name="formLayout_19">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_rd_tvp_adms_hourly_standard">
+                   <property name="text">
+                    <string>standard</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_tvp_adms_hourly_standard"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_rd_tvp_adms_hourly_reference">
+                   <property name="text">
+                    <string>reference id</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_tvp_adms_hourly_reference"/>
+                 </item>
+                </layout>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_rd_tvp_reference">
-                <property name="text">
-                 <string>reference id</string>
+              <item row="3" column="0" colspan="2">
+               <widget class="QGroupBox" name="groupBox_rd_tvp_adms_monthly">
+                <property name="title">
+                 <string>Monthly</string>
                 </property>
+                <layout class="QFormLayout" name="formLayout_20">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_rd_tvp_adms_monthly_standard">
+                   <property name="text">
+                    <string>standard</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_tvp_adms_monthly_standard"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_rd_tvp_adms_monthly_reference">
+                   <property name="text">
+                    <string>reference id</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QgsFieldComboBox" name="fcb_rd_tvp_adms_monthly_reference"/>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
@@ -1445,7 +1579,7 @@
             <x>0</x>
             <y>0</y>
             <width>608</width>
-            <height>633</height>
+            <height>869</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1545,7 +1679,7 @@
             <x>0</x>
             <y>0</y>
             <width>608</width>
-            <height>633</height>
+            <height>869</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -1819,8 +1953,6 @@
   <tabstop>fcb_es_adms_vertical_velocity</tabstop>
   <tabstop>fcb_es_adms_volumetric_flow_rate</tabstop>
   <tabstop>fcb_es_hc_value</tabstop>
-  <tabstop>fcb_es_tvp_standard</tabstop>
-  <tabstop>fcb_es_tvp_reference</tabstop>
   <tabstop>scrollArea_2</tabstop>
   <tabstop>combo_layer_rd</tabstop>
   <tabstop>fcb_rd_label</tabstop>

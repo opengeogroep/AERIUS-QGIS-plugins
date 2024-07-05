@@ -23,6 +23,7 @@ emission_sectors = {
                     'label_rd_b_right_height_max', 'fcb_rd_b_right_height_max',
                     'label_rd_b_right_height_min', 'fcb_rd_b_right_height_min',
                     'label_rd_b_right_porosity', 'fcb_rd_b_right_porosity',
+                    'groupBox_rd_tvp_adms',
                 ],
                 'vehicle_page': 'page_veh_srm2'
             },
@@ -32,6 +33,7 @@ emission_sectors = {
                     'label_rd_elevation_height', 'fcb_rd_elevation_height',
                     'label_rd_b_left_height', 'fcb_rd_b_left_height',
                     'label_rd_b_right_height', 'fcb_rd_b_right_height',
+                    'groupBox_rd_tvp',
                 ],
                 'vehicle_page': 'page_veh_adms'
             }
@@ -61,6 +63,7 @@ emission_sectors = {
                     'label_es_adms_efflux_type', 'fcb_es_adms_efflux_type',
                     'label_es_adms_vertical_velocity', 'fcb_es_adms_vertical_velocity',
                     'label_es_adms_volumetric_flow_rate', 'fcb_es_adms_volumetric_flow_rate',
+                    'groupBox_es_tvp_adms',
                 ]
             },
             'UK': {
@@ -68,6 +71,7 @@ emission_sectors = {
                     'label_es_emission_height', 'fcb_es_emission_height',
                     'label_es_spread', 'fcb_es_spread',
                     'groupBox_heatContent',
+                    'groupBox_es_tvp',
                 ],
             }
         }

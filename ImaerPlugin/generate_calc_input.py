@@ -290,7 +290,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         for sector in [sector1, sector2, sector3, sector4, sector5]:
             if sector in emission_sectors and 'ui_settings' in emission_sectors[sector]:
-                # Running this loop twice because looping all objects of the QWidget
+                # Running this loop multiple times because looping all objects of the QWidget
                 # class resulted in a frozen dialog.
                 for widget in self.findChildren(QgsFieldComboBox):
                     if widget.objectName() in emission_sectors[sector]['ui_settings'][country]['disable_widgets']:
@@ -543,16 +543,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             asc_vertical_velocity = self.get_feature_value(self.fcb_es_adms_vertical_velocity, feat)
             asc_volumetric_flow_rate = self.get_feature_value(self.fcb_es_adms_volumetric_flow_rate, feat)
 
-            # time varying profile
-            tvp = None
-            tvp_standard = self.get_feature_value(self.fcb_es_tvp_standard, feat)
-            if tvp_standard is not None:
-                tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
-            tvp_reference = self.get_feature_value(self.fcb_es_tvp_reference, feat)
-            if tvp_reference is not None:
-                tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
-            print(tvp)
-
             asc = ADMSSourceCharacteristics(
                 building_id=prim_bld, height=asc_height, specific_heat_capacity=asc_heat_capacity,
                 source_type=asc_source_type, diameter=asc_diameter, elevation_angle=asc_elevation_angle,
@@ -562,6 +552,29 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 vertical_velocity=asc_vertical_velocity, volumetric_flow_rate=asc_volumetric_flow_rate,
                 hourlyVariation=tvp, monthlyVariation=tvp)
             es.emission_source_characteristics = asc
+
+        # time varying profiles
+        # hourly
+        hourly_tvp = None
+        tvp_standard = self.get_feature_value(self.fcb_es_tvp_adms_hourly_standard, feat)
+        if tvp_standard is not None:
+            hourly_tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+        tvp_reference = self.get_feature_value(self.fcb_es_tvp_adms_hourly_reference, feat)
+        if tvp_reference is not None:
+            hourly_tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
+
+        es.hourly_variation = hourly_tvp
+
+        # monthly
+        monthly_tvp = None
+        tvp_standard = self.get_feature_value(self.fcb_es_tvp_adms_monthly_standard, feat)
+        if tvp_standard is not None:
+            monthly_tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+        tvp_reference = self.get_feature_value(self.fcb_es_tvp_adms_monthly_reference, feat)
+        if tvp_reference is not None:
+            monthly_tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
+
+        es.monthly_variation = monthly_tvp
 
         # emissions
         es.emissions = []
@@ -700,18 +713,27 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                     es.barrier_right = rsb
 
         # time varying profile
-        tvp_standard = self.get_feature_value(self.fcb_rd_tvp_standard, feat)
+        # hourly
+        hourly_tvp = None
+        tvp_standard = self.get_feature_value(self.fcb_rd_tvp_adms_hourly_standard, feat)
         if tvp_standard is not None:
-            tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
-            es.time_varying_profile = tvp
-        tvp_reference = self.get_feature_value(self.fcb_rd_tvp_reference, feat)
+            hourly_tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+        tvp_reference = self.get_feature_value(self.fcb_rd_tvp_adms_hourly_reference, feat)
         if tvp_reference is not None:
-            tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
-            es.time_varying_profile = tvp
-        print(tvp)
+            hourly_tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
 
-        es.hourly_variation = tvp
-        es.monthly_variation = tvp
+        es.hourly_variation = hourly_tvp
+
+        # monthly
+        monthly_tvp = None
+        tvp_standard = self.get_feature_value(self.fcb_rd_tvp_adms_monthly_standard, feat)
+        if tvp_standard is not None:
+            monthly_tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+        tvp_reference = self.get_feature_value(self.fcb_rd_tvp_adms_monthly_reference, feat)
+        if tvp_reference is not None:
+            monthly_tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
+
+        es.monthly_variation = monthly_tvp
 
         # vehicles
         vehicles = []
