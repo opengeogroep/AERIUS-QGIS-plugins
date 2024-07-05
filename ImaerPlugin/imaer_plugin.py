@@ -471,15 +471,7 @@ class ImaerPlugin:
         result = self.generate_calc_input_dlg.exec_()
         # print(result)
         if result:
-            self.log('starting calcinput generation ...', user='user')
-            imaer_doc = self.generate_calc_input_dlg.get_imaer_doc_from_gui()
-            if imaer_doc is None:  # Something went wrong during IMAER doc generation...
-                self.log('Something went wrong during IMAER doc generation.')
-                return
-            fn = self.generate_calc_input_dlg.edit_outfile.text()
-            imaer_doc.to_xml_file(fn)
-            self.log('Imaer GML file saved as: <a href="{0}">{0}</a>'.format(fn), lvl='Info', bar=True, duration=10)
-        # self.log('Could not export GML file to {0}'.format(fn), lvl='Critical', bar=True, duration=10)
+            self.generate_calc_input_dlg.generate_imaer_gml()
 
     def update_all_widgets(self):
         self.update_crs_widgets()

@@ -20,7 +20,8 @@ from qgis.PyQt.QtWidgets import (
 )
 from qgis.PyQt.QtGui import (
     QStandardItem,
-    QStandardItemModel
+    QStandardItemModel,
+    QTextDocument
 )
 
 from qgis.PyQt import uic
@@ -357,6 +358,16 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     def update_adms_vehicle_page(self):
         self.stack_rd_veh_adms.setCurrentWidget(self.sender().page)
+
+    def generate_imaer_gml(self):
+        self.plugin.log('starting calcinput generation ...', user='user')
+        imaer_doc = self.get_imaer_doc_from_gui()
+        if imaer_doc is None:  # Something went wrong during IMAER doc generation...
+            self.plugin.log('Something went wrong during IMAER doc generation.')
+            return
+        fn = self.edit_outfile.text()
+        imaer_doc.to_xml_file(fn)
+        self.plugin.log('Imaer GML file saved as: <a href="{0}">{0}</a>'.format(fn), lvl='Info', bar=True, duration=10)
 
     def get_imaer_doc_from_gui(self):
         '''Maps items from GUI widgets to IMAER object'''
@@ -917,60 +928,93 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 return result.toString()
         return value
 
-    def save_settings(self):
-        work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
-        if work_dir is None:
-            raise Exception('Work dir not set')
-            return
-        # TODO: choose file name
-        base_name = 'generate_gml_config.json'
-        out_fn = os.path.join(work_dir, base_name)
-        # print(out_fn)
-        field_dict = self.collect_field_settings()
+    def save_settings(self, out_fn=None):
+        if out_fn is None:
+            work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
+            if work_dir is None:
+                raise Exception('Work dir not set')
+                return
+            # TODO: choose file name
+            base_name = 'generate_gml_config.json'
+            out_fn = os.path.join(work_dir, base_name)
+        field_dict = self.collect_settings()
         txt = json.dumps(field_dict, indent=4)
         with open(out_fn, 'w') as out_file:
             out_file.write(txt)
 
-    def load_settings(self):
-        work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
-        if work_dir is None:
-            raise Exception('Work dir not set')
-            return
-        # TODO: choose file name
-        base_name = 'generate_gml_config.json'
-        out_fn = os.path.join(work_dir, base_name)
-        # print(out_fn)
+    def load_settings(self, in_fn=None):
+        if in_fn is None:
+            work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
+            if work_dir is None:
+                raise Exception('Work dir not set')
+                return
+            # TODO: choose file name
+            base_name = 'generate_gml_config.json'
+            in_fn = os.path.join(work_dir, base_name)
 
-        with open(out_fn, 'r') as out_file:
-            txt = out_file.read()
+        with open(in_fn, 'r') as in_file:
+            txt = in_file.read()
+        settings_cfg = json.loads(txt)
 
-        field_dict = json.loads(txt)
-
-        if 'imaer_plugin_version' not in field_dict:
+        if 'imaer_plugin_version' not in settings_cfg:
             self.plugin.log('This is not a valid field configuration file', lvl='Warning', bar=True)
             return
 
-        self.set_field_settings(field_dict['fields'])
+        self.set_settings(settings_cfg)
         self.plugin.log('Configuration file loaded', bar=True)
 
-    def collect_field_settings(self):
+    def collect_settings(self):
         '''Collects a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
         result = {}
-        result['imaer_plugin_version'] = 1
+        result['imaer_plugin_version'] = self.plugin.version
+        # options
+        result['options'] = {}
+        widget_names = ['group_input_es', 'radioButton_es', 'radioButton_rd', 
+            'checkBox_bld', 'checkBox_cp', 'checkBox_tvp',
+            'combo_project_year', 'edit_project_description',
+            'group_situation', 'edit_situation_name', 'combo_situation_type',
+            'radio_veh_page_custom', 'radio_veh_page_eft', 'fcb_rd_v_eft_units',
+        ]
+        for widget_name in widget_names:
+            widget = getattr(self, widget_name)
+            print(widget)
+            if widget.__class__.__name__ in ['QGroupBox', 'QRadioButton', 'QCheckBox']:
+                result['options'][widget_name] = widget.isChecked()
+            if widget.__class__.__name__ == 'QComboBox':
+                result['options'][widget_name] = widget.currentText()
+            if widget.__class__.__name__ == 'QLineEdit':
+                result['options'][widget_name] = widget.text()
+            if widget.__class__.__name__ == 'QTextEdit':
+                result['options'][widget_name] = widget.toPlainText()
+        # fields
         result['fields'] = {}
         for fcb in self.findChildren(QgsFieldComboBox):
             k = fcb.objectName()
             v = fcb.currentText()
             result['fields'][k] = v
+
         return result
 
-    def set_field_settings(self, field_cfg):
+    def set_settings(self, settings_cfg):
         '''Sets texts from a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
+        # options
+        for widget_name, v in settings_cfg['options'].items():
+            widget = getattr(self, widget_name)
+            if widget.__class__.__name__ in ['QGroupBox', 'QRadioButton', 'QCheckBox']:
+                widget.setChecked(v)
+            if widget.__class__.__name__ == 'QComboBox':
+                widget.setCurrentText(v)
+            if widget.__class__.__name__ == 'QLineEdit':
+                widget.setText(v)
+            if widget.__class__.__name__ == 'QTextEdit':
+                widget.setDocument(QTextDocument(v))
+
+        # fields
         for fcb in self.findChildren(QgsFieldComboBox):
             widget_name = fcb.objectName()
-            if widget_name not in field_cfg:
+            if widget_name not in settings_cfg['fields']:
                 continue
-            new_field = field_cfg[widget_name]
+            new_field = settings_cfg['fields'][widget_name]
             if new_field == '':
                 fcb.setCurrentIndex(0)  # Make empty
                 continue
