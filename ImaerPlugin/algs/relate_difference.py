@@ -86,7 +86,7 @@ class RelateDifferenceAlgorithm(RelateAlgorithm):
             raise QgsProcessingException(f'No IMAER layer type found')
         elif len(layer_types) > 1:
             raise QgsProcessingException(f'Multiple IMAER layer types found')
-        
+
         layer_type = layer_types[0]
 
         for layer in [layer_1, layer_2]:
@@ -96,7 +96,7 @@ class RelateDifferenceAlgorithm(RelateAlgorithm):
 
             if value_dict is None:
                 raise QgsProcessingException(f'"{layer_name}" is not a valid deposition layer.')
-            
+
             result_value_dicts.append(value_dict)
 
             feedback.setProgress(int(current * step))
@@ -138,22 +138,21 @@ class RelateDifferenceAlgorithm(RelateAlgorithm):
 
         return {self.OUTPUT: dest_id}
 
-
     def _calc_dict_difference(self, result_value_dict_1, result_value_dict_2):
         result = {}
 
         for id in result_value_dict_1:
             for substance, value in result_value_dict_1[id].items():
-                if not id in result:
+                if id not in result:
                     result[id] = {}
-                if not substance in result[id]:
+                if substance not in result[id]:
                     result[id][substance] = value
 
         for id in result_value_dict_2:
             for substance, value in result_value_dict_2[id].items():
-                if not id in result:
+                if id not in result:
                     result[id] = {}
-                    if not substance in result[id]:
+                    if substance not in result[id]:
                         if value is None:
                             result[id][substance] = value
                         else:

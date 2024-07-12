@@ -77,7 +77,7 @@ class CustomTimeVaryingProfile(TimeVaryingProfile):
 
     def values_to_csv(self):
         # print('values_to_csv')
-        
+
         # Return empty string for new objects
         if len(self.values) == 0:
             return ''
@@ -115,12 +115,12 @@ class CustomTimeVaryingProfile(TimeVaryingProfile):
                     return False
             if len(values) == num_cols:
                 recs.append(values)
-        
+
         result = []
         for rec in recs:
             for value in rec:
                 result.append(value)
-        
+
         if not (num_rows * num_cols) == len(result):
             return False
 

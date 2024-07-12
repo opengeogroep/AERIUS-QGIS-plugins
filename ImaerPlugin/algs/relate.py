@@ -30,7 +30,7 @@ from ImaerPlugin.gpkg import ImaerGpkgFieldFactory
 
 class RelateAlgorithm(QgsProcessingAlgorithm):
     # Abstract base class for all relate algorithms
-    
+
     geometry_cache = {}
     field_factory = ImaerGpkgFieldFactory()
     output_field_names_dict = {}
@@ -58,7 +58,7 @@ class RelateAlgorithm(QgsProcessingAlgorithm):
 
         if layer_type not in self.output_field_names_dict:
             self.output_field_names_dict[layer_type] = self.field_factory.create_fields_for_layer_type(layer_type).names()
-        
+
         output_field_names = self.output_field_names_dict[layer_type]
 
         attributes = []
@@ -68,7 +68,7 @@ class RelateAlgorithm(QgsProcessingAlgorithm):
                 attributes.append(int(part))
         else:
             attributes.append(key)
-        
+
         num_id_fields = len(attributes)
 
         for output_field_name in output_field_names[num_id_fields:]:
@@ -88,19 +88,19 @@ class RelateAlgorithm(QgsProcessingAlgorithm):
         Returns None if not all deposition fields and an "fid" field exist,
         which will abort the calculation.
         '''
-        
+
         layer_type = self.get_layer_type(layer)
         if layer_type is None:
             return None
         if feedback is not None:
             feedback.pushInfo(repr(layer_type))
-        
+
         value_fields = self.field_factory.create_fields_for_layer_type(layer_type, value_fields_only=True)
         value_field_names = value_fields.names()
 
         if feedback is not None:
             feedback.pushInfo(repr(value_field_names))
-        
+
         result = {}
         for feat in layer.getFeatures():
             if layer_type in ['receptor_points', 'receptor_hexagons']:

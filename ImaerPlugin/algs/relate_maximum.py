@@ -71,15 +71,15 @@ class RelateMaximumAlgorithm(RelateAlgorithm):
             raise QgsProcessingException(f'No IMAER layer type found')
         elif len(layer_types) > 1:
             raise QgsProcessingException(f'Multiple IMAER layer types found')
-        
+
         layer_type = layer_types[0]
 
         for layer in layers:
             layer_name = layer.name()
             feedback.pushInfo(layer_name)
-            
+
             value_dict = self._create_value_dictionary(layer, feedback)
-            #feedback.pushInfo(repr(value_dict))
+            # feedback.pushInfo(repr(value_dict))
 
             if value_dict is None:
                 raise QgsProcessingException(f'"{layer_name}" is not a valid deposition layer.')
@@ -127,12 +127,11 @@ class RelateMaximumAlgorithm(RelateAlgorithm):
         result = {}
         for in_dep_dict in result_value_dicts:
             for id in in_dep_dict:
-                #print(id)
                 for substance, value in in_dep_dict[id].items():
-                    #print(substance, value)
-                    if not id in result:
+                    # print(substance, value)
+                    if id not in result:
                         result[id] = {}
-                    if not substance in result[id]:
+                    if substance not in result[id]:
                         result[id][substance] = value
                     else:
                         old_value = result[id][substance]
@@ -141,4 +140,4 @@ class RelateMaximumAlgorithm(RelateAlgorithm):
                         else:
                             if value is not None:
                                 result[id][substance] = max(old_value, value)
-        return result   
+        return result

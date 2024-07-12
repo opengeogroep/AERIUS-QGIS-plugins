@@ -970,7 +970,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         result['imaer_plugin_version'] = self.plugin.version
         # options
         result['options'] = {}
-        widget_names = ['group_input_es', 'radioButton_es', 'radioButton_rd', 
+        widget_names = ['group_input_es', 'radioButton_es', 'radioButton_rd',
             'checkBox_bld', 'checkBox_cp', 'checkBox_tvp',
             'combo_project_year', 'edit_project_description',
             'group_situation', 'edit_situation_name', 'combo_situation_type',

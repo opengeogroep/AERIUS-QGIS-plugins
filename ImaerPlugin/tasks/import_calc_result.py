@@ -42,7 +42,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         self.log(self.gpkg_fn)
 
         self.setProgress(1)  # Cause setting to 0% does not work.
-        
+
         doc = ImaerDocument()
         doc.from_xml_file(self.gml_fn)
         self.log(str(doc))
@@ -100,13 +100,13 @@ class ImportImaerCalculatorResultTask(QgsTask):
                     gpkg.create_layer_receptor_hexagons(epsg_id)
                     receptor_hexagons_layer = QgsVectorLayer(f'{self.gpkg_fn}|layername=receptor_hexagons', 'receptor_hexagons', 'ogr')
                     receptor_hexagons_layer.startEditing()
-                
+
                 feat = member.to_point_feature()
                 receptor_points_layer.addFeature(feat)
-                
+
                 feat = member.to_polygon_feature()
                 receptor_hexagons_layer.addFeature(feat)
-                
+
                 member_cnt += 1
             elif member.__class__.__name__ == 'SubPoint':
                 if sub_points_layer is None:
@@ -139,14 +139,14 @@ class ImportImaerCalculatorResultTask(QgsTask):
             sub_points_layer.commitChanges()
         if calculation_points_layer is not None:
             calculation_points_layer.commitChanges()
-        
+
         self.setProgress(100)
 
         return True
 
     def finished(self, result):
-        #self.log('finished task')
-        #self.log(result)
+        # self.log('finished task')
+        # self.log(result)
         self.load_layer_callback(self.gpkg_fn, make_groups=True)
 
     def cancel(self):
@@ -158,4 +158,3 @@ class ImportImaerCalculatorResultTask(QgsTask):
     def log(self, message, tab='IMAER'):
         if self.do_log:
             QgsMessageLog.logMessage(repr(message), tab, level=Qgis.Info)
-

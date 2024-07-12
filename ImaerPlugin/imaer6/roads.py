@@ -99,7 +99,7 @@ class CustomVehicle(Vehicle):
 
             elem = em.to_xml_elem(doc)
             em_elem.appendChild(elem)
-            
+
             result.appendChild(em_elem)
 
         return result

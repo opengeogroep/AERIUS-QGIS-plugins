@@ -48,6 +48,7 @@ class VersionNumber():
     def __ge__(self, other):
         return self.to_integer() >= other.to_integer()
 
+
 if __name__ == '__main__':
     print('Running tests...')
     vn = VersionNumber()

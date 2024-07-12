@@ -1,10 +1,8 @@
-#from PyQt5.QtXml import QDomDocument
-
 from qgis.core import QgsFeature
 
-#from .generic import xml_reader_to_current_node
 from .geometry import GmlPoint, GmlPolygon
 from .identifier import Nen3610Id
+
 
 class CalculationResult(object):
 
@@ -15,7 +13,7 @@ class CalculationResult(object):
 
     def __str__(self):
         return f'CalculationResult[{self.result_type}, {self.substance}, {self.value}]'
-    
+
     def is_valid(self):
         return self.result_type is not None \
             and self.substance is not None \
@@ -33,7 +31,7 @@ class CalculationResult(object):
         return result
 
     def from_xml_reader(self, xml_reader):
-        #print('--- 1', xml_reader.name(), xml_reader.isStartElement())
+        # print('--- 1', xml_reader.name(), xml_reader.isStartElement())
         if not xml_reader.name() == 'CalculationResult':
             return
         attributes = xml_reader.attributes()
@@ -58,7 +56,7 @@ class Receptor(object):
         self.edge_effect = None
         self.level = None
         self.results = results or []
-        
+
         # SubPoint attributes
         self.sub_point_id = None
         self.level = None
@@ -69,10 +67,10 @@ class Receptor(object):
         self.assessment_category = None
         self.road_local_fraction_no2 = None
         self.habitat_code = None
-    
+
     def is_valid(self):
         return self.local_id is not None
-    
+
     def __str__(self):
         return f'Receptor[{self.local_id}, {len(self.results)}]'
 
@@ -91,13 +89,13 @@ class Receptor(object):
             pnt_elem = self.gm_point.to_xml_elem(doc)
             gmp_elem.appendChild(pnt_elem)
             elem.appendChild(gmp_elem)
-        
+
         if self.representation is not None:
             repr_elem = doc.createElement('imaer:representation')
             poly_elem = self.representation.to_xml_elem(doc)
             repr_elem.appendChild(poly_elem)
             elem.appendChild(repr_elem)
-        
+
         for result in self.results:
             result_elem = doc.createElement('result')
             result_elem.appendChild(result.to_xml_elem(doc))
@@ -223,14 +221,14 @@ class ReceptorPoint(Receptor):
 
     def is_valid(self):
         return self.local_id is not None
-    
+
     def __str__(self):
         return f'ReceptorPoint[{self.local_id}, {len(self.results)}]'
 
     def to_point_feature(self, fid=None):
         if not self.is_valid():
             return
-        
+
         feat = QgsFeature()
         feat.setGeometry(self.gm_point.to_geometry())
 
@@ -254,7 +252,7 @@ class ReceptorPoint(Receptor):
     def to_polygon_feature(self, fid=None):
         if not self.is_valid():
             return
-        
+
         feat = QgsFeature()
         feat.setGeometry(self.representation.to_geometry())
 
@@ -293,15 +291,15 @@ class SubPoint(Receptor):
 
     def is_valid(self):
         return self.local_id is not None and self.sub_point_id is not None
-    
+
     def __str__(self):
         return f'SubPoint[{self.local_id}, {self.sub_point_id}, {self.level}, {len(self.results)}]'
-    
+
     def to_point_feature(self, fid=None):
         if not self.is_valid():
             print('invalid')
             return
-        
+
         feat = QgsFeature()
         feat.setGeometry(self.gm_point.to_geometry())
 
@@ -349,13 +347,13 @@ class CalculationPoint(Receptor):
         return f'{class_name}[{self.identifier}, {self.label}, {self.height}, {self.assessment_category}, {len(self.results)}]'
 
     def is_valid(self):
-        return True #self.local_id is not None
+        return True  # self.local_id is not None
 
     def to_point_feature(self, fid=None):
         if not self.is_valid():
             print('invalid')
             return
-        
+
         feat = QgsFeature()
         feat.setGeometry(self.gm_point.to_geometry())
 
@@ -387,4 +385,3 @@ class CalculationPoint(Receptor):
 
         feat.setAttributes(attributes)
         return feat
-

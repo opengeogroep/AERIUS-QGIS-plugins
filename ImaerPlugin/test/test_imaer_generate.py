@@ -31,7 +31,7 @@ _GEOM_POINT_UK_1 = QgsGeometry.fromWkt('POINT(311618 723548)')
 _GEOM_POLY_UK_1 = QgsGeometry.fromWkt('POLYGON((311608 723548, 311618 723558, 311628 723548, 311618 723538, 311608 723548))')
 
 # Load IMAER xsd for validation check. (Needs internet connection and can take pretty long.)
-#xsd_fn = os.path.join('test', 'xsd', 'IMAER_5.1.2.xsd')
+# xsd_fn = os.path.join('test', 'xsd', 'IMAER_5.1.2.xsd')
 xsd_fn = os.path.join('test', 'xsd', 'IMAER_6.0.0.xsd')
 xmlschema_doc = etree.parse(xsd_fn)
 xmlschema = etree.XMLSchema(xmlschema_doc)

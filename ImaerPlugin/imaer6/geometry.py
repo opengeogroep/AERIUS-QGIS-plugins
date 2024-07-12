@@ -4,9 +4,9 @@ from PyQt5.QtXml import QDomDocument
 
 from qgis.core import QgsPoint, QgsLineString, QgsPolygon
 
-#path_qgis_python_folder = "/home/raymond/programs/qgis/qgis-master/share/qgis/python/"
-#sys.path.append(path_qgis_python_folder)
-#from qgis.core import QgsGeometry
+# path_qgis_python_folder = "/home/raymond/programs/qgis/qgis-master/share/qgis/python/"
+# sys.path.append(path_qgis_python_folder)
+# from qgis.core import QgsGeometry
 
 
 class GmlGeometry():
@@ -24,7 +24,7 @@ class GmlGeometry():
         attributes = xml_reader.attributes()
         if attributes.hasAttribute('srsName'):
             srs_name = attributes.value('srsName')
-            self.epsg_id = srs_name.split(':')[-1] 
+            self.epsg_id = srs_name.split(':')[-1]
         if attributes.hasAttribute('gml:id'):
             self.gml_id = attributes.value('gml:id')
 
@@ -65,12 +65,12 @@ class GmlPoint(GmlGeometry):
                 parts = coords.split()
                 self.x = float(parts[0])
                 self.y = float(parts[1])
-    
+
     def to_geometry(self):
         return QgsPoint(round(self.x, 3), round(self.y, 3))
 
 
-class GmlLineString(GmlGeometry): # NEVER TESTED!!!
+class GmlLineString(GmlGeometry):  # NEVER TESTED!!!
 
     def __init__(self, *, coords=None):
         super().__init__()
@@ -78,7 +78,7 @@ class GmlLineString(GmlGeometry): # NEVER TESTED!!!
 
     def __str__(self):
         return f'GmlLineString[{self.epsg_id}, {self.gml_id}, {len(self.coords)}, {self.coords[:4]}]'
-    
+
     def from_xml_reader(self, xml_reader):
         super().from_xml_reader(xml_reader)
 
@@ -136,14 +136,13 @@ class GmlPolygon(GmlGeometry):
                 parts = coords.split()
                 for part in parts:
                     self.exterior.append(float(part))
-    
+
     def to_geometry(self):
-        l = QgsLineString()
+        line = QgsLineString()
         for i in range(0, len(self.exterior), 2):
-            l.addVertex(QgsPoint(self.exterior[i], self.exterior[i+1]))
+            line.addVertex(QgsPoint(self.exterior[i], self.exterior[i + 1]))
 
         result = QgsPolygon()
-        result.setExteriorRing(l)
+        result.setExteriorRing(line)
 
         return result
-

@@ -303,7 +303,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
     def update_combo_calculation_type(self):
         self.combo_calc_type.clear()
-        
+
         version = self.plugin.settings.value('imaer_plugin/connect_version')
         if version == '7':
             self.combo_calc_type.addItem('WNB_RECEPTORS')

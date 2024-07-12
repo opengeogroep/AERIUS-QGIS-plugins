@@ -25,7 +25,7 @@ class ImaerGpkg():
         self.field_factory = ImaerGpkgFieldFactory()
 
         self.connect()
-    
+
     def __str__(self):
         return f'ImaerGpkg[{self.filename}]'
 
@@ -38,7 +38,7 @@ class ImaerGpkg():
             self.version = self.get_metadata('db_version')
         else:
             self.create_new()
-    
+
     def create_new(self):
         if Qgis.QGIS_VERSION_INT >= 32800:
             self.md.createDatabase(self.filename)
@@ -57,7 +57,7 @@ class ImaerGpkg():
         fields = QgsFields()
         for field in specific_fields:
             fields.append(field)
-        
+
         self.conn.createVectorTable(
             '',
             name,
@@ -72,12 +72,12 @@ class ImaerGpkg():
         layer_type = 'receptor_points'
         fields = self.field_factory.create_fields_for_layer_type(layer_type)
         self.create_layer(layer_type, fields, QgsWkbTypes.Point, epsg_id)
-    
+
     def create_layer_receptor_hexagons(self, epsg_id):
         layer_type = 'receptor_hexagons'
         fields = self.field_factory.create_fields_for_layer_type(layer_type)
         self.create_layer(layer_type, fields, QgsWkbTypes.Polygon, epsg_id)
-    
+
     def create_layer_sub_points(self, epsg_id):
         layer_type = 'sub_points'
         fields = self.field_factory.create_fields_for_layer_type(layer_type)
@@ -141,7 +141,7 @@ class ImaerGpkg():
             return float(str_value)
         else:
             return str_value
-    
+
     def get_all_metadata(self):
         q = 'SELECT key FROM imaer_metadata ORDER BY key;'
         qr = self.conn.executeSql(q)
@@ -151,5 +151,5 @@ class ImaerGpkg():
         for rec in qr:
             key = rec[0]
             result[key] = self.get_metadata(key)
-        
+
         return result

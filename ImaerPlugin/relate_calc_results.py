@@ -73,7 +73,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
 
     def is_dep_layer(self, layer):
         '''Checks if layer contains all mandatory fields'''
-        return True # TODO Make this check work again.
+        return True  # TODO Make this check work again.
         mandatory_fields = ['fid', 'dep_NH3', 'dep_NOX']
 
         layer_field_names = [fld.name() for fld in layer.fields()]
@@ -111,7 +111,6 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         self.plugin.set_imaer_styles(layer, 'difference')
 
         QgsProject.instance().addMapLayer(layer)
-
 
     def calculate_difference(self, layers, layer_name):
         layer_1 = layers[0]

@@ -64,6 +64,7 @@ layer_type_config = {
     ]
 }
 
+
 class ImaerGpkgFieldFactory(object):
 
     def _create_fields(self, categories):
@@ -75,7 +76,7 @@ class ImaerGpkgFieldFactory(object):
 
     def create_fields_for_layer_type(self, layer_type, value_fields_only=False):
         categories = layer_type_config[layer_type].copy()
-        #print('value_fields_only', value_fields_only)
+        # print('value_fields_only', value_fields_only)
         if value_fields_only:
             categories.pop(0)
         result = self._create_fields(categories)

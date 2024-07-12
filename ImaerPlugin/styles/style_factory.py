@@ -16,19 +16,20 @@ from qgis.core import (
 
 from .classifications import classifications
 
+
 class StyleFactory():
 
     def __init__(self, plugin):
         self.plugin = plugin
 
     __base_properties = {
-        'color': "135,135,135,255", 'joinstyle': 'bevel','style': 'solid',
+        'color': "135,135,135,255", 'joinstyle': 'bevel', 'style': 'solid',
         'outline_color': '35,35,35,255', 'outline_style': 'solid', 'outline_width': '0.05', 'outline_width_unit': 'MM'
     }
 
     def __init__(self, plugin):
         self.plugin = plugin
-    
+
     def create_renderer(self, name, geometry_type):
         country_setting = self.plugin.settings.value('imaer_plugin/country', defaultValue='')
         if country_setting == '':
@@ -36,7 +37,7 @@ class StyleFactory():
 
         style_name = f'{country_setting.lower()}_{name}'
         classification = classifications[style_name]
-        
+
         result = None
         if geometry_type == 'point':
             if classification['render_type'] == 'graduated':

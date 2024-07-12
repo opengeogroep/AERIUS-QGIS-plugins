@@ -45,9 +45,9 @@ class ImaerDocument():
         return result
 
     def get_version(self):
-        if not 'xmlns:imaer' in self.namespaces:
+        if 'xmlns:imaer' not in self.namespaces:
             return None
-        
+
         imaer_ns_link = self.namespaces['xmlns:imaer'].split()[0]
         imaer_version_parts = [part for part in imaer_ns_link.split('/') if part != '']
         imaer_version_str = imaer_version_parts[-1]
@@ -108,7 +108,6 @@ class ImaerDocument():
         while not xml_reader.atEnd():
             if xml_reader.isStartElement():
                 tag_name = xml_reader.name()
-                #print(tag_name)
 
                 if tag_name == 'FeatureCollectionCalculator' and xml_reader.isStartElement():
                     self.namespaces = {}
@@ -127,7 +126,7 @@ class ImaerDocument():
                     tag_name = xml_reader.name()
 
                     if tag_name == 'ReceptorPoint':
-                        #print(f'  Processing {tag_name}')
+                        # print(f'  Processing {tag_name}')
                         member = ReceptorPoint()
                         member.from_xml_reader(xml_reader)
                         if member.is_valid():
@@ -145,12 +144,12 @@ class ImaerDocument():
                         if member.is_valid():
                             self.feature_members.append(member)
                     else:
-                        #print(f'  Skipping {tag_name}')
+                        # print(f'  Skipping {tag_name}')
                         xml_reader.skipCurrentElement()
 
             xml_reader.readNext()
         if xml_reader.hasError():
-            pass        
+            pass  # TODO?
 
     def get_member_count(self):
         feature_members = {}

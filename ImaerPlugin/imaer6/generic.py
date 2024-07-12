@@ -28,6 +28,7 @@ def find_xml_value(root, tag_name, object_type='text', default_value=None):
     if object_type == 'text':
         return elem.text
 
+
 def __get_attribute_string(attributes):
     if len(attributes) == 0:
         return ''
@@ -37,6 +38,7 @@ def __get_attribute_string(attributes):
         value = attribute.value()
         attribute_strings.append(f'{name}="{value}"')
     return ' '.join(attribute_strings)
+
 
 def xml_reader_to_current_node(xml_reader):
     result = ''
@@ -55,4 +57,4 @@ def xml_reader_to_current_node(xml_reader):
             result += text
         xml_reader.readNext()
     result += f'</{xml_reader.name()}>'
-    #print(result)
+    print(result)

@@ -57,6 +57,7 @@ from ImaerPlugin.styles import StyleFactory
 from ImaerPlugin.gpkg import ImaerGpkgFieldFactory
 from ImaerPlugin.config import ui_settings
 
+
 class ImaerPlugin:
 
     def __init__(self, iface):
@@ -214,11 +215,11 @@ class ImaerPlugin:
 
             if os.path.exists(gpkg_fn):
                 pass
-                #self.log(f'Gpkg file already exists: {gpkg_fn}', lvl='Warning', bar=True, duration=5)
-                #return
+                # self.log(f'Gpkg file already exists: {gpkg_fn}', lvl='Warning', bar=True, duration=5)
+                # return
 
             task = ImportImaerCalculatorResultTask(self, gml_fn, gpkg_fn, self.load_calculation_results_gpkg)
-            #task.taskCompleted.connect(self.import_result_task_completed)
+            # task.taskCompleted.connect(self.import_result_task_completed)
             task_result = self.task_manager.addTask(task)
             self.log(f'task result: {task_result}')
 
@@ -237,7 +238,7 @@ class ImaerPlugin:
 
         imaer_metadata_source = f'{gpkg_fn}|layername=imaer_metadata'
         imaer_metadata_layer = QgsVectorLayer(imaer_metadata_source, 'md', 'ogr')
-        
+
         situation_name = '---'
         for feat in imaer_metadata_layer.getFeatures():
             if feat['key'] == 'situation_name':
@@ -275,7 +276,7 @@ class ImaerPlugin:
                 layer_group = temp_group.clone()
                 root.insertChildNode(0, layer_group)
                 root.removeChildNode(temp_group)
-            
+
             if make_groups:
                 QgsProject.instance().addMapLayer(layer, False)
                 layer_group.addLayer(layer)
@@ -331,7 +332,7 @@ class ImaerPlugin:
             canvas = self.iface.mapCanvas()
             total_extent.scale(1.2)
             canvas.setExtent(total_extent)
-        
+
         if loaded_layer_cnt == 0:
             self.log(f'No result layers found.', lvl='Warning', bar=True, duration=3)
         else:
@@ -369,7 +370,7 @@ class ImaerPlugin:
             layer.setRenderer(renderer)
             if labeling is not None:
                 layer.setLabeling(labeling)
-                #layer.setLabelsEnabled(True)
+                # layer.setLabelsEnabled(True)
 
     def run_extract_gml_from_pdf(self):
         if self.dev:
@@ -404,7 +405,7 @@ class ImaerPlugin:
             return self.imaer_calc_layers[layer_id]
         else:
             self.imaer_calc_layers[layer_id] = {'is_imaer_calc_layer': False}
-        
+
         self.imaer_calc_layers[layer_id]['imaer_contribution_layer'] = self.is_contribution_layer(layer)
 
         if not isinstance(layer, QgsVectorLayer):
@@ -419,7 +420,7 @@ class ImaerPlugin:
             gpkg_fn, gpkg_layer = ds.split('|layername=')
         else:
             return self.imaer_calc_layers[layer_id]
-        if not gpkg_layer in ['receptor_hexagons', 'receptor_points', 'sub_points', 'calculation_points']:
+        if gpkg_layer not in ['receptor_hexagons', 'receptor_points', 'sub_points', 'calculation_points']:
             return self.imaer_calc_layers[layer_id]
 
         metadata_ds = '{}|layername=imaer_metadata'.format(gpkg_fn)
@@ -438,17 +439,15 @@ class ImaerPlugin:
     def is_contribution_layer(self, layer):
         if not isinstance(layer, QgsVectorLayer):
             return None
-        
+
         layer_fields = layer.fields()
         for layer_type in ['receptor_hexagons', 'receptor_points', 'sub_points', 'calculation_points']:
-            #print('>>', layer_type)
             layer_type_fields = self.imaer_gpkg_field_factory.create_fields_for_layer_type(layer_type)
 
             if self.contains_fields(layer_type_fields, layer_fields):
-                #print(layer_type)
                 return layer_type
         return None
-    
+
     def contains_fields(self, fields, mandatory_fields):
         for mandatory_field in mandatory_fields:
             if mandatory_field.name() in ['fid', 'ogc_fid']:
@@ -457,11 +456,9 @@ class ImaerPlugin:
             for field in fields:
                 if mandatory_field == field:
                     pass
-                    #print(mandatory_field.name(), field.name(), mandatory_field == field)
                 if mandatory_field == field:
                     field_found = True
             if not field_found:
-                #print(f'{mandatory_field.name()} not found')
                 return False
         return True
 
@@ -469,7 +466,6 @@ class ImaerPlugin:
         self.log('run_generate_calc_input()', user='dev')
         self.generate_calc_input_dlg.show()
         result = self.generate_calc_input_dlg.exec_()
-        # print(result)
         if result:
             self.generate_calc_input_dlg.generate_imaer_gml()
 
@@ -486,7 +482,7 @@ class ImaerPlugin:
 
     def update_connect_widgets(self):
         conn_ok = self.aerius_connection.api_key_is_ok
-        
+
         country = self.configuration_dlg.combo_country.currentText()
         is_connect_country = country in ui_settings['connect_countries']
 

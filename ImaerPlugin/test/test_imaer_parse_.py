@@ -29,12 +29,13 @@ logging.basicConfig(filename='/tmp/test_imaer_parse.log', filemode='w', format='
 logging.basicConfig(level=logging.DEBUG)
 logging.warning('initializing script')
 
+
 class TestImaerParse(unittest.TestCase):
 
     def __init__(self, whatever):
         logging.debug('init class')
         unittest.TestCase.__init__(self, whatever)
-    
+
     def parse_calculation_results(self):
         file = QFile(_fn_short)
 
@@ -53,27 +54,26 @@ class TestImaerParse(unittest.TestCase):
         while not xml_reader.atEnd():
             if xml_reader.isStartElement():
                 tag_name = xml_reader.name()
-                #print(tag_name)
+                # print(tag_name)
                 if tag_name == 'featureMember':
                     xml_reader.readNextStartElement()
                     tag_name = xml_reader.name()
                     if tag_name == 'ReceptorPoint':
-                        #print(f'  Processing {tag_name}')
+                        # print(f'  Processing {tag_name}')
                         rp = ReceptorPoint()
                         rp.from_xml_reader(xml_reader)
                         if rp.is_valid():
                             receptor_points.append(rp)
                     else:
-                        print(f'  Skipping {tag_name}')
+                        # print(f'  Skipping {tag_name}')
                         xml_reader.skipCurrentElement()
             xml_reader.readNext()
         if xml_reader.hasError():
             pass
 
         for rp in receptor_points:
-            #print(rp)
+            # print(rp)
             for result in rp.results:
-                pass#print(' ', result)
+                pass  # print(' ', result)
 
         print(len(receptor_points))
-
