@@ -33,9 +33,9 @@ set_configuration(country='UK', crs=27700)
 # uk roads
 fn = os.path.join(demo_data_dir, 'test_input_uk.gpkg')
 ln = 'Traffic_shapefile_UK_27700'
-layer = QgsVectorLayer(f'{fn}|layername={ln}', 'test_input_uk_roads')
-QgsProject.instance().addMapLayer(layer)
-plugin.generate_calc_input_dlg.combo_layer_rd.setLayer(layer)
+layer_roads = QgsVectorLayer(f'{fn}|layername={ln}', 'test_input_uk_roads')
+QgsProject.instance().addMapLayer(layer_roads)
+plugin.generate_calc_input_dlg.combo_layer_rd.setLayer(layer_roads)
 
 cfg_fn = os.path.join(demo_data_dir, 'generate_gml_config_uk_roads.json')
 plugin.generate_calc_input_dlg.load_settings(in_fn=cfg_fn)
@@ -44,7 +44,7 @@ gml_fn = os.path.join(work_dir, 'test_uk_roads.gml')
 plugin.generate_calc_input_dlg.edit_outfile.setText(gml_fn)
 plugin.generate_calc_input_dlg.generate_imaer_gml()
 
-QgsProject.instance().removeMapLayers([layer.id()])
+QgsProject.instance().removeMapLayers([layer_roads.id()])
 
 # uk generic and buildings
 
@@ -67,6 +67,8 @@ gml_fn = os.path.join(work_dir, 'test_uk_points.gml')
 plugin.generate_calc_input_dlg.edit_outfile.setText(gml_fn)
 plugin.generate_calc_input_dlg.generate_imaer_gml()
 
+QgsProject.instance().removeMapLayers([layer_points.id()])
+QgsProject.instance().removeMapLayers([layer_buildings.id()])
 
 
 #set_configuration(work_dir=old_work_dir)
