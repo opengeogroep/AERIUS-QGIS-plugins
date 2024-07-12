@@ -560,8 +560,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 horizontal_angle=asc_horizontal_angle, width=asc_width,
                 vertical_dimension=asc_vertical_dimension, buoyancy_type=asc_buoyancy_type,
                 density=asc_density, temperature=asc_temperature, efflux_type=asc_efflux_type,
-                vertical_velocity=asc_vertical_velocity, volumetric_flow_rate=asc_volumetric_flow_rate,
-                hourlyVariation=tvp, monthlyVariation=tvp)
+                vertical_velocity=asc_vertical_velocity, volumetric_flow_rate=asc_volumetric_flow_rate
+            )
             es.emission_source_characteristics = asc
 
         # time varying profiles
@@ -928,7 +928,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 return result.toString()
         return value
 
-    def save_settings(self, out_fn=None):
+    def save_settings(self, button_is_checked=False, out_fn=None):
+        print(out_fn)
         if out_fn is None:
             work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
             if work_dir is None:
@@ -942,7 +943,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         with open(out_fn, 'w') as out_file:
             out_file.write(txt)
 
-    def load_settings(self, in_fn=None):
+    def load_settings(self, button_is_checked=False, in_fn=None):
         if in_fn is None:
             work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
             if work_dir is None:
@@ -977,7 +978,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         ]
         for widget_name in widget_names:
             widget = getattr(self, widget_name)
-            print(widget)
+            # print(widget)
             if widget.__class__.__name__ in ['QGroupBox', 'QRadioButton', 'QCheckBox']:
                 result['options'][widget_name] = widget.isChecked()
             if widget.__class__.__name__ == 'QComboBox':
