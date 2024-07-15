@@ -127,7 +127,7 @@ class AeriusCalculatorMetadata():
                         self.project['year'] = int(xml_reader.text())
                     if xml_reader.name() == 'name' and xml_reader.isStartElement():
                         xml_reader.readNext()
-                        self.project['name'] = int(xml_reader.text())
+                        self.project['name'] = xml_reader.text()
                     elif xml_reader.name() == 'description' and xml_reader.isStartElement():
                         xml_reader.readNext()
                         self.project['descripton'] = xml_reader.text()
