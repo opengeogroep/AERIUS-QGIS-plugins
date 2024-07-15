@@ -24,6 +24,12 @@ def set_configuration(country=None, crs=None, work_dir=None):
     plugin.update_connect_widgets()
     plugin.update_crs_widgets()
 
+def load_configuration_file(cfg_fn):
+    print(f'Loading: {cfg_fn}')
+    result = plugin.generate_calc_input_dlg.load_settings(in_fn=cfg_fn)
+    if result is False:
+        print(f'Could not load configuration file ({cfg_fn})')
+
 set_configuration(country='NL', crs=28992, work_dir=work_dir)
 #plugin.configuration_dlg.show()
 set_configuration(country='UK', crs=27700)
@@ -38,7 +44,7 @@ QgsProject.instance().addMapLayer(layer_roads)
 plugin.generate_calc_input_dlg.combo_layer_rd.setLayer(layer_roads)
 
 cfg_fn = os.path.join(demo_data_dir, 'generate_gml_config_uk_roads.json')
-plugin.generate_calc_input_dlg.load_settings(in_fn=cfg_fn)
+load_configuration_file(cfg_fn)
 
 gml_fn = os.path.join(work_dir, 'test_uk_roads.gml')
 plugin.generate_calc_input_dlg.edit_outfile.setText(gml_fn)
@@ -61,7 +67,7 @@ QgsProject.instance().addMapLayer(layer_buildings)
 plugin.generate_calc_input_dlg.combo_layer_bld.setLayer(layer_buildings)
 
 cfg_fn = os.path.join(demo_data_dir, 'generate_gml_config_uk_points.json')
-plugin.generate_calc_input_dlg.load_settings(in_fn=cfg_fn)
+load_configuration_file(cfg_fn)
 
 gml_fn = os.path.join(work_dir, 'test_uk_points.gml')
 plugin.generate_calc_input_dlg.edit_outfile.setText(gml_fn)

@@ -928,41 +928,57 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 return result.toString()
         return value
 
-    def save_settings(self, button_is_checked=False, out_fn=None):
-        print(out_fn)
-        if out_fn is None:
-            work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
-            if work_dir is None:
-                raise Exception('Work dir not set')
-                return
-            # TODO: choose file name
-            base_name = 'generate_gml_config.json'
-            out_fn = os.path.join(work_dir, base_name)
+    def save_settings(self):
+        work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
+
+        if work_dir is None:
+            self.plugin.log('Work direction not set.', lvl='Critical', bar=True)
+            return
+
+        # TODO: choose file name
+        base_name = 'generate_gml_config.json'
+        out_fn = os.path.join(work_dir, base_name)
         field_dict = self.collect_settings()
         txt = json.dumps(field_dict, indent=4)
-        with open(out_fn, 'w') as out_file:
-            out_file.write(txt)
+        try:
+            with open(out_fn, 'w') as out_file:
+                out_file.write(txt)
+                self.plugin.log(f'Configuration file saved ({out_fn})', bar=True)
+        except:  # For anything that can go wrong here!
+            self.plugin.log(f'Could not save configuration file ({out_fn})', lvl='Critical', bar=True)
 
-    def load_settings(self, button_is_checked=False, in_fn=None):
+    def load_settings(self, btn_info=None, in_fn=None):
         if in_fn is None:
             work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
+
             if work_dir is None:
-                raise Exception('Work dir not set')
-                return
+                self.plugin.log('Work direction not set.', lvl='Critical', bar=True)
+                return False
+
             # TODO: choose file name
             base_name = 'generate_gml_config.json'
             in_fn = os.path.join(work_dir, base_name)
 
-        with open(in_fn, 'r') as in_file:
-            txt = in_file.read()
-        settings_cfg = json.loads(txt)
+        if not os.path.isfile(in_fn):
+            self.plugin.log(f'Configuration file not found ({in_fn})', lvl='Warning', bar=True)
+            return False
 
-        if 'imaer_plugin_version' not in settings_cfg:
+        with open(in_fn, 'r') as out_file:
+            txt = out_file.read()
+
+        field_dict = json.loads(txt)
+
+        config_file_version = field_dict.get('imaer_plugin_version', None)
+        if config_file_version is None:
             self.plugin.log('This is not a valid field configuration file', lvl='Warning', bar=True)
-            return
+            return False
+        if field_dict['imaer_plugin_version'] != self.plugin.version:
+            self.plugin.log(f'Configuration file has different plugin version ({config_file_version} &lt;&gt; {self.plugin.version})', lvl='Critical', bar=True)
+            return False
 
-        self.set_settings(settings_cfg)
-        self.plugin.log('Configuration file loaded', bar=True)
+        self.set_settings(field_dict)
+        self.plugin.log(f'Configuration file loaded ({in_fn})', bar=True)
+        return True
 
     def collect_settings(self):
         '''Collects a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
@@ -998,8 +1014,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     def set_settings(self, settings_cfg):
         '''Sets texts from a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
+        # print(json.dumps(settings_cfg, indent=4))
+
         # options
-        for widget_name, v in settings_cfg['options'].items():
+        options = settings_cfg.get('options', {})
+        for widget_name, v in options.items():
             widget = getattr(self, widget_name)
             if widget.__class__.__name__ in ['QGroupBox', 'QRadioButton', 'QCheckBox']:
                 widget.setChecked(v)

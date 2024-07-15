@@ -195,7 +195,7 @@ class ImaerPlugin:
         self.log('ImaerPlugin unloaded', user='dev')
 
     def log(self, message, tab='Imaer', lvl='Info', bar=False, user='user', duration=3):
-        # lvl: Info, Warning, Critical
+        # lvl: Info, Warning, Critical, Success
         # user: user, dev
         level = getattr(Qgis, lvl)
         if bar or (user == 'user') or (user == 'dev' and self.dev):
