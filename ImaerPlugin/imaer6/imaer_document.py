@@ -138,7 +138,7 @@ class ImaerDocument():
                         if member.is_valid():
                             self.feature_members.append(member)
                     elif tag_name in ['CalculationPoint', 'NcaCustomCalculationPoint']:
-                        print(f'  Processing {tag_name}')
+                        # print(f'  Processing {tag_name}')
                         member = CalculationPoint()
                         member.from_xml_reader(xml_reader)
                         if member.is_valid():

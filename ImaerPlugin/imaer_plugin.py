@@ -194,7 +194,7 @@ class ImaerPlugin:
         # del self.relate_calc_results_dlg
         self.log('ImaerPlugin unloaded', user='dev')
 
-    def log(self, message, tab='Imaer', lvl='Info', bar=False, user='user', duration=3):
+    def log(self, message, tab='IMAER Plugin', lvl='Info', bar=False, user='user', duration=3):
         # lvl: Info, Warning, Critical, Success
         # user: user, dev
         level = getattr(Qgis, lvl)
@@ -213,15 +213,25 @@ class ImaerPlugin:
         if os.path.exists(os.path.dirname(gml_fn)):
             gpkg_fn = gml_fn.replace('.gml', '.gpkg')  # TODO change extension in a proper way
 
-            if os.path.exists(gpkg_fn):
+            if os.path.exists(gpkg_fn):  # TODO Warn for overwriting 
                 pass
                 # self.log(f'Gpkg file already exists: {gpkg_fn}', lvl='Warning', bar=True, duration=5)
                 # return
 
-            task = ImportImaerCalculatorResultTask(self, gml_fn, gpkg_fn, self.load_calculation_results_gpkg)
-            # task.taskCompleted.connect(self.import_result_task_completed)
+            task = ImportImaerCalculatorResultTask(self, gml_fn, gpkg_fn, self.import_calc_result_callback)
             task_result = self.task_manager.addTask(task)
             self.log(f'task result: {task_result}')
+    
+    def import_calc_result_callback(self, result, gpkg_fn=None):
+        self.log(result)
+        if result['status'] == 'ok':
+            self.load_calculation_results_gpkg(gpkg_fn)
+        elif result['status'] == 'error':
+            self.log(result['message'], lvl='Critical', bar=True)
+        elif result['status'] == 'warning':
+            self.log(result['message'], lvl='Warning', bar=True)
+        else:
+            self.log('Something unexpected went wrong (import_calc_result_callback)')
 
     def load_calculation_results_gpkg(self, gpkg_fn, layer_names=None, zoom=True, make_groups=True):
         '''Callback function from the import task after finishing the gpkg'''

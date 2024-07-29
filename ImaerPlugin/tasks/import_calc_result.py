@@ -14,60 +14,64 @@ from qgis.core import (
     QgsGeometry,
     QgsVectorLayer,
     QgsExpressionContextUtils,
-    QgsSettings
 )
 
 from .. task_timer import TaskTimer
 from ImaerPlugin.imaer6 import ImaerDocument
 from ImaerPlugin.gpkg import ImaerGpkg
-
-_SUPPORTED_IMAER_VERSIONS = ['3.1', '4.0', '5.0', '5.1']
+from ImaerPlugin.config import ui_settings
+from ImaerPlugin.version import VersionNumber
 
 
 class ImportImaerCalculatorResultTask(QgsTask):
 
-    def __init__(self, plugin, gml_fn, gpkg_fn, load_layer_callback):
+    def __init__(self, plugin, gml_fn, gpkg_fn, result_callback):
         super().__init__('Import IMAER Calculator Result', QgsTask.CanCancel)
         self.gml_fn = gml_fn
         self.gpkg_fn = gpkg_fn
-        self.load_layer_callback = load_layer_callback
-        self.exception = None
-        self.settings = QgsSettings()
+        self.result = {'status': 'error', 'message': ''}
+        self.result_callback = result_callback
         self.plugin = plugin
         self.do_log = True
 
     def run(self):
         self.log('Started task "{}"'.format(self.description()))
-        self.log(self.gml_fn)
-        self.log(self.gpkg_fn)
+        # self.log(f'source: {self.gml_fn}')
+        # self.log(f'target: {self.gpkg_fn}')
 
         self.setProgress(1)  # Cause setting to 0% does not work.
 
         doc = ImaerDocument()
         doc.from_xml_file(self.gml_fn)
-        self.log(str(doc))
+        # self.log(f'doc: {str(doc)}')
 
         self.setProgress(40)
 
         if os.path.isfile(self.gpkg_fn):
             os.remove(self.gpkg_fn)
 
-        member_info = doc.get_member_count()
-        self.log(member_info)
+        doc_version = VersionNumber(doc.get_version().to_string())
+        doc_version_str = doc_version.to_string(2)
+        self.log(doc_version_str)
+        if doc_version_str not in ui_settings['supported_imaer_versions']:
+            self.result['status'] = 'error'
+            self.result['message'] = f'Unsupported IMAER version ({doc.get_version().to_string()}).'
+            return False
 
+        member_info = doc.get_member_count()
         result_member_count = 0
         for k, v in member_info.items():
             if k in ['ReceptorPoint', 'SubPoint', 'CalculationPoint']:
                 result_member_count += v
-        self.log(result_member_count)
+        # self.log(result_member_count)
 
         if result_member_count == 0:
-            self.log('No results found')
-            # TODO User feedback
+            self.result['status'] = 'warning'
+            self.result['message'] = 'No result features found in GML file.'
             return False
 
         gpkg = ImaerGpkg(self.gpkg_fn, plugin=self.plugin)
-        self.log(str(gpkg))
+        # self.log(str(gpkg))
 
         # metadata
         gpkg.set_metadata('gml_fn', doc.gml_fn)
@@ -78,7 +82,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
             situation_name = ''
         gpkg.set_metadata('situation_name', situation_name)
 
-        self.log(gpkg.get_all_metadata())
+        # self.log(gpkg.get_all_metadata())
 
         receptor_points_layer = None
         receptor_hexagons_layer = None
@@ -125,7 +129,6 @@ class ImportImaerCalculatorResultTask(QgsTask):
                     calculation_points_layer = QgsVectorLayer(f'{self.gpkg_fn}|layername=calculation_points', 'calcultion_points', 'ogr')
                     calculation_points_layer.startEditing()
                 feat = member.to_point_feature()
-                self.log(feat)
                 calculation_points_layer.addFeature(feat)
                 member_cnt += 1
 
@@ -142,19 +145,21 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
         self.setProgress(100)
 
+        self.result['status'] = 'ok'
         return True
 
     def finished(self, result):
         # self.log('finished task')
-        # self.log(result)
-        self.load_layer_callback(self.gpkg_fn, make_groups=True)
+        self.log('FINISHED')
+        self.result_callback(self.result, self.gpkg_fn)
 
     def cancel(self):
-        self.log(
-            'Task "{name}" was canceled'.format(name=self.description()))
+        self.result['message'] = 'Task "{name}" was canceled'.format(name=self.description())
+        self.log(self.result['message']
+        )
         # TODO delete gpkg file
         super().cancel()
 
-    def log(self, message, tab='IMAER'):
+    def log(self, message, tab='IMAER Plugin'):
         if self.do_log:
             QgsMessageLog.logMessage(repr(message), tab, level=Qgis.Info)
