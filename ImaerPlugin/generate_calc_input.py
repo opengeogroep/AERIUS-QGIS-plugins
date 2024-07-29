@@ -207,16 +207,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             crs_name = f"{crs['name']} ({crs['srid']})"
             self.combo_crs.addItem(crs_name, crs['srid'])
 
-        # year
+        # years
         for item in ui_settings['project_years']:
             self.combo_project_year.addItem(str(item), item)
         year_index = self.combo_project_year.findData(ui_settings['project_default_year'])
         self.combo_project_year.setCurrentIndex(year_index)
-
-        # situation
-        self.edit_situation_name.setText(ui_settings['situation_name'])
-        for item in ui_settings['situation_types_gml']:
-            self.combo_situation_type.addItem(item, item)
 
     def update_emission_tab(self):
         country = self.plugin.settings.value('imaer_plugin/country', defaultValue='')
@@ -226,6 +221,15 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         crs_setting = self.plugin.settings.value('imaer_plugin/crs', defaultValue='')
         crs_index = self.combo_crs.findData(crs_setting)
         self.combo_crs.setCurrentIndex(crs_index)
+
+        # situation
+        self.edit_situation_name.setText('')
+        self.combo_situation_type.clear()
+        if not country == '':
+            self.edit_situation_name.setText(ui_settings['situation_name'][country])
+
+            for item in ui_settings['situation_types_gml'][country]:
+                self.combo_situation_type.addItem(item, item)
 
         # Remove all tabs but 'Metadata'
         while self.tabs_mapping.count() > 1:
