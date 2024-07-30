@@ -32,10 +32,11 @@ You can use all standard QGIS functionality for viewing, analysing and editing t
 An IMAER calculation result .gml file can hold up to 3 different feature types: CalculationPoint, SubPoint and Receptor. Receptor features are split into a point and a polygon (hexagon) layer. Hexagons contain deposition results and points contain concentration results. For convenience, the depositions are summarized in the field `depositions_nox_nh3_sum`.
 
 Layer names:
-* <<Situation Name>> - calculation_points
-* '<Situation Name>' - sub_points
-* [Situation Name] - receptor_points
-* `<Situation Name>` - receptor hexagons
+* `<Situation Name> - calculation_points`
+* `<Situation Name> - sub_points`
+* `<Situation Name> - receptor_points`
+* `<Situation Name> - receptor hexagons`
+
 ![layers and fields](img/calc_result_layers_and_fields.png)
 
 ## Remarks
