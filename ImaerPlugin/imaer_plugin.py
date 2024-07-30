@@ -225,10 +225,10 @@ class ImaerPlugin:
 
         task = ImportImaerCalculatorResultTask(self, gml_fn, gpkg_fn, self.import_calc_result_callback)
         task_result = self.task_manager.addTask(task)
-        self.log(f'task result: {task_result}')
+        # self.log(f'task result: {task_result}')
     
     def import_calc_result_callback(self, result, gpkg_fn=None):
-        self.log(result)
+        # self.log(result)
         if result['status'] == 'ok':
             self.load_calculation_results_gpkg(gpkg_fn)
         elif result['status'] == 'error':

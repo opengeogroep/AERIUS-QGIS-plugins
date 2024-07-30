@@ -36,8 +36,8 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
     def run(self):
         self.log('Started task "{}"'.format(self.description()))
-        # self.log(f'source: {self.gml_fn}')
-        # self.log(f'target: {self.gpkg_fn}')
+        self.log(f'source: {self.gml_fn}')
+        self.log(f'target: {self.gpkg_fn}')
 
         self.setProgress(1)  # Cause setting to 0% does not work.
 
@@ -52,7 +52,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
         doc_version = VersionNumber(doc.get_version().to_string())
         doc_version_str = doc_version.to_string(2)
-        self.log(doc_version_str)
+        # self.log(doc_version_str)
         if doc_version_str not in ui_settings['supported_imaer_versions']:
             self.result['status'] = 'error'
             self.result['message'] = f'Unsupported IMAER version ({doc.get_version().to_string()}).'
@@ -97,7 +97,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         member_cnt = 0
 
         for member in doc.feature_members:
-            self.log(member.__class__.__name__)
+            # self.log(member.__class__.__name__)
             if member.__class__.__name__ == 'ReceptorPoint':
                 if receptor_points_layer is None:
                     epsg_id = int(member.gm_point.epsg_id)
@@ -155,7 +155,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
 
     def finished(self, result):
         # self.log('finished task')
-        self.log('FINISHED')
+        # self.log('FINISHED')
         self.result_callback(self.result, self.gpkg_fn)
 
     def cancel(self):
