@@ -19,7 +19,7 @@ Some plugin configurations can be set in the Configuration dialog. Most of them 
 
 ### Country:
 The country where you are using AERIUS. Different countries use different versions
-and sub sets of IMAER.
+and sub sets of IMAER which will reflect in the user interface.
 
 ### CRS:
 Coordinate reference system your IMAER data should use.
@@ -31,7 +31,8 @@ and save files to. Make sure you have write access to this directory.
 ## Connect
 
 These settings are only needed if you want to use the plugin for AERIUS Connect
-functionality. When the settings are right, the
+functionality (currently only available in NL). When the country is set to UK, the
+Connect settings are disabled.
 
 ### Server base URL:
 Location of the Connect API URL. Should by default point to the current production
@@ -41,14 +42,17 @@ Some examples:
 * https://connect.aerius.nl/api
 
 ### Version:
+
 Connect server version. The version is displayed on the Connect swagger page. Just visit
 the Server base URL with your web browser to find it.
 
 ### Email:
+
 The email address you want to use for Connect. This is also your account name, and
 the address that will receive notifications when your calculations are completed.
 
 ### API Key:
+
 Connect API key that you will receive by e-mail after requesting it. You can click
 the `Request new API key` button to get (a new) one.
 
@@ -56,10 +60,11 @@ After receiving the new API key in your mailbox, simply copy the 32 character ke
 to the configuration screen.
 
 ## Save
+
 When saving the settings, the plugin will attempt to make a connection by firing
 a few rquests. They will also update the content of the connect plugin dialogs.
 
-### Hint
+## Hint
 
 In case you are running into connection problems, open the Debug/Developer panel in QGIS
 (F12) to inspect the internet traffic between QGIS and Connect.

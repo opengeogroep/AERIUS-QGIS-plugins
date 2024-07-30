@@ -54,7 +54,7 @@ The id field should contain the same integer value as used in the emission sourc
 
 Those are typically stand alone GML files to upload to AERIUS Connect for calulating depositions at your peronally picked locations. The input must be a point layer.
 
-### Diurnal Variation
+### Time Varying Profiles
 
 ![dialog](img/generate_aerius_calculator_input_dlg_dv.png)
 
@@ -64,6 +64,82 @@ from a semicolon separated value table.
 The three values per hour of the day are for mon-fri ; saturday ; sunday. In total there should b 72 values (24h x 7d).
 
 The id field should contain the same integer value as used in the emission source pointing to it.
+
+#### CSV Example DAY
+
+```
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+```
+
+#### CSV Example THREE_DAY
+
+```
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+1.0;1.0;1.0
+```
+
+#### CSV Example MONTHLY
+
+```
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+```
+
 
 ## Saving and loading settings
 
