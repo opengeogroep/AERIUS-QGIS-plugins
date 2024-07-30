@@ -204,23 +204,28 @@ class ImaerPlugin:
             self.iface.messageBar().pushMessage(lvl, str(message), level, duration=duration)
 
     def run_import_calc_result(self, checked=False, gml_fn=None):
-        self.log('run_import_calc_result()', user='dev')
-
         if gml_fn is None:
-            gml_fn, filter = self.calc_result_file_dialog.getOpenFileName(caption="Open Calculator result GML file", filter='*.gml', parent=self.iface.mainWindow())
-            self.log(gml_fn)
+            gml_fn, _ = self.calc_result_file_dialog.getOpenFileName(caption="Open Calculator result GML file", filter='*.gml', parent=self.iface.mainWindow())
+            # self.log(f'gml_fn: {gml_fn}')
+        
+        if gml_fn == '' or gml_fn is None:
+            return
 
-        if os.path.exists(os.path.dirname(gml_fn)):
-            gpkg_fn = gml_fn.replace('.gml', '.gpkg')  # TODO change extension in a proper way
+        gml_path = os.path.dirname(gml_fn)
+        if not os.access(gml_path, os.W_OK):
+            self.log(f'Cannot create .gpkg file in gml directory: {gml_path}', lvl='Critical', bar=True, duration=5)
+            return
 
-            if os.path.exists(gpkg_fn):  # TODO Warn for overwriting 
-                pass
-                # self.log(f'Gpkg file already exists: {gpkg_fn}', lvl='Warning', bar=True, duration=5)
-                # return
+        gml_stem, _ = os.path.splitext(gml_fn)
+        gpkg_fn = f'{gml_stem}.gpkg'
 
-            task = ImportImaerCalculatorResultTask(self, gml_fn, gpkg_fn, self.import_calc_result_callback)
-            task_result = self.task_manager.addTask(task)
-            self.log(f'task result: {task_result}')
+        if os.path.exists(gpkg_fn):  # TODO Warn for overwriting?
+            pass
+            # self.log(f'Gpkg file already exists: {gpkg_fn}', lvl='Warning', bar=True, duration=5)
+
+        task = ImportImaerCalculatorResultTask(self, gml_fn, gpkg_fn, self.import_calc_result_callback)
+        task_result = self.task_manager.addTask(task)
+        self.log(f'task result: {task_result}')
     
     def import_calc_result_callback(self, result, gpkg_fn=None):
         self.log(result)
