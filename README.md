@@ -34,7 +34,7 @@ Changes in IMAER and CONNECT can affect the working of the plugin.
   * generic ("other")
   * roads (adms & srmt)
   * buildings
-  * diurnal variation
+  * time varying profiles
   * calculation points
   * Connect API
 

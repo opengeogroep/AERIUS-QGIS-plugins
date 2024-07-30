@@ -1,10 +1,8 @@
 * [Index](index.md)
 * [Import Calculator Results](01_import_calc_results.md)
-* [Export Calculator Results](02_export_calc_results.md)
 * [Extract GML from AERIUS PDF](03_extract_gml_from_pdf.md)
 * [Generate Calculator Input](04_generate_calc_input.md)
 * [Relate Calculator results](05_relate_calc_results.md)
-* [Add Open data Layer](06_open_data_layers.md)
 * [Connect - Receptor Sets](07_connect_receptor_sets.md)
 * [Connect - Jobs](08_connect_jobs.md)
 * [Configuration](09_configuration.md)
@@ -26,13 +24,20 @@ The current functionality covers:
 
 ## Installation
 
+### From QGIS Plugin Repository
 The plugin is regularly updated in the QGIS plugin repository, so the easiest way
-to install it is by using the Plugin Manager within QGIS. Currently you will need to
-enable 'experimental plugins' to find it. The most recent plugin requires QGIS version
-3.16.x or higher.
+to install it is by using the Plugin Manager within QGIS. The plugin should work from
+QGIS 3.30.x or higher, and is likely to work in older versions of QGIS but that has
+not been tested.
 
-Of course you can also clone the code from the github repository and install it
-manually in QGIS.
+### From zip file 
+You can also install the plugin from a zip file using the `Install from ZIP` 
+functionality in the Plugin Manager in QGIS.
+
+Zip files can be downloaded from [github](https://github.com/opengeogroep/AERIUS-QGIS-plugins/tree/master/releases).
+
+### From source code
+Of course you can also clone the code from the git repository from [github](https://github.com/opengeogroep/AERIUS-QGIS-plugins/tree/master/releases) and install manually in QGIS.
 
 ## Issues
 
