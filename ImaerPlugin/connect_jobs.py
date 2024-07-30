@@ -58,16 +58,6 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
         self.set_fixed_options()
 
-        if self.plugin.dev:
-            gml_file_valid = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input/calcinput_20210930_130723.gml'
-            gml_file_27700 = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input/calcinput_20230123_175328.gml'
-            self.edit_gml_input_1.setText(gml_file_valid)
-            self.edit_gml_input_2.setText(gml_file_27700)
-            # self.combo_situation_1.setCurrentText('REFERENCE')
-            # self.combo_situation_2.setCurrentText('PROPOSED')
-            self.combo_year_1.setCurrentText('2022')
-            self.combo_year_2.setCurrentText('2023')
-
         self.update_widgets()
         self.get_jobs()
 
@@ -260,7 +250,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
     def update_widgets(self):
         '''Logic for widget behaviour'''
-        print('update_widgets()')
+        # print('update_widgets()')
 
         receptors_ok = False
         if self.combo_calc_type.currentText() in ['WNB_RECEPTORS', 'OWN2000_RECEPTORS']:

@@ -77,4 +77,4 @@ QgsProject.instance().removeMapLayers([layer_points.id()])
 QgsProject.instance().removeMapLayers([layer_buildings.id()])
 
 
-#set_configuration(work_dir=old_work_dir)
+set_configuration(work_dir=old_work_dir)
