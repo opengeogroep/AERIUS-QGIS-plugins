@@ -95,7 +95,8 @@ emission_sectors = {
 
 ui_settings = {
     'project_years': [
-        2024,
+        2018, 2019,
+        2020, 2021, 2022, 2023, 2024,
         2025, 2026, 2027, 2028, 2029,
         2030, 2031, 2032, 2033, 2034,
         2035, 2036, 2037, 2038, 2039,
@@ -104,7 +105,7 @@ ui_settings = {
     'situation_name': {'NL': 'Situation 1', 'UK': 'Scenario 1'},
     'situation_types_gml': {
         'NL': ['OFF_SITE_REDUCTION', 'PROPOSED', 'REFERENCE', 'TEMPORARY'],
-        'UK': ['COMBINATION_PROPOSED', 'COMBINATION_REFERENCE', 'OFF_SITE_REDUCTION', 'PROPOSED', 'REFERENCE', 'TEMPORARY', 'UNKNOWN'],
+        'UK': ['COMBINATION_PROPOSED', 'COMBINATION_REFERENCE', 'OFF_SITE_REDUCTION', 'PROPOSED', 'REFERENCE', 'TEMPORARY'],
     },
     'situation_types_connect': ['DEFINED_BY_FILE', 'REFERENCE', 'PROPOSED', 'TEMPORARY'],
     'countries': ['NL', 'UK'],
@@ -115,5 +116,5 @@ ui_settings = {
         {'name': 'OSGB 1936 / British National Grid', 'srid': 27700}
     ],
     'units_veh_movements': ['p/hour', 'p/24 hour', 'p/month', 'p/year'],
-    'time_varying_profile_types': ['DAY', 'THREE_DAY', 'MONTHLY']
+    'time_varying_profile_types': ['THREE_DAY', 'MONTHLY']
 }
