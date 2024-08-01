@@ -566,30 +566,29 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 density=asc_density, temperature=asc_temperature, efflux_type=asc_efflux_type,
                 vertical_velocity=asc_vertical_velocity, volumetric_flow_rate=asc_volumetric_flow_rate
             )
+
+            # time varying profiles
+            # hourly
+            hourly_tvp = None
+            tvp_standard = self.get_feature_value(self.fcb_es_tvp_adms_hourly_standard, feat)
+            if tvp_standard is not None:
+                hourly_tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+            tvp_reference = self.get_feature_value(self.fcb_es_tvp_adms_hourly_reference, feat)
+            if tvp_reference is not None:
+                hourly_tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
+            asc.hourly_variation = hourly_tvp
+
+            # monthly
+            monthly_tvp = None
+            tvp_standard = self.get_feature_value(self.fcb_es_tvp_adms_monthly_standard, feat)
+            if tvp_standard is not None:
+                monthly_tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+            tvp_reference = self.get_feature_value(self.fcb_es_tvp_adms_monthly_reference, feat)
+            if tvp_reference is not None:
+                monthly_tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
+            asc.monthly_variation = monthly_tvp
+
             es.emission_source_characteristics = asc
-
-        # time varying profiles
-        # hourly
-        hourly_tvp = None
-        tvp_standard = self.get_feature_value(self.fcb_es_tvp_adms_hourly_standard, feat)
-        if tvp_standard is not None:
-            hourly_tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
-        tvp_reference = self.get_feature_value(self.fcb_es_tvp_adms_hourly_reference, feat)
-        if tvp_reference is not None:
-            hourly_tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
-
-        es.hourly_variation = hourly_tvp
-
-        # monthly
-        monthly_tvp = None
-        tvp_standard = self.get_feature_value(self.fcb_es_tvp_adms_monthly_standard, feat)
-        if tvp_standard is not None:
-            monthly_tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
-        tvp_reference = self.get_feature_value(self.fcb_es_tvp_adms_monthly_reference, feat)
-        if tvp_reference is not None:
-            monthly_tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
-
-        es.monthly_variation = monthly_tvp
 
         # emissions
         es.emissions = []

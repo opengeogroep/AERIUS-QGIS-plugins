@@ -31,8 +31,29 @@ def load_configuration_file(cfg_fn):
         print(f'Could not load configuration file ({cfg_fn})')
 
 set_configuration(country='NL', crs=28992, work_dir=work_dir)
-#plugin.configuration_dlg.show()
 set_configuration(country='UK', crs=27700)
+
+# Add 2 tvp's
+plugin.generate_calc_input_dlg.tvp_model.clear()
+
+#tvp 1
+plugin.generate_calc_input_dlg.time_varying_profile_dlg.lineEdit_id.setText('1')
+plugin.generate_calc_input_dlg.time_varying_profile_dlg.lineEdit_label.setText('Een')
+plugin.generate_calc_input_dlg.time_varying_profile_dlg.combo_custom_type.setCurrentText('THREE_DAY')
+csv = '1.0;0.9;1.2\n1.0;1.1;0.8\n' * 12
+plugin.generate_calc_input_dlg.time_varying_profile_dlg.plainTextEdit_csv.setPlainText(csv)
+tvp = plugin.generate_calc_input_dlg.time_varying_profile_dlg.get_tvp()
+plugin.generate_calc_input_dlg.add_tvp_to_table(tvp)
+
+#tvp
+plugin.generate_calc_input_dlg.time_varying_profile_dlg.lineEdit_id.setText('2')
+plugin.generate_calc_input_dlg.time_varying_profile_dlg.lineEdit_label.setText('Twee')
+plugin.generate_calc_input_dlg.time_varying_profile_dlg.combo_custom_type.setCurrentText('MONTHLY')
+csv = '0.12\n1.08\n2.04\n0.6\n1.2\n0.12\n1.08\n0.48\n0.96\n1.92\n1.08\n1.32\n'
+plugin.generate_calc_input_dlg.time_varying_profile_dlg.plainTextEdit_csv.setPlainText(csv)
+tvp = plugin.generate_calc_input_dlg.time_varying_profile_dlg.get_tvp()
+plugin.generate_calc_input_dlg.add_tvp_to_table(tvp)
+
 
 # Generate GML
 
@@ -46,6 +67,9 @@ plugin.generate_calc_input_dlg.combo_layer_rd.setLayer(layer_roads)
 cfg_fn = os.path.join(demo_data_dir, 'generate_gml_config_uk_roads.json')
 load_configuration_file(cfg_fn)
 
+# tvp
+plugin.generate_calc_input_dlg.checkBox_tvp.setChecked(True)
+
 gml_fn = os.path.join(work_dir, 'test_uk_roads.gml')
 plugin.generate_calc_input_dlg.edit_outfile.setText(gml_fn)
 plugin.generate_calc_input_dlg.generate_imaer_gml()
@@ -53,7 +77,6 @@ plugin.generate_calc_input_dlg.generate_imaer_gml()
 QgsProject.instance().removeMapLayers([layer_roads.id()])
 
 # uk generic and buildings
-
 fn = os.path.join(demo_data_dir, 'test_input_uk.gpkg')
 
 ln = 'generic_points_uk'
@@ -66,15 +89,40 @@ layer_buildings = QgsVectorLayer(f'{fn}|layername={ln}', 'test_input_buildings')
 QgsProject.instance().addMapLayer(layer_buildings)
 plugin.generate_calc_input_dlg.combo_layer_bld.setLayer(layer_buildings)
 
-cfg_fn = os.path.join(demo_data_dir, 'generate_gml_config_uk_points.json')
+cfg_fn = os.path.join(demo_data_dir, 'generate_gml_config_uk_points_buildings.json')
 load_configuration_file(cfg_fn)
 
-gml_fn = os.path.join(work_dir, 'test_uk_points.gml')
+# No tvp here
+plugin.generate_calc_input_dlg.checkBox_tvp.setChecked(False)
+
+gml_fn = os.path.join(work_dir, 'test_uk_points_buildings.gml')
 plugin.generate_calc_input_dlg.edit_outfile.setText(gml_fn)
 plugin.generate_calc_input_dlg.generate_imaer_gml()
 
 QgsProject.instance().removeMapLayers([layer_points.id()])
 QgsProject.instance().removeMapLayers([layer_buildings.id()])
 
+# uk generic and time varying profiles
 
-set_configuration(work_dir=old_work_dir)
+fn = os.path.join(demo_data_dir, 'test_input_uk.gpkg')
+
+ln = 'generic_points_uk'
+layer_points = QgsVectorLayer(f'{fn}|layername={ln}', 'test_input_points')
+QgsProject.instance().addMapLayer(layer_points)
+plugin.generate_calc_input_dlg.combo_layer_es.setLayer(layer_points)
+
+cfg_fn = os.path.join(demo_data_dir, 'generate_gml_config_uk_points_tvp.json')
+load_configuration_file(cfg_fn)
+
+plugin.generate_calc_input_dlg.checkBox_tvp.setChecked(True)
+
+gml_fn = os.path.join(work_dir, 'test_uk_points_tvp.gml')
+plugin.generate_calc_input_dlg.edit_outfile.setText(gml_fn)
+plugin.generate_calc_input_dlg.generate_imaer_gml()
+
+
+QgsProject.instance().removeMapLayers([layer_points.id()])
+
+#set_configuration(work_dir=old_work_dir)
+
+print('Done')
