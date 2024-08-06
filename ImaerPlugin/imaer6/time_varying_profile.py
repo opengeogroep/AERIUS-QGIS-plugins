@@ -86,15 +86,14 @@ class CustomTimeVaryingProfile(TimeVaryingProfile):
         num_rows = self.__custom_types[self.custom_type]['rows']
 
         result = ''
-        i = 0
         for row_nr in range(num_rows):
             for col_nr in range(num_cols):
+                i = (num_rows * col_nr) + row_nr
                 result += str(self.values[i])
                 if col_nr < num_cols - 1:
                     result += ';'
                 else:
                     result += '\n'
-                i += 1
         return result
 
     def values_from_csv(self, csv_text):
@@ -117,9 +116,9 @@ class CustomTimeVaryingProfile(TimeVaryingProfile):
                 recs.append(values)
 
         result = []
-        for rec in recs:
-            for value in rec:
-                result.append(value)
+        for col_nr in range(num_cols):
+            for rec in recs:
+                result.append(rec[col_nr])
 
         if not (num_rows * num_cols) == len(result):
             return False

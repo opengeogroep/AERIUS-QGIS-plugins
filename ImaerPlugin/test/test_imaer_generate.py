@@ -319,6 +319,7 @@ class TestImaerGenerate(unittest.TestCase):
         '''
         check = tvp.values_from_csv(csv_text)
         assert check is True
+        print(tvp.values_to_csv())
         fcc.definitions.append(tvp)
         tvp = CustomTimeVaryingProfile(local_id=126, label='Test label 2', custom_type='DAY')
         csv_text = '''
@@ -349,5 +350,6 @@ class TestImaerGenerate(unittest.TestCase):
         '''
         check = tvp.values_from_csv(csv_text)
         assert check is True
+        print(tvp.values_to_csv())
         fcc.definitions.append(tvp)
         self.generate_gml_file(fcc, 'time_varying_profile_01')

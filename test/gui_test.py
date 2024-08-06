@@ -45,7 +45,7 @@ plugin.generate_calc_input_dlg.time_varying_profile_dlg.plainTextEdit_csv.setPla
 tvp = plugin.generate_calc_input_dlg.time_varying_profile_dlg.get_tvp()
 plugin.generate_calc_input_dlg.add_tvp_to_table(tvp)
 
-#tvp
+#tvp 2
 plugin.generate_calc_input_dlg.time_varying_profile_dlg.lineEdit_id.setText('2')
 plugin.generate_calc_input_dlg.time_varying_profile_dlg.lineEdit_label.setText('Twee')
 plugin.generate_calc_input_dlg.time_varying_profile_dlg.combo_custom_type.setCurrentText('MONTHLY')
@@ -54,6 +54,37 @@ plugin.generate_calc_input_dlg.time_varying_profile_dlg.plainTextEdit_csv.setPla
 tvp = plugin.generate_calc_input_dlg.time_varying_profile_dlg.get_tvp()
 plugin.generate_calc_input_dlg.add_tvp_to_table(tvp)
 
+#tvp 3
+plugin.generate_calc_input_dlg.time_varying_profile_dlg.lineEdit_id.setText('3')
+plugin.generate_calc_input_dlg.time_varying_profile_dlg.lineEdit_label.setText('Drie')
+plugin.generate_calc_input_dlg.time_varying_profile_dlg.combo_custom_type.setCurrentText('THREE_DAY')
+csv = '''1.0000;2.0000;3.0000
+4.0000;5.0000;6.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;1.0000
+1.0000;0.0000;0.0000
+1.0000;0.0000;0.0000
+1.0000;0.0000;0.0000
+1.0000;0.0000;0.0000
+1.0000;0.0000;0.0000
+1.0000;0.0000;0.0000
+1.0000;1.0000;1.0000'''
+plugin.generate_calc_input_dlg.time_varying_profile_dlg.plainTextEdit_csv.setPlainText(csv)
+tvp = plugin.generate_calc_input_dlg.time_varying_profile_dlg.get_tvp()
+plugin.generate_calc_input_dlg.add_tvp_to_table(tvp)
 
 # Generate GML
 
