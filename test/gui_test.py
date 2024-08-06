@@ -40,7 +40,7 @@ plugin.generate_calc_input_dlg.tvp_model.clear()
 plugin.generate_calc_input_dlg.time_varying_profile_dlg.lineEdit_id.setText('1')
 plugin.generate_calc_input_dlg.time_varying_profile_dlg.lineEdit_label.setText('Een')
 plugin.generate_calc_input_dlg.time_varying_profile_dlg.combo_custom_type.setCurrentText('THREE_DAY')
-csv = '1.0;0.9;1.2\n1.0;1.1;0.8\n' * 12
+csv = '1.0,0.9,1.2\n1.0,1.1,0.8\n' * 12
 plugin.generate_calc_input_dlg.time_varying_profile_dlg.plainTextEdit_csv.setPlainText(csv)
 tvp = plugin.generate_calc_input_dlg.time_varying_profile_dlg.get_tvp()
 plugin.generate_calc_input_dlg.add_tvp_to_table(tvp)
@@ -58,30 +58,30 @@ plugin.generate_calc_input_dlg.add_tvp_to_table(tvp)
 plugin.generate_calc_input_dlg.time_varying_profile_dlg.lineEdit_id.setText('3')
 plugin.generate_calc_input_dlg.time_varying_profile_dlg.lineEdit_label.setText('Drie')
 plugin.generate_calc_input_dlg.time_varying_profile_dlg.combo_custom_type.setCurrentText('THREE_DAY')
-csv = '''1.0000;2.0000;3.0000
-4.0000;5.0000;6.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;1.0000
-1.0000;0.0000;0.0000
-1.0000;0.0000;0.0000
-1.0000;0.0000;0.0000
-1.0000;0.0000;0.0000
-1.0000;0.0000;0.0000
-1.0000;0.0000;0.0000
-1.0000;1.0000;1.0000'''
+csv = '''0.9,1.0,1.0
+0.9,1.0,1.0
+0.9,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.1,1.0,1.0
+1.1,1.0,1.0
+1.2,1.0,1.0
+1.1,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+0.9,1.0,1.0
+0.9,1.0,1.0'''
 plugin.generate_calc_input_dlg.time_varying_profile_dlg.plainTextEdit_csv.setPlainText(csv)
 tvp = plugin.generate_calc_input_dlg.time_varying_profile_dlg.get_tvp()
 plugin.generate_calc_input_dlg.add_tvp_to_table(tvp)

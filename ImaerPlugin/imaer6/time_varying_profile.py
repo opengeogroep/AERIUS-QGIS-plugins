@@ -91,7 +91,7 @@ class CustomTimeVaryingProfile(TimeVaryingProfile):
                 i = (num_rows * col_nr) + row_nr
                 result += str(self.values[i])
                 if col_nr < num_cols - 1:
-                    result += ';'
+                    result += ','
                 else:
                     result += '\n'
         return result
@@ -107,7 +107,7 @@ class CustomTimeVaryingProfile(TimeVaryingProfile):
             values = []
             if not len(line.strip()) > 0:
                 continue
-            for part in line.split(';'):
+            for part in line.split(','):
                 try:
                     values.append(float(part))
                 except ValueError:
