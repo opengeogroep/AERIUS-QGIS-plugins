@@ -61,7 +61,7 @@ Those are typically stand alone GML files to upload to AERIUS Connect for calula
 ![dialog](img/generate_aerius_calculator_input_dlg_dv.png)
 
 Diurnal variation profiles are not created from a layer (as there is no geometry needed) but by hand
-from a semicolon separated value table.
+from a comma separated value table.
 
 The three values per hour of the day are for mon-fri ; saturday ; sunday. In total there should b 72 values (24h x 7d).
 
