@@ -826,7 +826,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 vehicles_per_time_unit=movements,
                 time_unit=time_unit,
                 description=description,
-                emission=emission
+                emissions=emission
             )
             vehicles.append(veh)
 
