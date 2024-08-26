@@ -30,7 +30,8 @@ from qgis.core import (
     QgsExpressionContextUtils,
     QgsCoordinateReferenceSystem,
     QgsCoordinateTransform,
-    QgsSettings)
+    QgsSettings,
+    QgsCsException)
 from qgis.gui import QgsMapLayerComboBox
 
 from ImaerPlugin.tasks import (
@@ -281,12 +282,17 @@ class ImaerPlugin:
 
             layer_crs = layer.crs()
             extent_transform = QgsCoordinateTransform(layer_crs, canvas_crs, QgsProject.instance())
-            layer_extent = extent_transform.transformBoundingBox(layer.extent())
+            
+            try:
+                layer_extent = extent_transform.transformBoundingBox(layer.extent())
+            except QgsCsException:
+                layer_extent = None
 
-            if total_extent is None:
-                total_extent = layer_extent
-            else:
-                total_extent.combineExtentWith(layer_extent)
+            if layer_extent is not None:
+                if total_extent is None:
+                    total_extent = layer_extent
+                else:
+                    total_extent.combineExtentWith(layer_extent)
 
             if make_groups and (layer_group is None):
                 root = QgsProject.instance().layerTreeRoot()
