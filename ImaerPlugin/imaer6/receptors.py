@@ -66,7 +66,7 @@ class Receptor(object):
         self.height = None
         self.assessment_category = None
         self.road_local_fraction_no2 = None
-        self.habitat_code = None
+        # self.habitat_code = None
 
     def is_valid(self):
         return self.local_id is not None
@@ -175,6 +175,11 @@ class Receptor(object):
             if xml_reader.name() == 'assessmentCategory' and xml_reader.isStartElement():
                 xml_reader.readNext()
                 self.assessment_category = xml_reader.text()
+
+            if xml_reader.name() == 'roadLocalFractionNO2' and xml_reader.isStartElement():
+                xml_reader.readNext()
+                text = xml_reader.text().strip()
+                self.road_local_fraction_no2 = float(text)
 
     def get_results_dict(self):
         results_dict = {}
@@ -368,6 +373,7 @@ class CalculationPoint(Receptor):
         attributes.append(self.label)
         attributes.append(self.height)
         attributes.append(self.assessment_category)
+        attributes.append(self.road_local_fraction_no2)
 
         attr_dict = self.get_attributes_dict()
         attributes.append(attr_dict['deposition_nox_nh3_sum'])

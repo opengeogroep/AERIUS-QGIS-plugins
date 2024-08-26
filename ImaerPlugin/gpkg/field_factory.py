@@ -36,7 +36,8 @@ field_config = {
         'calculation_point_id': QVariant.String,
         'label': QVariant.String,
         'height': QVariant.Double,
-        'assessment_category': QVariant.String
+        'assessment_category': QVariant.String,
+        'road_local_fraction_no2': QVariant.Double
     }
 }
 
