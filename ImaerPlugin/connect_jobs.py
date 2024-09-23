@@ -85,11 +85,9 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         # self.plugin.log('show_feedback()', user='dev')
         # self.plugin.log(str(type(fb)), user='dev')
 
-        if isinstance(fb, dict):
+        if isinstance(fb, dict) or isinstance(fb, list):
             txt = json.dumps(fb, indent=4)
             print(txt)
-            return
-            # self.text_feedback.setText(txt)
 
     def validate(self):
         related_widgets = self.get_related_data_widgets(self.sender())
@@ -139,24 +137,42 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
         jobs_dict = result
 
-        cols = {0: 'name', 1: 'jobKey', 2: 'startDateTime', 3: 'status', 4: 'hectareCalculated'}
-        info_col = len(cols)  # Last column
-
         for job in jobs_dict:
             row_num = self.table_jobs.rowCount()
             self.table_jobs.insertRow(row_num)
-            for k, v in cols.items():
-                if v in job:
-                    self.table_jobs.setItem(row_num, k, QTableWidgetItem(str(job[v])))
+
+            col_num = 0
+            value = job['name']
+            self.table_jobs.setItem(row_num, col_num, QTableWidgetItem(str(value)))
+
+            col_num = 1
+            value = job['jobKey']
+            self.table_jobs.setItem(row_num, col_num, QTableWidgetItem(str(value)))
+
+            col_num = 2
+            value = job['startDateTime']
+            self.table_jobs.setItem(row_num, col_num, QTableWidgetItem(str(value)))
+
+            col_num = 3
+            value = job['status']
+            self.table_jobs.setItem(row_num, col_num, QTableWidgetItem(str(value)))
+
+            col_num = 4
+            number_of_points_calculated = job['numberOfPointsCalculated']
+            number_of_points = job['numberOfPoints']
+            percentage = number_of_points_calculated / number_of_points * 100
+            value = f'{percentage:.0f}%'
+            self.table_jobs.setItem(row_num, col_num, QTableWidgetItem(value))
+
+            col_num = 5
             if 'status' in job:
                 info_text = None
-
                 if job['status'] == 'ERROR' and 'errorMessage' in job:
                     info_text = job['errorMessage']
                 if job['status'] == 'COMPLETED' and 'resultUrl' in job:
                     info_text = job['resultUrl']
                 if info_text is not None:
-                    self.table_jobs.setItem(row_num, info_col, QTableWidgetItem(info_text))
+                    self.table_jobs.setItem(row_num, col_num, QTableWidgetItem(info_text))
 
     def cancel_jobs(self):
         '''Sends a cancel request to the server for the selected jobs'''
