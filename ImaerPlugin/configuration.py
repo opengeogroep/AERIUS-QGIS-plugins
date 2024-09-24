@@ -50,7 +50,7 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         for crs in ui_settings['crs']:
             crs_name = f"{crs['name']} ({crs['srid']})"
             self.combo_crs.addItem(crs_name, crs['srid'])
-        self.combo_connect_ver.addItems(self.plugin.aerius_connection.available_versions)
+        self.combo_connect_ver.addItems(ui_settings['supported_connect_versions'])
         self.file_dialog = QFileDialog()
         self.button_get_key.clicked.connect(self.get_api_key)
         self.button_browse_work_dir.clicked.connect(self.browse_work_dir)

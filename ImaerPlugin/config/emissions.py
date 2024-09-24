@@ -110,6 +110,13 @@ ui_settings = {
     'situation_types_connect': ['DEFINED_BY_FILE', 'REFERENCE', 'PROPOSED', 'TEMPORARY'],
     'countries': ['NL', 'UK'],
     'connect_countries': ['NL'],
+    'connect_url': {
+        'NL': 'https://calculator-dev.aerius.nl/api'
+    },
+    'connect_version': {
+        'NL': '8'
+    },
+    'supported_connect_versions': ['8'],
     'supported_imaer_versions': ['6.0'],
     'crs': [
         {'name': 'Amersfoort / RD New - Netherlands', 'srid': 28992},

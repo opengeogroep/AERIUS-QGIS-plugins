@@ -124,7 +124,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         while self.table_jobs.rowCount() > 0:
             self.table_jobs.removeRow(0)
 
-        if not self.plugin.aerius_connection.api_key_is_ok:
+        if self.plugin.aerius_connection is None or (not self.plugin.aerius_connection.api_key_is_ok):
             return
 
         QgsApplication.setOverrideCursor(Qt.WaitCursor)
