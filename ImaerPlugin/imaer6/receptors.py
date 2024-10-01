@@ -1,4 +1,11 @@
-from qgis.core import QgsFeature
+from math import sqrt
+
+from qgis.core import (
+    QgsFeature,
+    QgsPoint,
+    QgsLineString,
+    QgsPolygon
+)
 
 from .geometry import GmlPoint, GmlPolygon
 from .identifier import Nen3610Id
@@ -52,7 +59,7 @@ class Receptor(object):
         self.local_id = local_id
         self.identifier = identifier
         self.gm_point = geom
-        self.representation = None
+        #self.representation = None
         self.edge_effect = None
         self.level = None
         self.results = results or []
@@ -90,11 +97,13 @@ class Receptor(object):
             gmp_elem.appendChild(pnt_elem)
             elem.appendChild(gmp_elem)
 
+        '''
         if self.representation is not None:
             repr_elem = doc.createElement('imaer:representation')
             poly_elem = self.representation.to_xml_elem(doc)
             repr_elem.appendChild(poly_elem)
             elem.appendChild(repr_elem)
+        '''
 
         for result in self.results:
             result_elem = doc.createElement('result')
@@ -135,6 +144,7 @@ class Receptor(object):
                     if geom.is_valid():
                         self.gm_point = geom
 
+            '''
             if xml_reader.name() == 'representation':
                 xml_reader.readNextStartElement()
                 if xml_reader.name() == 'Polygon':
@@ -143,6 +153,7 @@ class Receptor(object):
                     # print(geom)
                     if geom.is_valid():
                         self.representation = geom
+            '''
 
             if xml_reader.name() == 'CalculationResult':
                 result = CalculationResult()
@@ -259,7 +270,10 @@ class ReceptorPoint(Receptor):
             return
 
         feat = QgsFeature()
-        feat.setGeometry(self.representation.to_geometry())
+        #feat.setGeometry(self.representation.to_geometry())
+        hexagon = AeriusHexagon(10000)
+        polygon = hexagon.get_polygon(self.gm_point.x, self.gm_point.y)
+        feat.setGeometry(polygon)
 
         attributes = []
         attributes.append(fid)
@@ -391,3 +405,40 @@ class CalculationPoint(Receptor):
 
         feat.setAttributes(attributes)
         return feat
+
+
+class AeriusHexagon():
+    
+    def __init__(self, area):
+        self.area = area
+        self.c = sqrt(self.area / (1.5 * sqrt(3)))
+        self.a = self.c / 2
+        self.b = self.a * sqrt(3)
+
+    def get_polygon(self, x0, y0):
+        x1 = round(x0 - self.c)
+        x2 = round(x0 - self.a)
+        x4 = round(x0 + self.a)
+        x5 = round(x0 + self.c)
+        y1 = round(y0 - self.b)
+        y2 = round(y0)
+        y3 = round(y0 + self.b)
+        
+        p1 = QgsPoint(x4,y3)
+        p2 = QgsPoint(x5,y2)
+        p3 = QgsPoint(x4,y1)
+        p4 = QgsPoint(x2,y1)
+        p5 = QgsPoint(x1,y2)
+        p6 = QgsPoint(x2,y3)
+        
+        p = QgsPolygon()
+        l = QgsLineString()
+        l.addVertex(p1)
+        l.addVertex(p2)
+        l.addVertex(p3)
+        l.addVertex(p4)
+        l.addVertex(p5)
+        l.addVertex(p6)
+        l.addVertex(p1)
+        p.setExteriorRing(l)
+        return p

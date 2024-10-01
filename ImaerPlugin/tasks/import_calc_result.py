@@ -99,13 +99,12 @@ class ImportImaerCalculatorResultTask(QgsTask):
         for member in doc.feature_members:
             # self.log(member.__class__.__name__)
             if member.__class__.__name__ == 'ReceptorPoint':
+                epsg_id = int(member.gm_point.epsg_id)
                 if receptor_points_layer is None:
-                    epsg_id = int(member.gm_point.epsg_id)
                     gpkg.create_layer_receptor_points(epsg_id)
                     receptor_points_layer = QgsVectorLayer(f'{self.gpkg_fn}|layername=receptor_points', 'receptor_points', 'ogr')
                     receptor_points_layer.startEditing()
                 if receptor_hexagons_layer is None:
-                    epsg_id = int(member.representation.epsg_id)
                     gpkg.create_layer_receptor_hexagons(epsg_id)
                     receptor_hexagons_layer = QgsVectorLayer(f'{self.gpkg_fn}|layername=receptor_hexagons', 'receptor_hexagons', 'ogr')
                     receptor_hexagons_layer.startEditing()
