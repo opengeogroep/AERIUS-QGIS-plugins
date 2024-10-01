@@ -308,34 +308,6 @@ class AeriusConnection():
                     result.append(gml_fn)
         return result
 
-    '''
-    def download_zip(self, download_url):
-        print('download_zip()')
-        print(download_url)
-
-        manager = QgsNetworkAccessManager.instance()
-
-        url = QUrl(download_url)
-        print(url)
-
-        request = QNetworkRequest(url)
-
-        manager.finished.connect(self.download_zip_handler)
-        manager.get(request)
-
-    def download_zip_handler(self, reply):
-        print(reply)
-
-        er = reply.error()
-        if not er == QNetworkReply.NoError:
-            print("Error occured: ", er)
-            print(reply.errorString())
-            return False
-        with open('/home/raymond/tmp/imaer_test.zip', 'wb') as out_file:
-            out_file.write(reply.content())
-        return True
-    '''
-
     def post_calculate(self, gml_files, user_options={}):
         '''Start a new calculation'''
         self._log('post_calculate()')
