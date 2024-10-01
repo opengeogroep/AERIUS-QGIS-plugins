@@ -346,7 +346,7 @@ class AeriusConnection():
         end_point = end_points[self.version]
 
         options = {}
-        options['outputType'] = 'GML'  # GML or PDF
+        options['outputType'] = 'GML'
         options['sendEmail'] = False
         # update default options with user options
         options.update(user_options)

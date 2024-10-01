@@ -34,13 +34,8 @@ from qgis.core import (
     QgsCsException)
 from qgis.gui import QgsMapLayerComboBox
 
-from ImaerPlugin.tasks import (
-    ImportImaerCalculatorResultTask,
-    ExtractGmlFromPdfTask
-)
-
+from ImaerPlugin.tasks import ImportImaerCalculatorResultTask
 from ImaerPlugin.algs.provider import ImaerProvider
-
 from ImaerPlugin.generate_calc_input import GenerateCalcInputDialog
 from ImaerPlugin.configuration import ConfigurationDialog
 from ImaerPlugin.connect_receptorsets import ConnectReceptorSetsDialog
@@ -111,11 +106,6 @@ class ImaerPlugin:
                 'icon': 'icon_import_calc_result.svg',
                 'tool_tip': 'Import IMAER Calculator result GML',
                 'triggered_slot': self.run_import_calc_result
-            }, {
-                'name': 'extract_gml_from_pdf',
-                'icon': 'icon_extract_gml_from_pdf.svg',
-                'tool_tip': 'Extract GML from Aerius PDF',
-                'triggered_slot': self.run_extract_gml_from_pdf
             }, {
                 'name': 'generate_calc_input',
                 'icon': 'icon_generate_calc_input.svg',
@@ -393,27 +383,6 @@ class ImaerPlugin:
             if labeling is not None:
                 layer.setLabeling(labeling)
                 # layer.setLabelsEnabled(True)
-
-    def run_extract_gml_from_pdf(self):
-        if self.dev:
-            self.calc_result_file_dialog.setDirectory('/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata')
-        pdf_fn, filter = self.calc_result_file_dialog.getOpenFileName(caption="Open IMAER PDF file", filter='*.pdf', parent=self.iface.mainWindow())
-        self.log(f'run pdf: {pdf_fn}', user='dev')
-
-        if os.path.exists(os.path.dirname(pdf_fn)):
-            gml_fn = pdf_fn.replace('.pdf', '_{0}.gml')
-            task = ExtractGmlFromPdfTask(pdf_fn, gml_fn, self.extract_gml_from_pdf_callback)
-            self.task_manager.addTask(task)
-            self.log('added ExtractGmlFromPdfTask to task manager', user='dev')
-
-    def extract_gml_from_pdf_callback(self, fns):
-        if len(fns) == 0:
-            msg = 'No GML found in the PDF document.'
-            self.iface.messageBar().pushMessage('Warning', msg, level=Qgis.Warning, duration=10)
-            return
-        for fn in fns:
-            msg = 'Extracted GML file saved as: <a href="{0}">{0}</a>'.format(fn)
-            self.iface.messageBar().pushMessage('Success', msg, level=Qgis.Info, duration=10)
 
     def get_imaer_calc_metadata(self, layer):
         '''Returns IMAER gpkg metadata from cache or attempts

@@ -105,7 +105,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
         user_options = {}
         user_options['name'] = self.edit_name.text()
-        user_options['outputType'] = 'GML'  # GML or PDF
+        user_options['outputType'] = 'GML'
         user_options['calculationPointsType'] = self.combo_calc_type.currentText()
         if user_options['calculationPointsType'] == 'CUSTOM_POINTS':
             user_options['receptorSetName'] = self.combo_receptor_set.currentData()
