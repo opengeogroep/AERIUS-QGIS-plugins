@@ -395,7 +395,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         country = self.combo_country.currentData()
         crs_dest_srid = self.combo_crs.currentData()
-        crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
+        crs_dest = QgsCoordinateReferenceSystem.fromEpsgId(crs_dest_srid)
 
         gml_creator = f'QgisImaerPlugin-{self.plugin.version}'
 

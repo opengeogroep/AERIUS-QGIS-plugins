@@ -28,7 +28,6 @@ from qgis.core import (
     QgsProject,
     QgsApplication,
     QgsExpressionContextUtils,
-    QgsCoordinateReferenceSystem,
     QgsCoordinateTransform,
     QgsSettings,
     QgsCsException)

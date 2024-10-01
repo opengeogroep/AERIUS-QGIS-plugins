@@ -6,7 +6,6 @@ from qgis.core import (
     QgsTask,
     QgsMessageLog,
     QgsProviderRegistry,
-    QgsCoordinateReferenceSystem,
     QgsFields,
     QgsField,
     QgsWkbTypes,
