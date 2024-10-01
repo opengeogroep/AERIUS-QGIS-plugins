@@ -70,7 +70,7 @@ class ImaerPlugin:
         self.provider = None
         self.imaer_calc_layers = {}
         self.settings = QgsSettings()
-        self.version = '3.5.1'
+        self.version = '3.6.0'
         self.imaer_doc = ImaerDocument()
         self.imaer_gpkg = ImaerGpkg(None)
         self.imaer_gpkg_field_factory = ImaerGpkgFieldFactory()
