@@ -102,15 +102,15 @@ class ImaerPlugin:
 
         self.action_configuration = [
             {
-                'name': 'import_calc_result',
-                'icon': 'icon_import_calc_result.svg',
-                'tool_tip': 'Import IMAER Calculator result GML',
-                'triggered_slot': self.run_import_calc_result
-            }, {
                 'name': 'generate_calc_input',
                 'icon': 'icon_generate_calc_input.svg',
                 'tool_tip': 'Generate IMAER Calculator input gml',
                 'triggered_slot': self.run_generate_calc_input
+            }, {
+                'name': 'import_calc_result',
+                'icon': 'icon_import_calc_result.svg',
+                'tool_tip': 'Import IMAER Calculator result GML',
+                'triggered_slot': self.run_import_calc_result
             }, {
                 'name': 'relate_calc_results',
                 'icon': 'icon_relate_calc_results.svg',
