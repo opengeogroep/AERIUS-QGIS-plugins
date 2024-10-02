@@ -75,7 +75,7 @@ class ImportImaerCalculatorResultTask(QgsTask):
         # metadata
         gpkg.set_metadata('gml_fn', doc.gml_fn)
         gpkg.set_metadata('imaer_version', doc.get_version().to_string())
-        
+
         if doc.metadata is None:
             situation_name = ''
         elif doc.metadata.situation is None:

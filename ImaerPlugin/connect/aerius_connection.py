@@ -68,7 +68,7 @@ class AeriusConnection():
                 print(f'AeriusConnection: {msg}')
         else:
             self.plugin.log(msg, user=self.user)
-    
+
     def is_valid(self):
         if self.version is None:
             return False

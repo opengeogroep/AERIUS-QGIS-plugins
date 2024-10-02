@@ -35,7 +35,7 @@ class VersionNumber():
         result += self.numbers[1] * 100
         result += self.numbers[2]
         return result
-    
+
     def round(self, lvl=1):
         if lvl < 3:
             self.numbers[2] = 0

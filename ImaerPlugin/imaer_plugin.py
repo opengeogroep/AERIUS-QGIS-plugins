@@ -195,7 +195,7 @@ class ImaerPlugin:
         if gml_fn is None:
             gml_fn, _ = self.calc_result_file_dialog.getOpenFileName(caption="Open Calculator result GML file", filter='*.gml', parent=self.iface.mainWindow())
             # self.log(f'gml_fn: {gml_fn}')
-        
+
         if gml_fn == '' or gml_fn is None:
             return
 
@@ -214,7 +214,7 @@ class ImaerPlugin:
         task = ImportImaerCalculatorResultTask(self, gml_fn, gpkg_fn, self.import_calc_result_callback)
         task_result = self.task_manager.addTask(task)
         # self.log(f'task result: {task_result}')
-    
+
     def import_calc_result_callback(self, result, gpkg_fn=None):
         # self.log(result)
         if result['status'] == 'ok':
@@ -269,7 +269,7 @@ class ImaerPlugin:
 
             layer_crs = layer.crs()
             extent_transform = QgsCoordinateTransform(layer_crs, canvas_crs, QgsProject.instance())
-            
+
             try:
                 layer_extent = extent_transform.transformBoundingBox(layer.extent())
             except QgsCsException:
