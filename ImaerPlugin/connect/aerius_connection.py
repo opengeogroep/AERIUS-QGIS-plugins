@@ -30,12 +30,15 @@ class AeriusConnection():
 
     def __init__(self, plugin, base_url=None, version=None, api_key=None, do_check_connection=True, user='user'):
         self.plugin = plugin
-        self.available_versions = ['7']
+        self.available_versions = ['8']
         self.default_base_url = 'https://connect.aerius.nl/api'
-        self.default_version = '7'
+        self.default_version = '8'
 
         self.base_url = base_url
-        self.version = version
+        if version in self.available_versions:
+            self.version = version
+        else:
+            self.version = None
         self.api_key = api_key
         self.user = user
 
@@ -65,6 +68,10 @@ class AeriusConnection():
                 print(f'AeriusConnection: {msg}')
         else:
             self.plugin.log(msg, user=self.user)
+    
+    def is_valid(self):
+        if self.version is None:
+            return False
 
     def check_connection(self, test_api_key=True):
         '''
@@ -211,7 +218,7 @@ class AeriusConnection():
     def server_is_up(self):
         self._log('server_is_up()')
         end_points = {
-            '7': 'actuator/health'
+            '8': 'actuator/health'
         }
         end_point = end_points[self.version]
         response = self.run_request(end_point, 'GET', with_api_key=False, with_version=False)
@@ -222,7 +229,7 @@ class AeriusConnection():
         if self.base_url is None:
             return
         end_points = {
-            '7': 'user/generateApiKey'
+            '8': 'user/generateApiKey'
         }
         end_point = end_points[self.version]
         data = {'email': email}
@@ -235,7 +242,7 @@ class AeriusConnection():
     def get_jobs(self):
         self._log('get_jobs()')
         end_points = {
-            '7': 'jobs'
+            '8': 'jobs'
         }
         end_point = end_points[self.version]
 
@@ -253,7 +260,7 @@ class AeriusConnection():
     def cancel_job(self, job_key):
         self._log('cancel_job()')
         end_points = {
-            '7': f'jobs/{job_key}/cancel'
+            '8': f'jobs/{job_key}/cancel'
         }
         end_point = end_points[self.version]
 
@@ -263,7 +270,7 @@ class AeriusConnection():
     def delete_job(self, job_key):
         self._log('delete_job()')
         end_points = {
-            '7': f'jobs/{job_key}'
+            '8': f'jobs/{job_key}'
         }
         end_point = end_points[self.version]
 
@@ -301,45 +308,17 @@ class AeriusConnection():
                     result.append(gml_fn)
         return result
 
-    '''
-    def download_zip(self, download_url):
-        print('download_zip()')
-        print(download_url)
-
-        manager = QgsNetworkAccessManager.instance()
-
-        url = QUrl(download_url)
-        print(url)
-
-        request = QNetworkRequest(url)
-
-        manager.finished.connect(self.download_zip_handler)
-        manager.get(request)
-
-    def download_zip_handler(self, reply):
-        print(reply)
-
-        er = reply.error()
-        if not er == QNetworkReply.NoError:
-            print("Error occured: ", er)
-            print(reply.errorString())
-            return False
-        with open('/home/raymond/tmp/imaer_test.zip', 'wb') as out_file:
-            out_file.write(reply.content())
-        return True
-    '''
-
     def post_calculate(self, gml_files, user_options={}):
         '''Start a new calculation'''
         self._log('post_calculate()')
 
         end_points = {
-            '7': 'wnb/calculate'
+            '8': 'own2000/calculate'
         }
         end_point = end_points[self.version]
 
         options = {}
-        options['outputType'] = 'GML'  # GML or PDF
+        options['outputType'] = 'GML'
         options['sendEmail'] = False
         # update default options with user options
         options.update(user_options)
@@ -367,7 +346,8 @@ class AeriusConnection():
         ]
 
         for f in files:
-            print(f)
+            pass
+            # print(f)
         for fp in file_parts:
             pass
             # print(fp)
@@ -379,7 +359,7 @@ class AeriusConnection():
         'Returns a dictionary of receptor sets, or None in case of network errors'
         self._log('get_receptor_sets()')
         end_points = {
-            '7': 'receptorSets'
+            '8': 'receptorSets'
         }
         end_point = end_points[self.version]
         data = {}
@@ -397,7 +377,7 @@ class AeriusConnection():
         '''Posts a new receptor set'''
         self._log('post_receptor_set()')
         end_points = {
-            '7': 'receptorSets'
+            '8': 'receptorSets'
         }
         end_point = end_points[self.version]
 
@@ -427,7 +407,7 @@ class AeriusConnection():
     def post_validate(self, gml_fn):
         self._log('post_validate()')
         end_points = {
-            '7': 'utility/validate'
+            '8': 'utility/validate'
         }
         end_point = end_points[self.version]
 

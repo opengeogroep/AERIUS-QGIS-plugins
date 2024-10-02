@@ -20,7 +20,7 @@ sys.path.append(dev_config['path_qgis_python_folder'])
 
 from qgis.core import *
 
-from imaer5 import *
+from imaer6 import *
 
 _GEOM0 = QgsGeometry.fromWkt('POINT(148458.0 411641.0)')
 _GEOM1 = QgsGeometry.fromWkt('LINESTRING((1 0, 2 1, 3 0))')
@@ -31,12 +31,13 @@ _GEOM_POINT_UK_1 = QgsGeometry.fromWkt('POINT(311618 723548)')
 _GEOM_POLY_UK_1 = QgsGeometry.fromWkt('POLYGON((311608 723548, 311618 723558, 311628 723548, 311618 723538, 311608 723548))')
 
 # Load IMAER xsd for validation check. (Needs internet connection and can take pretty long.)
-xsd_fn = os.path.join('test', 'xsd', 'IMAER_5.1.2.xsd')
+# xsd_fn = os.path.join('test', 'xsd', 'IMAER_5.1.2.xsd')
+xsd_fn = os.path.join('test', 'xsd', 'IMAER_6.0.0.xsd')
 xmlschema_doc = etree.parse(xsd_fn)
 xmlschema = etree.XMLSchema(xmlschema_doc)
 
 
-class TestImaer(unittest.TestCase):
+class TestImaerGenerate(unittest.TestCase):
 
     def __init__(self, whatever):
         # print('init')
@@ -73,9 +74,9 @@ class TestImaer(unittest.TestCase):
     def test_ffc_metadata(self):
         fcc = ImaerDocument()
         fcc.metadata = AeriusCalculatorMetadata(
-            project={'year': 2020, 'description': 'Some description...'},
-            situation={'name': 'Situation 1', 'reference': 'ABCDE12345', 'type': 'PROPOSED'},
-            calculation={'type': 'NATURE_AREA', 'substances': ['NH3', 'NOX'], 'result_type': 'DEPOSITION'},
+            project={'year': 2020, 'name': 'Project name', 'description': 'Some description...'},
+            situation={'name': 'Situation 1', 'reference': 'ABCDE12345', 'type': 'OFF_SITE_REDUCTION'},
+            calculation={'method': 'NATURE_AREA', 'substances': ['NH3', 'NOX'], 'result_types': ['DEPOSITION', 'CONCENTRATION', 'EXCEEDANCE_DAYS', 'EXCEEDANCE_HOURS']},
             version={'aeriusVersion': '2019A_20200610_3aefc4c15b', 'databaseVersion': '2019A_20200610_3aefc4c15b'},
             gml_creator=f'QgisImaerPlugin-3.1.1'
         )
@@ -88,11 +89,19 @@ class TestImaer(unittest.TestCase):
         fcc.feature_members.append(es)
         self.generate_gml_file(fcc, 'em_simple')
 
+    def test_ffc_emission_simple_with_identifier(self):
+        fcc = ImaerDocument()
+        identifier = Nen3610Id(namespace='UK.IMAER', local_id=1234)
+        es = EmissionSource(local_id=123, sector_id=9000, label='Bron 123', geom=_GEOM0, epsg_id=28992, identifier=identifier)
+        es.emissions.append(Emission('NH3', 1))
+        fcc.feature_members.append(es)
+        self.generate_gml_file(fcc, 'em_simple_with_identifier')
+
     def test_ffc_emission_characteristics01(self):
         hc = SpecifiedHeatContent(value=12.5)
         es = EmissionSource(local_id=1234, sector_id=9999, label='Bron 1234', geom=_GEOM1, epsg_id=28992)
-        dv = StandardDiurnalVariation(standard_type='LIGHT_DUTY_VEHICLES')
-        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation=dv)
+        tvp = StandardTimeVaryingProfile(standard_type='LIGHT_DUTY_VEHICLES')
+        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, time_varying_profile=tvp)
         es.emissions.append(Emission('NH3', 4.3))
         es.emissions.append(Emission('NOX', 4.4))
         fcc = ImaerDocument()
@@ -103,12 +112,12 @@ class TestImaer(unittest.TestCase):
         fcc = ImaerDocument()
         hc = SpecifiedHeatContent(value=12.5)
         es = EmissionSource(local_id=125, sector_id=9999, label='Bron 125', geom=_GEOM1, epsg_id=28992)
-        rdv = ReferenceDiurnalVariation(local_id=125)
-        cdv = CustomDiurnalVariation(local_id=125, label='Test label', custom_type='DAY', values=[0.5, 1, 1.5] * 8)
-        fcc.definitions.append(cdv)
-        cdv = CustomDiurnalVariation(local_id=126, label='Test label', custom_type='THREE_DAY', values=[5, 1, 1] * 24)
-        fcc.definitions.append(cdv)
-        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, diurnal_variation=rdv)
+        rtvp = ReferenceTimeVaryingProfile(local_id=125)
+        ctvp = CustomTimeVaryingProfile(local_id=125, label='Test label', custom_type='DAY', values=[0.5, 1, 1.5] * 8)
+        fcc.definitions.append(ctvp)
+        ctvp = CustomTimeVaryingProfile(local_id=126, label='Test label', custom_type='THREE_DAY', values=[5, 1, 1] * 24)
+        fcc.definitions.append(ctvp)
+        es.emission_source_characteristics = EmissionSourceCharacteristics(heat_content=hc, emission_height=2.4, spread=3, time_varying_profile=rtvp)
         es.emissions.append(Emission('NH3', 5))
         es.emissions.append(Emission('NOX', 5.22))
         fcc.feature_members.append(es)
@@ -123,11 +132,11 @@ class TestImaer(unittest.TestCase):
             label='building no. 123',
             geom=_GEOM_POLY_UK_1,
             epsg_id=27700)
-        dv = StandardDiurnalVariation(standard_type='LIGHT_DUTY_VEHICLES')
+        tvp = StandardTimeVaryingProfile(standard_type='LIGHT_DUTY_VEHICLES')
         es.emission_source_characteristics = ADMSSourceCharacteristics(
             height=0.5, specific_heat_capacity=1012, source_type='POINT',
             diameter=0.01, buoyancy_type='TEMPERATURE', temperature=15, efflux_type='VELOCITY',
-            vertical_velocity=15.0)
+            vertical_velocity=15.0, hourly_variation=tvp, monthly_variation=tvp)
         es.emissions.append(Emission('NH3', 10))
         es.emissions.append(Emission('NOX', 50))
         fcc = ImaerDocument()
@@ -196,7 +205,7 @@ class TestImaer(unittest.TestCase):
             vehicles_per_time_unit=1000,
             time_unit='DAY',
             description='Test test ...',
-            emission=[em]
+            emissions=[em]
         )
         es.vehicles.append(v2)
 
@@ -278,40 +287,41 @@ class TestImaer(unittest.TestCase):
         fcc.feature_members.append(cp)
         self.generate_gml_file(fcc, 'calculation_points_02')
 
-    def test_custom_diurnal_variation_csv(self):
+    def test_custom_time_varying_profile_csv(self):
         fcc = ImaerDocument()
-        cdv = CustomDiurnalVariation(local_id=125, label='Test label 1', custom_type='THREE_DAY')
+        tvp = CustomTimeVaryingProfile(local_id=125, label='Test label 1', custom_type='THREE_DAY')
         csv_text = '''
-0.9;1.0;1.0
-0.9;1.0;1.0
-0.9;1.0;1.0
-1.0;1.0;1.0
-1.0;1.0;1.0
-1.0;1.0;1.0
-1.0;1.0;1.0
-1.0;1.0;1.0
-1.1;1.0;1.0
-1.1;1.0;1.0
-1.2;1.0;1.0
-1.1;1.0;1.0
-1.0;1.0;1.0
-1.0;1.0;1.0
-1.0;1.0;1.0
-1.0;1.0;1.0
-1.0;1.0;1.0
-1.0;1.0;1.0
-1.0;1.0;1.0
-1.0;1.0;1.0
-1.0;1.0;1.0
-1.0;1.0;1.0
-0.9;1.0;1.0
-0.9;1.0;1.0
+0.9,1.0,1.0
+0.9,1.0,1.0
+0.9,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.1,1.0,1.0
+1.1,1.0,1.0
+1.2,1.0,1.0
+1.1,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+1.0,1.0,1.0
+0.9,1.0,1.0
+0.9,1.0,1.0
 
         '''
-        check = cdv.values_from_csv(csv_text)
+        check = tvp.values_from_csv(csv_text)
         assert check is True
-        fcc.definitions.append(cdv)
-        cdv = CustomDiurnalVariation(local_id=126, label='Test label 2', custom_type='DAY')
+        print(tvp.values_to_csv())
+        fcc.definitions.append(tvp)
+        tvp = CustomTimeVaryingProfile(local_id=126, label='Test label 2', custom_type='DAY')
         csv_text = '''
 1
 1
@@ -338,7 +348,8 @@ class TestImaer(unittest.TestCase):
 1
 1
         '''
-        check = cdv.values_from_csv(csv_text)
+        check = tvp.values_from_csv(csv_text)
         assert check is True
-        fcc.definitions.append(cdv)
-        self.generate_gml_file(fcc, 'diurnal_variation_01')
+        print(tvp.values_to_csv())
+        fcc.definitions.append(tvp)
+        self.generate_gml_file(fcc, 'time_varying_profile_01')

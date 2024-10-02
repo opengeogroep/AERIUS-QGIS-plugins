@@ -38,18 +38,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QComboBox" name="combo_calc_type">
-        <item>
-         <property name="text">
-          <string>WNB_RECEPTORS</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>CUSTOM_POINTS</string>
-         </property>
-        </item>
-       </widget>
+       <widget class="QComboBox" name="combo_calc_type"/>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_receptor_set">
@@ -389,7 +378,7 @@
         </column>
         <column>
          <property name="text">
-          <string>hectareCalculated</string>
+          <string>progress</string>
          </property>
         </column>
         <column>

@@ -82,10 +82,10 @@ class StandardVehicle(Vehicle):
 
 class CustomVehicle(Vehicle):
 
-    def __init__(self, *, description='', emission=None, **kwargs):
+    def __init__(self, *, description='', emissions=None, **kwargs):
         super().__init__(**kwargs)
         self.description = description
-        self.emission = emission or []
+        self.emissions = emissions or []
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = super().to_xml_elem(doc)
@@ -94,8 +94,12 @@ class CustomVehicle(Vehicle):
         elem.appendChild(doc.createTextNode(str(self.description)))
         result.appendChild(elem)
 
-        for em in self.emission:
+        for em in self.emissions:
+            em_elem = doc.createElement('imaer:emissionFactor')
+
             elem = em.to_xml_elem(doc)
-            result.appendChild(elem)
+            em_elem.appendChild(elem)
+
+            result.appendChild(em_elem)
 
         return result

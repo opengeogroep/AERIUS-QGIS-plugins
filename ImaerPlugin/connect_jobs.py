@@ -58,16 +58,6 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
         self.set_fixed_options()
 
-        if self.plugin.dev:
-            gml_file_valid = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input/calcinput_20210930_130723.gml'
-            gml_file_27700 = '/home/raymond/terglobo/projecten/aerius/202007_calc_input_plugin/demodata/gen_calc_input/calcinput_20230123_175328.gml'
-            self.edit_gml_input_1.setText(gml_file_valid)
-            self.edit_gml_input_2.setText(gml_file_27700)
-            # self.combo_situation_1.setCurrentText('REFERENCE')
-            # self.combo_situation_2.setCurrentText('PROPOSED')
-            self.combo_year_1.setCurrentText('2022')
-            self.combo_year_2.setCurrentText('2023')
-
         self.update_widgets()
         self.get_jobs()
 
@@ -95,11 +85,9 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         # self.plugin.log('show_feedback()', user='dev')
         # self.plugin.log(str(type(fb)), user='dev')
 
-        if isinstance(fb, dict):
+        if isinstance(fb, dict) or isinstance(fb, list):
             txt = json.dumps(fb, indent=4)
             print(txt)
-            return
-            # self.text_feedback.setText(txt)
 
     def validate(self):
         related_widgets = self.get_related_data_widgets(self.sender())
@@ -117,7 +105,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
         user_options = {}
         user_options['name'] = self.edit_name.text()
-        user_options['outputType'] = 'GML'  # GML or PDF
+        user_options['outputType'] = 'GML'
         user_options['calculationPointsType'] = self.combo_calc_type.currentText()
         if user_options['calculationPointsType'] == 'CUSTOM_POINTS':
             user_options['receptorSetName'] = self.combo_receptor_set.currentData()
@@ -136,7 +124,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         while self.table_jobs.rowCount() > 0:
             self.table_jobs.removeRow(0)
 
-        if not self.plugin.aerius_connection.api_key_is_ok:
+        if self.plugin.aerius_connection is None or (not self.plugin.aerius_connection.api_key_is_ok):
             return
 
         QgsApplication.setOverrideCursor(Qt.WaitCursor)
@@ -149,24 +137,42 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
         jobs_dict = result
 
-        cols = {0: 'name', 1: 'jobKey', 2: 'startDateTime', 3: 'status', 4: 'hectareCalculated'}
-        info_col = len(cols)  # Last column
-
         for job in jobs_dict:
             row_num = self.table_jobs.rowCount()
             self.table_jobs.insertRow(row_num)
-            for k, v in cols.items():
-                if v in job:
-                    self.table_jobs.setItem(row_num, k, QTableWidgetItem(str(job[v])))
+
+            col_num = 0
+            value = job['name']
+            self.table_jobs.setItem(row_num, col_num, QTableWidgetItem(str(value)))
+
+            col_num = 1
+            value = job['jobKey']
+            self.table_jobs.setItem(row_num, col_num, QTableWidgetItem(str(value)))
+
+            col_num = 2
+            value = job['startDateTime']
+            self.table_jobs.setItem(row_num, col_num, QTableWidgetItem(str(value)))
+
+            col_num = 3
+            value = job['status']
+            self.table_jobs.setItem(row_num, col_num, QTableWidgetItem(str(value)))
+
+            col_num = 4
+            number_of_points_calculated = job['numberOfPointsCalculated']
+            number_of_points = job['numberOfPoints']
+            percentage = number_of_points_calculated / number_of_points * 100
+            value = f'{percentage:.0f}%'
+            self.table_jobs.setItem(row_num, col_num, QTableWidgetItem(value))
+
+            col_num = 5
             if 'status' in job:
                 info_text = None
-
                 if job['status'] == 'ERROR' and 'errorMessage' in job:
                     info_text = job['errorMessage']
                 if job['status'] == 'COMPLETED' and 'resultUrl' in job:
                     info_text = job['resultUrl']
                 if info_text is not None:
-                    self.table_jobs.setItem(row_num, info_col, QTableWidgetItem(info_text))
+                    self.table_jobs.setItem(row_num, col_num, QTableWidgetItem(info_text))
 
     def cancel_jobs(self):
         '''Sends a cancel request to the server for the selected jobs'''
@@ -260,11 +266,10 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
 
     def update_widgets(self):
         '''Logic for widget behaviour'''
-        print('update_widgets()')
+        # print('update_widgets()')
 
         receptors_ok = False
-        if self.combo_calc_type.currentText() == 'WNB_RECEPTORS':
-            self.plugin.log('wnb_receptors', user='dev')
+        if self.combo_calc_type.currentText() in ['WNB_RECEPTORS', 'OWN2000_RECEPTORS']:
             self.combo_receptor_set.clear()
             receptors_ok = True
             self.label_receptor_set.setEnabled(False)
@@ -301,6 +306,16 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         self.button_delete.setEnabled(jobs_to_delete > 0)
         self.button_cancel.setEnabled(jobs_to_cancel > 0)
         self.button_download.setEnabled(jobs_to_download > 0)
+
+    def update_combo_calculation_type(self):
+        self.combo_calc_type.clear()
+
+        version = self.plugin.settings.value('imaer_plugin/connect_version')
+        if version == '7':
+            self.combo_calc_type.addItem('WNB_RECEPTORS')
+        elif version == '8':
+            self.combo_calc_type.addItem('OWN2000_RECEPTORS')
+        self.combo_calc_type.addItem('CUSTOM_POINTS')
 
     def update_combo_receptor_set(self):
         """requests available receptor sets and fills combo box """

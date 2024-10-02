@@ -23,6 +23,7 @@ emission_sectors = {
                     'label_rd_b_right_height_max', 'fcb_rd_b_right_height_max',
                     'label_rd_b_right_height_min', 'fcb_rd_b_right_height_min',
                     'label_rd_b_right_porosity', 'fcb_rd_b_right_porosity',
+                    'groupBox_rd_tvp_adms',
                 ],
                 'vehicle_page': 'page_veh_srm2'
             },
@@ -32,6 +33,7 @@ emission_sectors = {
                     'label_rd_elevation_height', 'fcb_rd_elevation_height',
                     'label_rd_b_left_height', 'fcb_rd_b_left_height',
                     'label_rd_b_right_height', 'fcb_rd_b_right_height',
+                    'groupBox_rd_tvp',
                 ],
                 'vehicle_page': 'page_veh_adms'
             }
@@ -61,6 +63,7 @@ emission_sectors = {
                     'label_es_adms_efflux_type', 'fcb_es_adms_efflux_type',
                     'label_es_adms_vertical_velocity', 'fcb_es_adms_vertical_velocity',
                     'label_es_adms_volumetric_flow_rate', 'fcb_es_adms_volumetric_flow_rate',
+                    'groupBox_es_tvp_adms',
                 ]
             },
             'UK': {
@@ -68,6 +71,7 @@ emission_sectors = {
                     'label_es_emission_height', 'fcb_es_emission_height',
                     'label_es_spread', 'fcb_es_spread',
                     'groupBox_heatContent',
+                    'groupBox_es_tvp',
                 ],
             }
         }
@@ -82,29 +86,42 @@ emission_sectors = {
         'tab_name': 'Calculation Points',
         'sector_id': 9997
     },
-    'diurnal_variation': {
-        'emission_tab': 'tab_diurnal_variation',
-        'tab_name': 'Diurnal Variation',
+    'time_varying_profiles': {
+        'emission_tab': 'tab_time_varying_profiles',
+        'tab_name': 'Time Varying Profiles',
         'sector_id': 9996
     }
 }
 
 ui_settings = {
     'project_years': [
+        2018, 2019,
         2020, 2021, 2022, 2023, 2024,
         2025, 2026, 2027, 2028, 2029,
         2030, 2031, 2032, 2033, 2034,
         2035, 2036, 2037, 2038, 2039,
         2040],
-    'project_default_year': 2023,
-    'situation_name': 'Situation 1',
+    'project_default_year': 2024,
+    'situation_name': {'NL': 'Situation 1', 'UK': 'Scenario 1'},
+    'situation_types_gml': {
+        'NL': ['OFF_SITE_REDUCTION', 'PROPOSED', 'REFERENCE', 'TEMPORARY'],
+        'UK': ['COMBINATION_PROPOSED', 'COMBINATION_REFERENCE', 'OFF_SITE_REDUCTION', 'PROPOSED', 'REFERENCE', 'TEMPORARY'],
+    },
     'situation_types_connect': ['DEFINED_BY_FILE', 'REFERENCE', 'PROPOSED', 'TEMPORARY'],
-    'situation_types_gml': ['REFERENCE', 'PROPOSED', 'TEMPORARY', 'NETTING'],
     'countries': ['NL', 'UK'],
-    'imaer_versions': ['5.1'],
+    'connect_countries': ['NL'],
+    'connect_url': {
+        'NL': 'https://calculator.aerius.nl/api'
+    },
+    'connect_version': {
+        'NL': '8'
+    },
+    'supported_connect_versions': ['8'],
+    'supported_imaer_versions': ['6.0'],
     'crs': [
         {'name': 'Amersfoort / RD New - Netherlands', 'srid': 28992},
         {'name': 'OSGB 1936 / British National Grid', 'srid': 27700}
     ],
-    'units_veh_movements': ['p/hour', 'p/24 hour', 'p/month', 'p/year']
+    'units_veh_movements': ['p/hour', 'p/24 hour', 'p/month', 'p/year'],
+    'time_varying_profile_types': ['THREE_DAY', 'MONTHLY']
 }

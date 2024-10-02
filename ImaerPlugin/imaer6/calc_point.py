@@ -1,11 +1,12 @@
 from PyQt5.QtXml import QDomDocument
 
 from .gml import get_gml_element
+from .identifier import Nen3610Id
 
 
 class CalculationPoint(object):
 
-    def __init__(self, *, local_id, geom, epsg_id, label=None, description=None, height=None, assessment_category=None):
+    def __init__(self, *, local_id, geom, epsg_id, label=None, description=None, height=None, assessment_category=None, identifier=None):
         self.local_id = local_id
         self.geometry = geom
         self.epsg_id = epsg_id
@@ -13,6 +14,10 @@ class CalculationPoint(object):
         self.description = description
         self.height = height
         self.assessment_category = assessment_category
+        if identifier is None:
+            self.identifier = Nen3610Id(local_id=f'CP.{self.local_id}')
+        else:
+            self.identifier = identifier
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement(f'imaer:CalculationPoint')
@@ -20,15 +25,7 @@ class CalculationPoint(object):
 
         # identifier
         ident_elem = doc.createElement('imaer:identifier')
-        nen_elem = doc.createElement('imaer:NEN3610ID')
-
-        elem = doc.createElement('imaer:namespace')
-        elem.appendChild(doc.createTextNode('NL.IMAER'))
-        nen_elem.appendChild(elem)
-        elem = doc.createElement('imaer:localId')
-        elem.appendChild(doc.createTextNode(str(self.local_id)))
-        nen_elem.appendChild(elem)
-
+        nen_elem = self.identifier.to_xml_elem(doc)
         ident_elem.appendChild(nen_elem)
         result.appendChild(ident_elem)
 

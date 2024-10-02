@@ -1,11 +1,12 @@
 from PyQt5.QtXml import QDomDocument
 
 from .gml import get_gml_element
+from .identifier import Nen3610Id
 
 
 class EmissionSourceType(object):
 
-    def __init__(self, *, local_id, sector_id, geom, epsg_id, label=None, description=None):
+    def __init__(self, *, local_id, sector_id, geom, epsg_id, label=None, description=None, identifier=None):
         self.label = label
         self.description = description
         self.emission_source_characteristics = None
@@ -15,9 +16,12 @@ class EmissionSourceType(object):
         self.geometry = geom
         self.epsg_id = epsg_id
         self.local_id = local_id
+        if identifier is None:
+            self.identifier = Nen3610Id(local_id=f'ES.{self.local_id}')
+        else:
+            self.identifier = identifier
 
     def to_xml_elem(self, doc=QDomDocument()):
-        # print('class:', self.__class__.__name__)
         class_name = self.__class__.__name__
         result = doc.createElement(f'imaer:{class_name}')
 
@@ -30,15 +34,7 @@ class EmissionSourceType(object):
 
         # identifier
         ident_elem = doc.createElement('imaer:identifier')
-        nen_elem = doc.createElement('imaer:NEN3610ID')
-
-        elem = doc.createElement('imaer:namespace')
-        elem.appendChild(doc.createTextNode('NL.IMAER'))
-        nen_elem.appendChild(elem)
-        elem = doc.createElement('imaer:localId')
-        elem.appendChild(doc.createTextNode(f'ES.{self.local_id}'))
-        nen_elem.appendChild(elem)
-
+        nen_elem = self.identifier.to_xml_elem(doc)
         ident_elem.appendChild(nen_elem)
         result.appendChild(ident_elem)
 
@@ -93,20 +89,24 @@ class EmissionSource(EmissionSourceType):
         result = super().to_xml_elem(doc)
 
         for em in self.emissions:
+            em_elem = doc.createElement('imaer:emission')
+
             elem = em.to_xml_elem(doc)
-            result.appendChild(elem)
+            em_elem.appendChild(elem)
+
+            result.appendChild(em_elem)
 
         return result
 
 
 class EmissionSourceCharacteristics(object):
 
-    def __init__(self, building_id=None, heat_content=None, emission_height=None, spread=None, diurnal_variation=None):
+    def __init__(self, building_id=None, heat_content=None, emission_height=None, spread=None, time_varying_profile=None):
         self.building_id = building_id
         self.heat_content = heat_content
         self.emission_height = emission_height
         self.spread = spread
-        self.diurnal_variation = diurnal_variation
+        self.time_varying_profile = time_varying_profile
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement('imaer:EmissionSourceCharacteristics')
@@ -134,11 +134,11 @@ class EmissionSourceCharacteristics(object):
             elem.appendChild(doc.createTextNode(str(self.spread)))
             result.appendChild(elem)
 
-        # diurnal variation
-        if self.diurnal_variation is not None:
-            elem = doc.createElement('imaer:diurnalVariation')
-            dv = self.diurnal_variation.to_xml_elem(doc)
-            elem.appendChild(dv)
+        # time varying profile
+        if self.time_varying_profile is not None:
+            elem = doc.createElement('imaer:timeVaryingProfile')
+            tvp = self.time_varying_profile.to_xml_elem(doc)
+            elem.appendChild(tvp)
             result.appendChild(elem)
 
         return result
@@ -151,7 +151,7 @@ class ADMSSourceCharacteristics(object):
         source_type=None, diameter=None, elevation_angle=None, horizontal_angle=None,
         width=None, vertical_dimension=None, buoyancy_type=None, density=None,
         temperature=None, efflux_type=None, vertical_velocity=None,
-        volumetric_flow_rate=None, diurnal_variation=None
+        volumetric_flow_rate=None, hourly_variation=None, monthly_variation=None
     ):
         self.building_id = building_id
         self.height = height
@@ -168,7 +168,8 @@ class ADMSSourceCharacteristics(object):
         self.efflux_type = efflux_type
         self.vertical_velocity = vertical_velocity
         self.volumetric_flow_rate = volumetric_flow_rate
-        self.diurnal_variation = diurnal_variation
+        self.hourly_variation = hourly_variation
+        self.monthly_variation = monthly_variation
 
     def to_xml_elem(self, doc=QDomDocument()):
         result = doc.createElement('imaer:ADMSSourceCharacteristics')
@@ -263,11 +264,18 @@ class ADMSSourceCharacteristics(object):
             elem.appendChild(doc.createTextNode(str(self.volumetric_flow_rate)))
             result.appendChild(elem)
 
-        # diurnal variation
-        if self.diurnal_variation is not None:
-            elem = doc.createElement('imaer:diurnalVariation')
-            dv = self.diurnal_variation.to_xml_elem(doc)
-            elem.appendChild(dv)
+        # hourly variation
+        if self.hourly_variation is not None:
+            elem = doc.createElement('imaer:hourlyVariation')
+            tvp = self.hourly_variation.to_xml_elem(doc)
+            elem.appendChild(tvp)
+            result.appendChild(elem)
+
+        # monthly variation
+        if self.monthly_variation is not None:
+            elem = doc.createElement('imaer:monthlyVariation')
+            tvp = self.monthly_variation.to_xml_elem(doc)
+            elem.appendChild(tvp)
             result.appendChild(elem)
 
         return result
@@ -309,14 +317,12 @@ class Emission(object):
         self.value = value
 
     def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:emission')
+        result = doc.createElement('imaer:Emission')
+        result.setAttribute('substance', self.substance)
 
-        em_elem = doc.createElement('imaer:Emission')
-        em_elem.setAttribute('substance', self.substance)
         v_elem = doc.createElement('imaer:value')
         v_elem.appendChild(doc.createTextNode(str(self.value)))
 
-        em_elem.appendChild(v_elem)
-        result.appendChild(em_elem)
+        result.appendChild(v_elem)
 
         return result

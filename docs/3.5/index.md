@@ -16,7 +16,7 @@ IMAER data.
 ## Functionality
 
 The current functionality covers:
-* Opening and editing AERIUS Calculator results
+* Opening AERIUS Calculator results
 * Extracting GML data from AERIUS PDF files
 * Generating AERIUS Calculator input from your own emission source layers
 * Performing calculations on Calculation result layers
@@ -24,20 +24,26 @@ The current functionality covers:
 
 ## Installation
 
-### From QGIS Plugin Repository
+### From the QGIS plugin repository
+
 The plugin is regularly updated in the QGIS plugin repository, so the easiest way
-to install it is by using the Plugin Manager within QGIS. The plugin should work from
-QGIS 3.30.x or higher, and is likely to work in older versions of QGIS but that has
-not been tested.
+to install it is by using the Plugin Manager within QGIS. Currently you will need to
+enable 'experimental plugins' to find it. The most recent plugin requires QGIS version
+3.16.x or higher.
 
-### From zip file 
-You can also install the plugin from a zip file using the `Install from ZIP` 
-functionality in the Plugin Manager in QGIS.
+### From zip file
 
-Zip files can be downloaded from [github](https://github.com/opengeogroep/AERIUS-QGIS-plugins/tree/master/releases).
+In case you want to use another version of the plugin than the most current in the QGIS plugin repository, you can download the desired plugin form github
+[code](https://github.com/opengeogroep/AERIUS-QGIS-plugins/issues)
+and install it with the Plugin Manager in QGIS ("Install from zip tab").
 
-### From source code
-Of course you can also clone the code from the git repository from [github](https://github.com/opengeogroep/AERIUS-QGIS-plugins/tree/master/releases) and install manually in QGIS.
+### From python code
+
+Of course you can also clone the code from the github repository and install it
+manually in QGIS.
+
+[issues](https://github.com/opengeogroep/AERIUS-QGIS-plugins)
+
 
 ## Issues
 

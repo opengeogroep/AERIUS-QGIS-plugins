@@ -1,20 +1,20 @@
 from PyQt5.QtXml import QDomDocument
 
 
-class DiurnalVariation(object):
+class TimeVaryingProfile(object):
 
     def __init__(self):
         pass
 
 
-class StandardDiurnalVariation(DiurnalVariation):
+class StandardTimeVaryingProfile(TimeVaryingProfile):
 
     def __init__(self, *, standard_type, **kwargs):
         super().__init__(**kwargs)
         self.standard_type = standard_type
 
     def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:StandardDiurnalVariation')
+        result = doc.createElement('imaer:StandardTimeVaryingProfile')
 
         st = doc.createElement('imaer:standardType')
         st.appendChild(doc.createTextNode(str(self.standard_type)))
@@ -23,22 +23,22 @@ class StandardDiurnalVariation(DiurnalVariation):
         return result
 
 
-class ReferenceDiurnalVariation(DiurnalVariation):
+class ReferenceTimeVaryingProfile(TimeVaryingProfile):
     def __init__(self, *, local_id, **kwargs):
         super().__init__(**kwargs)
         self.local_id = local_id
 
     def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:ReferenceDiurnalVariation')
+        result = doc.createElement('imaer:ReferenceTimeVaryingProfile')
 
-        dv = doc.createElement('imaer:customDiurnalVariation')
-        dv.setAttribute('xlink:href', f'#DiurnalProfile.{self.local_id}')
+        dv = doc.createElement('imaer:customTimeVaryingProfile')
+        dv.setAttribute('xlink:href', f'#TimeVaryingProfile.{self.local_id}')
         result.appendChild(dv)
 
         return result
 
 
-class CustomDiurnalVariation(DiurnalVariation):
+class CustomTimeVaryingProfile(TimeVaryingProfile):
 
     def __init__(self, *, local_id, custom_type, label=None, values=None, **kwargs):
         super().__init__(**kwargs)
@@ -47,14 +47,15 @@ class CustomDiurnalVariation(DiurnalVariation):
         self.label = label
         self.values = values or []
         self.__custom_types = {
-            'DAY': {'cols': 1, 'hours': 24},
-            'THREE_DAY': {'cols': 3, 'hours': 24},
+            'DAY': {'cols': 1, 'rows': 24},
+            'THREE_DAY': {'cols': 3, 'rows': 24},
+            'MONTHLY': {'cols': 1, 'rows': 12},
         }
 
     def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement('imaer:customDiurnalVariation')
-        dv = doc.createElement('imaer:CustomDiurnalVariation')
-        dv.setAttribute('gml:id', f'DiurnalProfile.{self.local_id}')
+        result = doc.createElement('imaer:customTimeVaryingProfile')
+        dv = doc.createElement('imaer:CustomTimeVaryingProfile')
+        dv.setAttribute('gml:id', f'TimeVaryingProfile.{self.local_id}')
 
         if self.label is not None:
             elem = doc.createElement('imaer:label')
@@ -75,50 +76,52 @@ class CustomDiurnalVariation(DiurnalVariation):
         return result
 
     def values_to_csv(self):
+        # print('values_to_csv')
+
         # Return empty string for new objects
         if len(self.values) == 0:
             return ''
 
-        cols = self.__custom_types[self.custom_type]['cols']
-        hours = self.__custom_types[self.custom_type]['hours']
+        num_cols = self.__custom_types[self.custom_type]['cols']
+        num_rows = self.__custom_types[self.custom_type]['rows']
 
         result = ''
-        for row_nr in range(hours):
-            for col_nr in range(cols):
-                i = (hours * col_nr) + row_nr
+        for row_nr in range(num_rows):
+            for col_nr in range(num_cols):
+                i = (num_rows * col_nr) + row_nr
                 result += str(self.values[i])
-                if col_nr < cols - 1:
-                    result += ';'
+                if col_nr < num_cols - 1:
+                    result += ','
                 else:
                     result += '\n'
         return result
 
     def values_from_csv(self, csv_text):
-        cols = self.__custom_types[self.custom_type]['cols']
-        hours = self.__custom_types[self.custom_type]['hours']
+        # print('values_from_csv')
+        num_cols = self.__custom_types[self.custom_type]['cols']
+        num_rows = self.__custom_types[self.custom_type]['rows']
 
-        rows = []
+        # csv to recs and values
+        recs = []
         for line in csv_text.split('\n'):
             values = []
-            if len(line.strip()) > 0:
-                for value in line.split(';'):
-                    try:
-                        values.append(float(value))
-                    except ValueError:
-                        return False
-            if len(values) == cols:
-                rows.append(values)
-
-        cnt = 0
-        for col in rows:
-            cnt += len(col)
-
-        if not (cols * hours) == cnt:
-            return False
+            if not len(line.strip()) > 0:
+                continue
+            for part in line.split(','):
+                try:
+                    values.append(float(part))
+                except ValueError:
+                    return False
+            if len(values) == num_cols:
+                recs.append(values)
 
         result = []
-        for col_nr in range(cols):
-            for row in rows:
-                result.append(row[col_nr])
+        for col_nr in range(num_cols):
+            for rec in recs:
+                result.append(rec[col_nr])
+
+        if not (num_rows * num_cols) == len(result):
+            return False
+
         self.values = result
         return True

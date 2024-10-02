@@ -20,7 +20,8 @@ from qgis.PyQt.QtWidgets import (
 )
 from qgis.PyQt.QtGui import (
     QStandardItem,
-    QStandardItemModel
+    QStandardItemModel,
+    QTextDocument
 )
 
 from qgis.PyQt import uic
@@ -31,10 +32,10 @@ from qgis.gui import (
     QgsFieldComboBox
 )
 from qgis.core import (
-    QgsMapLayerProxyModel,
     QgsProject,
     QgsCoordinateReferenceSystem,
-    QgsCoordinateTransform
+    QgsCoordinateTransform,
+    Qgis
 )
 
 from ImaerPlugin.config import (
@@ -42,27 +43,27 @@ from ImaerPlugin.config import (
     ui_settings
 )
 
-from ImaerPlugin.diurnal_variation import DiurnalVariationDialog
+from ImaerPlugin.time_varying_profile import TimeVaryingProfileDialog
 
-from ImaerPlugin.imaer5 import (
+from ImaerPlugin.imaer6 import (
     ADMSRoad,
     AdmsRoadSideBarrier,
     ADMSSourceCharacteristics,
     AeriusCalculatorMetadata,
     Building,
     CalculationPoint,
-    CustomDiurnalVariation,
+    CustomTimeVaryingProfile,
     CustomVehicle,
     Emission,
     EmissionSource,
     EmissionSourceCharacteristics,
     EmissionSourceType,
     ImaerDocument,
-    ReferenceDiurnalVariation,
+    ReferenceTimeVaryingProfile,
     SpecifiedHeatContent,
     SRM2Road,
     Srm2RoadSideBarrier,
-    StandardDiurnalVariation,
+    StandardTimeVaryingProfile,
     StandardVehicle
 )
 
@@ -78,31 +79,33 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.iface = iface
         self.plugin = plugin
-        self.diurnal_variation_dlg = DiurnalVariationDialog()
+        self.time_varying_profile_dlg = TimeVaryingProfileDialog()
 
         self.emission_tabs = {}
         self.emission_tabs['other'] = getattr(self, 'tab_emission_sources')
         self.emission_tabs['roads'] = getattr(self, 'tab_roads')
         self.emission_tabs['buildings'] = getattr(self, 'tab_buildings')
         self.emission_tabs['calc_points'] = getattr(self, 'tab_calc_points')
-        self.emission_tabs['diurnal_variation'] = getattr(self, 'tab_diurnal_variation')
+        self.emission_tabs['time_varying_profiles'] = getattr(self, 'tab_time_varying_profiles')
+
+        self.imaer_doc = ImaerDocument()
 
         self.init_gui()
 
     def init_gui(self):
         # Add message bar
 
-        self.combo_layer_es.setFilters(QgsMapLayerProxyModel.VectorLayer)
-        self.combo_layer_rd.setFilters(QgsMapLayerProxyModel.LineLayer)
-        self.combo_layer_bld.setFilters(QgsMapLayerProxyModel.PolygonLayer | QgsMapLayerProxyModel.PointLayer)
-        self.combo_layer_cp.setFilters(QgsMapLayerProxyModel.PointLayer)
+        self.combo_layer_es.setFilters(Qgis.LayerFilter.VectorLayer)
+        self.combo_layer_rd.setFilters(Qgis.LayerFilter.LineLayer)
+        self.combo_layer_bld.setFilters(Qgis.LayerFilter.PolygonLayer | Qgis.LayerFilter.PointLayer)
+        self.combo_layer_cp.setFilters(Qgis.LayerFilter.PointLayer)
 
         self.group_input_es.toggled.connect(self.update_emission_tab)
         self.radioButton_es.toggled.connect(self.update_emission_tab)
         self.radioButton_rd.toggled.connect(self.update_emission_tab)
         self.checkBox_bld.toggled.connect(self.update_emission_tab)
         self.checkBox_cp.toggled.connect(self.update_emission_tab)
-        self.checkBox_dv.toggled.connect(self.update_emission_tab)
+        self.checkBox_tvp.toggled.connect(self.update_emission_tab)
 
         self.edit_outfile.textChanged.connect(self.update_ok_button)
 
@@ -128,24 +131,24 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.fcb_rd_v_eft_units.addItems(ui_settings['units_veh_movements'])
         self.fcb_rd_v_eft_units.setCurrentIndex(1)  # Default to 'p/24 hour'
 
-        self.dv_model = QStandardItemModel()
-        self.dv_model.setHorizontalHeaderItem(0, QStandardItem('localId'))
-        self.dv_model.setHorizontalHeaderItem(1, QStandardItem('label'))
-        self.dv_model.setHorizontalHeaderItem(2, QStandardItem('customType'))
-        self.dv_model.setHorizontalHeaderItem(3, QStandardItem('values'))
+        self.tvp_model = QStandardItemModel()
+        self.tvp_model.setHorizontalHeaderItem(0, QStandardItem('localId'))
+        self.tvp_model.setHorizontalHeaderItem(1, QStandardItem('label'))
+        self.tvp_model.setHorizontalHeaderItem(2, QStandardItem('customType'))
+        self.tvp_model.setHorizontalHeaderItem(3, QStandardItem('values'))
 
-        self.tableView_dv.horizontalHeader().setStretchLastSection(True)
-        self.tableView_dv.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.tableView_dv.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.tableView_dv.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.tableView_tvp.horizontalHeader().setStretchLastSection(True)
+        self.tableView_tvp.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.tableView_tvp.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tableView_tvp.setSelectionMode(QAbstractItemView.SingleSelection)
 
-        self.tableView_dv.setModel(self.dv_model)
-        self.tableView_dv.resizeColumnsToContents()
+        self.tableView_tvp.setModel(self.tvp_model)
+        self.tableView_tvp.resizeColumnsToContents()
 
-        self.button_dv_add.clicked.connect(self.open_diurnal_variation_dlg)
-        self.button_dv_edit.clicked.connect(self.open_diurnal_variation_dlg)
-        self.button_dv_delete.clicked.connect(self.open_diurnal_variation_dlg)
-        self.tableView_dv.selectionModel().selectionChanged.connect(self.update_dv_buttons)
+        self.button_tvp_add.clicked.connect(self.open_time_varying_profile_dlg)
+        self.button_tvp_edit.clicked.connect(self.open_time_varying_profile_dlg)
+        self.button_tvp_delete.clicked.connect(self.open_time_varying_profile_dlg)
+        self.tableView_tvp.selectionModel().selectionChanged.connect(self.update_tvp_buttons)
 
         # Make sure the corresponding vehicle page is displayed
         self.radio_veh_page_custom.setChecked(True)
@@ -154,7 +157,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.set_fixed_options()
         self.update_field_combos()
         self.update_ok_button()
-        self.update_dv_buttons()
+        self.update_tvp_buttons()
         self.update_emission_tab()
 
     def __del__(self):
@@ -169,17 +172,17 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.btn_save_settings.clicked.disconnect(self.save_settings)
         self.btn_load_settings.clicked.disconnect(self.load_settings)
 
-        self.button_dv_add.clicked.disconnect(self.open_diurnal_variation_dlg)
-        self.button_dv_edit.clicked.disconnect(self.open_diurnal_variation_dlg)
-        self.button_dv_delete.clicked.disconnect(self.open_diurnal_variation_dlg)
-        self.tableView_dv.selectionModel().selectionChanged.disconnect(self.update_dv_buttons)
+        self.button_tvp_add.clicked.disconnect(self.open_time_varying_profile_dlg)
+        self.button_tvp_edit.clicked.disconnect(self.open_time_varying_profile_dlg)
+        self.button_tvp_delete.clicked.disconnect(self.open_time_varying_profile_dlg)
+        self.tableView_tvp.selectionModel().selectionChanged.disconnect(self.update_tvp_buttons)
 
         self.group_input_es.toggled.disconnect(self.update_emission_tab)
         self.radioButton_es.toggled.disconnect(self.update_emission_tab)
         self.radioButton_rd.toggled.disconnect(self.update_emission_tab)
         self.checkBox_bld.toggled.disconnect(self.update_emission_tab)
         self.checkBox_cp.toggled.disconnect(self.update_emission_tab)
-        self.checkBox_dv.toggled.disconnect(self.update_emission_tab)
+        self.checkBox_tvp.toggled.disconnect(self.update_emission_tab)
 
     def browse_generate_calc_input_file(self):
         if self.plugin.dev:
@@ -204,16 +207,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             crs_name = f"{crs['name']} ({crs['srid']})"
             self.combo_crs.addItem(crs_name, crs['srid'])
 
-        # year
+        # years
         for item in ui_settings['project_years']:
             self.combo_project_year.addItem(str(item), item)
         year_index = self.combo_project_year.findData(ui_settings['project_default_year'])
         self.combo_project_year.setCurrentIndex(year_index)
-
-        # situation
-        self.edit_situation_name.setText(ui_settings['situation_name'])
-        for item in ui_settings['situation_types_gml']:
-            self.combo_situation_type.addItem(item, item)
 
     def update_emission_tab(self):
         country = self.plugin.settings.value('imaer_plugin/country', defaultValue='')
@@ -223,6 +221,15 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         crs_setting = self.plugin.settings.value('imaer_plugin/crs', defaultValue='')
         crs_index = self.combo_crs.findData(crs_setting)
         self.combo_crs.setCurrentIndex(crs_index)
+
+        # situation
+        self.edit_situation_name.setText('')
+        self.combo_situation_type.clear()
+        if not country == '':
+            self.edit_situation_name.setText(ui_settings['situation_name'][country])
+
+            for item in ui_settings['situation_types_gml'][country]:
+                self.combo_situation_type.addItem(item, item)
 
         # Remove all tabs but 'Metadata'
         while self.tabs_mapping.count() > 1:
@@ -272,8 +279,8 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         else:
             sector4 = None
 
-        if self.checkBox_dv.isChecked():
-            sector5 = 'diurnal_variation'
+        if self.checkBox_tvp.isChecked():
+            sector5 = 'time_varying_profiles'
             sector_name = emission_sectors[sector5]['tab_name']
             self.tabs_mapping.insertTab(n, self.emission_tabs[sector5], sector_name)
             self.tabs_mapping.setCurrentIndex(n)
@@ -288,7 +295,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         for sector in [sector1, sector2, sector3, sector4, sector5]:
             if sector in emission_sectors and 'ui_settings' in emission_sectors[sector]:
-                # Running this loop twice because looping all objects of the QWidget
+                # Running this loop multiple times because looping all objects of the QWidget
                 # class resulted in a frozen dialog.
                 for widget in self.findChildren(QgsFieldComboBox):
                     if widget.objectName() in emission_sectors[sector]['ui_settings'][country]['disable_widgets']:
@@ -348,37 +355,52 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         '''
         self.buttonBox.button(QDialogButtonBox.Save).setEnabled(True)
 
-    def update_dv_buttons(self):
-        selected_rows = self.tableView_dv.selectionModel().selectedRows()
-        self.button_dv_edit.setEnabled(len(selected_rows) == 1)
-        self.button_dv_delete.setEnabled(len(selected_rows) == 1)
+    def update_tvp_buttons(self):
+        selected_rows = self.tableView_tvp.selectionModel().selectedRows()
+        self.button_tvp_edit.setEnabled(len(selected_rows) == 1)
+        self.button_tvp_delete.setEnabled(len(selected_rows) == 1)
 
     def update_adms_vehicle_page(self):
         self.stack_rd_veh_adms.setCurrentWidget(self.sender().page)
+
+    def generate_imaer_gml(self):
+        self.plugin.log('starting calcinput generation ...', user='user')
+        imaer_doc = self.get_imaer_doc_from_gui()
+        if imaer_doc is None:  # Something went wrong during IMAER doc generation...
+            self.plugin.log('Something went wrong during IMAER doc generation.')
+            return
+        fn = self.edit_outfile.text()
+        imaer_doc.to_xml_file(fn)
+        self.plugin.log('Imaer GML file saved as: <a href="{0}">{0}</a>'.format(fn), lvl='Info', bar=True, duration=10)
 
     def get_imaer_doc_from_gui(self):
         '''Maps items from GUI widgets to IMAER object'''
         imaer_doc = ImaerDocument()
 
         # Metadata
+        project = {}
         year = self.combo_project_year.currentData()
+        project['year'] = year
         description = self.edit_project_description.toPlainText()
+        if not description == '':
+            project['description'] = description
 
+        situation = None
         if self.group_situation.isChecked():
+            situation = {}
             situation_name = self.edit_situation_name.text()
-            situation_type = self.combo_situation_type.currentText()
-            situation = {'name': situation_name, 'type': situation_type}
-        else:
-            situation = None
+            if not situation_name == '':
+                situation['name'] = situation_name
+            situation['type'] = self.combo_situation_type.currentText()
 
         country = self.combo_country.currentData()
         crs_dest_srid = self.combo_crs.currentData()
-        crs_dest = QgsCoordinateReferenceSystem(crs_dest_srid)
+        crs_dest = QgsCoordinateReferenceSystem.fromEpsgId(crs_dest_srid)
 
         gml_creator = f'QgisImaerPlugin-{self.plugin.version}'
 
         metadata = AeriusCalculatorMetadata(
-            project={'year': year, 'description': description},
+            project=project,
             situation=situation,
             gml_creator=gml_creator
         )
@@ -450,11 +472,11 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                     cp = self.get_calculation_point_from_gui(feat, geom, local_id, crs_dest_srid)
                     imaer_doc.feature_members.append(cp)
 
-        # Custom Diurnal Variation
-        if self.checkBox_dv.isChecked():
-            for row in range(self.tableView_dv.model().rowCount()):
-                dv = self.dv_model.item(row, 0).data()
-                imaer_doc.definitions.append(dv)
+        # Custom Time Varying Profile
+        if self.checkBox_tvp.isChecked():
+            for row in range(self.tableView_tvp.model().rowCount()):
+                tvp = self.tvp_model.item(row, 0).data()
+                imaer_doc.definitions.append(tvp)
 
         return imaer_doc
 
@@ -480,21 +502,21 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             else:
                 hc = None
 
-            # diurnal variation
-            dv = None
-            dv_standard = self.get_feature_value(self.fcb_es_dv_standard, feat)
-            if dv_standard is not None:
-                dv = StandardDiurnalVariation(standard_type=dv_standard)
-            dv_reference = self.get_feature_value(self.fcb_es_dv_reference, feat)
-            if dv_reference is not None:
-                dv = ReferenceDiurnalVariation(local_id=dv_reference)
+            # time varying profile
+            tvp = None
+            tvp_standard = self.get_feature_value(self.fcb_es_tvp_standard, feat)
+            if tvp_standard is not None:
+                tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+            tvp_reference = self.get_feature_value(self.fcb_es_tvp_reference, feat)
+            if tvp_reference is not None:
+                tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
 
             esc = EmissionSourceCharacteristics(
                 building_id=prim_bld,
                 emission_height=esc_height,
                 spread=esc_spread,
                 heat_content=hc,
-                diurnal_variation=dv,
+                time_varying_profile=tvp,
             )
             es.emission_source_characteristics = esc
 
@@ -536,23 +558,36 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
             asc_vertical_velocity = self.get_feature_value(self.fcb_es_adms_vertical_velocity, feat)
             asc_volumetric_flow_rate = self.get_feature_value(self.fcb_es_adms_volumetric_flow_rate, feat)
 
-            # diurnal variation
-            dv = None
-            dv_standard = self.get_feature_value(self.fcb_es_dv_standard, feat)
-            if dv_standard is not None:
-                dv = StandardDiurnalVariation(standard_type=dv_standard)
-            dv_reference = self.get_feature_value(self.fcb_es_dv_reference, feat)
-            if dv_reference is not None:
-                dv = ReferenceDiurnalVariation(local_id=dv_reference)
-
             asc = ADMSSourceCharacteristics(
                 building_id=prim_bld, height=asc_height, specific_heat_capacity=asc_heat_capacity,
                 source_type=asc_source_type, diameter=asc_diameter, elevation_angle=asc_elevation_angle,
                 horizontal_angle=asc_horizontal_angle, width=asc_width,
                 vertical_dimension=asc_vertical_dimension, buoyancy_type=asc_buoyancy_type,
                 density=asc_density, temperature=asc_temperature, efflux_type=asc_efflux_type,
-                vertical_velocity=asc_vertical_velocity, volumetric_flow_rate=asc_volumetric_flow_rate,
-                diurnal_variation=dv)
+                vertical_velocity=asc_vertical_velocity, volumetric_flow_rate=asc_volumetric_flow_rate
+            )
+
+            # time varying profiles
+            # hourly
+            hourly_tvp = None
+            tvp_standard = self.get_feature_value(self.fcb_es_tvp_adms_hourly_standard, feat)
+            if tvp_standard is not None:
+                hourly_tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+            tvp_reference = self.get_feature_value(self.fcb_es_tvp_adms_hourly_reference, feat)
+            if tvp_reference is not None:
+                hourly_tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
+            asc.hourly_variation = hourly_tvp
+
+            # monthly
+            monthly_tvp = None
+            tvp_standard = self.get_feature_value(self.fcb_es_tvp_adms_monthly_standard, feat)
+            if tvp_standard is not None:
+                monthly_tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+            tvp_reference = self.get_feature_value(self.fcb_es_tvp_adms_monthly_reference, feat)
+            if tvp_reference is not None:
+                monthly_tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
+            asc.monthly_variation = monthly_tvp
+
             es.emission_source_characteristics = asc
 
         # emissions
@@ -691,15 +726,28 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 else:
                     es.barrier_right = rsb
 
-        # diurnal variation
-        dv_standard = self.get_feature_value(self.fcb_rd_dv_standard, feat)
-        if dv_standard is not None:
-            dv = StandardDiurnalVariation(standard_type=dv_standard)
-            es.diurnal_variation = dv
-        dv_reference = self.get_feature_value(self.fcb_rd_dv_reference, feat)
-        if dv_reference is not None:
-            dv = ReferenceDiurnalVariation(local_id=dv_reference)
-            es.diurnal_variation = dv
+        # time varying profile
+        # hourly
+        hourly_tvp = None
+        tvp_standard = self.get_feature_value(self.fcb_rd_tvp_adms_hourly_standard, feat)
+        if tvp_standard is not None:
+            hourly_tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+        tvp_reference = self.get_feature_value(self.fcb_rd_tvp_adms_hourly_reference, feat)
+        if tvp_reference is not None:
+            hourly_tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
+
+        es.hourly_variation = hourly_tvp
+
+        # monthly
+        monthly_tvp = None
+        tvp_standard = self.get_feature_value(self.fcb_rd_tvp_adms_monthly_standard, feat)
+        if tvp_standard is not None:
+            monthly_tvp = StandardTimeVaryingProfile(standard_type=tvp_standard)
+        tvp_reference = self.get_feature_value(self.fcb_rd_tvp_adms_monthly_reference, feat)
+        if tvp_reference is not None:
+            monthly_tvp = ReferenceTimeVaryingProfile(local_id=tvp_reference)
+
+        es.monthly_variation = monthly_tvp
 
         # vehicles
         vehicles = []
@@ -778,7 +826,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
                 vehicles_per_time_unit=movements,
                 time_unit=time_unit,
                 description=description,
-                emission=emission
+                emissions=emission
             )
             vehicles.append(veh)
 
@@ -825,37 +873,37 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
         return p
 
-    def open_diurnal_variation_dlg(self, dv=None):
-        self.plugin.log('open_dv_dlg()', user='dev')
-        if self.sender().objectName() == 'button_dv_add':
-            dv = CustomDiurnalVariation(local_id='', label='', custom_type='THREE_DAY', values=[])
+    def open_time_varying_profile_dlg(self, tvp=None):
+        self.plugin.log('open_tvp_dlg()', user='dev')
+        if self.sender().objectName() == 'button_tvp_add':
+            tvp = CustomTimeVaryingProfile(local_id='', label='', custom_type='THREE_DAY', values=[])
             row = None
         else:
-            row = self.tableView_dv.selectionModel().selectedRows()[0].row()
-            if self.sender().objectName() == 'button_dv_delete':
+            row = self.tableView_tvp.selectionModel().selectedRows()[0].row()
+            if self.sender().objectName() == 'button_tvp_delete':
                 # No need to open the dialog, just delete the row
-                self.dv_model.removeRow(row)
+                self.tvp_model.removeRow(row)
                 return
-            dv = self.dv_model.item(row, 0).data()
-        self.diurnal_variation_dlg.set_by_dv(dv)
-        self.diurnal_variation_dlg.show()
-        result = self.diurnal_variation_dlg.exec_()
+            tvp = self.tvp_model.item(row, 0).data()
+        self.time_varying_profile_dlg.set_by_tvp(tvp)
+        self.time_varying_profile_dlg.show()
+        result = self.time_varying_profile_dlg.exec_()
         if result:
-            dv = self.diurnal_variation_dlg.get_dv()
-            row = self.add_dv_to_table(dv, row)
-            self.tableView_dv.selectRow(row)
+            tvp = self.time_varying_profile_dlg.get_tvp()
+            row = self.add_tvp_to_table(tvp, row)
+            self.tableView_tvp.selectRow(row)
 
-    def add_dv_to_table(self, dv, row=None):
-        local_id_item = QStandardItem(f'{dv.local_id}')
-        local_id_item.setData(dv)
-        label_item = QStandardItem(f'{dv.label}')
-        custom_type_item = QStandardItem(f'{dv.custom_type}')
-        values_item = QStandardItem(f'{len(dv.values)} values')
+    def add_tvp_to_table(self, tvp, row=None):
+        local_id_item = QStandardItem(f'{tvp.local_id}')
+        local_id_item.setData(tvp)
+        label_item = QStandardItem(f'{tvp.label}')
+        custom_type_item = QStandardItem(f'{tvp.custom_type}')
+        values_item = QStandardItem(f'{len(tvp.values)} values')
         if row is None:
-            row = self.dv_model.rowCount()
+            row = self.tvp_model.rowCount()
         else:
-            self.dv_model.removeRow(row)
-        self.dv_model.insertRow(row, [local_id_item, label_item, custom_type_item, values_item])
+            self.tvp_model.removeRow(row)
+        self.tvp_model.insertRow(row, [local_id_item, label_item, custom_type_item, values_item])
         return row
 
     def get_feature_value(self, widget, feat, cast_to=None):
@@ -885,58 +933,111 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
 
     def save_settings(self):
         work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
+
         if work_dir is None:
-            raise Exception('Work dir not set')
+            self.plugin.log('Work direction not set.', lvl='Critical', bar=True)
             return
+
         # TODO: choose file name
         base_name = 'generate_gml_config.json'
         out_fn = os.path.join(work_dir, base_name)
-        # print(out_fn)
-        field_dict = self.collect_field_settings()
+        field_dict = self.collect_settings()
         txt = json.dumps(field_dict, indent=4)
-        with open(out_fn, 'w') as out_file:
-            out_file.write(txt)
+        try:
+            with open(out_fn, 'w') as out_file:
+                out_file.write(txt)
+                self.plugin.log(f'Configuration file saved ({out_fn})', bar=True)
+        except:  # For anything that can go wrong here!
+            self.plugin.log(f'Could not save configuration file ({out_fn})', lvl='Critical', bar=True)
 
-    def load_settings(self):
-        work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
-        if work_dir is None:
-            raise Exception('Work dir not set')
-            return
-        # TODO: choose file name
-        base_name = 'generate_gml_config.json'
-        out_fn = os.path.join(work_dir, base_name)
-        # print(out_fn)
+    def load_settings(self, btn_info=None, in_fn=None):
+        if in_fn is None:
+            work_dir = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue=None)
 
-        with open(out_fn, 'r') as out_file:
+            if work_dir is None:
+                self.plugin.log('Work direction not set.', lvl='Critical', bar=True)
+                return False
+
+            # TODO: choose file name
+            base_name = 'generate_gml_config.json'
+            in_fn = os.path.join(work_dir, base_name)
+
+        if not os.path.isfile(in_fn):
+            self.plugin.log(f'Configuration file not found ({in_fn})', lvl='Warning', bar=True)
+            return False
+
+        with open(in_fn, 'r') as out_file:
             txt = out_file.read()
 
         field_dict = json.loads(txt)
 
-        if 'imaer_plugin_version' not in field_dict:
+        config_file_version = field_dict.get('imaer_plugin_version', None)
+        if config_file_version is None:
             self.plugin.log('This is not a valid field configuration file', lvl='Warning', bar=True)
-            return
+            return False
+        if field_dict['imaer_plugin_version'] != self.plugin.version:
+            self.plugin.log(f'Configuration file has different plugin version ({config_file_version} &lt;&gt; {self.plugin.version})', lvl='Critical', bar=True)
+            return False
 
-        self.set_field_settings(field_dict['fields'])
-        self.plugin.log('Configuration file loaded', bar=True)
+        self.set_settings(field_dict)
+        self.plugin.log(f'Configuration file loaded ({in_fn})', bar=True)
+        return True
 
-    def collect_field_settings(self):
+    def collect_settings(self):
         '''Collects a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
         result = {}
-        result['imaer_plugin_version'] = 1
+        result['imaer_plugin_version'] = self.plugin.version
+        # options
+        result['options'] = {}
+        widget_names = ['group_input_es', 'radioButton_es', 'radioButton_rd',
+            'checkBox_bld', 'checkBox_cp', 'checkBox_tvp',
+            'combo_project_year', 'edit_project_description',
+            'group_situation', 'edit_situation_name', 'combo_situation_type',
+            'radio_veh_page_custom', 'radio_veh_page_eft', 'fcb_rd_v_eft_units',
+        ]
+        for widget_name in widget_names:
+            widget = getattr(self, widget_name)
+            # print(widget)
+            if widget.__class__.__name__ in ['QGroupBox', 'QRadioButton', 'QCheckBox']:
+                result['options'][widget_name] = widget.isChecked()
+            if widget.__class__.__name__ == 'QComboBox':
+                result['options'][widget_name] = widget.currentText()
+            if widget.__class__.__name__ == 'QLineEdit':
+                result['options'][widget_name] = widget.text()
+            if widget.__class__.__name__ == 'QTextEdit':
+                result['options'][widget_name] = widget.toPlainText()
+        # fields
         result['fields'] = {}
         for fcb in self.findChildren(QgsFieldComboBox):
             k = fcb.objectName()
             v = fcb.currentText()
             result['fields'][k] = v
+
         return result
 
-    def set_field_settings(self, field_cfg):
+    def set_settings(self, settings_cfg):
         '''Sets texts from a dictionary with all widget_names and field_names for all QgsFieldComboBoxes'''
+        # print(json.dumps(settings_cfg, indent=4))
+
+        # options
+        options = settings_cfg.get('options', {})
+        for widget_name, v in options.items():
+            widget = getattr(self, widget_name)
+            if widget.__class__.__name__ in ['QGroupBox', 'QRadioButton', 'QCheckBox']:
+                widget.setChecked(v)
+            if widget.__class__.__name__ == 'QComboBox':
+                widget.setCurrentText(v)
+            if widget.__class__.__name__ == 'QLineEdit':
+                widget.setText(v)
+            if widget.__class__.__name__ == 'QTextEdit':
+                widget.setDocument(QTextDocument(v))
+
+        # fields
         for fcb in self.findChildren(QgsFieldComboBox):
             widget_name = fcb.objectName()
-            if widget_name not in field_cfg:
+            if widget_name not in settings_cfg['fields']:
                 continue
-            new_field = field_cfg[widget_name]
+            new_field = settings_cfg['fields'][widget_name]
             if new_field == '':
                 fcb.setCurrentIndex(0)  # Make empty
                 continue

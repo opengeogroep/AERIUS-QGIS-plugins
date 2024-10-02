@@ -1,1 +1,2 @@
-from .test_imaer import TestImaer
+# from .test_imaer_parse import TestImaerParse
+from .test_imaer_generate import TestImaerGenerate

@@ -70,7 +70,7 @@ class ConnectReceptorSetsDialog(QDialog, FORM_CLASS):
         while self.table_receptorsets.rowCount() > 0:
             self.table_receptorsets.removeRow(0)
 
-        if not self.plugin.aerius_connection.api_key_is_ok:
+        if self.plugin.aerius_connection is None or (not self.plugin.aerius_connection.api_key_is_ok):
             QgsApplication.restoreOverrideCursor()
             return
 
