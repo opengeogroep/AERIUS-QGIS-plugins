@@ -32,10 +32,10 @@ from qgis.gui import (
     QgsFieldComboBox
 )
 from qgis.core import (
-    QgsMapLayerProxyModel,
     QgsProject,
     QgsCoordinateReferenceSystem,
-    QgsCoordinateTransform
+    QgsCoordinateTransform,
+    Qgis
 )
 
 from ImaerPlugin.config import (
@@ -95,10 +95,10 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
     def init_gui(self):
         # Add message bar
 
-        self.combo_layer_es.setFilters(QgsMapLayerProxyModel.VectorLayer)
-        self.combo_layer_rd.setFilters(QgsMapLayerProxyModel.LineLayer)
-        self.combo_layer_bld.setFilters(QgsMapLayerProxyModel.PolygonLayer | QgsMapLayerProxyModel.PointLayer)
-        self.combo_layer_cp.setFilters(QgsMapLayerProxyModel.PointLayer)
+        self.combo_layer_es.setFilters(Qgis.LayerFilter.VectorLayer)
+        self.combo_layer_rd.setFilters(Qgis.LayerFilter.LineLayer)
+        self.combo_layer_bld.setFilters(Qgis.LayerFilter.PolygonLayer | Qgis.LayerFilter.PointLayer)
+        self.combo_layer_cp.setFilters(Qgis.LayerFilter.PointLayer)
 
         self.group_input_es.toggled.connect(self.update_emission_tab)
         self.radioButton_es.toggled.connect(self.update_emission_tab)

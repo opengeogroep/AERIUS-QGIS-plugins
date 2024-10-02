@@ -13,7 +13,6 @@ from qgis.core import (
     QgsField,
     QgsProject,
     QgsFeature,
-    QgsMapLayerProxyModel,
     Qgis
 )
 
@@ -47,7 +46,7 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
             5: self.combo_layer5
         }
         for key, widget in self.layer_widgets.items():
-            widget.setFilters(QgsMapLayerProxyModel.PointLayer | QgsMapLayerProxyModel.PolygonLayer)
+            widget.setFilters(Qgis.LayerFilter.PointLayer | Qgis.LayerFilter.PolygonLayer)
             widget.setAllowEmptyLayer(True)
             widget.setCurrentIndex(0)
             widget.currentIndexChanged.connect(self.gui_update_layer_combo)
