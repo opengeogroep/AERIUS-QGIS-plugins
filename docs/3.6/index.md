@@ -31,7 +31,7 @@ enable 'experimental plugins' to find it. The most recent plugin requires QGIS v
 
 ### From zip file
 
-In case you want to use another version of the plugin than the most current in the QGIS plugin repository, you can download the desired plugin form github
+In case you want to use another version of the plugin than the most current in the QGIS plugin repository, you can download the desired plugin from github
 [zip releases](https://github.com/opengeogroep/AERIUS-QGIS-plugins/tree/master/releases)
 and install it with the Plugin Manager in QGIS ("Install from zip tab").
 
@@ -40,7 +40,7 @@ and install it with the Plugin Manager in QGIS ("Install from zip tab").
 Of course you can also clone the code from the github repository and install it
 manually in QGIS.
 
-[code](https://github.com/opengeogroep/AERIUS-QGIS-plugins)
+[code repository](https://github.com/opengeogroep/AERIUS-QGIS-plugins)
 
 ## Issues
 
