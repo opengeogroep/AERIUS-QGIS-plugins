@@ -34,9 +34,16 @@ Layer names:
 * `<Situation Name> - calculation_points`
 * `<Situation Name> - sub_points`
 * `<Situation Name> - receptor_points`
-* `<Situation Name> - receptor hexagons`
+* `<Situation Name> - receptor_hexagons`
 
 ![layers and fields](img/calc_result_layers_and_fields.png)
+
+## Emission sources
+
+The plugin can only extract calculation results from the .gml. If you need a map layer of your
+emission source data, simply drag and drop your .gml file from your file browser into the QGIS
+map and QGIS will try to find all geometries in the .gml file. No guarantees, but it
+often simply works.
 
 ## Remarks
 
