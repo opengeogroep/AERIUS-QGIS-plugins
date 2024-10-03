@@ -21,9 +21,12 @@ The main purpose of this sending your emission GML file to the Connect API to
 start a calculation. The GML can be either created with the Generate Calculator
 Input functionality from this plugin or generated in any other way.
 
+You can select up to 6 .gml files for calculation. All of them The `scenario` and
+`year` properties can override the settings as defined in the .gml file.
+
 ### Validate
 
-After picking the GML file it is recommended to run a validation before starting
+After picking the GML file(s) it is recommended to run a validation before starting
 a calculation. Just hit the `Validate` button and wait for the result.
 
 The validation result will be shown in a dialog like these:
@@ -32,19 +35,22 @@ The validation result will be shown in a dialog like these:
 
 ![dialog](img/connect_jobs_validation_2.png)
 
-In case of an error, you can selecting the text (CTRL-A) and copy (CTRL-C) it
+In case of an error, you can select the text (CTRL-A) and copy (CTRL-C) it
 to the clipboard.
 
 ### Calculate
 
 For starting a calculaion you will need to set some input parameters:
 
-* Situation: DEFINED_BY_FILE, REFERENCE, PROPOSED, TEMPORARY
 * Name: Any name for your own reference. This will be displayed in the table
 * Type:
   * WNB_RECEPTORS: Normal calculation on all default Nature Area receptors.
   * CUSTOM_POINTS: Pick one of your self uploaded receptor sets
 * Send e-mail when calculation is completed: Check if you wish to receive an email notification when the calculation has finished
+
+Per file, these settings can override the values in the .gml file:
+* Situation: DEFINED_BY_FILE, REFERENCE, PROPOSED, TEMPORARY
+* Year
 
 Click the `Calculate` button for sending your data to Connect and start the calculation.
 
