@@ -34,16 +34,15 @@ functionality (currently only available in NL). When the country is set to UK, t
 Connect settings are disabled.
 
 ### Server base URL:
-Location of the Connect API URL. Should by default point to the current production
-URL.
-
-Some examples:
-* https://connect.aerius.nl/api
+Location of the Connect API URL.
+(Since version 3.6 of the plugin, this value is hardcoded
+and not editable anymore. It is only shown in the configuration dialog for convenience.)
 
 ### Version:
 
-Connect server version. The version is displayed on the Connect swagger page. Just visit
-the Server base URL with your web browser to find it.
+Connect server version.
+(Since version 3.6 of the plugin, this value is hardcoded
+and not editable anymore. It is only shown in the configuration dialog for convenience.)
 
 ### Email:
 
@@ -60,8 +59,7 @@ to the configuration screen.
 
 ## Save
 
-When saving the settings, the plugin will attempt to make a connection by firing
-a few rquests. They will also update the content of the connect plugin dialogs.
+Save the settings. When the country is set to NL, the plugin will attempt to make a connection by firing a few rquests. That will also update the content of the Connect buttons and dialogs.
 
 ## Hint
 
