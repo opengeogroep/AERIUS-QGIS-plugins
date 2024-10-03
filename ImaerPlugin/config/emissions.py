@@ -111,7 +111,7 @@ ui_settings = {
     'countries': ['NL', 'UK'],
     'connect_countries': ['NL'],
     'connect_url': {
-        'NL': 'https://calculator.aerius.nl/api'
+        'NL': 'https://connect.aerius.nl/api'
     },
     'connect_version': {
         'NL': '8'

@@ -12,9 +12,9 @@
 
 Convert your own data into IMAER GML data for use in AERIUS Calculator. This feature can turn data from any type of QGIS vector layer into emission sources, buildings and/or calculation points.
 
-The the available fields in the interface are depending on your country setting.
+The available fields in the interface are depending on your country setting.
 
-The plugin simply attempts to generate the GML code based on your input data and plugin settings. There is no check for data validity! The easiest way to check validity is using the website.
+The plugin simply attempts to generate the GML code based on your input data and plugin settings. There is no check for data validity! The easiest way to check validity is using the Calculator website.
 In general, leaving a field blank or having NULL values in your data will result in NULL values in the output. For optional parameters, this will simply not output anything. But in case of mandatory data it might result in errors.
 
 ## Emission Sources
@@ -60,38 +60,9 @@ Those are typically stand alone GML files to upload to AERIUS Connect for calula
 Diurnal variation profiles are not created from a layer (as there is no geometry needed) but by hand
 from a semicolon separated value table.
 
-The three values per hour of the day are for mon-fri ; saturday ; sunday. In total there should b 72 values (24h x 7d).
+The three values per hour of the day are for mon-fri ; saturday ; sunday. In total there should be 72 values (24h x 3d). The monthly profile should have 12 values, one for every month. See examples below.
 
-The id field should contain the same integer value as used in the emission source pointing to it.
-
-#### CSV Example DAY
-
-```
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-```
+The `id` field should contain the same integer value as used in the emission source pointing to it.
 
 #### CSV Example THREE_DAY
 
@@ -138,7 +109,6 @@ The id field should contain the same integer value as used in the emission sourc
 1.0
 1.0
 ```
-
 
 ## Saving and loading settings
 
