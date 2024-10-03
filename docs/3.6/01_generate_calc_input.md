@@ -136,7 +136,7 @@ create your own software to connect to it.
 
 ## Remarks
 
-* The current version of the generated GML file is `IMAER 5.1`
+* The current version of the generated GML file is `IMAER 6.0`
 * IMAER does not support multi geometry types (like MultiLineString) and will try to
 convert your data in case it has a multi type, because single geometry data is often stored as multi geometry type in GIS.
 * Your attribute data must contain the exact values that should end up in the GML file. The plugin does not attempt to convert values in some smart way.
