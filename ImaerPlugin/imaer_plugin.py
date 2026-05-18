@@ -149,6 +149,7 @@ class ImaerPlugin:
     def initGui(self):
         # Create toolbar and actions
         self.toolbar = self.iface.addToolBar("Imaer Toolbar")
+        self.toolbar.setObjectName('ImaerToolbar')
         if self.dev:
             self.toolbar.setStyleSheet("QToolBar { background-color: rgba(200, 180, 200, 255); }")
 
