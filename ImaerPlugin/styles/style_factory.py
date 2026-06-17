@@ -19,9 +19,6 @@ from .classifications import classifications
 
 class StyleFactory():
 
-    def __init__(self, plugin):
-        self.plugin = plugin
-
     __base_properties = {
         'color': "135,135,135,255", 'joinstyle': 'bevel', 'style': 'solid',
         'outline_color': '35,35,35,255', 'outline_style': 'solid', 'outline_width': '0.05', 'outline_width_unit': 'MM'

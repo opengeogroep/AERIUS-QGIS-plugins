@@ -3,7 +3,6 @@ import os
 
 from qgis.PyQt import uic
 from qgis.PyQt.QtCore import (
-    QVariant,
     QStandardPaths,
     Qt
 )
@@ -76,7 +75,7 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         crs_setting = self.plugin.settings.value('imaer_plugin/crs', defaultValue='')
         crs_index = self.combo_crs.findData(crs_setting)
         if crs_index == -1:  # not found
-            crs_idex = 0
+            crs_index = 0
         self.combo_crs.setCurrentIndex(crs_index)
 
         work_dir_setting = self.plugin.settings.value('imaer_plugin/work_dir', defaultValue='')

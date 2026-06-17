@@ -12,26 +12,22 @@
 ################################################################################
 
 import os
-import time
 import webbrowser
-import pathlib
 
-from qgis.PyQt.QtWidgets import QAction, QFileDialog, QDialogButtonBox
+from qgis.PyQt.QtWidgets import QAction, QFileDialog
 from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtCore import QVariant, QStandardPaths, Qt
+from qgis.PyQt.QtCore import QStandardPaths
 
 from qgis.core import (
     QgsMessageLog,
     Qgis,
     QgsVectorLayer,
-    QgsField,
     QgsProject,
     QgsApplication,
     QgsExpressionContextUtils,
     QgsCoordinateTransform,
     QgsSettings,
     QgsCsException)
-from qgis.gui import QgsMapLayerComboBox
 
 from ImaerPlugin.tasks import ImportImaerCalculatorResultTask
 from ImaerPlugin.algs.provider import ImaerProvider
@@ -41,11 +37,7 @@ from ImaerPlugin.connect_receptorsets import ConnectReceptorSetsDialog
 from ImaerPlugin.connect_jobs import ConnectJobsDialog
 from ImaerPlugin.relate_calc_results import RelateCalcResultsDialog
 
-from ImaerPlugin.connect import (
-    AeriusConnection,
-    AeriusOpenData
-)
-
+from ImaerPlugin.connect import AeriusConnection
 from ImaerPlugin.imaer6 import ImaerDocument
 from ImaerPlugin.gpkg import ImaerGpkg
 from ImaerPlugin.styles import StyleFactory
@@ -519,11 +511,11 @@ class ImaerPlugin:
 
     def open_connect_receptorsets(self):
         self.log('open_connect_receptorsets()', user='dev')
-        result = self.connect_receptorsets_dlg.exec()
+        self.connect_receptorsets_dlg.exec()
 
     def open_connect_jobs(self):
         self.log('open_connect_jobs()', user='dev')
-        result = self.connect_jobs_dlg.exec()
+        self.connect_jobs_dlg.exec()
 
     def run_relate_calc_results(self):
         result = self.relate_calc_results_dlg.exec()

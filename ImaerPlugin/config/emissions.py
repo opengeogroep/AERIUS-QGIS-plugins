@@ -1,5 +1,3 @@
-from qgis.core import QgsFieldProxyModel
-
 emission_sectors = {
     'roads': {
         'emission_tab': 'tab_roads',

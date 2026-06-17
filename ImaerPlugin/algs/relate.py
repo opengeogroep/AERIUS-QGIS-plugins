@@ -11,19 +11,10 @@
 ***************************************************************************
 """
 
-from qgis.PyQt.QtCore import QCoreApplication, QVariant
-from qgis.core import (QgsProcessing,
-                       QgsFeatureSink,
-                       QgsProcessingException,
-                       QgsProcessingAlgorithm,
-                       QgsProcessingParameterFeatureSource,
-                       QgsProcessingParameterFeatureSink)
-from qgis.core import (
-    QgsField,
-    QgsFields,
-    QgsFeature
-)
-from qgis import processing, utils
+from qgis.PyQt.QtCore import QVariant
+from qgis.core import QgsProcessingAlgorithm
+from qgis.core import QgsFeature
+from qgis import utils
 
 from ImaerPlugin.gpkg import ImaerGpkgFieldFactory
 
@@ -123,13 +114,3 @@ class RelateAlgorithm(QgsProcessingAlgorithm):
                 self.geometry_cache[key] = feat.geometry()
         return result
 
-    def _get_receptor_value(self, receptor_dict, key, field_name, no_data=None):
-        '''Returns the value for the field_name if present, or otherwise the no_data value.'''
-        if receptor_id not in receptor_dict:
-            return no_data
-        if field_name not in receptor_dict[receptor_id]:
-            return no_data
-        v = receptor_dict[receptor_id][field_name]
-        if v is None:
-            return no_data
-        return v

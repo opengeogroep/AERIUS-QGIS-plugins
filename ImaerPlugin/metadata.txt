@@ -29,7 +29,7 @@ homepage=https://github.com/aerius/IMAER-QGIS-plugin/
 # Recommended items:
 
 changelog=
-    3.7.0   (06-11-2025) Upgrade to Qt6 to work in QGIS 4 too.
+    3.7.0   (15-06-2026) Upgrade to Qt6 to work in QGIS 4 too.
     3.6.4   (11-07-2025) Documentation moved to docs.aerius.nl and fix for entity reference description in GML generator.
     3.6.3   (26-05-2025) Import multiple GML calculation result files in one go; Prevent connection requests when GUI is configured for UK; Only create result layers for data having result values.
     3.6.2   (02-04-2025) New GML generation options: Roads > Traffic direction; Calculation Points > road road_local_fraction_no2 and Entity Reference.

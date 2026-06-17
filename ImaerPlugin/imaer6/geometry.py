@@ -1,12 +1,4 @@
-import sys
-
-from qgis.PyQt.QtXml import QDomDocument
-
 from qgis.core import QgsPoint, QgsLineString, QgsPolygon
-
-# path_qgis_python_folder = "/home/raymond/programs/qgis/qgis-master/share/qgis/python/"
-# sys.path.append(path_qgis_python_folder)
-# from qgis.core import QgsGeometry
 
 
 class GmlGeometry():
@@ -43,11 +35,11 @@ class GmlPoint(GmlGeometry):
         return f'GmlPoint[{self.epsg_id}, {self.gml_id}, {self.x:.3f}, {self.y:.3f}]'
 
     def to_xml_elem(self, doc):
-        result = doc.createElement(f'gml:Point')
+        result = doc.createElement('gml:Point')
         result.setAttribute('srsName', f'urn:ogc:def:crs:EPSG::{self.epsg_id}')
         result.setAttribute('gml:id', self.gml_id)
 
-        pos_elem = doc.createElement(f'gml:pos')
+        pos_elem = doc.createElement('gml:pos')
         pos_elem.appendChild(doc.createTextNode(f'{self.x} {self.y}'))
         result.appendChild(pos_elem)
 
@@ -104,12 +96,12 @@ class GmlPolygon(GmlGeometry):
         return f'GmlPolygon[{self.epsg_id}, {self.gml_id}, {len(self.exterior)}, {self.exterior[:4]}]'
 
     def to_xml_elem(self, doc):
-        result = doc.createElement(f'gml:Polygon')
+        result = doc.createElement('gml:Polygon')
         result.setAttribute('srsName', f'urn:ogc:def:crs:EPSG::{self.epsg_id}')
         result.setAttribute('gml:id', self.gml_id)
 
-        exterior_elem = doc.createElement(f'gml:exterior')
-        pos_elem = doc.createElement(f'gml:pos')
+        exterior_elem = doc.createElement('gml:exterior')
+        pos_elem = doc.createElement('gml:pos')
 
         coords = [str(value) for value in self.exterior]
         pos_elem.appendChild(doc.createTextNode(' '.join(coords)))

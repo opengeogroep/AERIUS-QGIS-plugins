@@ -1,8 +1,3 @@
-import sys
-
-from qgis.PyQt.QtXml import QDomDocument
-
-
 class Nen3610Id():
 
     def __init__(self, namespace='NL.IMAER', local_id=None):

@@ -8,7 +8,6 @@ except ImportError:
     pass
 
 from .metadata import AeriusCalculatorMetadata
-from .emission_source import EmissionSource
 from .receptors import ReceptorPoint, SubPoint, CalculationPoint
 
 _default_namespaces = {

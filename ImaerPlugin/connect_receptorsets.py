@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import json
-import time
 
 from qgis.PyQt import uic
 from qgis.PyQt.QtWidgets import (

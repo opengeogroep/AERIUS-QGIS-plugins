@@ -6,7 +6,6 @@ from qgis.core import QgsOgcUtils
 def get_gml_element(geom, gml_id_base, epsg_id):
     doc = QDomDocument()
     ogc_utils = QgsOgcUtils()
-    version = QgsOgcUtils.GML_3_2_1
     srs_name = f'urn:ogc:def:crs:EPSG::{epsg_id}'
 
     gml_geom = ogc_utils.geometryToGML(

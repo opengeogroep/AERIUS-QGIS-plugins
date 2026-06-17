@@ -291,8 +291,7 @@ class AeriusConnection():
         # print(params)
 
         alg_id = 'native:filedownloader'
-        alg_result = processing.run(alg_id, params)
-        # print(alg_result)
+        processing.run(alg_id, params)
 
         result = []
         if not unzip_gmls:
@@ -363,7 +362,6 @@ class AeriusConnection():
             '8': 'receptorSets'
         }
         end_point = end_points[self.version]
-        data = {}
 
         response = self.run_request(end_point, 'GET')
 
@@ -392,7 +390,6 @@ class AeriusConnection():
         # response = self.run_request(end_point, 'POST')
         response = self.run_request(end_point, 'POST', text_parts=text_parts, file_parts=file_parts)
         # print(response)
-        resp = response
 
         self.last_response = response
         return response

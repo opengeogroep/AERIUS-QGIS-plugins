@@ -15,7 +15,7 @@ class Building(object):
         self.epsg_id = epsg_id
 
     def to_xml_elem(self, doc=QDomDocument()):
-        result = doc.createElement(f'imaer:Building')
+        result = doc.createElement('imaer:Building')
 
         result.setAttribute('gml:id', f'Building.{self.local_id}')
 

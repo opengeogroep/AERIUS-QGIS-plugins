@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 
-from qgis.PyQt.QtCore import QVariant
 from qgis.PyQt.QtWidgets import (
     QDialog,
     QDialogButtonBox
@@ -9,14 +8,10 @@ from qgis.PyQt.QtWidgets import (
 from qgis.PyQt import uic
 
 from qgis.core import (
-    QgsVectorLayer,
-    QgsField,
     QgsProject,
-    QgsFeature,
     Qgis
 )
 
-from qgis.gui import QgsMessageBar
 from qgis import processing
 
 from ImaerPlugin.styles import StyleFactory
@@ -99,7 +94,6 @@ class RelateCalcResultsDialog(QDialog, FORM_CLASS):
         return result
 
     def gui_update_layer_combo(self):
-        calc_type = self.combo_calc_type.currentText()
         layers = self.get_layer_list()
         enable_ok_button = len(layers) >= 2
         self.buttonBox.button(QDialogButtonBox.StandardButton.Ok).setEnabled(enable_ok_button)

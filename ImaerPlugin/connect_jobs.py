@@ -189,8 +189,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         for item in items:
             if item.column() == 1:  # jobKey column
                 job_key = item.text()
-                result = self.plugin.aerius_connection.cancel_job(job_key)
-                # self.show_feedback(result)
+                self.plugin.aerius_connection.cancel_job(job_key)
         QgsApplication.restoreOverrideCursor()
 
         self.get_jobs()
@@ -203,8 +202,7 @@ class ConnectJobsDialog(QDialog, FORM_CLASS):
         for item in items:
             if item.column() == 1:  # jobKey column
                 job_key = item.text()
-                result = self.plugin.aerius_connection.delete_job(job_key)
-                # self.show_feedback(result)
+                self.plugin.aerius_connection.delete_job(job_key)
         QgsApplication.restoreOverrideCursor()
 
         self.get_jobs()

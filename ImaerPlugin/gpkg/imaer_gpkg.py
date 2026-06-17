@@ -1,13 +1,12 @@
 import os
 
-from qgis.PyQt.QtCore import Qt, QVariant, QDateTime
+from qgis.PyQt.QtCore import Qt, QDateTime
 
 from qgis.core import (
     Qgis,
     QgsProviderRegistry,
     QgsCoordinateReferenceSystem,
     QgsFields,
-    QgsField,
     QgsWkbTypes
 )
 

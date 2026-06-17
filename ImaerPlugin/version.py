@@ -16,7 +16,7 @@ class VersionNumber():
                 part = parts[i]
                 try:
                     self.numbers[i] = int(part)
-                except Whatever:
+                except ValueError:
                     self.numbers[i] = 0
             except IndexError:
                 self.numbers[i] = 0

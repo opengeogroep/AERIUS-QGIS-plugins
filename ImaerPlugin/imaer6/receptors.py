@@ -3,7 +3,6 @@ from qgis.core import QgsFeature
 from .geometry import GmlPoint, GmlPolygon
 from .identifier import Nen3610Id
 from .gml import get_gml_element
-from ..gpkg.field_factory import field_config
 
 class CalculationResult(object):
 
@@ -21,11 +20,11 @@ class CalculationResult(object):
             and self.value is not None
 
     def to_xml_elem(self, doc):
-        result = doc.createElement(f'imaer:CalculationResult')
+        result = doc.createElement('imaer:CalculationResult')
         result.setAttribute('resultType', self.result_type)
         result.setAttribute('substance', self.substance)
 
-        value_elem = doc.createElement(f'imaer:value')
+        value_elem = doc.createElement('imaer:value')
         value_elem.appendChild(doc.createTextNode(str(self.value)))
         result.appendChild(value_elem)
 

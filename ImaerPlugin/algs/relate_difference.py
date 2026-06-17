@@ -4,12 +4,8 @@ from qgis.PyQt.QtCore import QCoreApplication
 from qgis.core import (QgsProcessing,
                        QgsFeatureSink,
                        QgsProcessingException,
-                       QgsProcessingAlgorithm,
-                       QgsProcessingParameterBoolean,
                        QgsProcessingParameterMapLayer,
-                       QgsProcessingParameterFeatureSource,
                        QgsProcessingParameterFeatureSink)
-from qgis import processing
 
 from .relate import RelateAlgorithm
 
@@ -83,9 +79,9 @@ class RelateDifferenceAlgorithm(RelateAlgorithm):
         feedback.pushInfo(repr(layer_types))
 
         if len(layer_types) == 0:
-            raise QgsProcessingException(f'No IMAER layer type found')
+            raise QgsProcessingException('No IMAER layer type found')
         elif len(layer_types) > 1:
-            raise QgsProcessingException(f'Multiple IMAER layer types found')
+            raise QgsProcessingException('Multiple IMAER layer types found')
 
         layer_type = layer_types[0]
 
@@ -121,7 +117,7 @@ class RelateDifferenceAlgorithm(RelateAlgorithm):
         feedback.setProgress(50)
 
         if len(calc_result_dict) == 0:
-            raise QgsProcessingException(f'No result features to load.')
+            raise QgsProcessingException('No result features to load.')
 
         step = 50 / len(calc_result_dict)
         current = 1

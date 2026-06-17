@@ -3,19 +3,12 @@ import os
 import time
 import json
 
-from qgis.PyQt.QtCore import (
-    Qt,
-    QVariant
-)
+from qgis.PyQt.QtCore import QVariant
 from qgis.PyQt.QtWidgets import (
     QAbstractItemView,
     QDialog,
     QDialogButtonBox,
-    QHBoxLayout,
     QLabel,
-    QLineEdit,
-    QSizePolicy,
-    QWidget,
     QGroupBox
 )
 from qgis.PyQt.QtGui import (
@@ -28,7 +21,6 @@ from qgis.PyQt import uic
 
 from qgis.utils import iface
 from qgis.gui import (
-    QgsMapLayerComboBox,
     QgsFieldComboBox
 )
 from qgis.core import (
@@ -59,7 +51,6 @@ from ImaerPlugin.imaer6 import (
     Emission,
     EmissionSource,
     EmissionSourceCharacteristics,
-    EmissionSourceType,
     EntityReference,
     ImaerDocument,
     ReferenceTimeVaryingProfile,
@@ -758,7 +749,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         vehicles = []
 
         if self.radio_veh_page_eft.isChecked():
-            fcb = getattr(self, f'fcb_rd_v_eft_link_speed')
+            fcb = getattr(self, 'fcb_rd_v_eft_link_speed')
             link_speed = self.get_feature_value(fcb, feat)
             if link_speed is not None:
                 link_speed = int(link_speed)
@@ -934,7 +925,7 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         self.tvp_model.insertRow(row, [local_id_item, label_item, custom_type_item, values_item])
         return row
 
-    def get_feature_value(self, widget, feat, cast_to=None):
+    def get_feature_value(self, widget, feat):
         if not isinstance(widget, QgsFieldComboBox):
             return None
         field_name = widget.currentField()
@@ -947,16 +938,6 @@ class GenerateCalcInputDialog(QDialog, FORM_CLASS):
         if isinstance(value, QVariant) and str(value) == 'NULL':
             return None
 
-        if cast_to is not None:
-            if cast_to == 'float':
-                if isinstance(result, float):
-                    return
-                if isInstance(result, QVariant):
-                    result.toFloat()
-            elif cast_to == 'integer':
-                return result.toInt()
-            elif cast_to == 'string':
-                return result.toString()
         return value
 
     def save_settings(self):

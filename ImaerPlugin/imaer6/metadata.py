@@ -1,7 +1,3 @@
-from qgis.PyQt.QtCore import QXmlStreamReader
-from qgis.PyQt.QtXml import QDomDocument
-
-
 class AeriusCalculatorMetadata():
 
     def __init__(self, project=None, situation=None, calculation=None, version=None, gml_creator=None):
