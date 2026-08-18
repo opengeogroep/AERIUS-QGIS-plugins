@@ -25,20 +25,20 @@ The current functionality covers:
 ### From the QGIS plugin repository
 
 The plugin is regularly updated in the QGIS plugin repository, so the easiest way
-to install it is by using the Plugin Manager within QGIS. Currently you will need to
-enable 'experimental plugins' to find it. The most recent plugin requires QGIS version
-3.34.x or higher.
+to install it is by using the Plugin Manager within QGIS. The most recent plugin 
+requires QGIS version 3.34.x or higher.
 
 ### From zip file
 
-In case you want to use another version of the plugin than the most current in the QGIS plugin repository, you can download the desired plugin from github
+In case you want to use another version of the plugin than the most current in
+the QGIS plugin repository, you can download the desired plugin from github
 [zip releases](https://github.com/aerius/IMAER-QGIS-plugin/tree/master/releases)
 and install it with the Plugin Manager in QGIS ("Install from zip tab").
 
 ### From python code
 
-Of course you can also clone the code from the github repository and install it
-manually in QGIS.
+Of course you can also clone the code from the github repository and install the 
+plugin manually in QGIS.
 
 [code repository](https://github.com/aerius/IMAER-QGIS-plugin)
 
