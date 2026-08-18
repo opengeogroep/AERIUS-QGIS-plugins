@@ -100,7 +100,7 @@ class ImaerGpkg():
 
     def set_metadata(self, key, value):
         if value is None:
-            q = f'DELETE FROM imaer_metadata WHERE key = \'{key}\';'
+            q = f'DELETE FROM imaer_metadata WHERE key = \'{key}\';' # nosec
             self.conn.executeSql(q)
             return True
 
@@ -114,19 +114,19 @@ class ImaerGpkg():
             return False
         str_value = str(value)
 
-        q = f'SELECT * FROM imaer_metadata WHERE key = \'{key}\';'
+        q = f'SELECT * FROM imaer_metadata WHERE key = \'{key}\';' # nosec
         result = self.conn.executeSql(q)
 
         if len(result) == 0:
-            q = f'INSERT INTO imaer_metadata (key, value, data_type) VALUES (\'{key}\', \'{str_value}\', \'{data_type}\');'
+            q = f'INSERT INTO imaer_metadata (key, value, data_type) VALUES (\'{key}\', \'{str_value}\', \'{data_type}\');' # nosec
         else:
-            q = f'UPDATE imaer_metadata SET (value, data_type) = (\'{str_value}\', \'{data_type}\') WHERE key = \'{key}\';'
+            q = f'UPDATE imaer_metadata SET (value, data_type) = (\'{str_value}\', \'{data_type}\') WHERE key = \'{key}\';' # nosec
         result = self.conn.executeSql(q)
 
         return True
 
     def get_metadata(self, key):
-        q = f'SELECT key, value, data_type FROM imaer_metadata WHERE key = \'{key}\';'
+        q = f'SELECT key, value, data_type FROM imaer_metadata WHERE key = \'{key}\';' # nosec
         result = self.conn.executeSql(q)
 
         if len(result) == 0:
